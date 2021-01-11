@@ -15,7 +15,7 @@ cmd = None
 settings = Settings()
 
 # %% Operations
-def initApp():
+def init_app():
     print("Init App")
     
 def cleanup():
@@ -24,7 +24,7 @@ def cleanup():
 # %% Main
 def main():
     sw = StopWatch("app")
-    initApp()
+    init_app()
 
     print("== MIP App ==")
     print("Parameters: " + str(sys.argv[1:]))
