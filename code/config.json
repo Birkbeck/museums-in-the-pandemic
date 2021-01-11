@@ -1,0 +1,11 @@
+{
+  "_comment": "MIP configuration file",
+  "_date": "2021",
+  "_author": "Andrea Ballatore",
+  "global_settings": {
+    "field_separator": "::",
+    "srid": 4326,
+    "wkt_rounding": 6,
+    "sim_rounding": 6
+  }
+}
