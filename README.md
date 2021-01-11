@@ -4,6 +4,11 @@
 
 Private repository for Museums in the Pandemic (MIP) project (Birkbeck, University of London).
 
-## Environment
+## Conda environment
 
-Conda environment in `env` with all Python packages.
+Conda environment in `conda_env` with all Python packages.
+
+## How to run
+
+The main file is `code/app.py`.
+
