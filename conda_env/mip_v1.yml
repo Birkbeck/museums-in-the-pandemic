@@ -1,0 +1,14 @@
+name: mip_v1
+channels:
+  - defaults
+dependencies:
+  - python=3.8
+  - scrapy
+  - nltk
+  - spacy
+  - scikit-learn
+  - matplotlib
+  - psycopg2
+  - numpy
+  - scipy
+  - pandas
