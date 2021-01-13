@@ -9,8 +9,10 @@ import sys
 import pandas as pd
 from utils import StopWatch
 from settings import Settings
+from scrapers.scraper_google_api import scrape_google_api
+from scrapers.scraper_twitter import scrape_twitter
 
-COMMANDS = ["help","tests"]
+COMMANDS = ["help","tests","scrape_google",'scrape_twitter']
 cmd = None
 settings = Settings()
 
@@ -21,26 +23,38 @@ def init_app():
 def cleanup():
     print("Cleanup")
 
+def load_input_museums():
+    # TODO: load CSV in a data frame
+    pass
+
 # %% Main
 def main():
     sw = StopWatch("app")
     init_app()
-
     print("== MIP App ==")
     print("Parameters: " + str(sys.argv[1:]))
     print("N CPUs =", os.cpu_count())
-    if len(sys.argv) < 2 or not sys.argv[1] in COMMANDS:
-        raise RuntimeError("Invalid parameter. Valid parameters: " + str(COMMANDS))
 
-    cmd = sys.argv[1]
+    # check input
+    cmd_list = sys.argv[1:]
+    for cmd in cmd_list:
+        if len(sys.argv) < 2 or not sys.argv[1] in COMMANDS:
+            raise RuntimeError("Invalid parameter. Valid parameters: " + str(COMMANDS))
+    
+    for cmd in cmd_list:
+        if cmd == "scrape_google":
+            print("scrape_google")
+            df = load_input_museums()
+            scrape_google_api(df)
 
-    if cmd == "scrape":
-        print("scrape")
-        # TODO
+        if cmd == "scrape_twitter":
+            print("scrape_twitter")
+            df = load_input_museums()
+            scrape_twitter(df)
 
-    elif cmd == "tests":
-        print("run tests")
-        # TODO
+        elif cmd == "tests":
+            print("run tests")
+            # TODO
 
     cleanup()
     sw.tick("OK")
