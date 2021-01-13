@@ -9,10 +9,10 @@ import sys
 import pandas as pd
 from utils import StopWatch
 from settings import Settings
-from scrapers.scraper_google_selenium import scrape_google_selenium
+from scrapers.scraper_google_selenium import *
 from scrapers.scraper_twitter import scrape_twitter
 
-COMMANDS = ["help","tests","scrape_google",'scrape_twitter']
+COMMANDS = ["help","tests","scrape_google","extract_google",'scrape_twitter']
 cmd = None
 settings = Settings()
 
@@ -43,6 +43,8 @@ def main():
 
     # check input
     cmd_list = sys.argv[1:]
+    if len(sys.argv) <= 1:
+            raise RuntimeError("No parameter. Valid parameters: " + str(COMMANDS))
     for cmd in cmd_list:
         if len(sys.argv) < 2 or not sys.argv[1] in COMMANDS:
             raise RuntimeError("Invalid parameter. Valid parameters: " + str(COMMANDS))
@@ -51,8 +53,12 @@ def main():
         if cmd == "scrape_google":
             print("scrape_google")
             df = load_input_museums()
-            scrape_google_selenium(df)
-
+            scrape_google_museum_names(df)
+        
+        if cmd == "extract_google":
+            print("extract_google")
+            extract_google_results()
+        
         if cmd == "scrape_twitter":
             print("scrape_twitter")
             df = load_input_museums()

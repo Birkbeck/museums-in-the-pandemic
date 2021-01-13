@@ -18,14 +18,11 @@ import subprocess
 import pandas as pd
 import numpy as np
 from webbot import Browser
-from mip.db import open_sqlite, create_page_dump
-
-
-GROUP_TYPES = ['General group',"Jobs group",'Buy and sell group',
-    'Gaming group','Social learning group','Parenting group','Custom group',
-    'Teams & projects group','Work group']
+from db.db import *
 
 GOOGLE_PAUSE_SECS = 3
+
+google_db_fn = 'tmp/google_pages.db'
 
 VPN_SERVERS = ['uk-manchester','uk-london','uk-southampton','ireland','belgium',
                 'isle-of-man','luxembourg','austria']
@@ -220,6 +217,33 @@ def extract_fb_data_from_fb_page(html, fn):
             }, index=[group_uid])
     return(infodf)
 
+def extract_links_from_google_page(html):
+    from bs4 import BeautifulSoup    
+    soup = BeautifulSoup(html, 'html.parser')
+
+    #place_code = fn.replace('.html','').replace('tmp/pages_dump/','')
+    links = []
+    for a_tag in soup.find_all("a"):
+        href = a_tag.attrs.get("href")
+        links.append(href)
+    
+    # keep only fb links
+    links = [clean_group_url(l) for l in links]
+    links = [l for l in links if len(l) > 10] # remove empty string
+    links = pd.Series(links).drop_duplicates().tolist() # get unique
+
+    if len(links) == 0: 
+        return None
+
+    # build results
+    ids = ['result'+'_'+'{:03d}'.format(l+1) for l in range(len(links))]
+    granks = range(1,len(links)+1)
+    assert len(granks)==len(links) and len(granks)==len(links) and len(ids)==len(links)
+
+    df = pd.DataFrame({'google_rank': granks,
+        'html_file': fn,'url':links},index=ids)
+    assert len(df.index)==len(links)
+    return df
 
 def extract_fb_links_from_google_page(html, fn):
     from bs4 import BeautifulSoup    
@@ -300,14 +324,6 @@ def get_timestamp():
     import datetime
     return(str(datetime.datetime.now()))
 
-# =============== MAIN =============== #
-
-# set VARIABLES
-
-def tests():
-    web = Browser()
-    # END TESTS
-
 
 def get_fb_page(web, url):
     print("get_fb_page", url)
@@ -372,7 +388,7 @@ def run_google_query(web, querytext):
     if 'unusual traffic from your computer network' in html.lower():
         raise Exception('Google is blocking. '+querytext)
 
-    return html
+    return queryurl, html
 
 
 def click_on_google_eula(web):
@@ -447,49 +463,42 @@ def scrape_google_museum_names(topicsdf):
     # NOTE: this function needs PIA VPN to work
     #assert vpn_is_on(),'VPN must be on'
 
-    db = open_sqlite('tmp/google_pages.db')
-
+    db = open_sqlite(google_db_fn)
+    create_page_dump(db)
     # init browser and google settings
     web = init_google_browser()
 
-    outdf = pd.DataFrame()
+    #outdf = pd.DataFrame()
+
     # scan place names
     for index, row in topicsdf.iterrows():
-        place_id = row['place_code'].strip()
-        fn = 'tmp/pages_dump/'+place_id+'.html'
-        if os.path.isfile(fn):
-            print('file found, skip')
-            continue
-        
-        print(index,row)
-        if index % 1000 == 0:
-            print("long pause idx=",index)
-            random_sleep(60,600)
-        
-        query = row['place_name'].strip() + " site:en-gb.facebook.com/groups"
-        
+        muse_name = row[0]
+        #print(muse_name)
+        assert len(muse_name)>5
+        query = muse_name.strip() #+ " site:en-gb.facebook.com/"
+        if index > 1: break # DEBUG
         # get data from google
         found = False
         while not found:
             try: 
-                html = run_google_query(web, query)
+                queryurl, html = run_google_query(web, query)
+                print("HTML size",len(html))
                 found = True
             except Exception as e:
                 print(e)
                 print('failed to download page, changing VPN')
                 web.quit()
-                vpn_random_region()
+                #vpn_random_region()
                 random_sleep(1,1)
                 web = init_google_browser()
                 random_sleep(2,2)
         
-        write_file(html, fn)
-        outdf = pd.concat([outdf, pd.DataFrame({'google_query': [query],'file':fn},
-                       index=[place_id])])
-        print("\t", fn)
-    dffn = 'tmp/scraping_google_out.csv'
-    outdf.to_csv(dffn, index_label="place_code")
-    print("scraping complete.",dffn)
+        assert len(html) > 1000
+        # TODO: insert museum id
+        insert_google_page(db, queryurl, query, 'MUSE_ID_TODO', html)
+        
+    web.quit()
+    print("Google scraping complete.")
     return
 
 
@@ -606,4 +615,16 @@ def scrape_facebook_groups_info(fn):
         print(url)
         web,html = get_fb_page(web, url)
         write_file(html,fout)
-        #print(fout)
+        
+
+def extract_google_results():
+    print("extract_google_results")
+    db = open_sqlite(google_db_fn)
+    res_df = pd.read_sql_query('select * from google_pages_dump;', db)
+
+    for index, row in res_df.iterrows():
+        html = row['page_content']
+        google_df = extract_links_from_google_page(html)
+
+    print(res_df)
+    
