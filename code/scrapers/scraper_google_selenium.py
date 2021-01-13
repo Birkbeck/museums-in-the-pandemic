@@ -610,18 +610,13 @@ def scrape_google_selenium(df):
     print("Scrape data with Selenium")
 
     web = init_google_browser()
+
+
     html = run_google_query(web, "Brading Roman Villa")
     random_sleep(2,5)
     write_file(html, 'test.html')
     return
-
-    # set up folders
-    if not os.path.exists("tmp"):
-        os.makedirs("tmp")
-        os.makedirs("tmp/pages_dump")
-    if not os.path.exists("tmp/pages_dump_fb"):
-        os.makedirs("tmp/pages_dump_fb")
-
+    
     # load input     
     topics = pd.read_csv('data/input/london_placenames-v2.csv')
     print('>> Topics to scrape:',len(topics))

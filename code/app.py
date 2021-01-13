@@ -19,6 +19,11 @@ settings = Settings()
 # %% Operations
 def init_app():
     print("Init App")
+    # set up folders
+    folders = ['tmp']
+    for f in folders:
+        if not os.path.exists(f):
+            os.makedirs(f)
     
 def cleanup():
     print("Cleanup")
