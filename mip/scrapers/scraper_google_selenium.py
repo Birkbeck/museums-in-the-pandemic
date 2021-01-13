@@ -461,7 +461,7 @@ def scrape_google_page(web, search_string):
 def scrape_google_museum_names(topicsdf):
     # NOTE: this function needs PIA VPN to work
     #assert vpn_is_on(),'VPN must be on'
-    
+
     db = open_sqlite(google_db_fn)
     create_page_dump(db)
     # init browser and google settings
@@ -471,9 +471,10 @@ def scrape_google_museum_names(topicsdf):
     for index, row in topicsdf.iterrows():
         muse_name = row[0]
         #print(muse_name)
-        assert len(muse_name)>5
-        query = muse_name.strip() #+ " "
-        if index > 1: break # DEBUG
+        assert len(muse_name) > 5
+        query = muse_name.strip()
+        #if index > 1: break # DEBUG
+        
         # 1 WEBSITE
         queryurl, html = scrape_google_page(web, query)
         insert_google_page(db, queryurl, query, 'website', 'MUSE_ID_TODO', html)
