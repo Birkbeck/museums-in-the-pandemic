@@ -19,6 +19,7 @@ def create_page_dump(db_conn):
     c.execute('''CREATE TABLE IF NOT EXISTS google_pages_dump 
             (url text NOT NULL, 
             search text NOT NULL,
+            search_type text NOT NULL,
             muse_id text NOT NULL, 
             page_content text NOT NULL,
             ts DATETIME DEFAULT CURRENT_TIMESTAMP)
@@ -28,11 +29,11 @@ def create_page_dump(db_conn):
     print('create_page_dump')
 
 
-def insert_google_page(db_conn, url, search, muse_id, page_content):
+def insert_google_page(db_conn, url, search, search_type, muse_id, page_content):
     c = db_conn.cursor()
-    sql = '''INSERT INTO google_pages_dump(url, search, muse_id, page_content)
-              VALUES(?,?,?,?) '''
+    sql = '''INSERT INTO google_pages_dump(url, search, search_type, muse_id, page_content)
+              VALUES(?,?,?,?,?) '''
     cur = db_conn.cursor()
-    cur.execute(sql, [url, search, muse_id, page_content])
+    cur.execute(sql, [url, search, search_type, muse_id, page_content])
     db_conn.commit()
     return db_conn
