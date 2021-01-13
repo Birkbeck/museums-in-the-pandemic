@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
 """
-Google API scraper
+DB management
 """
 
 import json
 
-def scrape_google_api():
-    print("scrape_google_api")
-    pass
+# TODO: create a sqlite DB

@@ -45,7 +45,7 @@ def main():
         if cmd == "scrape_google":
             print("scrape_google")
             df = load_input_museums()
-            scrape_google_api(df)
+            scrape_google_api()
 
         if cmd == "scrape_twitter":
             print("scrape_twitter")
