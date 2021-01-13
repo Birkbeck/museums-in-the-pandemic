@@ -3,12 +3,16 @@ channels:
   - defaults
 dependencies:
   - python=3.8
-  - scrapy
-  - nltk
-  - spacy
-  - scikit-learn
-  - matplotlib
-  - psycopg2
-  - numpy
-  - scipy
   - pandas
+  - nltk
+  - scrapy
+  - psycopg2
+  - sqlite
+  - spacy
+  - scipy
+  - matplotlib
+  - scikit-learn
+  - numpy
+  - pip
+  - pip:
+    - webbot
