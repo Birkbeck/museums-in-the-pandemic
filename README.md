@@ -10,5 +10,5 @@ Conda environment in `conda_env` with all Python packages.
 
 ## How to run
 
-The main file is `code/app.py`.
+The main file is `mip/app.py`.
 
