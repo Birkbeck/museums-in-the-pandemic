@@ -9,7 +9,7 @@ import sys
 import pandas as pd
 from utils import StopWatch
 from settings import Settings
-from scrapers.scraper_google_api import scrape_google_api
+from scrapers.scraper_google_selenium import scrape_google_selenium
 from scrapers.scraper_twitter import scrape_twitter
 
 COMMANDS = ["help","tests","scrape_google",'scrape_twitter']
@@ -24,8 +24,9 @@ def cleanup():
     print("Cleanup")
 
 def load_input_museums():
-    # TODO: load CSV in a data frame
-    pass
+    df = pd.read_csv('data/museums/museum_names_and_postcodes-20200113.csv')
+    print("loaded museums:",len(df))
+    return df
 
 # %% Main
 def main():
@@ -45,7 +46,7 @@ def main():
         if cmd == "scrape_google":
             print("scrape_google")
             df = load_input_museums()
-            scrape_google_api()
+            scrape_google_selenium(df)
 
         if cmd == "scrape_twitter":
             print("scrape_twitter")

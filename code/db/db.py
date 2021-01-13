@@ -4,6 +4,9 @@
 DB management
 """
 
-import json
+import sqlite3
 
 # TODO: create a sqlite DB
+
+def open_sqlite():
+    pass
