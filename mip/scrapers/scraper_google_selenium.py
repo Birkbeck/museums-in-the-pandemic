@@ -595,4 +595,3 @@ def extract_google_results():
     
     outdf.to_csv('tmp/google_extracted_results.csv', index=None)
     
-    
