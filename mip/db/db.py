@@ -37,3 +37,7 @@ def insert_google_page(db_conn, url, search, search_type, muse_id, page_content)
     cur.execute(sql, [url, search, search_type, muse_id, page_content])
     db_conn.commit()
     return db_conn
+
+def url_exists(db_conn, url):
+    return False
+    # TODO Val check if URL exists in database
