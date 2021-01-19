@@ -589,7 +589,7 @@ def extract_google_results():
         google_df['search'] = row['search']
         google_df['search_type'] = row['search_type']
         google_df['ts'] = row['ts']
-        # TODO: add museum ID
+        # TODO val: add museum ID
         #print(google_df)
         outdf = pd.concat([outdf, google_df])
     
