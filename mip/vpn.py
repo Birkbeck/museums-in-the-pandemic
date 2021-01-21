@@ -7,31 +7,39 @@ https://www.privateinternetaccess.com/helpdesk/kb/articles/pia-desktop-command-l
 
 """
 
-VPN_SERVERS = ['uk-manchester','uk-london','uk-southampton','ireland','belgium',
+vpn_servers = ['uk-manchester','uk-london','uk-southampton','ireland','belgium',
                 'isle-of-man','luxembourg','austria']
 
+vpn_os = 'mac' # 'win'
+
+assert VPN_OS in ['mac','win']
+
 # %% Mac functions
-def vpn_off_mac():
-    ret = run_os_command('piactl disconnect')
-    print(ret)
+def vpn_off():
+    if vpn_os == 'mac':
+        ret = run_os_command('piactl disconnect')
+        print(ret)
 
-def vpn_on_mac():
-    ret = run_os_command('piactl connect')
-    print(ret)
+def vpn_on():
+    if vpn_os == 'mac':
+        ret = run_os_command('piactl connect')
+        print(ret)
 
-def vpn_go_region_mac(reg):
+def vpn_go_region(reg):
     assert reg in VPN_SERVERS
-    ret = run_os_command('piactl set region '+reg)
+    if vpn_os == 'mac':
+        ret = run_os_command('piactl set region '+reg)
     print(">> vpn_go_region:",reg)
     return ret
 
-def vpn_is_on_mac():
-    ret = run_os_command('piactl get connectionstate') == 'Connected'
-    return ret
+def vpn_is_on():
+    if vpn_os == 'mac':
+        ret = run_os_command('piactl get connectionstate') == 'Connected'
+        return ret
 
 # %% Windows functions
 def vpn_random_region():
-    vpn_go_region(random.choice(VPN_SERVERS))
+    vpn_go_region(random.choice(vpn_servers))
 
 
 # TODO: add commands for PIA on Windows
