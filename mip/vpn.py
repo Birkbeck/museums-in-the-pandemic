@@ -3,7 +3,7 @@
 """ 
 VPN functions 
 
-
+https://www.privateinternetaccess.com/helpdesk/kb/articles/pia-desktop-command-line-interface
 
 """
 
