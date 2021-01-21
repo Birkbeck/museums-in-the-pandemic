@@ -41,6 +41,12 @@ def vpn_is_on():
 def vpn_random_region():
     vpn_go_region(random.choice(vpn_servers))
 
+def run_os_command(cmd):
+    if vpn_os == 'mac':
+        ret = subprocess.check_output(cmd, shell=True)
+        ret = ret.decode("utf-8").strip()
+        return ret
+
 
 # TODO: add commands for PIA on Windows
 
