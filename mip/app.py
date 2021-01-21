@@ -8,13 +8,11 @@ import os
 import sys
 import pandas as pd
 from utils import StopWatch
-from settings import Settings
 from scrapers.scraper_google_selenium import *
 from scrapers.scraper_twitter import scrape_twitter
 
 COMMANDS = ["help","tests","scrape_google","extract_google",'scrape_twitter']
 cmd = None
-settings = Settings()
 
 # %% Operations
 def init_app():
