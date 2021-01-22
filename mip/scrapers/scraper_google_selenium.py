@@ -440,9 +440,9 @@ def vpn_is_on():
     ret = run_os_command('piactl get connectionstate') == 'Connected'
     return ret
 
-def scrape_google_page(web, search_string, target):
+def scrape_google_page(web, search_string, target, connection):
     found = False
-    db = open_sqlite(google_db_fn)
+    
     queryurl = gen_google_url(search_string)
     if(url_exists(google_db_fn, queryurl)==False):
         while not found:
@@ -451,7 +451,7 @@ def scrape_google_page(web, search_string, target):
                 html = run_google_query(web, search_string, queryurl)
                 print("HTML size",len(html))
                 found = True
-                insert_google_page(db, queryurl, search_string, target, 'MUSE_ID_TODO', html)
+                insert_google_page(connection, queryurl, search_string, target, 'MUSE_ID_TODO', html)
                 return
             except Exception as e:
                 print(e)
@@ -482,17 +482,17 @@ def scrape_google_museum_names(topicsdf):
         #if index > 1: break # DEBUG
         
         # 1 WEBSITE
-        scrape_google_page(web, query, target)
+        scrape_google_page(web, query, target, db)
         
         # 2 TWITTER
         twquery = query + " site:twitter.com"
         target='twitter'
-        scrape_google_page(web, twquery, target)
+        scrape_google_page(web, twquery, target, db)
         
         # 3 FACEBOOK
         fbquery = query + " site:en-gb.facebook.com"
         target = 'facebook'
-        scrape_google_page(web, fbquery, target)
+        scrape_google_page(web, fbquery, target, db)
         
     web.quit()
     print("Google scraping complete.")
