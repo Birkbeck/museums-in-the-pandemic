@@ -63,6 +63,7 @@ def main():
             scrape_twitter(df)
 
         elif cmd == "tests":
+            
             print("run tests")
             # TODO
 

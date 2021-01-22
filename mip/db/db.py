@@ -38,6 +38,15 @@ def insert_google_page(db_conn, url, search, search_type, muse_id, page_content)
     db_conn.commit()
     return db_conn
 
-def url_exists(db_conn, url):
+def extract_google_urls(db_conn):
+    return db_conn
+
+def url_exists(db, targeturl):
+    con = sqlite3.connect(db)
+    df = pd.read_sql("SELECT * from google_pages_dump", con)
+    for row in df.iterrows():
+        if(row[1]['url']==targeturl):
+            return True
+    
     return False
     # TODO Val check if URL exists in database

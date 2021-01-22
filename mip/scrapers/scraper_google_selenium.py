@@ -477,15 +477,18 @@ def scrape_google_museum_names(topicsdf):
         
         # 1 WEBSITE
         queryurl, html = scrape_google_page(web, query)
-        insert_google_page(db, queryurl, query, 'website', 'MUSE_ID_TODO', html)
+        if(url_exists(google_db_fn, queryurl)==False):
+            insert_google_page(db, queryurl, query, 'website', 'MUSE_ID_TODO', html)
         # 2 TWITTER
         twquery = query + " site:twitter.com"
         queryurl, html = scrape_google_page(web, twquery)
-        insert_google_page(db, queryurl, twquery, 'twitter', 'MUSE_ID_TODO', html)
+        if(url_exists(google_db_fn, queryurl)==False):
+            insert_google_page(db, queryurl, twquery, 'twitter', 'MUSE_ID_TODO', html)
         # 3 FACEBOOK
         fbquery = query + " site:en-gb.facebook.com"
         queryurl, html = scrape_google_page(web, fbquery)
-        insert_google_page(db, queryurl, fbquery, 'facebook', 'MUSE_ID_TODO', html)
+        if(url_exists(google_db_fn, queryurl)==False):
+            insert_google_page(db, queryurl, fbquery, 'facebook', 'MUSE_ID_TODO', html)
     web.quit()
     print("Google scraping complete.")
     return
