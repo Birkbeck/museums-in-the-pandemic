@@ -2,9 +2,7 @@
 
 """ 
 VPN functions 
-
 https://www.privateinternetaccess.com/helpdesk/kb/articles/pia-desktop-command-line-interface
-
 """
 
 vpn_servers = ['uk-manchester','uk-london','uk-southampton','ireland','belgium',
