@@ -345,11 +345,11 @@ def gen_google_url(query_str):
     return url
 
 
-def run_google_query(web, querytext):
+def run_google_query(web, querytext, queryurl):
     assert len(querytext)>3
     print("run_google_query", querytext)
     # get google url
-    queryurl = gen_google_url(querytext)
+    #queryurl = gen_google_url(querytext)
 
     if True: # run webbot
         web.go_to(queryurl)
@@ -369,7 +369,7 @@ def run_google_query(web, querytext):
     if 'unusual traffic from your computer network' in html.lower():
         raise Exception('Google is blocking. '+querytext)
 
-    return queryurl, html
+    return html
 
 
 def click_on_google_eula(web):
@@ -440,22 +440,27 @@ def vpn_is_on():
     ret = run_os_command('piactl get connectionstate') == 'Connected'
     return ret
 
-def scrape_google_page(web, search_string):
+def scrape_google_page(web, search_string, target):
     found = False
-    while not found:
-        try: 
-            queryurl, html = run_google_query(web, search_string)
-            print("HTML size",len(html))
-            found = True
-            return queryurl, html
-        except Exception as e:
-            print(e)
-            print('failed to download page, changing VPN')
-            web.quit()
-            #vpn_random_region()
-            random_sleep(1,1)
-            web = init_google_browser()
-            random_sleep(2,2)
+    db = open_sqlite(google_db_fn)
+    queryurl = gen_google_url(search_string)
+    if(url_exists(google_db_fn, queryurl)==False):
+        while not found:
+            try: 
+                
+                html = run_google_query(web, search_string, queryurl)
+                print("HTML size",len(html))
+                found = True
+                insert_google_page(db, queryurl, search_string, target, 'MUSE_ID_TODO', html)
+                return
+            except Exception as e:
+                print(e)
+                print('failed to download page, changing VPN')
+                web.quit()
+                #vpn_random_region()
+                random_sleep(1,1)
+                web = init_google_browser()
+                random_sleep(2,2)
     return None
 
 def scrape_google_museum_names(topicsdf):
@@ -473,22 +478,22 @@ def scrape_google_museum_names(topicsdf):
         #print(muse_name)
         assert len(muse_name) > 5
         query = muse_name.strip()
+        target = 'website'
         #if index > 1: break # DEBUG
         
         # 1 WEBSITE
-        queryurl, html = scrape_google_page(web, query)
-        if(url_exists(google_db_fn, queryurl)==False):
-            insert_google_page(db, queryurl, query, 'website', 'MUSE_ID_TODO', html)
+        scrape_google_page(web, query, target)
+        
         # 2 TWITTER
         twquery = query + " site:twitter.com"
-        queryurl, html = scrape_google_page(web, twquery)
-        if(url_exists(google_db_fn, queryurl)==False):
-            insert_google_page(db, queryurl, twquery, 'twitter', 'MUSE_ID_TODO', html)
+        target='twitter'
+        scrape_google_page(web, twquery, target)
+        
         # 3 FACEBOOK
         fbquery = query + " site:en-gb.facebook.com"
-        queryurl, html = scrape_google_page(web, fbquery)
-        if(url_exists(google_db_fn, queryurl)==False):
-            insert_google_page(db, queryurl, fbquery, 'facebook', 'MUSE_ID_TODO', html)
+        target = 'facebook'
+        scrape_google_page(web, fbquery, target)
+        
     web.quit()
     print("Google scraping complete.")
     return
