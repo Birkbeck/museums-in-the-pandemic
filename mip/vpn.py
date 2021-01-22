@@ -3,6 +3,8 @@
 """ 
 VPN functions 
 https://www.privateinternetaccess.com/helpdesk/kb/articles/pia-desktop-command-line-interface
+
+TODO: write instructions for VPN set up here
 """
 
 vpn_servers = ['uk-manchester','uk-london','uk-southampton','ireland','belgium',
