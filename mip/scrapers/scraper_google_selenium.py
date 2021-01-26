@@ -21,6 +21,9 @@ from webbot import Browser
 from urllib.parse import urlparse
 from db.db import *
 
+import logging
+logger = logging.getLogger(__name__)
+
 GOOGLE_PAUSE_SECS = 5
 
 google_db_fn = 'tmp/google_pages.db'

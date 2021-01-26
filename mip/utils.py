@@ -2,6 +2,9 @@
 
 from datetime import datetime
 
+import logging
+logger = logging.getLogger(__name__)
+
 """ 
 Utility functions 
 """
@@ -281,7 +284,4 @@ class StopWatch(object):
         bFirst = self._tcur == self._tstart
         self._tcur = datetime.now()
         msg = "> SW [" + self._desc + " " + desc + "] t=" + str(t)[:-3]
-        # if bFirst: msg += " tot="+str(tt)
-        print(msg)
-        #print(msg)
-        return str(t)[:-3]
+        return msg

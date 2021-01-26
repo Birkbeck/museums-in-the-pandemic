@@ -7,6 +7,9 @@ https://www.privateinternetaccess.com/helpdesk/kb/articles/pia-desktop-command-l
 TODO: write instructions for VPN set up here
 """
 
+import logging
+logger = logging.getLogger(__name__)
+
 vpn_servers = ['uk-manchester','uk-london','uk-southampton','ireland','belgium',
                 'isle-of-man','luxembourg','austria']
 
