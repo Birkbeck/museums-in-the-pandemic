@@ -25,9 +25,6 @@ GOOGLE_PAUSE_SECS = 5
 
 google_db_fn = 'tmp/google_pages.db'
 
-VPN_SERVERS = ['uk-manchester','uk-london','uk-southampton','ireland','belgium',
-                'isle-of-man','luxembourg','austria']
-
 def gen_random_page_fn():
     import uuid
     fn = 'tmp/pages_dump/'+str(uuid.uuid4())+'.html'
@@ -406,25 +403,6 @@ def init_google_browser():
     random_sleep(0,2)
     return web
 
-def vpn_off():
-    ret = run_os_command('piactl disconnect')
-    print(ret)
-
-def vpn_on():
-    ret = run_os_command('piactl connect')
-    print(ret)
-
-def vpn_go_region(reg):
-    assert reg in VPN_SERVERS
-    ret = run_os_command('piactl set region '+reg)
-    print(">> vpn_go_region:",reg)
-    return ret
-
-def run_os_command(cmd):
-    ret = subprocess.check_output(cmd, shell=True)
-    ret = ret.decode("utf-8").strip()
-    return ret
-
 def is_fb_link(url):
     if not url: return False
     if url == '': return False
@@ -432,13 +410,6 @@ def is_fb_link(url):
     b = b and not ('webcache.googleusercontent.com' in url)
     b = b and not ('translate.google.' in url)
     return b
-
-def vpn_random_region():
-    vpn_go_region(random.choice(VPN_SERVERS))
-
-def vpn_is_on():
-    ret = run_os_command('piactl get connectionstate') == 'Connected'
-    return ret
 
 def scrape_google_page(web, search_string, target, connection):
     found = False

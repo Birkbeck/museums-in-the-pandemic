@@ -12,6 +12,11 @@ def select_random_sublist(l, n):
     s = random.sample(l, n)
     return s
 
+def run_os_command(cmd):
+    ret = subprocess.check_output(cmd, shell=True)
+    ret = ret.decode("utf-8").strip()
+    return ret
+
 def _sys_command(str_params):
     import subprocess
     result = subprocess.run(str_params, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
