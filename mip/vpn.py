@@ -35,6 +35,15 @@ def vpn_go_region(reg):
     print(">> vpn_go_region:",reg)
     return ret
 
+def get_url_vpn(url):
+    pia_socks5 = 'socks5h://XXXX@proxy-nl.privateinternetaccess.com:1080'
+    proxies = {'http': pia_socks5,'https': pia_socks5}
+    r = requests.get(url, proxies=proxies )
+    if r.status_code == 429: 
+        raise Exception("429 Too Many Requests")
+    assert r.status_code == 200, 'failed to download '+str(r.status_code) + ' ' + url
+    return r.text
+
 def vpn_is_on():
     if vpn_os == 'mac':
         ret = run_os_command('piactl get connectionstate') == 'Connected'

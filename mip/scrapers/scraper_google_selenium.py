@@ -383,16 +383,6 @@ def click_on_google_eula(web):
     web.press(web.Key.ENTER)
     random_sleep(0,1)
 
-
-def get_url_vpn(url):
-    pia_socks5 = 'socks5h://x1936726:9CammAz8bs@proxy-nl.privateinternetaccess.com:1080'
-    proxies = {'http': pia_socks5,'https': pia_socks5}
-    r = requests.get(url, proxies=proxies )
-    if r.status_code == 429: 
-        raise Exception("429 Too Many Requests")
-    assert r.status_code == 200, 'failed to download '+str(r.status_code) + ' ' + url
-    return r.text
-
 def restart_browser(web):
     web.quit()
 
