@@ -10,8 +10,9 @@ import pandas as pd
 from utils import StopWatch
 from scrapers.scraper_google_selenium import *
 from scrapers.scraper_twitter import scrape_twitter
+from scrapers.scraper_websites import scrape_websites
 
-COMMANDS = ["help","tests","scrape_google","extract_google",'scrape_twitter']
+COMMANDS = ["help","tests","scrape_google","extract_google",'scrape_twitter','scrape_websites']
 cmd = None
 
 # %% Operations
@@ -62,10 +63,14 @@ def main():
             df = load_input_museums()
             scrape_twitter(df)
 
-        elif cmd == "tests":
-            
+        if cmd == "scrape_websites":
+            print("scrape_websites")
+            df = load_input_museums()
+            scrape_websites(df)
+
+        if cmd == "tests":
             print("run tests")
-            # TODO
+            # TODO: let's put tests here
 
     cleanup()
     sw.tick("OK")
