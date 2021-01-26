@@ -51,7 +51,8 @@ def load_input_museums():
     if(pd.Series(df["Museum_Name"]).is_unique):
         print("All museum names unique.")
     else:
-        print("Duplicate museum names exist.")
+        
+        raise ValueError("Duplicate museum names exist.")
     print("loaded museums:",len(df))
     return df
 
