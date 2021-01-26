@@ -39,14 +39,22 @@ def scrape_websites(museums_df):
     logger.info("scraping session_id: "+session_id)
 
     # load input data
-    sample_df = pd.read_csv("data/museums/mip_data_sample_2020_01.tsv", sep='\t')
+    sample_df = pd.read_csv("data/museums/mip_data_sample_2020_01.tsv", sep='\t').head(4) # DEBUG
     logger.debug("sample_df", len(sample_df))
     
+    # start crawler
+    crawler_process = CrawlerProcess()
+
     # scrape all
     for i in sample_df.index:
         row = sample_df.loc[i]
-        scrape_website_scrapy(row.mm_id, row.website, session_id, ts, db, app_settings)
-
+        assert row.mm_id
+        if isinstance(row.website, str) and len(row.website)>5:
+            scrape_website_scrapy(crawler_process, row.mm_id, row.website, session_id, ts, db, app_settings)
+        else:
+            logger.debug("empty URL for museum"+row.mm_id)
+    # start crawling
+    crawler_process.start()
 
 def init_website_db(db_con):
     c = db_con.cursor()
@@ -57,6 +65,8 @@ def init_website_db(db_con):
             url_domain text NOT NULL,
             muse_id text NOT NULL, 
             page_content text NOT NULL,
+            page_content_length numeric NOT NULL,
+            depth numeric NOT NULL,
             session_id text NOT NULL,
             session_ts DATETIME NOT NULL,
             ts DATETIME DEFAULT CURRENT_TIMESTAMP);
@@ -65,13 +75,13 @@ def init_website_db(db_con):
     logger.debug('init_website_db')
 
 
-def insert_website_page_in_db(muse_id, url, page_content, response_status, session_id, session_ts, db_conn):
+def insert_website_page_in_db(muse_id, url, page_content, response_status, session_id, session_ts, depth, db_conn):
     c = db_conn.cursor()
-    sql = '''INSERT INTO web_pages_dump(url, url_domain, muse_id, page_content, session_id, session_ts)
-              VALUES(?,?,?,?,?,?) '''
+    sql = '''INSERT INTO web_pages_dump(url, url_domain, muse_id, page_content, page_content_length, depth, session_id, session_ts)
+              VALUES(?,?,?,?,?,?,?,?) '''
     cur = db_conn.cursor()
     
-    cur.execute(sql, [url, get_url_domain(url), muse_id, page_content, session_id, session_ts])
+    cur.execute(sql, [url, get_url_domain(url), muse_id, page_content, len(page_content), depth, session_id, session_ts])
     db_conn.commit()
 
 
@@ -80,7 +90,7 @@ class WebsiteSpider(CrawlSpider):
     Simple scraper
     https://docs.scrapy.org/en/latest/
     """
-    custom_settings = {'DOWNLOAD_DELAY': 1, 'DEPTH_LIMIT': 3}
+    custom_settings = {'DOWNLOAD_DELAY': .5, 'DEPTH_LIMIT': 2}
     name = 'website_scraper'
     rules = [
         Rule(LinkExtractor(unique=True), callback='parse', follow=True),
@@ -91,21 +101,24 @@ class WebsiteSpider(CrawlSpider):
         html = response.body
         url = response.url
         assert self.db_con
+        depth = response.meta['depth']
+        assert depth >= 1
         scraping_session_id = self.session_id
         scraping_session_ts = self.session_ts
         logger.debug('URL ' + url)
-        insert_website_page_in_db(self.muse_id, url, html, response.status, self.session_id, self.session_ts, self.db_con)
+        insert_website_page_in_db(self.muse_id, url, html, response.status, self.session_id, self.session_ts, depth, self.db_con)
 
 
-def scrape_website_scrapy(muse_id, start_url, session_id, session_ts, db_con, app_settings):
+def scrape_website_scrapy(crawler_process, muse_id, start_url, session_id, session_ts, db_con, app_settings):
     logger.debug("scrape_website_scrapy: "+muse_id+' '+start_url)
     assert muse_id
+    assert start_url
     # find allowed domains
     allowed_domains = app_settings['scraper']['allowed_domains']
     allowed_domains.append(get_url_domain(start_url))
     assert len(allowed_domains)>0
-    # start scraper
-    process = CrawlerProcess()
-    process.crawl(WebsiteSpider, session_id=session_id, muse_id=muse_id, allowed_domains=allowed_domains,
-        start_urls=[start_url], db_con=db_con, session_ts=session_ts)
-    process.start()
+    
+    # scrape
+    crawler_process.crawl(WebsiteSpider, session_id=session_id, muse_id=muse_id, 
+        allowed_domains=allowed_domains, start_urls=[start_url], 
+        db_con=db_con, session_ts=session_ts)
