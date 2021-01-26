@@ -46,8 +46,18 @@ def cleanup():
 
 
 def load_input_museums():
-    df = pd.read_csv('data/museums/museum_names_and_postcodes-2020-01-13.csv')
+    df = pd.read_csv('data/museums/museum_names_and_postcodes-2020-01-26.tsv', sep='\t')
+    df = exclude_closed(df)
+    if(pd.Series(df["Museum_Name"]).is_unique):
+        print("All museum names unique.")
+    else:
+        print("Duplicate museum names exist.")
     print("loaded museums:",len(df))
+    return df
+
+def exclude_closed(df):
+    df=df[df.year_closed == '9999:9999']
+    print(df)
     return df
 
 # %% Main
