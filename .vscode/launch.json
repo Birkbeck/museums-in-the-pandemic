@@ -15,7 +15,7 @@
     ],
     "compounds": [
         {
-            "name": "Compound",
+            "name": "run_multiple_examples",
             "configurations": ["scrape_websites"]
         }
     ]
