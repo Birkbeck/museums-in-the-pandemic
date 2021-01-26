@@ -1,0 +1,6 @@
+{
+  "_comment": "MIP configuration file",
+  "_date": "2021",
+  "_author": "Andrea Ballatore et al",
+  "scraper": {"allowed_domains":["twitter.com","facebook.com"]}
+}

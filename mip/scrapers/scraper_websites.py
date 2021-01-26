@@ -13,67 +13,99 @@ import pandas as pd
 import numpy as np
 from urllib.parse import urlparse
 from db.db import open_sqlite, create_page_dump
+# scrapy imports
 import scrapy
 from scrapy.crawler import CrawlerProcess
+from scrapy.linkextractors import LinkExtractor
+from scrapy.spiders import CrawlSpider, Rule
+from utils import get_url_domain, get_app_settings
 
 import logging
 logger = logging.getLogger(__name__)
 
 def scrape_websites(museums_df):
-    """ """
+    """ Main """
     print("scrape_websites", len(museums_df))
-
+    app_settings = get_app_settings()
+    
+    # set up local DB
     db_fn = 'tmp/websites.db'
     db = open_sqlite(db_fn)
-    create_page_dump(db)
-    # generate session for scraping
+    init_website_db(db)
+
+    # generate session and timestamp for scraping
     session_id = str(uuid.uuid1())
+    ts = datetime.datetime.now()
     logger.info("scraping session_id: "+session_id)
 
-    start_scrapy(db, session_id)
-    return
-
-    #sample_df = pd.read_csv("data/museums/mip_data_sample_2020_01.tsv", sep='\t')
-    #print("sample_df", len(sample_df))
-
-    #for i in sample_df.index:
-    #    row = sample_df.loc[i]
-    #    scrape_website(row.mm_id, row.mm_name, row.website)
-
+    # load input data
+    sample_df = pd.read_csv("data/museums/mip_data_sample_2020_01.tsv", sep='\t')
+    logger.debug("sample_df", len(sample_df))
     
-def scrape_website(muse_id, muse_name, url):
-    assert muse_id
-    assert muse_name
-    assert url
-    print("scrape_website",url)
+    # scrape all
+    for i in sample_df.index:
+        row = sample_df.loc[i]
+        scrape_website_scrapy(row.mm_id, row.website, session_id, ts, db, app_settings)
 
 
-class WebsiteSpider(scrapy.Spider):
+def init_website_db(db_con):
+    c = db_con.cursor()
+
+    # Create table
+    c.execute('''CREATE TABLE IF NOT EXISTS web_pages_dump 
+            (url text NOT NULL,
+            url_domain text NOT NULL,
+            muse_id text NOT NULL, 
+            page_content text NOT NULL,
+            session_id text NOT NULL,
+            session_ts DATETIME NOT NULL,
+            ts DATETIME DEFAULT CURRENT_TIMESTAMP);
+            ''')
+    db_con.commit()
+    logger.debug('init_website_db')
+
+
+def insert_website_page_in_db(muse_id, url, page_content, response_status, session_id, session_ts, db_conn):
+    c = db_conn.cursor()
+    sql = '''INSERT INTO web_pages_dump(url, url_domain, muse_id, page_content, session_id, session_ts)
+              VALUES(?,?,?,?,?,?) '''
+    cur = db_conn.cursor()
+    
+    cur.execute(sql, [url, get_url_domain(url), muse_id, page_content, session_id, session_ts])
+    db_conn.commit()
+
+
+class WebsiteSpider(CrawlSpider):
     """ 
+    Simple scraper
     https://docs.scrapy.org/en/latest/
     """
-    def __init__(self, category=None, *args, **kwargs):
-        super(WebsiteSpider, self).__init__(*args, **kwargs)
-    
     custom_settings = {'DOWNLOAD_DELAY': 1, 'DEPTH_LIMIT': 3}
-    name = 'museum_website_scraper'
-    
-    #def start_requests(self):
-    #    logger.debug("Museum id:"+self.muse_id)
-    #    yield scrapy.Request(url) #, headers=headers, params=params,callback = self.parse)
-    
-    def parse(self,response):
-        # write result in DB
+    name = 'website_scraper'
+    rules = [
+        Rule(LinkExtractor(unique=True), callback='parse', follow=True),
+    ]
+
+    def parse(self, response):
+        # call back from scraper
         html = response.body
         url = response.url
-        #url_exists(google_db_fn, )
-        muse_id = self.muse_id
         assert self.db_con
-        scrape_session_id = self.session_id
-        # TODO: insert scraped page
+        scraping_session_id = self.session_id
+        scraping_session_ts = self.session_ts
+        logger.debug('URL ' + url)
+        insert_website_page_in_db(self.muse_id, url, html, response.status, self.session_id, self.session_ts, self.db_con)
 
 
-def start_scrapy(db_con, session_id):
+def scrape_website_scrapy(muse_id, start_url, session_id, session_ts, db_con, app_settings):
+    logger.debug("scrape_website_scrapy: "+muse_id+' '+start_url)
+    assert muse_id
+    # find allowed domains
+    allowed_domains = app_settings['scraper']['allowed_domains']
+    allowed_domains.append(get_url_domain(start_url))
+    assert len(allowed_domains)>0
+    # start scraper
     process = CrawlerProcess()
-    process.crawl(WebsiteSpider, session_id=session_id, muse_id='test', start_urls=['https://www.bbc.co.uk/'], db_con=db_con)
+    process.crawl(WebsiteSpider, session_id=session_id, muse_id=muse_id, allowed_domains=allowed_domains,
+        start_urls=[start_url], db_con=db_con, session_ts=session_ts)
     process.start()

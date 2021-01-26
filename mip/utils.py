@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
-
+from urllib.parse import urlparse
+import os
 import logging
+import json
 logger = logging.getLogger(__name__)
 
 """ 
@@ -56,6 +58,12 @@ def _is_nan(*objs):
         if not b: return False
     return True
 
+def get_app_settings():
+    arr = os.listdir('.')
+    with open('mip/app_settings.json') as json_file:
+        data = json.load(json_file)
+
+    return data
 
 def _is_number(*objs):
     for i in range(len(objs)):
@@ -96,6 +104,10 @@ def _write_str_to_file(s, fn, bGzip=False):
             text_file.write(s)
     log.info(str(len(s)) + " chars written in " + fn)
 
+def get_url_domain(url):
+    assert url
+    dom = urlparse(url).netloc
+    return dom
 
 def _wrap_cdata_text(s):
     ss = "<![CDATA[\n" + s + "\n]]>"
@@ -285,3 +297,4 @@ class StopWatch(object):
         self._tcur = datetime.now()
         msg = "> SW [" + self._desc + " " + desc + "] t=" + str(t)[:-3]
         return msg
+
