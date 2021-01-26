@@ -383,6 +383,9 @@ def click_on_google_eula(web):
     web.press(web.Key.ENTER)
     random_sleep(0,1)
 
+
+
+
 def restart_browser(web):
     web.quit()
 
@@ -408,7 +411,8 @@ def scrape_google_page(web, search_string, target, connection):
     found = False
     
     queryurl = gen_google_url(search_string)
-    if(url_exists(google_db_fn, queryurl)==False):
+    con = sqlite3.connect(google_db_fn)
+    if(url_exists(con, queryurl)==False):
         while not found:
             try: 
                 
