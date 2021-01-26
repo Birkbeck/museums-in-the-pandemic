@@ -107,6 +107,7 @@ def _write_str_to_file(s, fn, bGzip=False):
 def get_url_domain(url):
     assert url
     dom = urlparse(url).netloc
+    dom = dom.replace("www.","")
     return dom
 
 def _wrap_cdata_text(s):
