@@ -16,7 +16,7 @@ from scrapers.scraper_websites import scrape_websites
 import logging
 logger = logging.getLogger(__name__)
 
-COMMANDS = ["help","tests","scrape_google","extract_google",'scrape_twitter','scrape_websites']
+COMMANDS = ["help","tests","scrape_google","extract_google",'scrape_twitter','scrape_websites','analyse_websites']
 cmd = None
 
 # %% Operations
@@ -97,6 +97,11 @@ def main():
             print("scrape_websites")
             df = load_input_museums()
             scrape_websites(df)
+
+        if cmd == "analyse_websites":
+            print("analyse_websites")
+            df = load_input_museums()
+            # TODO
 
         if cmd == "tests":
             print("run tests")
