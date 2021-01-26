@@ -39,17 +39,18 @@ def scrape_websites(museums_df):
     logger.info("scraping session_id: "+session_id)
 
     # load input data
-    sample_df = pd.read_csv("data/museums/mip_data_sample_2020_01.tsv", sep='\t').head(4) # DEBUG
+    sample_df = pd.read_csv("data/museums/mip_data_sample_2020_01.tsv", sep='\t') #.head(4) # DEBUG
     logger.debug("sample_df", len(sample_df))
     
     # start crawler
     crawler_process = CrawlerProcess()
 
-    # scrape all
+    # add all scrapers 
     for i in sample_df.index:
         row = sample_df.loc[i]
         assert row.mm_id
         if isinstance(row.website, str) and len(row.website)>5:
+            # valid URL
             scrape_website_scrapy(crawler_process, row.mm_id, row.website, session_id, ts, db, app_settings)
         else:
             logger.debug("empty URL for museum"+row.mm_id)
