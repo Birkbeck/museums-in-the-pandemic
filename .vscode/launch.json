@@ -19,6 +19,14 @@
             "program": "mip/app.py",
             "console": "integratedTerminal",
             "args": ["an_websites"]
+        },
+        {
+            "name": "tests",
+            "type": "python",
+            "request": "launch",
+            "program": "mip/app.py",
+            "console": "integratedTerminal",
+            "args": ["tests"]
         }
     ],
     "compounds": [

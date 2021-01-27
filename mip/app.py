@@ -14,6 +14,9 @@ from scrapers.scraper_google_selenium import *
 from scrapers.scraper_twitter import scrape_twitter
 from scrapers.scraper_websites import scrape_websites
 from analytics.an_websites import extract_text_from_websites
+import unittest
+import tests
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -104,8 +107,8 @@ def main():
             extract_text_from_websites(df)
 
         if cmd == "tests":
-            print("run tests")
-            # TODO: let's put tests here
+            logger.info("run tests")
+            unittest.main()
 
     cleanup()
     logger.info(sw.tick("OK"))
