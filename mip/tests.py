@@ -25,8 +25,9 @@ class TestWebsiteScraper(unittest.TestCase):
         user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36"
         #user_agent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.131 Safari/537.36"
 
-        for url in ['https://museumofcarpet.org','https://waterandsteam.org.uk/']:
+        for url in ['https://museumofcarpet.org','https://northhertsmuseum.org/','https://waterandsteam.org.uk/']:
+            print("test:",url)
             req = urllib.request.Request(url, headers={'User-Agent': user_agent})
-            response = urllib.request.urlopen(req) #, timeout=5
+            response = urllib.request.urlopen(req)
             new_url = response.geturl()
             print(new_url)
