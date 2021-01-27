@@ -47,7 +47,7 @@ def scrape_websites(museums_df):
     logger.debug("sample_df" + str(len(sample_df)))
 
     # DEBUG problem cases
-    sample_df = sample_df[sample_df.mm_id.isin(['mm.New.102','mm.domus.WM042', 'mm.New.39'])]
+    #sample_df = sample_df[sample_df.mm_id.isin(['mm.aim.0172'])] #'mm.New.102','mm.domus.WM042', 'mm.New.39'
     
     # start crawler
     crawler_process = CrawlerProcess()
@@ -159,13 +159,16 @@ class WebsiteSpider(CrawlSpider):
 def check_for_url_redirection(url):
     """ Useful to include redirected domain for scraping """
     assert url
-    # user agent must be defined, otherwise some sites says 403
-    req = urllib.request.Request(url, headers={'User-Agent': user_agent})
-    response = urllib.request.urlopen(req, timeout=5)
-    new_url = response.geturl()
-    redirected = new_url != url
-    if redirected:
-        return new_url
+    try:
+        # user agent must be defined, otherwise some sites says 403
+        req = urllib.request.Request(url, headers={'User-Agent': user_agent})
+        response = urllib.request.urlopen(req) #, timeout=5
+        new_url = response.geturl()
+        redirected = new_url != url
+        if redirected:
+            return new_url
+    except:
+        logger.warning("MIP check_for_url_redirection: could not check redirection for "+url)
     return None
 
 
