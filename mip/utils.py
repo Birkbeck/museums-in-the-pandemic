@@ -3,8 +3,8 @@
 from datetime import datetime
 from urllib.parse import urlparse
 import os
-import logging
 import json
+import logging
 logger = logging.getLogger(__name__)
 
 """ 

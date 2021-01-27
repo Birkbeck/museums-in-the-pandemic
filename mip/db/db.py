@@ -7,12 +7,15 @@ DB management
 import sqlite3
 import pandas as pd
 
+
 def open_sqlite(db_fn):
+    """ Open connection to sqlite local DB """
     conn = sqlite3.connect(db_fn)
     return conn
 
 
 def create_page_dump(db_conn):
+    """ create table for Google page dump """
     c = db_conn.cursor()
 
     # Create table
@@ -38,8 +41,14 @@ def insert_google_page(db_conn, url, search, search_type, muse_id, page_content)
     db_conn.commit()
     return db_conn
 
-def extract_google_urls(db_conn):
-    return db_conn
+
+def run_select_sql(sql, db_conn):
+    """ Run SQL select on db and return data frame. """
+    assert sql
+    assert db_conn
+    df = pd.read_sql(sql, db_conn)
+    return df
+
 
 def url_exists(con, targeturl):
     

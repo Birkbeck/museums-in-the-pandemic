@@ -13,10 +13,11 @@ from utils import StopWatch
 from scrapers.scraper_google_selenium import *
 from scrapers.scraper_twitter import scrape_twitter
 from scrapers.scraper_websites import scrape_websites
+from analytics.an_websites import extract_text_from_websites
 import logging
 logger = logging.getLogger(__name__)
 
-COMMANDS = ["help","tests","scrape_google","extract_google",'scrape_twitter','scrape_websites','analyse_websites']
+COMMANDS = ["help","tests","scrape_google","extract_google",'scrape_twitter','scrape_websites','an_websites']
 cmd = None
 
 # %% Operations
@@ -24,7 +25,7 @@ cmd = None
 def init_app():
     print("Init App")
     # set up folders
-    folders = ['tmp','tmp/logs']
+    folders = ['tmp','tmp/logs','tmp/analytics']
     for f in folders:
         if not os.path.exists(f):
             os.makedirs(f)
@@ -42,7 +43,7 @@ def get_log_file_name():
     return fn
     
 def cleanup():
-    print("Cleanup")
+    logger.info("Cleanup")
 
 
 def load_input_museums():
@@ -51,7 +52,6 @@ def load_input_museums():
     if(pd.Series(df["Museum_Name"]).is_unique):
         print("All museum names unique.")
     else:
-        
         raise ValueError("Duplicate museum names exist.")
     print("loaded museums:",len(df))
     return df
@@ -68,7 +68,7 @@ def main():
     logger.info("\n"*3)
     logger.info("== MIP App ==")
     logger.info("Parameters: " + str(sys.argv[1:]))
-    logger.info("N CPUs =", os.cpu_count())
+    logger.info("N CPUs =" + str(os.cpu_count()))
 
     # check input
     cmd_list = sys.argv[1:]
@@ -98,10 +98,10 @@ def main():
             df = load_input_museums()
             scrape_websites(df)
 
-        if cmd == "analyse_websites":
-            print("analyse_websites")
+        if cmd == "an_websites":
+            print("an_websites")
             df = load_input_museums()
-            # TODO
+            extract_text_from_websites(df)
 
         if cmd == "tests":
             print("run tests")

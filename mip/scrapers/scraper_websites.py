@@ -143,9 +143,12 @@ class WebsiteSpider(CrawlSpider):
 
 
 def scrape_website_scrapy(crawler_process, muse_id, start_url, session_id, session_ts, db_con, app_settings):
-    logger.debug("scrape_website_scrapy: "+muse_id+' '+start_url)
     assert muse_id
     assert start_url
+    logger.debug("scrape_website_scrapy: "+muse_id+' '+start_url)
+    muse_id = muse_id.strip()
+    start_url = start_url.strip()
+    
     # find allowed domains
     allowed_domains = app_settings['scraper']['allowed_domains']
     allowed_domains.append(get_url_domain(start_url))
