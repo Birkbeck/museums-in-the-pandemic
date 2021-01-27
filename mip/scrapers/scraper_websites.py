@@ -10,6 +10,7 @@ import random
 import calendar
 import datetime
 import pandas as pd
+import urllib
 import numpy as np
 from urllib.parse import urlparse
 from db.db import open_sqlite, create_page_dump
@@ -22,6 +23,9 @@ from utils import get_url_domain, get_app_settings
 
 import logging
 logger = logging.getLogger(__name__)
+
+page_counter = 0
+user_agent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.131 Safari/537.36"
 
 def scrape_websites(museums_df):
     """ Main """
@@ -40,7 +44,10 @@ def scrape_websites(museums_df):
 
     # load input data
     sample_df = pd.read_csv("data/museums/mip_data_sample_2020_01.tsv", sep='\t') #.sample(5) # DEBUG
-    logger.debug("sample_df", len(sample_df))
+    logger.debug("sample_df" + str(len(sample_df)))
+
+    # DEBUG problem cases
+    sample_df = sample_df[sample_df.mm_id.isin(['mm.New.102','mm.domus.WM042', 'mm.New.39'])]
     
     # start crawler
     crawler_process = CrawlerProcess()
@@ -56,6 +63,9 @@ def scrape_websites(museums_df):
             logger.debug("empty URL for museum"+row.mm_id)
     # start crawling
     crawler_process.start()
+    
+    global page_counter
+    logger.info("Scraped "+str(page_counter)+" pages.")
 
 
 def init_website_db(db_con):
@@ -108,7 +118,7 @@ class WebsiteSpider(CrawlSpider):
     https://docs.scrapy.org/en/latest/
     """
     custom_settings = {
-        'USER_AGENT': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
+        'USER_AGENT': user_agent,
         'DOWNLOAD_DELAY': .5, 
         'DEPTH_LIMIT': 2
     }
@@ -118,6 +128,8 @@ class WebsiteSpider(CrawlSpider):
     ]
 
     def parse(self, response):
+        global page_counter
+        page_counter += 1
         # call back from scraper
         html = response.body
         url = response.url
@@ -129,17 +141,32 @@ class WebsiteSpider(CrawlSpider):
         b_base_url = url in self.start_urls
 
         # check if url is in allowed domains
-        b_found = False
-        for dom in self.allowed_domains:
+        b_allowed = True #False # DEBUG
+        for dom in self.donotfollow_domains:
             if dom in url:
-                b_found = True
-        if b_found:
+                b_allowed = False
+        del dom
+
+        if b_allowed:
             # valid URL, save it in DB
             insert_website_page_in_db(self.muse_id, url, b_base_url, html, response.status, self.session_id, 
                 self.session_ts, depth, self.db_con)
             logger.debug('url saved: ' + url)
+            logger.debug('page_counter: ' + str(page_counter))
         else:
             logger.debug("MIP debug: url "+url+" is not allowed. Skipping.")
+
+def check_for_url_redirection(url):
+    """ Useful to include redirected domain for scraping """
+    assert url
+    # user agent must be defined, otherwise some sites says 403
+    req = urllib.request.Request(url, headers={'User-Agent': user_agent})
+    response = urllib.request.urlopen(req, timeout=5)
+    new_url = response.geturl()
+    redirected = new_url != url
+    if redirected:
+        return new_url
+    return None
 
 
 def scrape_website_scrapy(crawler_process, muse_id, start_url, session_id, session_ts, db_con, app_settings):
@@ -149,12 +176,19 @@ def scrape_website_scrapy(crawler_process, muse_id, start_url, session_id, sessi
     muse_id = muse_id.strip()
     start_url = start_url.strip()
     
-    # find allowed domains
-    allowed_domains = app_settings['scraper']['allowed_domains']
-    allowed_domains.append(get_url_domain(start_url))
+    # find allowed domains, including redirections
+    allowed_domains = [get_url_domain(start_url)]
+    start_urls = [start_url]
+    redirect_url = check_for_url_redirection(start_url)
+    if redirect_url:
+        start_urls.append(redirect_url)
+        allowed_domains.append(get_url_domain(redirect_url))
     assert len(allowed_domains)>0
-    
+    assert len(start_urls)>0
+    donotfollow_domains = app_settings['website_scraper']['donotfollow_domains']
     # scrape
     crawler_process.crawl(WebsiteSpider, session_id=session_id, muse_id=muse_id, 
-        allowed_domains=allowed_domains, start_urls=[start_url], 
+        allowed_domains=allowed_domains, 
+        donotfollow_domains=donotfollow_domains,
+        start_urls=start_urls,
         db_con=db_con, session_ts=session_ts)

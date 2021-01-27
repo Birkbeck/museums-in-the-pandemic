@@ -2,5 +2,7 @@
   "_comment": "MIP configuration file",
   "_date": "2021",
   "_author": "Andrea Ballatore et al",
-  "scraper": {"allowed_domains":[]}
+  "website_scraper": {"donotfollow_domains":
+    ["facebook.com", "tripadvisor.", "twitter.com",
+    "instagram.","youtube.","pinterest."]}
 }
