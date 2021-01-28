@@ -23,6 +23,20 @@ class TestVPN(unittest.TestCase):
         vpn_random_region()
 
 
+class TestTwitterScraper(unittest.TestCase):
+    def setUp(self):        
+        self.somevar = 0
+
+    def test_scrape_twitter(self):
+        from scrapers.scraper_twitter import scrape_twitter_account
+
+        urls = ["https://twitter.com/britishmuseum"]
+        session_id = "test"
+        muse_id = "fake_id"
+        for u in urls:
+            html = scrape_twitter_account(u, muse_id, session_id)
+
+
 class TestWebsiteScraper(unittest.TestCase):
     def setUp(self):        
         self.somevar = 0

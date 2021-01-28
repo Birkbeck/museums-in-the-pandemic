@@ -10,11 +10,15 @@ def get_all_tests():
     test_classes = []
     
     # import all tests
-    from tests.test_scrapers import TestWebsiteScraper, TestVPN
+    from tests.test_scrapers import TestWebsiteScraper, TestVPN, TestTwitterScraper
     
+    # ========================================================
     # add tests to run here
-    test_classes.append(TestWebsiteScraper)
-    test_classes.append(TestVPN)
+    # ========================================================
+    test_classes.append(TestTwitterScraper)
+    #test_classes.append(TestVPN)
+    #test_classes.append(TestWebsiteScraper)
+    #test_classes.append(TestVPN)
     
     # build suite
     suite = unittest.TestSuite()
