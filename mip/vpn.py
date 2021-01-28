@@ -69,7 +69,7 @@ def run_os_command(cmd):
         os.system(cmd)
         os.chdir(maindir)
         os.system('cd ..')
-        return ""
+        return None
 
 
 
