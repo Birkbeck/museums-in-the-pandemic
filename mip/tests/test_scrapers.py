@@ -5,11 +5,8 @@ logger = logging.getLogger(__name__)
 
 import unittest
 import urllib
-from vpn import *
 
-""" 
-Unit Tests for all classes
-"""
+
 class TestVPN(unittest.TestCase):
     def setUp(self):        
         self.somevar = 0
@@ -21,10 +18,10 @@ class TestVPN(unittest.TestCase):
         assert 1 + 1 == 2
 
     def test_vpn(self):
-
         print("testing vpn")
         cmd = ""
         vpn_random_region()
+
 
 class TestWebsiteScraper(unittest.TestCase):
     def setUp(self):        
@@ -37,7 +34,6 @@ class TestWebsiteScraper(unittest.TestCase):
         assert 1 + 1 == 2
 
     def test_problematic_sites(self):
-
         user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36"
         #user_agent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.131 Safari/537.36"
 

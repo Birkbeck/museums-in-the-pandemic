@@ -4,21 +4,23 @@
 
 # %% Setup
 
+import logging
+logger = logging.getLogger(__name__)
+
 import os
 import logging
 import sys
 import datetime
 import pandas as pd
 from utils import StopWatch
+
 from scrapers.scraper_google_selenium import *
 from scrapers.scraper_twitter import scrape_twitter
 from scrapers.scraper_websites import scrape_websites
 from analytics.an_websites import extract_text_from_websites
-import unittest
-import tests
 
-import logging
-logger = logging.getLogger(__name__)
+from tests.run_tests import get_all_tests
+import unittest
 
 COMMANDS = ["help","tests","scrape_google","extract_google",'scrape_twitter','scrape_websites','an_websites']
 cmd = None
@@ -107,8 +109,9 @@ def main():
             extract_text_from_websites(df)
 
         if cmd == "tests":
-            logger.info("run tests")
-            unittest.main()
+            logger.info("tests")
+            unittest.TextTestRunner().run(get_all_tests())
+
 
     cleanup()
     logger.info(sw.tick("OK"))
@@ -116,3 +119,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    
