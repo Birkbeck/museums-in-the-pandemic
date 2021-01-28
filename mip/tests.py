@@ -5,10 +5,26 @@ logger = logging.getLogger(__name__)
 
 import unittest
 import urllib
+from vpn import *
 
 """ 
 Unit Tests for all classes
 """
+class TestVPN(unittest.TestCase):
+    def setUp(self):        
+        self.somevar = 0
+
+    def test_1(self):
+        assert 1 + 1 == 2
+
+    def test_2(self):
+        assert 1 + 1 == 2
+
+    def test_vpn(self):
+
+        print("testing vpn")
+        cmd = ""
+        vpn_random_region()
 
 class TestWebsiteScraper(unittest.TestCase):
     def setUp(self):        
