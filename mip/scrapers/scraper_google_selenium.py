@@ -20,6 +20,7 @@ import numpy as np
 from webbot import Browser
 from urllib.parse import urlparse
 from db.db import *
+from vpn import *
 
 import logging
 logger = logging.getLogger(__name__)
@@ -307,6 +308,7 @@ def get_timestamp():
 
 
 def get_fb_page(web, url):
+    
     print("get_fb_page", url)
     while True:
         try:
@@ -411,8 +413,8 @@ def scrape_google_page(web, search_string, target, connection):
     found = False
     
     queryurl = gen_google_url(search_string)
-    con = sqlite3.connect(google_db_fn)
-    if(url_exists(con, queryurl)==False):
+    #con = sqlite3.connect(google_db_fn)
+    if(url_exists(connection, queryurl)==False):
         while not found:
             try: 
                 
@@ -420,16 +422,16 @@ def scrape_google_page(web, search_string, target, connection):
                 print("HTML size",len(html))
                 found = True
                 insert_google_page(connection, queryurl, search_string, target, 'MUSE_ID_TODO', html)
-                return
+                return web
             except Exception as e:
                 print(e)
                 print('failed to download page, changing VPN')
                 web.quit()
-                #vpn_random_region()
-                random_sleep(1,1)
+                vpn_random_region()
+                random_sleep(2,2)
                 web = init_google_browser()
                 random_sleep(2,2)
-    return None
+    return web
 
 def scrape_google_museum_names(topicsdf):
     # NOTE: this function needs PIA VPN to work
@@ -439,6 +441,7 @@ def scrape_google_museum_names(topicsdf):
     create_page_dump(db)
     # init browser and google settings
     web = init_google_browser()
+    #con = sqlite3.connect(google_db_fn)
 
     # scan place names
     for index, row in topicsdf.iterrows():
@@ -450,17 +453,17 @@ def scrape_google_museum_names(topicsdf):
         #if index > 1: break # DEBUG
         
         # 1 WEBSITE
-        scrape_google_page(web, query, target, db)
+        web=scrape_google_page(web, query, target, db)
         
         # 2 TWITTER
         twquery = query + " site:twitter.com"
         target='twitter'
-        scrape_google_page(web, twquery, target, db)
+        web=scrape_google_page(web, twquery, target, db)
         
         # 3 FACEBOOK
         fbquery = query + " site:en-gb.facebook.com"
         target = 'facebook'
-        scrape_google_page(web, fbquery, target, db)
+        web=scrape_google_page(web, fbquery, target, db)
         
     web.quit()
     print("Google scraping complete.")

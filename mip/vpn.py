@@ -8,30 +8,34 @@ TODO: write instructions for VPN set up here
 """
 
 import logging
+import os
+import random
+piadir = 'C:\Program Files\Private Internet Access'
+
 logger = logging.getLogger(__name__)
 
 vpn_servers = ['uk-manchester','uk-london','uk-southampton','ireland','belgium',
                 'isle-of-man','luxembourg','austria']
 
-vpn_os = 'mac' # 'win'
+vpn_os = 'win' # 'win'
 
-assert VPN_OS in ['mac','win']
+assert vpn_os in ['mac','win']
 
 # %% Mac functions
 def vpn_off():
-    if vpn_os == 'mac':
+    #if vpn_os == 'mac':
         ret = run_os_command('piactl disconnect')
         print(ret)
 
 def vpn_on():
-    if vpn_os == 'mac':
+    #if vpn_os == 'mac':
         ret = run_os_command('piactl connect')
         print(ret)
 
 def vpn_go_region(reg):
-    assert reg in VPN_SERVERS
-    if vpn_os == 'mac':
-        ret = run_os_command('piactl set region '+reg)
+    assert reg in vpn_servers
+    #if vpn_os == 'mac':
+    ret = run_os_command('piactl set region '+reg)
     print(">> vpn_go_region:",reg)
     return ret
 
@@ -45,7 +49,7 @@ def get_url_vpn(url):
     return r.text
 
 def vpn_is_on():
-    if vpn_os == 'mac':
+    #if vpn_os == 'mac':
         ret = run_os_command('piactl get connectionstate') == 'Connected'
         return ret
 
@@ -58,6 +62,16 @@ def run_os_command(cmd):
         ret = subprocess.check_output(cmd, shell=True)
         ret = ret.decode("utf-8").strip()
         return ret
+
+    if vpn_os == 'win':
+        maindir = os.path.dirname(os.path.realpath(__file__))
+        os.chdir(piadir)
+        os.system(cmd)
+        os.chdir(maindir)
+        os.system('cd ..')
+        return ""
+
+
 
 
 # TODO: add commands for PIA on Windows
