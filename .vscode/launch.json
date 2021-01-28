@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
             "name": "scrape_websites",
             "type": "python",
@@ -27,6 +28,14 @@
             "program": "mip/app.py",
             "console": "integratedTerminal",
             "args": ["tests"]
+        },
+        {
+            "name": "scrape_google",
+            "type": "python",
+            "request": "launch",
+            "program": "mip/app.py",
+            "console": "integratedTerminal",
+            "args": ["scrape_google"]
         }
     ],
     "compounds": [
