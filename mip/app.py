@@ -15,7 +15,7 @@ import pandas as pd
 from utils import StopWatch
 
 from scrapers.scraper_google_selenium import *
-from scrapers.scraper_twitter import scrape_twitter
+from scrapers.scraper_twitter import scrape_twitter_account
 from scrapers.scraper_websites import scrape_websites
 from analytics.an_websites import extract_text_from_websites
 
