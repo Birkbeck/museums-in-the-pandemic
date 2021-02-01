@@ -3,6 +3,11 @@
 # MIP project
 
 # %% Setup
+#To Import twint from the mip_v1 environemnt terminal enter the following commands in the same precise order:
+#pip install twint
+#pip3 install --upgrade -e git+https://github.com/twintproject/twint.git@origin/master#egg=twint
+#pip3 install --upgrade aiohttp_socks
+
 
 import logging
 logger = logging.getLogger(__name__)
