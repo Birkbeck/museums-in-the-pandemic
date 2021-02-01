@@ -447,7 +447,8 @@ def scrape_google_museum_names(topicsdf):
     for index, row in topicsdf.iterrows():
         muse_name = row[0]
         #print(muse_name)
-        assert len(muse_name) > 5
+        if(len(muse_name) < 5):
+            muse_name = muse_name+" museum"
         query = muse_name.strip()
         target = 'website'
         #if index > 1: break # DEBUG
@@ -456,14 +457,14 @@ def scrape_google_museum_names(topicsdf):
         web=scrape_google_page(web, query, target, db)
         
         # 2 TWITTER
-        twquery = query + " site:twitter.com"
-        target='twitter'
-        web=scrape_google_page(web, twquery, target, db)
+        #twquery = query + " site:twitter.com"
+        #target='twitter'
+        #web=scrape_google_page(web, twquery, target, db)
         
         # 3 FACEBOOK
-        fbquery = query + " site:en-gb.facebook.com"
-        target = 'facebook'
-        web=scrape_google_page(web, fbquery, target, db)
+        #fbquery = query + " site:en-gb.facebook.com"
+        #target = 'facebook'
+        #web=scrape_google_page(web, fbquery, target, db)
         
     web.quit()
     print("Google scraping complete.")

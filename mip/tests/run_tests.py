@@ -15,8 +15,9 @@ def get_all_tests():
     # ========================================================
     # add tests to run here
     # ========================================================
+    test_classes.append(TestVPN)
     test_classes.append(TestTwitterScraper)
-    #test_classes.append(TestVPN)
+    
     #test_classes.append(TestWebsiteScraper)
     #test_classes.append(TestVPN)
     
