@@ -273,6 +273,11 @@ def strh(n):
     return s
 
 
+def remove_empty_elem_from_list(l):
+    ll = [x for x in l if x != '' and x]
+    return ll
+
+
 def strmem(n):
     """ to string human (memory) """
     assert _is_number(n)
