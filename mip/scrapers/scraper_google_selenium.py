@@ -25,7 +25,7 @@ from vpn import *
 import logging
 logger = logging.getLogger(__name__)
 
-GOOGLE_PAUSE_SECS = 5
+GOOGLE_PAUSE_SECS = 2
 
 google_db_fn = 'tmp/google_pages.db'
 
