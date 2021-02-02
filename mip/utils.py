@@ -4,6 +4,7 @@ from datetime import datetime
 from urllib.parse import urlparse
 import os
 import json
+import re
 import logging
 logger = logging.getLogger(__name__)
 
@@ -270,6 +271,18 @@ def strh(n):
     """ to string human (generic number)"""
     assert _is_number(n)
     s = humanize.intcomma(n)
+    return s
+
+
+def remove_empty_elem_from_list(l):
+    ll = [x for x in l if x != '' and x]
+    return ll
+
+
+def remove_multiple_spaces_tabs(in_str):
+    s = re.sub("\s\s+", ' ', in_str.strip()) # spaces
+    s = re.sub("\t+", '\t', s) # tabs
+    s = re.sub("\n+", '\n', s) # new line
     return s
 
 

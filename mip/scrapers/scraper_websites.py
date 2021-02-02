@@ -60,7 +60,7 @@ def scrape_websites(museums_df):
             # valid URL
             scrape_website_scrapy(crawler_process, row.mm_id, row.website, session_id, ts, db, app_settings)
         else:
-            logger.debug("empty URL for museum"+row.mm_id)
+            logger.debug("MIP issue: empty URL for museum: "+row.mm_id)
     # start crawling
     crawler_process.start()
     
@@ -72,8 +72,9 @@ def init_website_db(db_con):
     c = db_con.cursor()
 
     # Create table
-    c.execute('''CREATE TABLE IF NOT EXISTS web_pages_dump 
-            (url text NOT NULL,
+    c.execute('''CREATE TABLE IF NOT EXISTS web_pages_dump (
+            page_id integer PRIMARY KEY AUTOINCREMENT,
+            url text NOT NULL,
             is_start_url boolean NOT NULL,
             url_domain text NOT NULL,
             muse_id text NOT NULL, 
@@ -83,7 +84,7 @@ def init_website_db(db_con):
             session_id text NOT NULL,
             session_ts DATETIME NOT NULL,
             ts DATETIME DEFAULT CURRENT_TIMESTAMP,
-            PRIMARY KEY(url,session_id));
+            UNIQUE(url, session_id))
             ''')
     db_con.commit()
     logger.debug('init_website_db')
