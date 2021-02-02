@@ -573,5 +573,5 @@ def extract_google_results():
         #print(google_df)
         outdf = pd.concat([outdf, google_df])
     
-    outdf.to_csv('tmp/google_extracted_results.csv', index=None)
+    outdf.to_csv('tmp/google_extracted_results.tsv', index=None, sep='\t')
     
