@@ -71,7 +71,6 @@ def load_extracted_museums():
     df = pd.read_csv('tmp/google_extracted_results.tsv', sep='\t')
     df = exclude_closed(df)
     print(df.columns.values)
-    array=['3','2','1']
     df=df[df.google_rank<4]
     df.to_csv('tmp/google_extracted_results_top3.tsv', index=None, sep='\t')
     return None
