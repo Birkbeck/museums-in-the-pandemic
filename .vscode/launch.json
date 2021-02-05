@@ -40,7 +40,7 @@
             "args": ["scrape_google"]
         },
         {
-            "name": "extract_google_results",
+            "name": "extract_google",
             "type": "python",
             "request": "launch",
             "program": "mip/app.py",

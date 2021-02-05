@@ -27,7 +27,7 @@ from analytics.an_websites import analyse_museum_websites
 from tests.run_tests import get_all_tests
 import unittest
 
-COMMANDS = ["help","tests","scrape_google","extract_google",'scrape_twitter','scrape_websites','an_websites','extract_google_results']
+COMMANDS = ["help","tests","scrape_google","extract_google",'scrape_twitter','scrape_websites','an_websites']
 cmd = None
 
 # %% Operations
