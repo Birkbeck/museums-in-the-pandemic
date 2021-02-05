@@ -1,0 +1,50 @@
+google_rank	url	muse_id	Museum_Name	Valid					location	year_closed
+1	http://museweb.dcs.bbk.ac.uk/Museum/mm.mgs.371	mm.mgs.371	Tigh Hughag	false (and funny how its us) - they have no site					Manchester	9999:9999
+1	https://www.visit-nottinghamshire.co.uk/things-to-do/natural-history-museum-at-wollaton-hall-p684441	mm.domus.EM017	Nottingham Natural History Museum	False (Its 2nd and 3rd entry)					Holmfirth	9999:9999
+1	https://www.visitscotland.com/info/see-do/prestongrange-museum-p251071	mm.domus.SC274	Prestongrange Industrial Heritage Museum	False (its 4th)					Sheringham	9999:9999
+1	http://www.discoverbrentwood.co.uk/thedms.aspx?dms=3&venue=0223510	mm.domus.SE199	Brentwood Museum	false (its N2)					Stockbridge	9999:9999
+1	https://www.archdaily.com/913719/windermere-jetty-museum-carmody-groarke	mm.New.12	Windermere Jetty Museum	"False (its numbers 4 through 8 on the rankings, but when I did manual search from london its N 1"					Honiton	9999:9999
+1	https://poets.org/poem/shropshire-lad-xl	mm.aim.0528	Land of Lost Content	"False (they have no site, but sites have info on their current affairs)"					Tavistock	9999:9999
+1	https://discovernorthernireland.com/things-to-do/hezlett-house-p687301	mm.nimc.009	Hezlett House	true/false - hard to say whether this or the national trust page is their 'main' site					Woodstock	9999:9999
+1	https://elizabethgaskellhouse.co.uk/	mm.wiki.189	Elizabeth Gaskells House	TRUE					Smethwick	9999:9999
+1	http://www.summerwine-holmfirth.co.uk/	mm.wiki.385	Last Of The Summer Wine Exhibition	TRUE					Burton on Trent	9999:9999
+1	https://sheringhamsociety.com/peter-coke-shell-gallery/	mm.fcm.202	Peter Coke Shell Gallery	TRUE					Coventry	9999:9999
+1	https://www.armyflying.com/	mm.domus.SE003	Museum Of Army Flying	TRUE					Gosport	9999:9999
+1	https://www.honitonmuseum.co.uk/	mm.domus.SW093	Allhallows Museum	TRUE					Minehead	9999:9999
+1	http://www.morwellham-quay.co.uk/	mm.domus.SW068	Morwellham Quay Museum	TRUE					The Quay	9999:9999
+1	https://www.blenheimpalace.com/	mm.hha.017	Blenheim Palace	TRUE					Glasgow	9999:9999
+1	https://www.smethwick.org.uk/	mm.aim.0892	Smethwick Heritage Centre	TRUE					Ramsgate	9999:9999
+1	http://www.claymills.org.uk/	mm.ace.1288	Claymills Victorian Pumping Station	TRUE					nr Prestonpans	9999:9999
+1	https://www.coventrywatchmuseum.co.uk/	mm.aim.0236	Coventry Watch Museum	TRUE					South Shields	9999:9999
+1	https://www.english-heritage.org.uk/visit/places/fort-brockhurst/	mm.ace.1233	Fort Brockhurst Collections Access Centre	TRUE					Tain	9999:9999
+1	https://www.west-somerset-railway.co.uk/	mm.aim82NM.127	West Somerset Railway	TRUE					Wareham	9999:9999
+1	https://www.conwy.gov.uk/en/Resident/Libraries-Museums-and-Archives/Arts-and-Museums/Conwy-Mussel-Museum.aspx	mm.wiki.438	Conwy Mussel Museum	TRUE					Elgin	9999:9999
+1	https://womenslibrary.org.uk/	mm.mgs.314	Glasgow Womens Library	TRUE					Middlesbrough	9999:9999
+1	http://www.ramsgatetunnels.org/	mm.aim.0788	Ramsgate Tunnels	TRUE					Bangor	9999:9999
+1	https://arbeiaromanfort.org.uk/	mm.domus.NE033	Arbeia Roman Fort And Museum	TRUE					Lincoln	9999:9999
+1	https://www.tarbat-discovery.co.uk/	mm.mgs.282	Tarbat Discovery Centre	TRUE					West Mersea	9999:9999
+1	https://tankmuseum.org/	mm.domus.SW131	Tank Museum	TRUE					Craven Arms	9999:9999
+1	https://elginmuseum.org.uk/	mm.domus.SC126	Elgin Museum	TRUE					Kilgetty	9999:9999
+1	https://newhamgrangefarm.co.uk/	mm.domus.NE014	Newham Grange Farm Museum	TRUE					Denbigh	9999:9999
+1	https://www.bangor.ac.uk/community/museum.php.en	mm.domus.WA102	Bangor Art Collection	TRUE					Keighley	9999:9999
+1	https://www.lincolnshire.gov.uk/museumoflincolnshirelife	mm.domus.EM028	Museum Of Lincolnshire Life	TRUE					York	9999:9999
+1	https://www.merseamuseum.org.uk/	mm.domus.SE069	Mersea Island Museum	TRUE					London	9999:9999
+1	https://www.cresselly.com/	mm.hha.190	Cresselly	TRUE					London	9999:9999
+1	https://www.culture24.org.uk/wa000015	mm.domus.WA015	Denbigh Library Museum And Gallery	TRUE					High Wycombe	9999:9999
+1	http://www.kbmt.org.uk/	mm.aim.0496	Keighley Bus Museum	TRUE					Winchester	9999:9999
+1	https://www.nationaltrust.org.uk/nunnington-hall	mm.domus.YH158	Nunnington Hall	TRUE					Windermere	9999:9999
+1	http://pollockstoys.com/	mm.aim.0754	Pollocks Toy Museum	TRUE					London	9999:9999
+1	https://hac.org.uk/where-we-come-from/estate-treasures/treasures	mm.wiki.160	Honourable Artillery Company Museum	TRUE					West Kirby	9999:9999
+1	https://wycombemuseum.org.uk/	mm.domus.SE412	Wycombe Museum	TRUE					Wrexham	9999:9999
+1	https://www.hampshireculture.org.uk/westgate-museum	mm.domus.SE255	Westgate Museum	TRUE					Papplewick	9999:9999
+1	https://www.stpauls.co.uk/	mm.wiki.170	St Pauls Cathedral	TRUE					Nottingham	9999:9999
+1	https://www.westkirbymuseum.co.uk/	mm.aim.1304	West Kirby Museum	TRUE					Kingsbridge	9999:9999
+1	http://old.wrexham.gov.uk/english/heritage/wrexham_museum.htm	mm.domus.WA042	Wrexham County Borough Museum	TRUE					London	9999:9999
+1	https://www.historichouses.org/houses/papplewick-hall.html	mm.hha.101	Papplewick Hall	TRUE					Coleraine	9999:9999
+1	http://kingsbridgemuseum.org.uk/	mm.domus.SW027	Kingsbridge Cookworthy Museum	TRUE					Thirsk	9999:9999
+1	https://williammorrissociety.org/	mm.domus.SE423	Kelmscott House	TRUE					Chard	9999:9999
+1	https://www.sionhillhall.co.uk/	mm.domus.YH144	Sion Hill Hall	TRUE					Derby	9999:9999
+1	https://www.fordeabbey.co.uk/	mm.hha.044	Forde Abbey & Gardens	TRUE					Skerray by Thurso	9999:9999
+1	https://www.moirafurnace.org/	mm.ace.1236	Moira Furnace Museum	TRUE					Knowle	9999:9999
+1	https://www.nationaltrust.org.uk/baddesley-clinton	mm.ace.1086	Baddesley Clinton Hall	TRUE					Brentwood	9999:9999
+1	https://www.lsbu.ac.uk/student-life/facilities/facility-finder/borough-road-gallery	mm.wiki.151	Borough Road Gallery	TRUE					London	9999:9999
