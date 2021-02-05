@@ -41,6 +41,18 @@ def insert_google_page(db_conn, url, search, search_type, muse_id, page_content)
     db_conn.commit()
     return db_conn
 
+def insert_google_id(db_conn, musename, muse_id):
+    c = db_conn.cursor()
+    musename = musename.replace("'","''")
+    #musename = musename.replace('"','')
+    if "Search" in musename:
+        print("'")
+    sql ="UPDATE google_pages_dump SET muse_id='"+muse_id+"' WHERE search ='" +musename+"'"
+    cur = db_conn.cursor()
+    cur.execute(sql)
+    db_conn.commit()
+    #print(".")
+    return db_conn
 
 def run_select_sql(sql, db_conn):
     """ Run SQL select on db and return data frame. """

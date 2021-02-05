@@ -36,14 +36,14 @@ class TestTwitterScraper(unittest.TestCase):
         #nest_asyncio.apply()
         
         scrape_twitter_account("https://twitter.com/adlingtonhall/status/745626936714661890&amp;ved=2ahUKEwi4v8aQu77uAhUQCawKHaS_Bu8QFjARegQIPBAC", "mm001.New", "12")
-        t = twint.Config()
-        t.Search = "from:@adlingtonhall"
-        t.Store_object = True
-        t.Limit = 1000 
-        twint.run.Search(t)
-        tlist = t.search_tweet_list
-        for item in tlist:
-            print(item)
+        #t = twint.Config()
+        #t.Search = "from:@adlingtonhall"
+        #t.Store_object = True
+        #t.Limit = 1000 
+        #twint.run.Search(t)
+        #tlist = t.search_tweet_list
+        #for item in tlist:
+            #print(item)
 
 class TestWebsiteScraper(unittest.TestCase):
     def setUp(self):        

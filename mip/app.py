@@ -27,7 +27,7 @@ from analytics.an_websites import analyse_museum_websites
 from tests.run_tests import get_all_tests
 import unittest
 
-COMMANDS = ["help","tests","scrape_google","extract_google",'scrape_twitter','scrape_websites','an_websites']
+COMMANDS = ["help","tests","scrape_google","extract_google",'scrape_twitter','scrape_websites','an_websites','extract_google_results']
 cmd = None
 
 # %% Operations
@@ -66,6 +66,17 @@ def load_input_museums():
     print("loaded museums:",len(df))
     return df
 
+
+def load_extracted_museums():
+    df = pd.read_csv('tmp/google_extracted_results.tsv', sep='\t')
+    df = exclude_closed(df)
+    print(df.columns.values)
+    array=['3','2','1']
+    df=df[df.google_rank<4]
+    df.to_csv('tmp/google_extracted_results_top3.tsv', index=None, sep='\t')
+    return None
+
+
 def exclude_closed(df):
     df=df[df.year_closed == '9999:9999']
     print(df)
@@ -95,8 +106,10 @@ def main():
             scrape_google_museum_names(df)
         
         if cmd == "extract_google":
-            print("extract_google")
-            extract_google_results()
+            print("extract_google")            
+            df = load_input_museums()
+            extract_google_results(df)
+            load_extracted_museums()
         
         if cmd == "scrape_twitter":
             print("scrape_twitter")
@@ -112,6 +125,11 @@ def main():
             print("an_websites")
             df = load_input_museums()
             analyse_museum_websites(df)
+
+        if cmd == "add_mus_ids":
+            print("add_mus_ids")
+            df = load_input_museums()
+            add_museum_ids(df)
 
         if cmd == "tests":
             logger.info("tests")

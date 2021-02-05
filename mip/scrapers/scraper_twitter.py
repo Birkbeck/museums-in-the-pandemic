@@ -18,4 +18,6 @@ def scrape_twitter_account(url, muse_id, session_id):
     t.Since = "2019-01-01" 
     twint.run.Search(t)
     tlist = t.search_tweet_list
+    for item in tlist:
+        print(item)
     return tlist

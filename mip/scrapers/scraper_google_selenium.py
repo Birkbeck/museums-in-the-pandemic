@@ -230,21 +230,31 @@ def extract_links_from_google_page(html):
     soup = BeautifulSoup(html, 'html.parser')
     links = []
     res = soup.find_all("div", class_="rc")
+    if(res==[]):
+        res = soup.find_all("div", class_="tF2Cxc")
     #print(res)
     for div in res:
         urls = div.findAll('a')
         for a_tag in urls:
-            href = a_tag["href"]
-            if is_valid_link(href):
-                links.append(href)
+            #try:
+                href = a_tag["href"]
+                if is_valid_link(href):
+                    links.append(href)
+            #except KeyError:
+                #pass
         
     # keep only fb links
     #links = [clean_group_url(l) for l in links]
     links = [l for l in links if len(l) > 10] # remove empty string
     links = pd.Series(links).drop_duplicates().tolist() # get unique
-
+    links2=[]
+    for item in links:
+        
+        if not "wikipedia" in item and not "tripadvisor" in item and not "twitter" in item and not "facebook" in item:
+            links2.append(item)
+    links=links2
     if len(links) == 0:
-        return None
+        return pd.DataFrame()
 
     # build results
     ids = ['result'+'_'+'{:03d}'.format(l+1) for l in range(len(links))]
@@ -409,7 +419,7 @@ def is_fb_link(url):
     b = b and not ('translate.google.' in url)
     return b
 
-def scrape_google_page(web, search_string, target, connection):
+def scrape_google_page(web, search_string, target, connection, muse_id):
     found = False
     
     queryurl = gen_google_url(search_string)
@@ -421,7 +431,7 @@ def scrape_google_page(web, search_string, target, connection):
                 html = run_google_query(web, search_string, queryurl)
                 print("HTML size",len(html))
                 found = True
-                insert_google_page(connection, queryurl, search_string, target, 'MUSE_ID_TODO', html)
+                insert_google_page(connection, queryurl, search_string, target, muse_id, html)
                 return web
             except Exception as e:
                 print(e)
@@ -432,6 +442,15 @@ def scrape_google_page(web, search_string, target, connection):
                 web = init_google_browser()
                 random_sleep(2,2)
     return web
+
+def add_museum_ids(muslist):
+    db = open_sqlite(google_db_fn)
+    for index, row in muslist.iterrows():
+        muse_name = row[0]+ " site:en-gb.facebook.com"
+        muse_id = row[1]
+        
+        insert_google_id(db, muse_name, muse_id)
+
 
 def scrape_google_museum_names(topicsdf):
     # NOTE: this function needs PIA VPN to work
@@ -446,6 +465,7 @@ def scrape_google_museum_names(topicsdf):
     # scan place names
     for index, row in topicsdf.iterrows():
         muse_name = row[0]
+        muse_id = row[1]
         #print(muse_name)
         if(len(muse_name) < 5):
             muse_name = muse_name+" museum"
@@ -454,7 +474,7 @@ def scrape_google_museum_names(topicsdf):
         #if index > 1: break # DEBUG
         
         # 1 WEBSITE
-        web=scrape_google_page(web, query, target, db)
+        web=scrape_google_page(web, query, target, db, muse_id)
         
         # 2 TWITTER
         #twquery = query + " site:twitter.com"
@@ -557,7 +577,7 @@ def scrape_facebook_groups_info(fn):
         write_file(html,fout)
         
 
-def extract_google_results():
+def extract_google_results(df):
     print("extract_google_results")
     db = open_sqlite(google_db_fn)
     res_df = pd.read_sql_query('select * from google_pages_dump;', db)
@@ -566,12 +586,21 @@ def extract_google_results():
     for index, row in res_df.iterrows():
         html = row['page_content']
         google_df = extract_links_from_google_page(html)
-        google_df['search'] = row['search']
-        google_df['search_type'] = row['search_type']
-        google_df['ts'] = row['ts']
-        # TODO val: add museum ID
+        if not google_df.empty:
+            google_df['search'] = row['search']
+            google_df['search_type'] = row['search_type']
+            google_df['ts'] = row['ts']
+            google_df['muse_id'] = row['muse_id']
+       
         #print(google_df)
-        outdf = pd.concat([outdf, google_df])
+            outdf = pd.concat([outdf, google_df])
     
-    outdf.to_csv('tmp/google_extracted_results.tsv', index=None, sep='\t')
+    
+    fulldf = outdf.merge(df, left_on='muse_id', right_on='id')
+    
+    
+    
+
+
+    fulldf.to_csv('tmp/google_extracted_results.tsv', index=None, sep='\t')
     
