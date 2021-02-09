@@ -7,7 +7,7 @@ import unittest
 import urllib
 from db.db import open_sqlite
 from analytics.an_websites import *
-
+from analytics.text_models import *
 
 class TestTextExtraction(unittest.TestCase):
     def setUp(self):        
@@ -23,4 +23,13 @@ class TestTextExtraction(unittest.TestCase):
     def test_2(self):
         assert 1 + 1 == 2
 
-    
+
+class TestTextModel(unittest.TestCase):
+
+    def setUp(self):        
+        i = 0 
+
+    def test_linguistic_model(self):
+        i = 0
+        setup_ling_model()
+        
