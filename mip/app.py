@@ -68,11 +68,73 @@ def load_input_museums():
 
 
 def load_extracted_museums():
-    df = pd.read_csv('tmp/google_extracted_results.tsv', sep='\t')
-    df = exclude_closed(df)
-    print(df.columns.values)
-    df=df[df.google_rank<4]
-    df.to_csv('tmp/google_extracted_results_top3.tsv', index=None, sep='\t')
+    df = pd.read_csv('data/google_results/museum_searches-2021-02-05.tsv', sep='\t')
+    
+    #print(df.url)
+    
+    #print(df2)
+    comparedf = pd.read_csv('data/websites_to_flag.tsv', sep='\t')
+    
+    urldict={}
+    url1=[]
+    domain1=[]
+    search1=[]
+    muse_id1=[]
+    Museum_Name1=[]
+    location1=[]
+
+    url2=[]
+    domain2=[]
+    search2=[]
+    muse_id2=[]
+    Museum_Name2=[]
+    location2=[]
+    for item in df.iterrows():
+        
+        
+        urlstring = item[1].url.split("/")[2]
+        if item[1].google_rank ==1:
+            #print(item[1].google_rank)
+            if comparedf['website'].str.contains(urlstring).any():
+                
+                url2.append(item[1].url)
+                domain2.append(item[1].domain)
+                search2.append(item[1].search)
+                muse_id2.append(item[1].muse_id)
+                Museum_Name2.append(item[1].Museum_Name)
+                location2.append(item[1].location)
+            else:
+                url1.append(item[1].url)
+                domain1.append(item[1].domain)
+                search1.append(item[1].search)
+                muse_id1.append(item[1].muse_id)
+                Museum_Name1.append(item[1].Museum_Name)
+                location1.append(item[1].location)
+               
+    d1={'url':url1,'domain':domain1,'search':search1,'muse_id':muse_id1,'Museum_Name':Museum_Name1,'location':location1}
+    d2={'url':url2,'domain':domain2,'search':search2,'muse_id':muse_id2,'Museum_Name':Museum_Name2,'location':location2}
+    dfaccurate=pd.DataFrame(data=d1)
+    dfcheck=pd.DataFrame(data=d2)
+    dfaccurate.to_csv('tmp/accurate_results_view.tsv', index=None, sep='\t')
+    dfcheck.to_csv('tmp/tocheck_results_view.tsv', index=None, sep='\t')
+    #for item in df.iterrows():
+        
+        
+        #urlstring = item[1].url.split("/")[2]
+        #if "visit" in urlstring:
+            #if urlstring in urldict.keys():
+
+                #if urldict[urlstring]>item[1].google_rank:
+                    #urldict[urlstring]=item[1].google_rank
+            #else:
+                #urldict[urlstring]=item[1].google_rank
+    #print(urldict)
+    #list1=urldict.keys()
+    #list2=urldict.values()
+    #dict2 = {'url':list1, 'google_rank':list2}
+    #df2 = pd.DataFrame.from_dict(dict2)
+    
+    #df2.to_csv('tmp/google_extracted_results_view.tsv', index=None, sep='\t')
     return None
 
 
@@ -107,7 +169,7 @@ def main():
         if cmd == "extract_google":
             print("extract_google")            
             df = load_input_museums()
-            extract_google_results(df)
+            #extract_google_results(df)
             load_extracted_museums()
         
         if cmd == "scrape_twitter":
