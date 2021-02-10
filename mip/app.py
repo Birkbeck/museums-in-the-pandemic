@@ -17,6 +17,7 @@ import logging
 import sys
 import datetime
 import pandas as pd
+import openpyxl
 from utils import StopWatch
 
 from scrapers.scraper_google_selenium import *
@@ -76,47 +77,43 @@ def load_extracted_museums():
     comparedf = pd.read_csv('data/websites_to_flag.tsv', sep='\t')
     
     urldict={}
-    url1=[]
-    domain1=[]
-    search1=[]
-    muse_id1=[]
-    Museum_Name1=[]
-    location1=[]
-
-    url2=[]
-    domain2=[]
-    search2=[]
-    muse_id2=[]
-    Museum_Name2=[]
-    location2=[]
+    
+    dfaccurate=pd.DataFrame(columns=["url","search", "muse_id", "location"])
+    dfcheck=pd.DataFrame(columns=["google_rank","url","search", "muse_id", "location"])
+    
+    dfaccurate=pd.DataFrame(columns=["url","search", "muse_id", "location"])
+    addedtocheck = False
     for item in df.iterrows():
         
         
         urlstring = item[1].url.split("/")[2]
         if item[1].google_rank ==1:
-            #print(item[1].google_rank)
+            #print(item)
             if comparedf['website'].str.contains(urlstring).any():
                 
-                url2.append(item[1].url)
-                domain2.append(item[1].domain)
-                search2.append(item[1].search)
-                muse_id2.append(item[1].muse_id)
-                Museum_Name2.append(item[1].Museum_Name)
-                location2.append(item[1].location)
+
+                list1=[item[1].google_rank, item[1].url, item[1].search, item[1].muse_id, item[1].location]
+                dftoadd=pd.DataFrame([list1],columns=["google_rank","url","search", "muse_id", "location"])
+                dfcheck=dfcheck.append(dftoadd)
+                addedtocheck=True
             else:
-                url1.append(item[1].url)
-                domain1.append(item[1].domain)
-                search1.append(item[1].search)
-                muse_id1.append(item[1].muse_id)
-                Museum_Name1.append(item[1].Museum_Name)
-                location1.append(item[1].location)
+                list1=[item[1].url, item[1].search, item[1].muse_id, item[1].location]
+                dftoadd=pd.DataFrame([list1],columns=["url","search", "muse_id", "location"])
+                dfaccurate=dfaccurate.append(dftoadd)
+                addedtocheck=False
+                
+        else:
+            if addedtocheck == True and (item[1].google_rank ==2 or item[1].google_rank ==3):
+                list1=[item[1].google_rank, item[1].url, item[1].search, item[1].muse_id, item[1].location]
+                dftoadd=pd.DataFrame([list1],columns=["google_rank","url","search", "muse_id", "location"])
+                dfcheck=dfcheck.append(dftoadd)
+
+                
                
-    d1={'url':url1,'domain':domain1,'search':search1,'muse_id':muse_id1,'Museum_Name':Museum_Name1,'location':location1}
-    d2={'url':url2,'domain':domain2,'search':search2,'muse_id':muse_id2,'Museum_Name':Museum_Name2,'location':location2}
-    dfaccurate=pd.DataFrame(data=d1)
-    dfcheck=pd.DataFrame(data=d2)
-    dfaccurate.to_csv('tmp/accurate_results_view.tsv', index=None, sep='\t')
-    dfcheck.to_csv('tmp/tocheck_results_view.tsv', index=None, sep='\t')
+   
+    
+    dfaccurate.to_excel("tmp/accurate_results_view.xlsx")  
+    dfcheck.to_excel("tmp/tocheck_results_view.xlsx")
     #for item in df.iterrows():
         
         
