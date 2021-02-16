@@ -8,6 +8,7 @@ import pandas as pd
 
 
 def load_input_museums():
+    """ Load MM museum data that includes ALL museums """
     df = pd.read_csv('data/museums/museum_names_and_postcodes-2020-01-26.tsv', sep='\t')
     df = exclude_closed(df)
     if(pd.Series(df["Museum_Name"]).is_unique):
@@ -16,7 +17,6 @@ def load_input_museums():
         raise ValueError("Duplicate museum names exist.")
     print("loaded museums:",len(df))
     return df
-
 
 
 def get_fb_tw_links():
