@@ -118,7 +118,6 @@ def main():
             logger.info("tests")
             unittest.TextTestRunner().run(get_all_tests())
 
-
     cleanup()
     logger.info(sw.tick("OK"))
     logger.info("OK")

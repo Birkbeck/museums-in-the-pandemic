@@ -11,6 +11,7 @@ def load_museums_df_complete():
     # TODO
     print("load_museums_df_complete")
 
+
 def load_input_museums():
     """ Load MM museum data that includes ALL museums """
     df = pd.read_csv('data/museums/museum_names_and_postcodes-2020-01-26.tsv', sep='\t')
