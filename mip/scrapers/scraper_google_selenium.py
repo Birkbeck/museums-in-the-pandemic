@@ -250,7 +250,7 @@ def extract_links_from_google_page(html):
     links2=[]
     for item in links:
         
-        if not "wikipedia" in item and not "tripadvisor" in item and not "twitter" in item and not "facebook" in item:
+        if not "wikipedia" in item and not "tripadvisor" in item:# and not "twitter" in item and not "facebook" in item:
             links2.append(item)
     links=links2
     if len(links) == 0:
