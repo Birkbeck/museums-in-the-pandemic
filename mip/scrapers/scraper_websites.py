@@ -174,6 +174,7 @@ def check_for_url_redirection(url):
 
 
 def scrape_website_scrapy(crawler_process, muse_id, start_url, session_id, session_ts, db_con, app_settings):
+    """ TODO: document """
     assert muse_id
     assert start_url
     logger.debug("scrape_website_scrapy: "+muse_id+' '+start_url)
