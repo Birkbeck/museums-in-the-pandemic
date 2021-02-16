@@ -23,12 +23,13 @@ from utils import StopWatch
 from scrapers.scraper_google_selenium import *
 from scrapers.scraper_twitter import scrape_twitter_account
 from scrapers.scraper_websites import scrape_websites
+from scrapers.scraper_facebook import scrape_facebook
 from analytics.an_websites import analyse_museum_websites
 
 from tests.run_tests import get_all_tests
 import unittest
 
-COMMANDS = ["help","tests","scrape_google","extract_google",'scrape_twitter','scrape_websites','an_websites']
+COMMANDS = ["help","tests","scrape_google","extract_google",'scrape_twitter','scrape_websites','an_websites', 'scrape_facebook']
 cmd = None
 
 # %% Operations
@@ -166,13 +167,18 @@ def main():
         if cmd == "extract_google":
             print("extract_google")            
             df = load_input_museums()
-            #extract_google_results(df)
+            extract_google_results(df)
             load_extracted_museums()
         
         if cmd == "scrape_twitter":
             print("scrape_twitter")
             df = load_input_museums()
             scrape_twitter(df)
+
+        if cmd == "scrape_facebook":
+            print("scrape_facebook")
+            df = load_input_museums()
+            scrape_facebook(df)
 
         if cmd == "scrape_websites":
             print("scrape_websites")
