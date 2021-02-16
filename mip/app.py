@@ -23,7 +23,7 @@ from utils import StopWatch
 from scrapers.scraper_google_selenium import extract_google_results
 from scrapers.scraper_twitter import scrape_twitter_account
 from scrapers.scraper_websites import scrape_websites
-#from scrapers.scraper_facebook import scrape_facebook
+from scrapers.scraper_facebook import scrape_facebook
 from analytics.an_websites import analyse_museum_websites
 from museums import load_input_museums, load_extracted_museums
 from tests.run_tests import get_all_tests
@@ -97,7 +97,7 @@ def main():
         if cmd == "scrape_facebook":
             print("scrape_facebook")
             df = load_input_museums()
-            #scrape_facebook(df)
+            scrape_facebook(df)
 
         if cmd == "scrape_websites":
             print("scrape_websites")
