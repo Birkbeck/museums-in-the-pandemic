@@ -6,9 +6,9 @@ logger = logging.getLogger(__name__)
 import unittest
 import urllib
 import twint
-from scrapers.scraper_twitter import scrape_twitter_account
+from scrapers.scraper_twitter import scrape_twitter_account, scrape_twitter_accounts
+import datetime
 #import nest_asyncio
-
 
 
 class TestVPN(unittest.TestCase):
@@ -33,17 +33,7 @@ class TestTwitterScraper(unittest.TestCase):
         self.somevar = 0
     
     def test_scrape_twitter(self):
-        #nest_asyncio.apply()
-        
-        scrape_twitter_account("https://twitter.com/adlingtonhall/status/745626936714661890&amp;ved=2ahUKEwi4v8aQu77uAhUQCawKHaS_Bu8QFjARegQIPBAC", "mm001.New", "12")
-        #t = twint.Config()
-        #t.Search = "from:@adlingtonhall"
-        #t.Store_object = True
-        #t.Limit = 1000 
-        #twint.run.Search(t)
-        #tlist = t.search_tweet_list
-        #for item in tlist:
-            #print(item)
+        scrape_twitter_accounts(None)
 
 class TestWebsiteScraper(unittest.TestCase):
     def setUp(self):        

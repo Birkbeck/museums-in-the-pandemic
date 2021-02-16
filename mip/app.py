@@ -41,6 +41,9 @@ def init_app():
         if not os.path.exists(f):
             os.makedirs(f)
 
+    # check if config files exist
+    assert os.path.exists('.twitter.json')
+
     # enable logger
     logging.basicConfig(
         filename=get_log_file_name(),
