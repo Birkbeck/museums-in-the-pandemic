@@ -29,6 +29,22 @@ class TestVPN(unittest.TestCase):
         cmd = ""
         vpn_random_region()
 
+class TestFacebookScraper(unittest.TestCase):
+    def setUp(self):        
+        self.somevar = 0
+    
+    def test_scrape_twitter(self):
+        #nest_asyncio.apply()
+        
+        scrape_facebook_url("https://en-gb.facebook.com/pg/1066BattleAbbey/posts/", "mm001.New", "12")
+        #t = twint.Config()
+        #t.Search = "from:@adlingtonhall"
+        #t.Store_object = True
+        #t.Limit = 1000 
+        #twint.run.Search(t)
+        #tlist = t.search_tweet_list
+        #for item in tlist:
+            #print(item)
 
 class TestTwitterScraper(unittest.TestCase):
     def setUp(self):        

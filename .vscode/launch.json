@@ -7,6 +7,7 @@
 
 
 
+
         {
             "name": "scrape_websites",
             "type": "python",
@@ -38,6 +39,14 @@
             "program": "mip/app.py",
             "console": "integratedTerminal",
             "args": ["scrape_google"]
+        },
+        {
+            "name": "scrape_facebook",
+            "type": "python",
+            "request": "launch",
+            "program": "mip/app.py",
+            "console": "integratedTerminal",
+            "args": ["scrape_facebook"]
         },
         {
             "name": "extract_google",
