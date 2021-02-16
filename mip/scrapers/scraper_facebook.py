@@ -4,59 +4,146 @@ import logging
 import twint
 import json
 import datetime
+import time
+from db.db import open_sqlite, run_select_sql
 from vpn import vpn_random_region
 from facebook_scraper import get_posts
 logger = logging.getLogger(__name__)
 
 """
-Twitter scraper
+Facebook scraper based on facebook_scraper
 """
-def scrape_facebook(df):
-    scrape_facebook_url("https://www.facebook.com/groups/InstantPotCommunity/", "mm001.New", "12", 500)
-    return None
 
-def scrape_facebook_url(url, muse_id, session_id, postnumber):
-    print("scrape_facebook_url: " + url)
-    urllist = url.split("/")
-    print(urllist[3])
-    if urllist[3]=='groups':
-        lastpost=""
-        
-        for post in get_posts(group=urllist[4], pages=postnumber, extra_info=True):
-            print(post)
-            lastpost=post
-        if lastpost=="":
-            vpn_random_region()
-            return scrape_facebook_url(url, muse_id, session_id, postnumber)
+page_limit = 50
+# to avoid infinite loop
+max_limit = 2000
 
-        d2 = datetime.datetime(2019, 1, 1)
-        print(lastpost['time'])
-        print(d2)
-        print(lastpost['time']>d2)
-        if lastpost['time']>d2:
-            return scrape_facebook_url(url, muse_id, session_id, postnumber+500)
-        else:
-            print(lastpost)
-        ##finalpost=json.dumps(lastpost)
-        ##print(finalpost)
-        ##print(finalpost[datetime.datetime])
-
-    else:
-        for post in get_posts(urllist[4], pages=1, extra_info=True):
-            print(post)
-            lastpost=post
-        if lastpost=="":
-            vpn_random_region()
-            return scrape_facebook_url(url, muse_id, session_id, postnumber)
-
-        d2 = datetime.datetime(2019, 1, 1)
-        print(lastpost['time'])
-        print(d2)
-        print(lastpost['time']>d2)
-        if lastpost['time']>d2:
-            return scrape_facebook_url(url, muse_id, session_id, postnumber+500)
-        else:
-            print(lastpost)
-
+def scrape_facebook(museums_df):
+    # TODO: implement for all museum data
+    print("scrape_facebook","page_limit =",page_limit)
+    db_con = open_sqlite('tmp/facebook_dump.db')
+    create_fb_dump(db_con)
     
-    return tlist
+    date_limit = datetime.datetime(2019, 1, 1)
+
+    pages = ["https://www.facebook.com/ntstoneywell/",
+    "https://www.facebook.com/cliffordroadairraidsheltermuseum/",
+    "https://www.facebook.com/wingdown617/"]
+    scraped_pages = 0
+    for p in pages:
+        b = scrape_facebook_page(p, "mm001.New", date_limit, db_con)
+        if b:
+            scraped_pages += 1 
+    print("scraped_pages =", scraped_pages)
+
+
+def get_earliest_date(fbdata):
+    i = 0
+    times = [p['time'] for p in fbdata]
+    min_t = min(times)
+    return min_t
+
+
+def scrape_facebook_page(url, muse_id, date_limit, db_conn):
+    urllist = url.split("/")
+    page_name = urllist[3]
+    assert page_name
+    assert muse_id
+
+    if page_exists_in_db(page_name, db_conn):
+        # skip page
+        return False
+
+    limit = page_limit
+    while True:
+        time.sleep(.1)
+        try:
+            logger.debug(page_name+' ...')
+            print('\t'+page_name+' ...')
+            # scrape fb
+            posts = get_posts(page_name, pages=page_limit)
+            posts = [p for p in posts]
+            
+            min_date = get_earliest_date(posts)
+            
+            if min_date > date_limit:
+                # too few posts, increase limit
+                limit += page_limit
+                if limit > max_limit:
+                    # save posts to DB and move on
+                    logger.warn("avoid infinite loop, saving and skipping: "+page_name)
+                    print(page_name, "posts n", len(posts))
+                    insert_fb_data(page_name, posts, muse_id, db_conn)
+                    return True
+
+                logger.debug("too few posts, increase limit to "+str(limit))
+                time.sleep(1)
+                continue
+            
+            # all good, save posts to DB and move on
+            print(page_name, "posts n", len(posts))
+            insert_fb_data(page_name, posts, muse_id, db_conn)
+            return True
+        
+        except Exception as e:
+            logger.warning("error while scraping Facebook, changing VPN")
+            raise e
+            continue_scraping = True
+            # TODO change VPN
+            time.sleep(2)
+
+
+def page_exists_in_db(page_name, db_con):
+    sql = "select count(page_name) as page_posts_n from facebook_dump where page_name = '{}';".format(page_name)
+    df = run_select_sql(sql, db_con)
+    val =  df.page_posts_n.tolist()[0]
+    if val > 0: 
+        return True
+    return False
+
+
+def create_fb_dump(db_conn):
+    """ create table for Facebook dump """
+    c = db_conn.cursor()
+
+    # Create table
+    c.execute('''CREATE TABLE IF NOT EXISTS facebook_dump 
+            (page_name text NOT NULL,
+            post_id text PRIMARY KEY,
+            muse_id text NOT NULL,
+            user_id text,
+            post_ts DATETIME NOT NULL,
+            facebook_data_json text NOT NULL,
+            collection_ts DATETIME DEFAULT CURRENT_TIMESTAMP)
+            ;
+            ''')
+    db_conn.commit()
+    print('create_facebook_dump')
+
+
+def insert_fb_data(page_name, fbdata, muse_id, db_con):
+    assert muse_id
+    assert db_con
+    if len(fbdata) == 0: 
+        return
+
+    cur = db_con.cursor()
+    done_ids = []
+    for x in fbdata:
+        # extract fields
+        post_id_str = x['post_id']
+        if post_id_str in done_ids: 
+            # repeated post, skip it
+            logger.debug("repeated post, skip it")
+            continue
+
+        user_id = x['user_id']
+        ts = x['time']
+        x['time'] = ts.isoformat()
+        json_attr = json.dumps(x)
+        # insert sql
+        sql = '''INSERT INTO facebook_dump(page_name, post_id, user_id, muse_id, post_ts, facebook_data_json)
+              VALUES(?,?,?,?,?,?);'''
+        cur.execute(sql, [page_name, post_id_str, user_id, muse_id, ts, json_attr])
+        done_ids.append(post_id_str)
+    db_con.commit()
