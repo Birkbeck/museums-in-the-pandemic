@@ -5,7 +5,7 @@ logger = logging.getLogger(__name__)
 
 import unittest
 import urllib
-from db.db import open_sqlite
+from db.db import open_sqlite, connect_to_postgresql_db, is_postgresql_db_accessible
 from analytics.an_websites import *
 from analytics.text_models import *
 
@@ -32,4 +32,13 @@ class TestTextModel(unittest.TestCase):
     def test_linguistic_model(self):
         i = 0
         setup_ling_model()
+
+
+class TestCentralDB(unittest.TestCase):
+    def setUp(self):        
+        i = 0 
+
+    def test_db_connection(self):
+        print(is_postgresql_db_accessible())
+        connect_to_postgresql_db()
         

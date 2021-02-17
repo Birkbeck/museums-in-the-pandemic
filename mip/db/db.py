@@ -2,11 +2,20 @@
 
 """
 DB management
+
+POSTGRESQL config
+- http://www.project-open.com/en/howto-postgresql-port-secure-remote-access
+
 """
 
 import sqlite3
+import psycopg2
 import pandas as pd
+import json
 
+# load postgres configuration
+with open('.secrets.json') as f:
+    pg_config = json.load(f)['postgres']
 
 def open_sqlite(db_fn):
     """ Open connection to sqlite local DB """
@@ -41,6 +50,7 @@ def insert_google_page(db_conn, url, search, search_type, muse_id, page_content)
     db_conn.commit()
     return db_conn
 
+
 def insert_google_id(db_conn, musename, muse_id):
     c = db_conn.cursor()
     musename = musename.replace("'","''")
@@ -53,6 +63,7 @@ def insert_google_id(db_conn, musename, muse_id):
     db_conn.commit()
     #print(".")
     return db_conn
+
 
 def run_select_sql(sql, db_conn):
     """ Run SQL select on db and return data frame. """
@@ -71,3 +82,21 @@ def url_exists(con, targeturl):
     
     return True
     # TODO Val check if URL exists in database
+
+
+def is_postgresql_db_accessible():
+    """ @returns True if the DB is accessible. """
+    try:
+        conn = connect_to_postgresql_db()
+        conn.close()
+        return True
+    except Exception as e:
+        return False
+
+
+def connect_to_postgresql_db():
+    """ Connect to central DB """
+    print("postgresql_db")
+    print(pg_config)
+    db_conn = psycopg2.connect(host=pg_config['ip'], dbname=pg_config['dbname'], user=pg_config['user'], password=pg_config['pwd'])
+    return db_conn
