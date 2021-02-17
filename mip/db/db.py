@@ -97,6 +97,6 @@ def is_postgresql_db_accessible():
 def connect_to_postgresql_db():
     """ Connect to central DB """
     print("postgresql_db")
-    print(pg_config)
-    db_conn = psycopg2.connect(host=pg_config['ip'], dbname=pg_config['dbname'], user=pg_config['user'], password=pg_config['pwd'])
+    db_conn = psycopg2.connect(host=pg_config['ip'], dbname=pg_config['dbname'], 
+        user=pg_config['user'], password=pg_config['pwd'])
     return db_conn

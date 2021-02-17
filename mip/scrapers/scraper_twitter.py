@@ -11,7 +11,7 @@ import datetime
 import json
 import time
 import requests
-from db.db import open_sqlite
+from db.db import open_sqlite, connect_to_postgresql_db
 
 """
 Twitter scraper
@@ -29,14 +29,17 @@ def create_tweet_dump(db_conn):
     c = db_conn.cursor()
 
     # Create table
-    c.execute('''CREATE TABLE IF NOT EXISTS tweets_dump 
+    c.execute('''
+        CREATE SCHEMA IF NOT EXISTS twitter;
+        CREATE EXTENSION IF NOT EXISTS hstore;
+        CREATE TABLE IF NOT EXISTS twitter.tweets_dump 
             (tw_id text PRIMARY KEY,
             author_id text NOT NULL,
             tweet_text text NOT NULL,
             muse_id text NOT NULL,
-            tw_ts text NOT NULL,
-            tweet_data_json text NOT NULL,
-            collection_ts DATETIME DEFAULT CURRENT_TIMESTAMP)
+            tw_ts timestamptz NOT NULL,
+            tweet_data_json json NOT NULL,
+            collection_ts timestamptz DEFAULT CURRENT_TIMESTAMP)
             ;
             ''')
     db_conn.commit()
@@ -61,13 +64,13 @@ def query_twitter_api_endpoint(headers, params):
 
 def scrape_twitter_accounts(museums_df):
     """ Scrape twitter accounts for all museums """
-    db_con = open_sqlite(twitter_db_fn)
+    db_con = connect_to_postgresql_db() #open_sqlite(twitter_db_fn)
     create_tweet_dump(db_con)
     accounts = ['adlingtonhall']
     # set date threshold
     min_date = datetime.datetime(2019, 1, 1, 0, 0, 0)
     scrape_twitter_account('TODO_my_museum_id', accounts[0], min_date, db_con)
-
+    db_con.close()
 
 def scrape_twitter_account(muse_id, user_name, min_date, db_con):
     """
@@ -135,8 +138,8 @@ def insert_tweets_into_db(tweets, muse_id, db_con):
         ts = datetime.datetime.fromisoformat(x['created_at'].replace("Z", "+00:00"))
         json_attr = json.dumps(x)
         # insert sql
-        sql = '''INSERT INTO tweets_dump(tw_id, tw_ts, author_id, tweet_text, muse_id, tweet_data_json)
-              VALUES(?,?,?,?,?,?);'''
+        sql = '''INSERT INTO twitter.tweets_dump(tw_id, tw_ts, author_id, tweet_text, muse_id, tweet_data_json)
+              VALUES(%s,%s,%s,%s,%s,%s);'''
         cur.execute(sql, [tw_id_str, ts, user_id, x['text'], muse_id, json_attr])
     
     db_con.commit()
