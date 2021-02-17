@@ -18,7 +18,7 @@ Twitter scraper
 """
 
 # load twitter API configuration
-with open('.twitter.json') as f:
+with open('.secrets.json') as f:
     twitter_config = json.load(f)
 
 twitter_db_fn = 'tmp/tweets.db'
@@ -44,7 +44,7 @@ def create_tweet_dump(db_conn):
 
 
 def create_twitter_api_headers():
-    bearer_token = twitter_config['bearer']
+    bearer_token = twitter_config['tw_bearer']
     assert bearer_token
     headers = {"Authorization": "Bearer {}".format(bearer_token)}
     return headers

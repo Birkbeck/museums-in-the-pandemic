@@ -43,7 +43,7 @@ def init_app():
             os.makedirs(f)
 
     # check if config files exist
-    assert os.path.exists('.twitter.json')
+    assert os.path.exists('.secrets.json')
 
     # enable logger
     logging.basicConfig(
