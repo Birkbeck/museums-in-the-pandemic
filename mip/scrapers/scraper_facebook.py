@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import logging
-import twint
 import json
 import datetime
 import time
@@ -14,9 +13,10 @@ logger = logging.getLogger(__name__)
 Facebook scraper based on facebook_scraper
 """
 
-page_limit = 50
+# initial page limit for facebook_scraper.get_posts
+page_limit = 100
 # to avoid infinite loop
-max_limit = 2000
+max_limit = 5000
 
 def scrape_facebook(museums_df):
     # TODO: implement for all museum data
@@ -45,6 +45,10 @@ def get_earliest_date(fbdata):
 
 
 def scrape_facebook_page(url, muse_id, date_limit, db_conn):
+    """ 
+    Scrape posts from facebook page in @url, going back at least to @date_limit
+    @returns True if page was scraped or False if the page was already present in the DB
+    """
     urllist = url.split("/")
     page_name = urllist[3]
     assert page_name
@@ -58,17 +62,21 @@ def scrape_facebook_page(url, muse_id, date_limit, db_conn):
     while True:
         time.sleep(.1)
         try:
-            logger.debug(page_name+' ...')
-            print('\t'+page_name+' ...')
-            # scrape fb
+            msg = page_name+' limit='+str(limit)+' ...'
+            logger.debug(msg)
+            print('\t'+msg)
+            # scrape fb (slow)
             posts = get_posts(page_name, pages=page_limit)
             posts = [p for p in posts]
             
             min_date = get_earliest_date(posts)
             
             if min_date > date_limit:
-                # too few posts, increase limit
-                limit += page_limit
+                msg = "Too few posts, increasing limit - earliest date="+ str(min_date)
+                logger.warn(msg)
+                print(msg)
+                # too few posts, double limit
+                limit = limit * 2
                 if limit > max_limit:
                     # save posts to DB and move on
                     logger.warn("avoid infinite loop, saving and skipping: "+page_name)
@@ -81,7 +89,9 @@ def scrape_facebook_page(url, muse_id, date_limit, db_conn):
                 continue
             
             # all good, save posts to DB and move on
-            print(page_name, "posts n", len(posts))
+            msg = page_name + " done: posts n " + str(len(posts)) + '; earliest_date_found=' + str(min_date)
+            print(msg)
+            logger.debug(msg)
             insert_fb_data(page_name, posts, muse_id, db_conn)
             return True
         
@@ -94,6 +104,7 @@ def scrape_facebook_page(url, muse_id, date_limit, db_conn):
 
 
 def page_exists_in_db(page_name, db_con):
+    """ True if page already exists in Facebook dump table """
     sql = "select count(page_name) as page_posts_n from facebook_dump where page_name = '{}';".format(page_name)
     df = run_select_sql(sql, db_con)
     val =  df.page_posts_n.tolist()[0]
@@ -122,6 +133,7 @@ def create_fb_dump(db_conn):
 
 
 def insert_fb_data(page_name, fbdata, muse_id, db_con):
+    """ Insert posts from @fbdata list into Facebook dump table """
     assert muse_id
     assert db_con
     if len(fbdata) == 0: 
