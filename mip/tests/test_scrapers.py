@@ -7,6 +7,8 @@ import unittest
 import urllib
 #import twint
 import pandas as pd
+import requests
+import json
 from scrapers.scraper_twitter import scrape_twitter_account, scrape_twitter_accounts
 from museums import get_fb_tw_links
 import datetime
@@ -33,18 +35,9 @@ class TestFacebookScraper(unittest.TestCase):
     def setUp(self):        
         self.somevar = 0
     
-    def test_scrape_twitter(self):
-        #nest_asyncio.apply()
-        
-        scrape_facebook_url("https://en-gb.facebook.com/pg/1066BattleAbbey/posts/", "mm001.New", "12")
-        #t = twint.Config()
-        #t.Search = "from:@adlingtonhall"
-        #t.Store_object = True
-        #t.Limit = 1000 
-        #twint.run.Search(t)
-        #tlist = t.search_tweet_list
-        #for item in tlist:
-            #print(item)
+    def test_scrape_facebook(self):
+        i = 0
+
 
 class TestTwitterScraper(unittest.TestCase):
     def setUp(self):        
@@ -53,6 +46,7 @@ class TestTwitterScraper(unittest.TestCase):
     def test_scrape_twitter(self):
         scrape_twitter_accounts(None)
 
+    
 class TestWebsiteScraper(unittest.TestCase):
     def setUp(self):        
         self.somevar = 0
