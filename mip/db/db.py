@@ -8,6 +8,9 @@ POSTGRESQL config
 
 """
 
+import logging
+logger = logging.getLogger(__name__)
+
 import sqlite3
 import psycopg2
 import pandas as pd
@@ -20,6 +23,7 @@ with open('.secrets.json') as f:
 def open_sqlite(db_fn):
     """ Open connection to sqlite local DB """
     conn = sqlite3.connect(db_fn)
+    logger.debug("open_sqlite: "+ db_fn)
     return conn
 
 
@@ -91,12 +95,13 @@ def is_postgresql_db_accessible():
         conn.close()
         return True
     except Exception as e:
+        logger.warn(str(e))
         return False
 
 
 def connect_to_postgresql_db():
     """ Connect to central DB """
-    print("postgresql_db")
+    logger.debug("connect_to_postgresql_db")
     db_conn = psycopg2.connect(host=pg_config['ip'], dbname=pg_config['dbname'], 
         user=pg_config['user'], password=pg_config['pwd'])
     return db_conn

@@ -3,12 +3,6 @@
 # MIP project
 
 # %% Setup
-#To Import twint from the mip_v1 environemnt terminal enter the following commands in the same precise order:
-#pip install twint
-#pip3 install --upgrade -e git+https://github.com/twintproject/twint.git@origin/master#egg=twint
-#pip3 install --upgrade aiohttp_socks
-
-
 import logging
 logger = logging.getLogger(__name__)
 
@@ -26,6 +20,7 @@ from scrapers.scraper_websites import scrape_websites
 from scrapers.scraper_facebook import scrape_facebook
 from analytics.an_websites import analyse_museum_websites
 from museums import load_input_museums, load_extracted_museums
+from db.db import is_postgresql_db_accessible
 from tests.run_tests import get_all_tests
 import unittest
 
@@ -35,7 +30,7 @@ cmd = None
 # %% Operations
 
 def init_app():
-    print("Init App")
+    print("Init App\n")
     # set up folders
     folders = ['tmp','tmp/logs','tmp/analytics']
     for f in folders:
@@ -44,6 +39,9 @@ def init_app():
 
     # check if config files exist
     assert os.path.exists('.secrets.json')
+
+    # check if DB is accessible
+    print("is_postgresql_db_accessible =",is_postgresql_db_accessible())
 
     # enable logger
     logging.basicConfig(
