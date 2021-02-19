@@ -97,3 +97,23 @@ def exclude_closed(df):
     df=df[df.year_closed == '9999:9999']
     assert len(df) > 0
     return df
+
+
+def load_manual_museum_urls():
+    """ Load manually selected URLs for difficult museums """
+    fn = 'data/museums/manual_google_url_results_top10_2021-02-19.xlsx'
+    df = pd.read_excel(fn)
+    df.muse_id
+    print(df.columns, len(df))
+    print("museum IDs:",len(df.muse_id.value_counts()))
+    manual_sites_df = df[df.correct_site.notnull()][['muse_id','correct_site']]
+    manual_sites_df = manual_sites_df[manual_sites_df.correct_site.str.contains('http')]
+    manual_sites_df.rename(columns={"correct_site":"url"})
+    
+    # get valid websites
+    valid_websites_df = df[df.valid=='T'][['muse_id','url']]
+    # concat results
+    valid_websites_df = pd.concat([valid_websites_df, manual_sites_df], axis=0)
+    print("valid_websites_df", len(valid_websites_df))
+    assert len(valid_websites_df) > 100
+    return valid_websites_df
