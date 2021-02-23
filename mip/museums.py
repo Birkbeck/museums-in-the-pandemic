@@ -117,3 +117,15 @@ def load_manual_museum_urls():
     print("valid_websites_df", len(valid_websites_df))
     assert len(valid_websites_df) > 100
     return valid_websites_df
+
+
+def generate_stratified_museum_sample():
+    print("generate_stratified_museum_sample")
+    df = load_input_museums()
+    print(df.columns)
+    manual_museums_df = load_manual_museum_urls()
+    print(manual_museums_df.columns)
+    df = df[~df.id.isin(manual_museums_df.muse_id)]
+    print(len(df))
+    # generate sample
+    # TODO load mus attributes
