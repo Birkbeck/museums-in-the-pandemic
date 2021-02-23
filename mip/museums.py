@@ -129,3 +129,22 @@ def generate_stratified_museum_sample():
     print(len(df))
     # generate sample
     # TODO load mus attributes
+
+
+def generate_string_pool_from_museum_name(mname):
+    """ @returns variants of strings for fuzzy match on museum names """
+    assert len(mname)>2
+    pool = []
+    # TODO: generate rules
+
+
+def fuzzy_string_match(a, b):
+    """ @returns a similarity score based on the extent to which a is found in b"""
+    assert len(a) > 0
+    assert len(b) > 0
+    score = None
+    # TODO: use this function here 
+    # https://towardsdatascience.com/fuzzy-string-matching-in-python-68f240d910fe
+
+
+    return score
