@@ -148,3 +148,15 @@ def fuzzy_string_match(a, b):
 
 
     return score
+
+
+def match_museum_name_with_string(mname, str_from_url):
+    """@returns max similarity score between variants of mname and str_from_url)"""
+    pool = generate_string_pool_from_museum_name(mname)
+    scores = []
+    for name_variant in pool:
+        score = fuzzy_string_match(name_variant, str_from_url)
+        if score is not None:
+            scores.append(score)
+    max_score = max(scores)
+    return max_score
