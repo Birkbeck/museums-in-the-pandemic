@@ -156,6 +156,10 @@ def generate_derived_attributes_muse_df(df):
 
 
 def generate_stratified_museum_sample():
+    """
+    How to calculate SE/CI for this sample size: 
+     http://sample-size.net/confidence-interval-proportion
+    """
     print("generate_stratified_museum_sample")
     df1 = load_input_museums()
     print(df1.columns)
