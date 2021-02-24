@@ -8,6 +8,7 @@ import urllib
 from db.db import open_sqlite, connect_to_postgresql_db, is_postgresql_db_accessible
 from analytics.an_websites import *
 from analytics.text_models import *
+from museums import *
 
 class TestTextExtraction(unittest.TestCase):
     def setUp(self):        
@@ -36,9 +37,13 @@ class TestTextModel(unittest.TestCase):
 
 class TestCentralDB(unittest.TestCase):
     def setUp(self):        
-        i = 0 
+        i = 0
 
     def test_db_connection(self):
         print(is_postgresql_db_accessible())
         connect_to_postgresql_db()
+
+    def test_load_manual_links(self):
+        #load_manual_museum_urls()
+        generate_stratified_museum_sample()
         

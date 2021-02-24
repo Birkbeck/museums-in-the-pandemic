@@ -14,27 +14,27 @@ def load_museums_df_complete():
 
 def load_input_museums():
     """ Load MM museum data that includes ALL museums """
-    df = pd.read_csv('data/museums/museum_names_and_postcodes-2020-01-26.tsv', sep='\t')
+    fn = 'data/museums/museum_names_and_postcodes-2020-01-26.tsv'
+    df = pd.read_csv(fn, sep='\t')
     df = exclude_closed(df)
     assert df["id"].is_unique
-    if df["Museum_Name"].is_unique:
-        print("All museum names unique.")
-    else:
+    if not df["Museum_Name"].is_unique:
         raise ValueError("Duplicate museum names exist.")
-    print("loaded museums:",len(df))
+    print("loaded museums:",len(df), fn)
     return df
 
 
 def load_input_museums_wattributes():
     """  """
-    df = pd.read_csv('data/museums/museums_wattributes-2020-02-23.tsv', sep='\t')
+    fn = 'data/museums/museums_wattributes-2020-02-23.tsv'
+    df = pd.read_csv(fn, sep='\t')
     print(df.columns)
     # remove closed museums
     df = df[df.closing_date.str.lower() == 'still open']
     assert len(df) > 0 
-    #print(df[~df.duplicated(subset=['muse_id'])])
-    print("loaded museums w attributes:",len(df))
+    print("loaded museums w attributes (open):",len(df), fn)
     assert df["muse_id"].is_unique
+    assert df["musname"].is_unique
     return df
 
 
@@ -133,19 +133,63 @@ def load_manual_museum_urls():
     return valid_websites_df
 
 
+def generate_derived_attributes_muse_df(df):
+    print("generate_derived_attributes_muse_df")
+
+    def get_region(x):
+        x = x.replace("/England",'')
+        r = x.split('/')
+        reg = r[1]
+        assert reg
+        return reg
+
+    def get_gov(x):
+        s = x.split(":")
+        assert s[0]
+        return s[0]
+
+    df['region'] = df['admin_area'].apply(get_region)
+    df['gov'] = df['governance'].apply(get_gov)
+    #print(df['gov'].value_counts())
+    #print(df.sample(10))
+    return df
+
+
 def generate_stratified_museum_sample():
     print("generate_stratified_museum_sample")
-    df = load_input_museums()
-    print(df.columns)
-    df = load_input_museums_wattributes()
-    
-    manual_museums_df = load_manual_museum_urls()
+    df1 = load_input_museums()
+    print(df1.columns)
+    df2 = load_input_museums_wattributes()
+    print(df2.columns)
+    print("difference between datasets:", set(df1.id).symmetric_difference(set(df2.muse_id)))
+    # only select museums present in the initial dataset
+    #df2 = df2[df2.muse_id.str.isin(df1.id.str)]
 
+    # remove manual museums
+    manual_museums_df = load_manual_museum_urls()
     print(manual_museums_df.columns)
-    df = df[~df.id.isin(manual_museums_df.muse_id)]
-    print(len(df))
+    df = df2[~df2.muse_id.isin(manual_museums_df.muse_id)]
+    df = generate_derived_attributes_muse_df(df)
+    print("selected museums for sampling:", len(df))
+    
     # generate sample
-    # TODO load mus attributes
+    fraction = .03
+    sample_n = int(len(df) * fraction)
+    print("sample_n", sample_n)
+    cols = ["region","size","accreditation","gov"]
+    sample_df = pd.DataFrame()
+    for val, subdf in df.groupby(cols):
+        sub_smpl_f = len(subdf) * fraction
+        sub_smpl_n = int(round(sub_smpl_f,0))
+        print(val, len(subdf), sub_smpl_f, sub_smpl_n)
+        sample_df = sample_df.append(subdf.sample(sub_smpl_n, random_state=32))
+    
+    print("sample_df", len(sample_df))
+    sample_df['valid'] = ''
+    assert sample_df.muse_id.is_unique
+    fout = 'tmp/museums_stratified_sample_{}.tsv'.format(len(sample_df))
+    sample_df.to_csv(fout, sep="\t", index=False)
+    print(fout)
 
 
 def generate_string_pool_from_museum_name(mname):
