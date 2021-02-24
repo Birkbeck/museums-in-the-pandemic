@@ -16,11 +16,25 @@ def load_input_museums():
     """ Load MM museum data that includes ALL museums """
     df = pd.read_csv('data/museums/museum_names_and_postcodes-2020-01-26.tsv', sep='\t')
     df = exclude_closed(df)
-    if(pd.Series(df["Museum_Name"]).is_unique):
+    assert df["id"].is_unique
+    if df["Museum_Name"].is_unique:
         print("All museum names unique.")
     else:
         raise ValueError("Duplicate museum names exist.")
     print("loaded museums:",len(df))
+    return df
+
+
+def load_input_museums_wattributes():
+    """  """
+    df = pd.read_csv('data/museums/museums_wattributes-2020-02-23.tsv', sep='\t')
+    print(df.columns)
+    # remove closed museums
+    df = df[df.closing_date.str.lower() == 'still open']
+    assert len(df) > 0 
+    #print(df[~df.duplicated(subset=['muse_id'])])
+    print("loaded museums w attributes:",len(df))
+    assert df["muse_id"].is_unique
     return df
 
 
@@ -123,7 +137,10 @@ def generate_stratified_museum_sample():
     print("generate_stratified_museum_sample")
     df = load_input_museums()
     print(df.columns)
+    df = load_input_museums_wattributes()
+    
     manual_museums_df = load_manual_museum_urls()
+
     print(manual_museums_df.columns)
     df = df[~df.id.isin(manual_museums_df.muse_id)]
     print(len(df))
