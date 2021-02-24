@@ -5,6 +5,8 @@ functions to handle museum data
 """
 
 import pandas as pd
+from fuzzywuzzy import fuzz
+from fuzzywuzzy import process
 
 def load_museums_df_complete():
     """ Load and combine master list of museums for scraping and analysis """
@@ -21,6 +23,13 @@ def load_input_museums():
     if not df["Museum_Name"].is_unique:
         raise ValueError("Duplicate museum names exist.")
     print("loaded museums:",len(df), fn)
+    return df
+
+def load_fuzzy_museums():
+    """ Load MM museum data that includes ALL museums """
+    df = pd.read_csv('data/google_results/google_extracted_results_facebook.tsv', sep='\t')
+    df = exclude_closed(df)
+    print("loaded museums:",len(df))
     return df
 
 
@@ -67,8 +76,16 @@ def get_fb_tw_links():
 
 def load_extracted_museums():
     """ TODO: document """
-    df = pd.read_csv('data/google_results/museum_searches-2021-02-05.tsv', sep='\t')
-    
+    df = pd.read_csv('data/google_results/museum_searches_all-2021-02-18.tsv', sep='\t')
+    dfcheck1=pd.DataFrame(columns=["google_rank","url","search", "muse_id"])
+    museidlist=["mm.fcm.186","mm.domus.YH153","mm.domus.SE481","mm.wiki.220","mm.aim82NM.130","mm.ace.1101","mm.musa.285","mm.mald.111","mm.domus.NW191","mm.fcm.130","mm.ace.1163","mm.domus.SE270","mm.domus.EM031","mm.ace.1258","mm.misc.015","mm.musa.295","mm.New.26","mm.ace.685","mm.aim82NM.012","mm.domus.SC280","mm.domus.SC314","mm.domus.WA017","mm.musa.345","mm.domus.SC074","mm.hha.119","mm.domus.NW031","mm.domus.YH123","mm.domus.SC096","mm.musa.349","mm.wiki.105"]
+    for item in df.iterrows():
+        if item[1].muse_id in museidlist:
+            list1=[item[1].google_rank, item[1].url, item[1].search, item[1].muse_id]
+            dftoadd=pd.DataFrame([list1],columns=["google_rank","url","search", "muse_id"])
+            dfcheck1=dfcheck1.append(dftoadd)
+    dfcheck1.to_excel("tmp/tocheck_sample.xlsx", index=False)
+
     comparedf = pd.read_csv('data/websites_to_flag.tsv', sep='\t')
     
     urldict={}
@@ -96,7 +113,7 @@ def load_extracted_museums():
                 dfaccurate=dfaccurate.append(dftoadd)
                 addedtocheck=False  
         else:
-            if addedtocheck == True and (item[1].google_rank ==2 or item[1].google_rank ==3):
+            if addedtocheck == True and (item[1].google_rank >1 and item[1].google_rank <11):
                 list1=[item[1].google_rank, item[1].url, item[1].search, item[1].muse_id, item[1].location]
                 dftoadd=pd.DataFrame([list1],columns=["google_rank","url","search", "muse_id", "location"])
                 dfcheck=dfcheck.append(dftoadd)
@@ -161,6 +178,7 @@ def generate_stratified_museum_sample():
      http://sample-size.net/confidence-interval-proportion
     """
     print("generate_stratified_museum_sample")
+
     df1 = load_input_museums()
     print(df1.columns)
     df2 = load_input_museums_wattributes()
@@ -170,6 +188,8 @@ def generate_stratified_museum_sample():
     #df2 = df2[df2.muse_id.str.isin(df1.id.str)]
 
     # remove manual museums
+
+
     manual_museums_df = load_manual_museum_urls()
     print(manual_museums_df.columns)
     df = df2[~df2.muse_id.isin(manual_museums_df.muse_id)]
@@ -200,7 +220,49 @@ def generate_string_pool_from_museum_name(mname):
     """ @returns variants of strings for fuzzy match on museum names """
     assert len(mname)>2
     pool = []
-    # TODO: generate rules
+    pool.append(mname)
+    pool.append(mname+" museum")
+    pool.append(mname+" Museum")
+    mnamelist= mname.rstrip().split(" ")
+    newphrase=""
+    for word in mnamelist:
+        
+        if word != "or" and word != "the" and word != "a" and word != "for" and word != "and" and word != "Or" and word != "The" and word != "A" and word != "For" and word != "And":
+            newphrase = newphrase+word+" "
+    pool.append(newphrase.rstrip())
+    pool.append(newphrase+"museum")
+    pool.append(newphrase+"Museum")
+    newphrase=""
+    for word in mnamelist:
+        
+        if word != "or" and word != "the" and word != "a" and word != "for" and word != "Or" and word != "The" and word != "A" and word != "For":
+            if word == "and" or word == "And":
+                newphrase = newphrase+"& "
+            else:
+                newphrase = newphrase+word+" "
+    pool.append(newphrase.rstrip())
+    pool.append(newphrase+"museum")
+    pool.append(newphrase+"Museum")
+    newphrase=""
+    for word in mnamelist:
+        
+        if word != "or" and word != "the" and word != "a" and word != "for" and word != "and" and word != "Or" and word != "The" and word != "A" and word != "For" and word != "And":
+            newphrase = newphrase+word[0]
+    pool.append(newphrase)
+    pool.append(newphrase+" museum")
+    pool.append(newphrase+ "Museum")
+    newphrase=""
+    for word in mnamelist:
+        
+        if word != "or" and word != "the" and word != "a" and word != "for" and word != "Or" and word != "The" and word != "A" and word != "For":
+            if word == "and" or word == "And":
+                newphrase = newphrase+"&"
+            else:
+                newphrase = newphrase+word[0]
+    pool.append(newphrase)
+    pool.append(newphrase+" museum")
+    pool.append(newphrase+" Museum")
+    return pool
 
 
 def fuzzy_string_match(a, b):
@@ -208,7 +270,8 @@ def fuzzy_string_match(a, b):
     assert len(a) > 0
     assert len(b) > 0
     score = None
-    # TODO: use this function here 
+    ratio = fuzz.token_sort_ratio(a, b)
+    return ratio
     # https://towardsdatascience.com/fuzzy-string-matching-in-python-68f240d910fe
 
 
@@ -225,3 +288,21 @@ def match_museum_name_with_string(mname, str_from_url):
             scores.append(score)
     max_score = max(scores)
     return max_score
+
+def get_fuzzy_string_match_ranks(musdf):
+    rankrow=[]
+    for row in musdf.iterrows():
+        urlstring=row[1].url.split("/")[3]
+        musename = row[1].Museum_Name
+        rankrow.append(match_museum_name_with_string(musename, urlstring))
+    musdf['rank']=rankrow
+    musdf.to_csv('tmp/fuzzy_museum_rankings.tsv', index=False, sep='\t')
+    return None
+
+
+def combinedatasets():
+    df1 = pd.read_csv('tmp/eggs.tsv', sep='\t')
+    df2 = pd.read_csv('tmp/data.csv', sep=',')
+    df3=pd.merge(df1, df2, on='musname')
+    df3.to_csv('tmp/museums_wattributes-2020-02-23.tsv', index=False, sep='\t')
+    return None

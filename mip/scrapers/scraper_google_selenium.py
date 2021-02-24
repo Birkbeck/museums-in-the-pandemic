@@ -369,7 +369,7 @@ def run_google_query(web, querytext, queryurl):
         #random_sleep(0,1)
         #web.click('Google Search', classname="form-input", number=2)
         #web.press(web.Key.TAB)
-        random_sleep(1,3)
+        #random_sleep(1,3)
         web.press(web.Key.ENTER)
         random_sleep(GOOGLE_PAUSE_SECS,GOOGLE_PAUSE_SECS*1.5)
         html = web.get_page_source()
@@ -466,10 +466,15 @@ def scrape_google_museum_names(topicsdf):
     for index, row in topicsdf.iterrows():
         muse_name = row[0]
         muse_id = row[1]
+        location = row[2]
         #print(muse_name)
         if(len(muse_name) < 5):
             muse_name = muse_name+" museum"
-        query = muse_name.strip()
+        if location != location: #this rather arcane check is here to ensure the location field does not contain the float NaN
+            query = muse_name.strip()
+        else:
+            query = "\""+muse_name.strip()+"\""+" "+location #add this to add location
+            
         target = 'website'
         #if index > 1: break # DEBUG
         
@@ -479,12 +484,12 @@ def scrape_google_museum_names(topicsdf):
         # 2 TWITTER
         #twquery = query + " site:twitter.com"
         #target='twitter'
-        #web=scrape_google_page(web, twquery, target, db)
+        #web=scrape_google_page(web, twquery, target, db, muse_id)
         
         # 3 FACEBOOK
         #fbquery = query + " site:en-gb.facebook.com"
         #target = 'facebook'
-        #web=scrape_google_page(web, fbquery, target, db)
+        #web=scrape_google_page(web, fbquery, target, db, muse_id)
         
     web.quit()
     print("Google scraping complete.")

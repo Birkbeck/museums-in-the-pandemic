@@ -13,18 +13,18 @@ import datetime
 import pandas as pd
 import openpyxl
 from utils import StopWatch
-
+from scrapers.scraper_google_selenium import scrape_google_museum_names
 from scrapers.scraper_google_selenium import extract_google_results
 from scrapers.scraper_twitter import scrape_twitter_account
 from scrapers.scraper_websites import scrape_websites
 from scrapers.scraper_facebook import scrape_facebook
 from analytics.an_websites import analyse_museum_websites
-from museums import load_input_museums, load_extracted_museums
+from museums import load_input_museums, load_extracted_museums, combinedatasets, get_fuzzy_string_match_ranks, load_fuzzy_museums
 from db.db import is_postgresql_db_accessible
 from tests.run_tests import get_all_tests
 import unittest
 
-COMMANDS = ["help","tests","scrape_google","extract_google",'scrape_twitter','scrape_websites','an_websites', 'scrape_facebook']
+COMMANDS = ["help","tests","scrape_google","extract_google",'scrape_twitter','scrape_websites','an_websites', 'scrape_facebook', 'fuzzy_string_match', 'combine_datasets']
 cmd = None
 
 # %% Operations
@@ -80,12 +80,19 @@ def main():
             print("scrape_google")
             df = load_input_museums()
             scrape_google_museum_names(df)
-        
+
+        if cmd=="combine_datasets":
+            combinedatasets()  
+
+        if cmd=="fuzzy_string_match":
+            df = load_fuzzy_museums()
+            get_fuzzy_string_match_ranks(df)
+
         if cmd == "extract_google":
-            print("extract_google")            
+            print("extract_google")                      
             df = load_input_museums()
             extract_google_results(df)
-            load_extracted_museums()
+            #load_extracted_museums()
         
         if cmd == "scrape_twitter":
             print("scrape_twitter")

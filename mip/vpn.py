@@ -67,7 +67,7 @@ def run_os_command(cmd):
         maindir = os.path.dirname(os.path.realpath(__file__))
         os.chdir(piadir)
         os.system(cmd)
-        os.chdir(maindir)
+        os.chdir('C:\\Users\\VV\\workspace1\\museums-in-the-pandemic\\mip')
         os.system('cd ..')
         return None
 
