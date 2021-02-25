@@ -34,7 +34,10 @@ class TestTextModel(unittest.TestCase):
         i = 0
         setup_ling_model()
 
-
+class TestVal(unittest.TestCase):
+    df=load_fuzzy_museums()
+    get_fuzzy_string_match_scores(df)
+    
 class TestCentralDB(unittest.TestCase):
     def setUp(self):        
         i = 0

@@ -19,12 +19,12 @@ from scrapers.scraper_twitter import scrape_twitter_account
 from scrapers.scraper_websites import scrape_websites
 from scrapers.scraper_facebook import scrape_facebook
 from analytics.an_websites import analyse_museum_websites
-from museums import load_input_museums, load_extracted_museums, combinedatasets, get_fuzzy_string_match_ranks, load_fuzzy_museums
+from museums import load_input_museums, load_extracted_museums, combinedatasets, get_fuzzy_string_match_scores, load_fuzzy_museums
 from db.db import is_postgresql_db_accessible
 from tests.run_tests import get_all_tests
 import unittest
 
-COMMANDS = ["help","tests","scrape_google","extract_google",'scrape_twitter','scrape_websites','an_websites', 'scrape_facebook', 'fuzzy_string_match', 'combine_datasets']
+COMMANDS = ["help","tests","scrape_google","extract_google",'scrape_twitter','scrape_websites','an_websites', 'scrape_facebook']
 cmd = None
 
 # %% Operations
@@ -81,12 +81,6 @@ def main():
             df = load_input_museums()
             scrape_google_museum_names(df)
 
-        if cmd=="combine_datasets":
-            combinedatasets()  
-
-        if cmd=="fuzzy_string_match":
-            df = load_fuzzy_museums()
-            get_fuzzy_string_match_ranks(df)
 
         if cmd == "extract_google":
             print("extract_google")                      
@@ -114,10 +108,6 @@ def main():
             df = load_input_museums()
             analyse_museum_websites(df)
 
-        if cmd == "add_mus_ids":
-            print("add_mus_ids")
-            df = load_input_museums()
-            add_museum_ids(df)
 
         if cmd == "tests":
             logger.info("tests")

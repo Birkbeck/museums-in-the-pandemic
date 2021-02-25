@@ -8,7 +8,7 @@ import tests
 
 # import all tests
 from tests.test_scrapers import TestWebsiteScraper, TestVPN, TestTwitterScraper, TestFacebookScraper
-from tests.test_analytics import TestTextExtraction, TestTextModel
+from tests.test_analytics import TestTextExtraction, TestTextModel, TestVal
     
         
 def get_all_tests():
@@ -21,10 +21,11 @@ def get_all_tests():
     #test_classes.append(TestVPN)
     #test_classes.append(TestTwitterScraper)
     #test_classes.append(TestWebsiteScraper)
-    test_classes.append(TestFacebookScraper)
+    #test_classes.append(TestFacebookScraper)
     #test_classes.append(TestVPN)
     #test_classes.append(TestTextExtraction)
     #test_classes.append(TestTextModel)
+    test_classes.append(TestVal)
     
     
     # build suite

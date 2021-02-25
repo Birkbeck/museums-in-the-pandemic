@@ -220,48 +220,55 @@ def generate_string_pool_from_museum_name(mname):
     """ @returns variants of strings for fuzzy match on museum names """
     assert len(mname)>2
     pool = []
+    joiningwords=["or", "the", "a", "for", "th"]
     pool.append(mname)
     pool.append(mname+" museum")
-    pool.append(mname+" Museum")
+    
     mnamelist= mname.rstrip().split(" ")
     newphrase=""
     for word in mnamelist:
         
-        if word != "or" and word != "the" and word != "a" and word != "for" and word != "and" and word != "Or" and word != "The" and word != "A" and word != "For" and word != "And":
+        if word not in joiningwords and word != "and" :
             newphrase = newphrase+word+" "
     pool.append(newphrase.rstrip())
     pool.append(newphrase+"museum")
-    pool.append(newphrase+"Museum")
+    pool.append(newphrase.replace(' ',''))
+    pool.append(newphrase.replace(' ','')+"museum")
+    
     newphrase=""
     for word in mnamelist:
         
-        if word != "or" and word != "the" and word != "a" and word != "for" and word != "Or" and word != "The" and word != "A" and word != "For":
-            if word == "and" or word == "And":
+        if word not in joiningwords:
+            if word == "and":
                 newphrase = newphrase+"& "
             else:
                 newphrase = newphrase+word+" "
     pool.append(newphrase.rstrip())
     pool.append(newphrase+"museum")
-    pool.append(newphrase+"Museum")
+    pool.append(newphrase.replace(' ',''))
+    pool.append(newphrase.replace(' ','')+"museum")
+    
     newphrase=""
     for word in mnamelist:
         
-        if word != "or" and word != "the" and word != "a" and word != "for" and word != "and" and word != "Or" and word != "The" and word != "A" and word != "For" and word != "And":
+        if word not in joiningwords and word != "and" :
             newphrase = newphrase+word[0]
     pool.append(newphrase)
     pool.append(newphrase+" museum")
-    pool.append(newphrase+ "Museum")
+    pool.append(newphrase+"museum")
+    
     newphrase=""
     for word in mnamelist:
         
-        if word != "or" and word != "the" and word != "a" and word != "for" and word != "Or" and word != "The" and word != "A" and word != "For":
-            if word == "and" or word == "And":
+        if word not in joiningwords:
+            if word == "and":
                 newphrase = newphrase+"&"
             else:
                 newphrase = newphrase+word[0]
     pool.append(newphrase)
     pool.append(newphrase+" museum")
-    pool.append(newphrase+" Museum")
+    pool.append(newphrase+"museum")
+    
     return pool
 
 
@@ -269,13 +276,13 @@ def fuzzy_string_match(a, b):
     """ @returns a similarity score based on the extent to which a is found in b"""
     assert len(a) > 0
     assert len(b) > 0
-    score = None
+    
     ratio = fuzz.token_sort_ratio(a, b)
     return ratio
     # https://towardsdatascience.com/fuzzy-string-matching-in-python-68f240d910fe
 
 
-    return score
+    
 
 
 def match_museum_name_with_string(mname, str_from_url):
@@ -289,20 +296,24 @@ def match_museum_name_with_string(mname, str_from_url):
     max_score = max(scores)
     return max_score
 
-def get_fuzzy_string_match_ranks(musdf):
-    rankrow=[]
+def get_fuzzy_string_match_scores(musdf):
+    scorerow=[]
     for row in musdf.iterrows():
-        urlstring=row[1].url.split("/")[3]
-        musename = row[1].Museum_Name
-        rankrow.append(match_museum_name_with_string(musename, urlstring))
-    musdf['rank']=rankrow
-    musdf.to_csv('tmp/fuzzy_museum_rankings.tsv', index=False, sep='\t')
+        urlstring=row[1].url.split("/")[3].lower()
+        musename = row[1].Museum_Name.lower()
+        scorerow.append(match_museum_name_with_string(musename, urlstring))
+    musdf['score']=scorerow
+    finaldf=pd.DataFrame()
+    for score, muse_df in musdf.groupby('muse_id'):
+        newdf=muse_df.sort_values(by=['score'], ascending=False)
+        finaldf=pd.concat([finaldf, newdf])
+    finaldf.to_csv('tmp/fuzzy_museum_scores.tsv', index=False, sep='\t')
     return None
 
 
 def combinedatasets():
-    df1 = pd.read_csv('tmp/eggs.tsv', sep='\t')
-    df2 = pd.read_csv('tmp/data.csv', sep=',')
+    df1 = pd.read_csv('tmp/all_museum_id.tsv', sep='\t')
+    df2 = pd.read_csv('tmp/all_museum_data.csv', sep=',')
     df3=pd.merge(df1, df2, on='musname')
     df3.to_csv('tmp/museums_wattributes-2020-02-23.tsv', index=False, sep='\t')
     return None

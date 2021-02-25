@@ -56,14 +56,6 @@
             "program": "mip/app.py",
             "console": "integratedTerminal",
             "args": ["extract_google"]
-        },
-        {
-            "name": "fuzzy_string_match",
-            "type": "python",
-            "request": "launch",
-            "program": "mip/app.py",
-            "console": "integratedTerminal",
-            "args": ["fuzzy_string_match"]
         }
     ],
     "compounds": [
