@@ -27,8 +27,9 @@ def load_input_museums():
 
 def load_fuzzy_museums():
     """ Load MM museum data that includes ALL museums """
-    df = pd.read_csv('data/google_results/google_extracted_results_facebook.tsv', sep='\t')
-    df = exclude_closed(df)
+    df = pd.read_csv('data/google_results/google_extracted_results_twitter_noloc.tsv', sep='\t')
+    
+    #df = exclude_closed(df)
     print("loaded museums:",len(df))
     return df
 
@@ -289,7 +290,10 @@ def match_museum_name_with_string(mname, str_from_url):
     """@returns max similarity score between variants of mname and str_from_url)"""
     pool = generate_string_pool_from_museum_name(mname)
     scores = []
+    print(mname)
+    print(str_from_url)
     for name_variant in pool:
+        
         score = fuzzy_string_match(name_variant, str_from_url)
         if score is not None:
             scores.append(score)
@@ -300,8 +304,13 @@ def get_fuzzy_string_match_scores(musdf):
     scorerow=[]
     for row in musdf.iterrows():
         urlstring=row[1].url.split("/")[3].lower()
+        if(urlstring=='events'):
+            urlstring=row[1].url.split("/")[4].lower()
         musename = row[1].Museum_Name.lower()
-        scorerow.append(match_museum_name_with_string(musename, urlstring))
+        if urlstring !='':
+            scorerow.append(match_museum_name_with_string(musename, urlstring))
+        else:
+            scorerow.append(0)
     musdf['score']=scorerow
     finaldf=pd.DataFrame()
     for score, muse_df in musdf.groupby('muse_id'):

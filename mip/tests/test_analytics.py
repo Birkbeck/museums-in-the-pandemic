@@ -38,6 +38,7 @@ class TestVal(unittest.TestCase):
     df=load_fuzzy_museums()
     get_fuzzy_string_match_scores(df)
     
+    
 class TestCentralDB(unittest.TestCase):
     def setUp(self):        
         i = 0
