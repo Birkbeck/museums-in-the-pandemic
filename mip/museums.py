@@ -287,7 +287,7 @@ def fuzzy_string_match(a, b):
 def generate_combined_dataframe():
     scrapetarget=[]
     searchtype=[]
-    df_mus = pd.read_csv('data/google_results/museum_searches_all-2021-02-18.tsv', sep='\t')
+    df_mus = pd.read_csv('data/google_results/results_source_files/museum_searches_all-2021-02-18.tsv.gz', sep='\t')
     for item in df_mus.iterrows():
         scrapetarget.append('web')
         searchtype.append('regular')
@@ -296,7 +296,7 @@ def generate_combined_dataframe():
     scrapetarget=[]
     searchtype=[]
 
-    df_mus_exact=pd.read_csv('data/google_results/google_extracted_results_exact.tsv', sep='\t')
+    df_mus_exact=pd.read_csv('data/google_results/results_source_files/google_extracted_results_exact.tsv.gz', sep='\t')
     for item in df_mus_exact.iterrows():
         scrapetarget.append('web')
         searchtype.append('exact')
@@ -304,7 +304,7 @@ def generate_combined_dataframe():
     df_mus_exact['search_variety']=searchtype
     scrapetarget=[]
     searchtype=[]
-    df_facebook=pd.read_csv('data/google_results/google_extracted_results_facebook.tsv', sep='\t')
+    df_facebook=pd.read_csv('data/google_results/results_source_files/google_extracted_results_facebook.tsv.gz', sep='\t')
     for item in df_facebook.iterrows():
         scrapetarget.append('facebook')
         searchtype.append('location')
@@ -312,7 +312,7 @@ def generate_combined_dataframe():
     df_facebook['search_variety']=searchtype
     scrapetarget=[]
     searchtype=[]
-    df_facebook_noloc=pd.read_csv('data/google_results/google_extracted_results_facebook_noloc.tsv', sep='\t')
+    df_facebook_noloc=pd.read_csv('data/google_results/results_source_files/google_extracted_results_facebook_noloc.tsv.gz', sep='\t')
     for item in df_facebook_noloc.iterrows():
         scrapetarget.append('facebook')
         searchtype.append('regular')
@@ -320,7 +320,7 @@ def generate_combined_dataframe():
     df_facebook_noloc['search_variety']=searchtype
     scrapetarget=[]
     searchtype=[]
-    df_twitter=pd.read_csv('data/google_results/google_extracted_results_twitter.tsv', sep='\t')
+    df_twitter=pd.read_csv('data/google_results/results_source_files/google_extracted_results_twitter.tsv.gz', sep='\t')
     for item in df_twitter.iterrows():
         scrapetarget.append('twitter')
         searchtype.append('location')
@@ -328,7 +328,7 @@ def generate_combined_dataframe():
     df_twitter['search_variety']=searchtype
     scrapetarget=[]
     searchtype=[]
-    df_twitter_noloc=pd.read_csv('data/google_results/google_extracted_results_twitter_noloc.tsv', sep='\t')
+    df_twitter_noloc=pd.read_csv('data/google_results/results_source_files/google_extracted_results_twitter_noloc.tsv.gz', sep='\t')
     for item in df_twitter_noloc.iterrows():
         scrapetarget.append('twitter')
         searchtype.append('regular')
@@ -339,7 +339,7 @@ def generate_combined_dataframe():
     finaldf=finaldf.append(df_facebook_noloc)
     finaldf=finaldf.append(df_twitter)
     finaldf=finaldf.append(df_twitter_noloc)
-    finaldf.to_csv('tmp/merged_search_df_01_03_2021.tsv', index=False, sep='\t')
+    finaldf.to_csv('data/google_results/google_results_all_01_03_2021.tsv', index=False, sep='\t')
 
 
 
