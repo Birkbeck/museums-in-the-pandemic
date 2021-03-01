@@ -284,6 +284,63 @@ def fuzzy_string_match(a, b):
 
 
     
+def generate_combined_dataframe():
+    scrapetarget=[]
+    searchtype=[]
+    df_mus = pd.read_csv('data/google_results/museum_searches_all-2021-02-18.tsv', sep='\t')
+    for item in df_mus.iterrows():
+        scrapetarget.append('web')
+        searchtype.append('regular')
+    df_mus['scrape_target']=scrapetarget
+    df_mus['search_variety']=searchtype
+    scrapetarget=[]
+    searchtype=[]
+
+    df_mus_exact=pd.read_csv('data/google_results/google_extracted_results_exact.tsv', sep='\t')
+    for item in df_mus_exact.iterrows():
+        scrapetarget.append('web')
+        searchtype.append('exact')
+    df_mus_exact['scrape_target']=scrapetarget
+    df_mus_exact['search_variety']=searchtype
+    scrapetarget=[]
+    searchtype=[]
+    df_facebook=pd.read_csv('data/google_results/google_extracted_results_facebook.tsv', sep='\t')
+    for item in df_facebook.iterrows():
+        scrapetarget.append('facebook')
+        searchtype.append('location')
+    df_facebook['scrape_target']=scrapetarget
+    df_facebook['search_variety']=searchtype
+    scrapetarget=[]
+    searchtype=[]
+    df_facebook_noloc=pd.read_csv('data/google_results/google_extracted_results_facebook_noloc.tsv', sep='\t')
+    for item in df_facebook_noloc.iterrows():
+        scrapetarget.append('facebook')
+        searchtype.append('regular')
+    df_facebook_noloc['scrape_target']=scrapetarget
+    df_facebook_noloc['search_variety']=searchtype
+    scrapetarget=[]
+    searchtype=[]
+    df_twitter=pd.read_csv('data/google_results/google_extracted_results_twitter.tsv', sep='\t')
+    for item in df_twitter.iterrows():
+        scrapetarget.append('twitter')
+        searchtype.append('location')
+    df_twitter['scrape_target']=scrapetarget
+    df_twitter['search_variety']=searchtype
+    scrapetarget=[]
+    searchtype=[]
+    df_twitter_noloc=pd.read_csv('data/google_results/google_extracted_results_twitter_noloc.tsv', sep='\t')
+    for item in df_twitter_noloc.iterrows():
+        scrapetarget.append('twitter')
+        searchtype.append('regular')
+    df_twitter_noloc['scrape_target']=scrapetarget
+    df_twitter_noloc['search_variety']=searchtype
+    finaldf=df_mus.append(df_mus_exact)
+    finaldf=finaldf.append(df_facebook)
+    finaldf=finaldf.append(df_facebook_noloc)
+    finaldf=finaldf.append(df_twitter)
+    finaldf=finaldf.append(df_twitter_noloc)
+    finaldf.to_csv('tmp/merged_search_df_01_03_2021.tsv', index=False, sep='\t')
+
 
 
 def match_museum_name_with_string(mname, str_from_url):
