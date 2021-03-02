@@ -133,7 +133,8 @@ def exclude_closed(df):
 
 def load_manual_museum_urls():
     """ Load manually selected URLs for difficult museums """
-    fn = 'data/museums/manual_google_url_results_top10_2021-02-19.xlsx'
+    fn = 'data/samples/manual_google_url_results_top10_2021-02-19.xlsx'
+    fn2 = 'data/samples/sample_museum_search_with_loc'
     df = pd.read_excel(fn)
     df.muse_id
     print(df.columns, len(df))
@@ -288,7 +289,7 @@ def generate_combined_dataframe():
     print("generate_combined_dataframe")
     scrapetarget=[]
     searchtype=[]
-    df_mus = pd.read_csv('data/google_results/results_source_files/museum_searches_all-2021-02-18.tsv.gz', sep='\t')
+    df_mus = pd.read_csv('data/google_results/results_source_files/google_extracted_results_reg.tsv.gz', sep='\t')
     for item in df_mus.iterrows():
         scrapetarget.append('web')
         searchtype.append('regular')
@@ -340,7 +341,7 @@ def generate_combined_dataframe():
     finaldf=finaldf.append(df_facebook_noloc)
     finaldf=finaldf.append(df_twitter)
     finaldf=finaldf.append(df_twitter_noloc)
-    finaldf.to_csv('data/google_results/google_results_all_01_03_2021.tsv', index=False, sep='\t')
+    finaldf.to_csv('data/google_results/google_results_all_02_03_2021.tsv', index=False, sep='\t')
 
 
 

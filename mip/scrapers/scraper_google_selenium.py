@@ -589,16 +589,17 @@ def extract_google_results(df):
     print(res_df.columns)
     outdf = pd.DataFrame()
     for index, row in res_df.iterrows():
-        html = row['page_content']
-        google_df = extract_links_from_google_page(html)
-        if not google_df.empty:
-            google_df['search'] = row['search']
-            google_df['search_type'] = row['search_type']
-            google_df['ts'] = row['ts']
-            google_df['muse_id'] = row['muse_id']
+        if row['search_type']!='twitter' and row['search_type']!='facebook':
+            html = row['page_content']
+            google_df = extract_links_from_google_page(html)
+            if not google_df.empty:
+                google_df['search'] = row['search']
+                google_df['search_type'] = row['search_type']
+                google_df['ts'] = row['ts']
+                google_df['muse_id'] = row['muse_id']
        
         #print(google_df)
-            outdf = pd.concat([outdf, google_df])
+                outdf = pd.concat([outdf, google_df])
     
     
     fulldf = outdf.merge(df, left_on='muse_id', right_on='id')
