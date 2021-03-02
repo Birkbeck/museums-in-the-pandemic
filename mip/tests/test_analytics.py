@@ -34,8 +34,13 @@ class TestTextModel(unittest.TestCase):
         i = 0
         setup_ling_model()
 
+
 class TestVal(unittest.TestCase):
-    generate_combined_dataframe()
+    def setUp(self):        
+        i = 0
+
+    def test_combined_dataframe(self):
+        generate_combined_dataframe()
     
     
 class TestCentralDB(unittest.TestCase):

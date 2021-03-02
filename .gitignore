@@ -134,3 +134,4 @@ workspace.code-workspace
 .twitter.json
 .secrets.json
 data/museums/~$manual_google_url_results_top10_2021-02-19.xlsx
+data/samples/~$sample_museum_search_with_loc.xlsx

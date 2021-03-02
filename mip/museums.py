@@ -285,6 +285,7 @@ def fuzzy_string_match(a, b):
 
     
 def generate_combined_dataframe():
+    print("generate_combined_dataframe")
     scrapetarget=[]
     searchtype=[]
     df_mus = pd.read_csv('data/google_results/results_source_files/museum_searches_all-2021-02-18.tsv.gz', sep='\t')
@@ -383,3 +384,15 @@ def combinedatasets():
     df3=pd.merge(df1, df2, on='musname')
     df3.to_csv('tmp/museums_wattributes-2020-02-23.tsv', index=False, sep='\t')
     return None
+
+
+def load_all_google_results():
+    df = pd.read_csv('data/google_results/google_results_all_01_03_2021.tsv.gz', sep='\t')
+    print("load_all_google_results", len(df))
+    print(df.describe())
+    print(df.columns)
+    print(df.search_type.value_counts())
+    print(df.search_variety.value_counts())
+    print(df.year_closed.value_counts())
+    print(df.scrape_target.value_counts())
+    return df

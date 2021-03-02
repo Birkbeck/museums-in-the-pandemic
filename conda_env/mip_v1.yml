@@ -15,8 +15,10 @@ dependencies:
   - scikit-learn
   - numpy
   - openpyxl
+  - python-levenshtein
   - pip
   - pip:
     - webbot
     - facebook_scraper
+    - fuzzywuzzy
     
