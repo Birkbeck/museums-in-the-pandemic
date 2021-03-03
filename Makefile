@@ -18,7 +18,7 @@ scrape_websites:
  	# echo ">>> Experiment running in background."
 
 running:
-	-@ps auxw | grep 'run_app_server';
+	-@ps auxw | grep 'mip/app.py';
 	#-@ps auxw | grep '[t]or';
 	#-@netstat -ant | grep 9050;
 
