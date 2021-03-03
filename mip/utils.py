@@ -11,7 +11,6 @@ logger = logging.getLogger(__name__)
 """ 
 Utility functions 
 """
-
 def select_random_sublist(l, n):
     random.seed(30)  # use seed to use deterministic randomisation
     assert len(l) >= n, "select_random_sublist: " + str(len(l)) + ' ' + str(n)
@@ -50,10 +49,12 @@ def _pickle_obj_to_gz(obj, filePath):
     pickle.dump(obj, gzip.open(filePath, "wb"), pickle.HIGHEST_PROTOCOL)
     log.info("_pickle_obj_to_gz: " + filePath)
 
+
 def count_numbers(l):
     vals = [v for v in l if _is_number(v) and not _is_nan(v)]
     n = len(vals)
     return n
+
 
 def _is_nan(*objs):
     for i in range(len(objs)):
@@ -61,12 +62,14 @@ def _is_nan(*objs):
         if not b: return False
     return True
 
+
 def get_app_settings():
     arr = os.listdir('.')
     with open('mip/app_settings.json') as json_file:
         data = json.load(json_file)
 
     return data
+
 
 def _is_number(*objs):
     for i in range(len(objs)):
@@ -107,11 +110,13 @@ def _write_str_to_file(s, fn, bGzip=False):
             text_file.write(s)
     log.info(str(len(s)) + " chars written in " + fn)
 
+
 def get_url_domain(url):
     assert url
     dom = urlparse(url).netloc
     dom = dom.replace("www.","")
     return dom
+
 
 def _wrap_cdata_text(s):
     ss = "<![CDATA[\n" + s + "\n]]>"
@@ -293,6 +298,7 @@ def strmem(n):
     assert _is_number(n)
     s = humanize.naturalsize(n, gnu=True)
     return s
+
 
 class StopWatch(object):
     """

@@ -4,63 +4,67 @@
 Analyse scraped websites
 """
 
-from db.db import open_sqlite, run_select_sql
+from db.db import connect_to_postgresql_db
 import pandas as pd
 from bs4 import BeautifulSoup
 from bs4.element import Comment
+from scrapers.scraper_websites import get_scraping_session_tables, get_scraping_session_stats_by_museum
 import re
 from utils import remove_empty_elem_from_list, remove_multiple_spaces_tabs
 import logging
 logger = logging.getLogger(__name__)
 
+# constants
 field_sep = '\n'
+table_suffix = '_attr'
 
-def get_scraping_sessions(db):
-    df = run_select_sql("select session_id, count(*) as page_n from web_pages_dump group by session_id; ", db)
-    return df
 
-def get_scraping_sessions_by_museum(db):
-    df = run_select_sql(
-        """select session_id, muse_id, count(*) as page_n, sum(page_content_length) as data_size
-        from web_pages_dump 
-        group by session_id, muse_id;
-        """, db)
-    return df
+def get_webdump_attr_table_name(session_id):
+    tablen = get_webdump_table_name(session_id) + table_suffix
+    return tablen
 
-def create_webpage_attribute_table(db_con):
+
+def create_webpage_attribute_table(table_name, db_con):
+    """ create table for attributes """
+    assert table_name
+    attr_table = table_name + table_suffix
     c = db_con.cursor()
     # Create table
-    c.execute('''CREATE TABLE IF NOT EXISTS web_page_attributes
-            (page_attr_id integer PRIMARY KEY AUTOINCREMENT,
-            page_id integer NOT NULL,
+    # #page_attr_id integer PRIMARY KEY AUTOINCREMENT,
+    sql = '''CREATE TABLE IF NOT EXISTS {}
+            (page_id integer NOT NULL REFERENCES {}(page_id),
             session_id text NOT NULL,
             attrib_name text NOT NULL,
             attrib_val text,
-            UNIQUE(page_id, attrib_name));
-            ''')
+            PRIMARY KEY(page_id, attrib_name));
+            '''.format(attr_table, table_name)
+    c.execute(sql)
     db_con.commit()
-    logger.debug('create_webpage_attribute_table')
+    
+    logger.info('create_webpage_attribute_table: '+attr_table)
+    return attr_table
 
-
-def clear_attribute_table(db_con):
-    logger.debug("clear_attribute_table")
+def clear_attribute_table(table_name, db_con):
+    logger.debug("clear_attribute_table: "+ table_name)
     c = db_con.cursor()
-    c.execute('''DELETE from web_page_attributes;''')
+    c.execute('''DELETE from {};'''.format(table_name))
     db_con.commit()
+    return True
 
-def insert_page_attribute(db_con, page_id, session_id, attrib_name, attrib_val):
+def insert_page_attribute(db_con, table_name, page_id, session_id, attrib_name, attrib_val):
     assert attrib_name in ['title','headers','all_text']
     assert page_id >= 0
     if attrib_val == '':
         attrib_val = None
     
     c = db_con.cursor()
-    sql = '''INSERT INTO web_page_attributes(page_id, session_id, attrib_name, attrib_val)
-              VALUES(?,?,?,?);'''
+    sql = '''INSERT INTO {}(page_id, session_id, attrib_name, attrib_val)
+              VALUES(%s,%s,%s,%s);'''.format(table_name)
     
     cur = db_con.cursor()
     cur.execute(sql, [page_id, session_id, attrib_name, attrib_val])
     db_con.commit()
+    return True
 
 
 def tag_visible(element):
@@ -78,7 +82,7 @@ def clean_text(s):
     return s
 
 
-def extract_attributes_from_page_html(db_con, page_id, session_id, page_html):
+def extract_attributes_from_page_html(page_id, session_id, page_html, attr_table, db_con):
     """ Extract text attributes from HTML code of a museum web page """
     assert page_id >= 0
     assert len(page_html) > 0
@@ -87,14 +91,14 @@ def extract_attributes_from_page_html(db_con, page_id, session_id, page_html):
     # get page title
     ptitle = soup.title.string
     if ptitle: ptitle = ptitle.strip()
-    insert_page_attribute(db_con, page_id, session_id, 'title', ptitle)
+    insert_page_attribute(db_con, attr_table, page_id, session_id, 'title', ptitle)
     
     # get page headers
     headers = soup.find_all(re.compile('^h[1-6]$'))
     headers = [clean_text(h.text).strip() for h in headers if h.text]
     headers = remove_empty_elem_from_list(headers)
     headers = field_sep.join(headers)
-    insert_page_attribute(db_con, page_id, session_id, 'headers', remove_multiple_spaces_tabs(headers))
+    insert_page_attribute(db_con, attr_table, page_id, session_id, 'headers', remove_multiple_spaces_tabs(headers))
 
     # get all text
     if soup.body:
@@ -102,29 +106,31 @@ def extract_attributes_from_page_html(db_con, page_id, session_id, page_html):
         visible_texts = remove_empty_elem_from_list(filter(tag_visible, texts))
         page_all_text = field_sep.join(t.strip() for t in visible_texts if t)
         page_all_text = remove_multiple_spaces_tabs(page_all_text)
-        insert_page_attribute(db_con, page_id, session_id, 'all_text', page_all_text)
+        insert_page_attribute(db_con, attr_table, page_id, session_id, 'all_text', page_all_text)
     else:
-        insert_page_attribute(db_con, page_id, session_id, 'all_text', None)
+        insert_page_attribute(db_con, attr_table, page_id, session_id, 'all_text', None)
         logger.debug("page ID "+str(page_id)+" has no HTML content")
 
+    # TODO: extract other page fields/links here
 
-    # TODO: extract page fields/links here
 
-def extract_text_from_websites(in_website_db, out_attr_db):
+def extract_text_from_websites(in_table, out_table, db_conn):
     """ Scan all pages in in_website_db and generate attributes in out_attr_db"""
-    clear_attribute_table(out_attr_db)
+    assert in_table
+    assert 'attr' in out_table
+    clear_attribute_table(out_table, db_conn)
     block_sz = 50
     offset = 0
     keep_scanning = True
     while keep_scanning:
         print(offset)
-        sql = "select * from web_pages_dump limit "+str(block_sz)+ " offset "+str(offset)+";"
-        pages_df = run_select_sql(sql, in_website_db)
+        sql = "select * from {} limit {} offset {};".format(in_table, str(block_sz), str(offset))
+        pages_df = pd.read_sql(sql, db_conn)
         for index, row in pages_df.iterrows():
             page_id = row['page_id']
             session_id = row['session_id']
             page_html = row['page_content']
-            extract_attributes_from_page_html(out_attr_db, page_id, session_id, page_html)
+            extract_attributes_from_page_html(page_id, session_id, page_html, out_table, db_conn)
         # process pages
         # scanning logic
         offset += block_sz
@@ -135,23 +141,22 @@ def extract_text_from_websites(in_website_db, out_attr_db):
     in_website_db.close()
     out_attr_db.close()
 
-def analyse_museum_websites(museums_df):
-    """ Main function """
+def analyse_museum_websites():
+    """ Main function analyse_museum_websites"""
     # input data (museum sample)
-    sample_df = pd.read_csv("data/museums/mip_data_sample_2020_01.tsv", sep='\t')
+    db_conn = connect_to_postgresql_db()
 
-    #in_db = 'tmp/websites-sample-2020-01-26.db'
-    in_db = 'tmp/websites.db'
-    logger.info("extract_text_from_websites: "+in_db)
-    db = open_sqlite(in_db)
+    logger.info("extract_text_from_websites")
 
     # get session stats
-    print(get_scraping_sessions(db))
-    
-    stats_df = get_scraping_sessions_by_museum(db)
-    df = sample_df.merge(stats_df, how='left', left_on='mm_id', right_on='muse_id')
-    df.to_excel('tmp/analytics/websites-sample-stats.xlsx')
+    tables = get_scraping_session_tables(db_conn)
 
-    # extract page attributes
-    create_webpage_attribute_table(db)
+    for tab in tables:
+        df = get_scraping_session_stats_by_museum(tab, db_conn)
+        #df = sample_df.merge(stats_df, how='left', left_on='mm_id', right_on='muse_id')
+        df.to_excel('tmp/analytics/websites-stats-{}.xlsx'.format(tab), index=False)
+        # prepare table
+        out_table = create_webpage_attribute_table(tab, db_conn)
+        # extract attributes
+        extract_text_from_websites(tab, out_table, db_conn)
     

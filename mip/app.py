@@ -13,8 +13,7 @@ import datetime
 import pandas as pd
 import openpyxl
 from utils import StopWatch
-from scrapers.scraper_google_selenium import scrape_google_museum_names
-from scrapers.scraper_google_selenium import extract_google_results
+from scrapers.scraper_google_selenium import scrape_google_museum_names, extract_google_results
 from scrapers.scraper_twitter import scrape_twitter_account
 from scrapers.scraper_websites import scrape_websites
 from scrapers.scraper_facebook import scrape_facebook
@@ -81,7 +80,6 @@ def main():
             df = load_input_museums()
             scrape_google_museum_names(df)
 
-
         if cmd == "extract_google":
             print("extract_google")                      
             df = load_input_museums()
@@ -99,15 +97,14 @@ def main():
             scrape_facebook(df)
 
         if cmd == "scrape_websites":
-            print("scrape_websites")
-            df = load_input_museums()
-            scrape_websites(df)
+            logger.info("scrape_websites")
+            assert is_postgresql_db_accessible()
+            scrape_websites()
 
         if cmd == "an_websites":
             print("an_websites")
-            df = load_input_museums()
-            analyse_museum_websites(df)
-
+            assert is_postgresql_db_accessible()
+            analyse_museum_websites()
 
         if cmd == "tests":
             logger.info("tests")

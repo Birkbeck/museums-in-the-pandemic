@@ -388,7 +388,7 @@ def combinedatasets():
 
 
 def load_all_google_results():
-    df = pd.read_csv('data/google_results/google_results_all_01_03_2021.tsv.gz', sep='\t')
+    df = pd.read_csv('data/google_results/google_results_all_02_03_2021.tsv.gz', sep='\t')
     print("load_all_google_results", len(df))
     print(df.describe())
     print(df.columns)
