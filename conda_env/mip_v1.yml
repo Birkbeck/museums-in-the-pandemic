@@ -21,4 +21,5 @@ dependencies:
     - webbot
     - facebook_scraper
     - fuzzywuzzy
+    - tldextract
     

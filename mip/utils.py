@@ -6,6 +6,7 @@ import os
 import json
 import re
 import logging
+from tldextract import extract
 logger = logging.getLogger(__name__)
 
 """ 
@@ -113,9 +114,22 @@ def _write_str_to_file(s, fn, bGzip=False):
 
 def get_url_domain(url):
     assert url
-    dom = urlparse(url).netloc
-    dom = dom.replace("www.","")
+    tsd, td, tsu = extract(url) # prints abc, hostname, com
+    dom = td + '.' + tsu # will prints as hostname.com
+    #dom = urlparse(url).netloc
+    #dom = dom.replace("www.","")
     return dom
+
+
+def split_dataframe(df, chunk_size):
+    """ Split a dataframe into sub dataframes """
+    chunks = list()
+    num_chunks = len(df) // chunk_size + 1
+    for i in range(num_chunks):
+        subdf = df[i*chunk_size:(i+1)*chunk_size]
+        if len(subdf)>0:
+            chunks.append(subdf)
+    return chunks
 
 
 def _wrap_cdata_text(s):
