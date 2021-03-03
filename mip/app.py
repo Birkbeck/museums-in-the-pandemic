@@ -23,7 +23,7 @@ from db.db import is_postgresql_db_accessible
 from tests.run_tests import get_all_tests
 import unittest
 
-COMMANDS = ["help","tests","scrape_google","extract_google",'scrape_twitter','scrape_websites','an_websites', 'scrape_facebook']
+COMMANDS = ["tests","scrape_google","extract_google",'scrape_twitter','scrape_websites','an_websites','scrape_facebook']
 cmd = None
 
 # %% Operations
@@ -69,10 +69,10 @@ def main():
     # check input
     cmd_list = sys.argv[1:]
     if len(sys.argv) <= 1:
-            raise RuntimeError("No parameter. Valid parameters: " + str(COMMANDS))
+            raise RuntimeError("No parameter. Valid parameters: " + str(sorted(COMMANDS)))
     for cmd in cmd_list:
         if len(sys.argv) < 2 or not sys.argv[1] in COMMANDS:
-            raise RuntimeError("Invalid parameter. Valid parameters: " + str(COMMANDS))
+            raise RuntimeError("Invalid parameter. Valid parameters: " + str(sorted(COMMANDS)))
     
     for cmd in cmd_list:
         if cmd == "scrape_google":
