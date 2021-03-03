@@ -20,6 +20,7 @@ SELECT table_name FROM information_schema.tables WHERE table_schema='websites';
 select page_id, root_url, url, referer_url, depth from websites.web_pages_dump_20210303 limit 100;
 select count(page_id) from websites.web_pages_dump_20210303;
 select muse_id, count(page_id) as page_n from websites.web_pages_dump_20210303 group by muse_id;
+select root_url, count(page_id) as page_n from websites.web_pages_dump_20210303 group by root_url;
 select count(distinct muse_id) as muse_n from websites.web_pages_dump_20210303;
 
 -

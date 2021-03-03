@@ -35,19 +35,18 @@ def scrape_websites():
 
     url_df = load_urls_for_wide_scrape()
     print("scrape_websites urls =", len(url_df))
-    print("scrape_websites urls =", len(url_df))
 
     # generate session and timestamp for scraping
     session_id = gen_scraping_session_id()
     logger.info("scraping session_id: "+str(session_id))
-        
+
     # open DB
     db_conn = connect_to_postgresql_db()
     init_website_dump_db(db_conn, session_id)
     
     # DEBUG problem cases
     #sample_df = sample_df[sample_df.mm_id.isin(['mm.aim.0172'])] #'mm.New.102','mm.domus.WM042', 'mm.New.39'
-    #url_df = url_df.sample(10)
+    url_df = url_df.sample(30, random_state=23)
     # start crawler
     crawler_process = CrawlerProcess()
     websites_counter = 0
@@ -56,15 +55,14 @@ def scrape_websites():
         row = url_df.loc[i]
         assert row.muse_id
         websites_counter += 1
-        msg = ">> {} of {} websites processed".format(websites_counter, len(url_df))
+        msg = ">> {} of {} URLs processed".format(websites_counter, len(url_df))
         logger.debug(msg)
         print(msg)
         if is_valid_website(row.url):
             # valid URL
             scrape_website_scrapy(crawler_process, row.muse_id, row.url, session_id, db_conn, app_settings)
-            db_conn.commit()
             # delay
-            time.sleep(1)
+            #time.sleep(1)
         else:
             logger.debug("MIP issue: empty URL for museum: "+row.mm_id)
     # start crawling
