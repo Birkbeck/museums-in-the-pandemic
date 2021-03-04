@@ -116,7 +116,7 @@ def _write_str_to_file(s, fn, bGzip=False):
 
 
 def parallel_dataframe_apply(df, func, n_cores=4):
-    """ TODO: untested """
+    """ Apply function to rows in parallel """
     df_split = np.array_split(df, n_cores)
     pool = Pool(n_cores)
     df = pd.concat(pool.map(func, df_split))
