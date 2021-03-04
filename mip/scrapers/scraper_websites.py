@@ -21,7 +21,7 @@ import scrapy
 from scrapy.crawler import CrawlerProcess
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
-from utils import get_url_domain, get_app_settings, split_dataframe
+from utils import get_url_domain, get_app_settings, split_dataframe, parallel_dataframe_apply
 
 import logging
 logger = logging.getLogger(__name__)
@@ -60,17 +60,8 @@ def scrape_websites():
         assert len(df)>0
         assert df['url'].is_unique
         # find redirections
-        logger.info("find URL redirections...")
-        redirected_url_df = pd.DataFrame()
-        for idx, row in df.iterrows():
-            redirect_url = check_for_url_redirection(row.url)
-            if redirect_url:
-                row['url'] = redirect_url
-            redirected_url_df = redirected_url_df.append(row)
-        
-        assert len(redirected_url_df) == len(df)
-        assert len(redirected_url_df)>0
-        redirected_url_df['domain'] = redirected_url_df['url'].apply(get_url_domain)
+        redirected_url_df = parallel_dataframe_apply(df, check_redirections_before_scraping, n_cores=8)
+        #redirected_url_df = check_redirections_before_scraping(df)
         
         # set up crawler
         start_urls = redirected_url_df.url.tolist()
@@ -93,7 +84,28 @@ def scrape_websites():
     crawler_process.start()
     global page_counter
     logger.info("Scraped ended page_counter={}".format(page_counter))
-    
+
+
+def check_redirections_before_scraping(df):
+    msg = "check_redirections_before_scraping urls={}".format(len(df))
+    logger.info(msg)
+    print(msg)
+    redirected_url_df = pd.DataFrame()
+
+    for ind in range(len(df)):
+        if ind % 200 == 0:
+            logger.debug("   {}".format(ind))
+        row = df.iloc[ind]
+        redirect_url = check_for_url_redirection(row.url)
+        if redirect_url:
+            row['url'] = redirect_url
+        redirected_url_df = redirected_url_df.append(row)
+
+    assert len(redirected_url_df) == len(df)
+    assert len(redirected_url_df)>0
+    redirected_url_df['domain'] = redirected_url_df['url'].apply(get_url_domain)
+    return redirected_url_df
+
 
 def gen_scraping_session_id():
     """ Session id is the current date """
@@ -286,7 +298,7 @@ def check_for_url_redirection(url):
     try:
         # user agent must be defined, otherwise some sites says 403
         req = urllib.request.Request(url, headers={'User-Agent': user_agent})
-        response = urllib.request.urlopen(req) #, timeout=5
+        response = urllib.request.urlopen(req, timeout=5)
         new_url = response.geturl()
         redirected = new_url != url
         if redirected:

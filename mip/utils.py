@@ -7,6 +7,9 @@ import json
 import re
 import logging
 from tldextract import extract
+import numpy as np
+import pandas as pd
+from multiprocessing import Pool
 logger = logging.getLogger(__name__)
 
 """ 
@@ -110,6 +113,16 @@ def _write_str_to_file(s, fn, bGzip=False):
         with open(fn, "w") as text_file:
             text_file.write(s)
     log.info(str(len(s)) + " chars written in " + fn)
+
+
+def parallel_dataframe_apply(df, func, n_cores=4):
+    """ TODO: untested """
+    df_split = np.array_split(df, n_cores)
+    pool = Pool(n_cores)
+    df = pd.concat(pool.map(func, df_split))
+    pool.close()
+    pool.join()
+    return df
 
 
 def get_url_domain(url):
