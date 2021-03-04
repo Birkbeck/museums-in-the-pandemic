@@ -93,7 +93,7 @@ def check_redirections_before_scraping(df):
 
     for ind in range(len(df)):
         if ind % 200 == 0:
-            logger.debug("   {}".format(ind))
+            logger.debug("   redir n={}".format(ind))
         row = df.iloc[ind]
         redirect_url = check_for_url_redirection(row.url)
         if redirect_url:
