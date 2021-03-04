@@ -24,6 +24,7 @@ running:
 
 logs:
 	@ls -lh tmp/logs
+	@tail tmp/logs/nohup*
 
 wait:
 	sleep 3;
