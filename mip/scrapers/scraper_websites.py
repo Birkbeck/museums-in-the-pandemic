@@ -48,9 +48,9 @@ def scrape_websites():
     crawler_process = CrawlerProcess()
 
     # DEBUG
-    #url_df = url_df.sample(10, random_state=3)
     #url_df = url_df[url_df.url=='https://marblebar.org.au/company/st-peters-heritage-centre-hall-1460398/']
     #url_df.to_excel("tmp/museum_scraping_input.xlsx",index=False)
+    #url_df = url_df.sample(100, random_state=3)
     
     max_urls_single_crawler = 5000
     # split df and create a new crawler for each chunk
