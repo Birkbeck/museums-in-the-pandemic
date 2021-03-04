@@ -56,11 +56,11 @@ def scrape_websites():
     # split df and create a new crawler for each chunk
     chunks = split_dataframe(url_df, max_urls_single_crawler)
     for df in chunks:
-        print("urls chunk urls={} chunks={}".format(len(df),len(chunks)))
+        logger.debug("urls chunk urls={} chunks={}".format(len(df),len(chunks)))
         assert len(df)>0
         assert df['url'].is_unique
         # find redirections
-        print("find URL redirections...")
+        logger.info("find URL redirections...")
         redirected_url_df = pd.DataFrame()
         for idx, row in df.iterrows():
             redirect_url = check_for_url_redirection(row.url)
