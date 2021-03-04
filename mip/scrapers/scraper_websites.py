@@ -61,7 +61,6 @@ def scrape_websites():
         assert df['url'].is_unique
         # find redirections
         redirected_url_df = parallel_dataframe_apply(df, check_redirections_before_scraping, n_cores=8)
-        #redirected_url_df = check_redirections_before_scraping(df)
         
         # set up crawler
         start_urls = redirected_url_df.url.tolist()
