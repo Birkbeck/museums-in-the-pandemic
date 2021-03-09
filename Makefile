@@ -23,8 +23,8 @@ running:
 	#-@netstat -ant | grep 9050;
 
 logs:
-	@ls -lh tmp/logs
-	@tail tmp/logs/nohup*
+	@ls -lh tmp/logs/*
+	@tail tmp/logs/nohup*txt
 
 wait:
 	sleep 3;
