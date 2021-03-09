@@ -21,6 +21,7 @@ import scrapy
 from scrapy.crawler import CrawlerProcess
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
+from scrapy.dupefilters import RFPDupeFilter
 from utils import get_url_domain, get_app_settings, split_dataframe, parallel_dataframe_apply
 
 import logging
@@ -37,10 +38,13 @@ def scrape_websites():
     print("scrape_websites urls =", len(url_df))
 
     # generate session and timestamp for scraping
-    session_id = gen_scraping_session_id()
+    global session_id
+    # DEBUG <<<< REMOVE <<<<<< IMPORTANT
+    session_id = "20210304" #gen_scraping_session_id() 
     logger.info("scraping session_id: "+str(session_id))
 
     # open DB
+    global db_conn
     db_conn = connect_to_postgresql_db()
     init_website_dump_db(db_conn, session_id)
     
@@ -50,7 +54,7 @@ def scrape_websites():
     # DEBUG
     #url_df = url_df[url_df.url=='https://marblebar.org.au/company/st-peters-heritage-centre-hall-1460398/']
     #url_df.to_excel("tmp/museum_scraping_input.xlsx",index=False)
-    #url_df = url_df.sample(100, random_state=3)
+    #url_df = url_df.sample(10, random_state=7134)
     
     max_urls_single_crawler = 5000
     # split df and create a new crawler for each chunk
@@ -61,7 +65,6 @@ def scrape_websites():
         assert df['url'].is_unique
         # find redirections
         redirected_url_df = parallel_dataframe_apply(df, check_redirections_before_scraping, n_cores=8)
-        
         # set up crawler
         start_urls = redirected_url_df.url.tolist()
         msg = "start crawler with start_urls={}".format(len(start_urls))
@@ -120,7 +123,7 @@ def load_urls_for_wide_scrape():
     google_df = load_all_google_results()
     #for vars, subdf in google_df.groupby(['search_variety','search_type','scrape_target']):
     #    print(vars, len(subdf))
-    google_df = google_df[google_df.google_rank < 16]
+    google_df = google_df[google_df.google_rank < 11]
     #print(len(google_df))
     df = google_df[['muse_id','url']].drop_duplicates()
     #print(len(df))
@@ -214,9 +217,33 @@ def url_session_exists(url, session_id, db_conn):
         return False
 
 
+class CustomLinkExtractor(LinkExtractor):
+    """ This is to avoid rescraping the same URL in the same session. """
+    
+    def _link_allowed(self, link):
+        """ return True if URL has to be scraped (URL is not in the DB) """
+        # check if URL is in DB
+        allowed = super()._link_allowed(link)
+        if not allowed:
+            return False
+            
+        global session_id
+        global db_conn
+        assert session_id
+        already_in_session = url_session_exists(link.url, session_id, db_conn)
+        if already_in_session:
+            return False
+        
+        # run this again
+        allowed = super()._link_allowed(link)
+        if not allowed:
+            return False
+        return True
+
+
 class MultiWebsiteSpider(CrawlSpider):
     """ 
-    Simple scraper
+    Spider to scrape museum pages
     https://docs.scrapy.org/en/latest/
     """
     custom_settings = {
@@ -226,7 +253,7 @@ class MultiWebsiteSpider(CrawlSpider):
     }
     name = 'website_scraper'
     rules = [
-        Rule(LinkExtractor(unique=True, deny=[]), callback='parse', follow=True),
+        Rule(CustomLinkExtractor(unique=True, deny=[]), callback='parse', follow=True),
     ]
 
     def get_museum_id_for_url(self, url):
