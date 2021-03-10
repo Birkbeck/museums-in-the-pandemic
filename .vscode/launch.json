@@ -9,6 +9,7 @@
 
 
 
+
         {
             "name": "scrape_websites",
             "type": "python",
@@ -56,6 +57,14 @@
             "program": "mip/app.py",
             "console": "integratedTerminal",
             "args": ["extract_google"]
+        },
+        {
+            "name": "compare_sample",
+            "type": "python",
+            "request": "launch",
+            "program": "mip/app.py",
+            "console": "integratedTerminal",
+            "args": ["compare_sample"]
         }
     ],
     "compounds": [

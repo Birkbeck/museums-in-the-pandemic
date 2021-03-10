@@ -5,8 +5,10 @@ functions to handle museum data
 """
 
 import pandas as pd
+import re 
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
+from utils import get_url_domain, get_url_domain_with_search
 
 def load_museums_df_complete():
     """ Load and combine master list of museums for scraping and analysis """
@@ -130,6 +132,72 @@ def exclude_closed(df):
     assert len(df) > 0
     return df
 
+def compare_result_to_sample(search):
+    resultsdf=pd.read_csv("data/google_results/results_source_files/google_extracted_results_facebook.tsv.gz", sep='\t')
+    idealdf=load_museum_samples()
+    score=0
+    total=0
+    for row in idealdf.iterrows():
+        if row[1].search == search:
+            total=total+1
+            print(total)
+            for item in resultsdf.iterrows():
+                if item[1].id==row[1].muse_id:
+                    if not row[1].correct_url.lower()=='no_resource':
+                        if get_url_domain_with_search(item[1].url.lower().split("?lang=")[0], search)==get_url_domain_with_search(row[1].correct_url.lower().split("?lang=")[0], search):
+                            print("yes "+get_url_domain_with_search(item[1].url.lower().split("?lang=")[0], search)+" "+get_url_domain_with_search(row[1].correct_url.lower().split("?lang=")[0], search))
+                            score=score+1
+                        else:
+                            print("no "+get_url_domain_with_search(item[1].url.lower().split("?lang=")[0], search)+" "+get_url_domain_with_search(row[1].correct_url.lower().split("?lang=")[0], search))
+                        print(item[1].url+" "+row[1].correct_url)
+                    else:
+                        print("no_resource")
+                        total=total-1
+                    break
+    percentage=score/(total/100)
+    return percentage
+
+
+def load_museum_samples():
+    """ Load museum sample URLs for difficult museums """
+    #fn = 'data/samples/manual_google_url_results_top10_2021-02-19.xlsx'
+    fn2 = 'data/samples/sample_museum_search_with_loc.xlsx'
+    fn3="data/samples/mip_data_sample_2020_01.tsv"
+    #df = pd.read_excel(fn)
+    df2=pd.read_excel(fn2)
+    df3=pd.read_csv(fn3, sep='\t')
+    musid=[]
+    url=[]
+    search=[]
+    #for row in df.iterrows():
+        #if not row[1].correct_url != row[1].correct_url:
+            #musid.append(row[1].muse_id)
+            #url.append(row[1].correct_url)
+            #search.append("web")
+    for row in df2.iterrows():
+        
+        musid.append(row[1].muse_id)
+        url.append(row[1].correct_url)
+        search.append(row[1].site)
+    for row in df3.iterrows():
+        if not row[1].website != row[1].website:
+            musid.append(row[1].mm_id)
+            url.append(row[1].website)
+            search.append("web")
+        if not row[1].facebook != row[1].facebook:
+            musid.append(row[1].mm_id)
+            url.append(row[1].facebook)
+            search.append("facebook")
+        if not row[1].twitter != row[1].twitter:
+            musid.append(row[1].mm_id)
+            url.append(row[1].twitter)
+            search.append("twitter")
+    sampledict={'muse_id': musid, 'correct_url':url, 'search':search}
+    valid_websites_df=pd.DataFrame(sampledict)
+    
+    print("valid_websites_df", len(valid_websites_df))
+    assert len(valid_websites_df) > 100
+    return valid_websites_df
 
 def load_manual_museum_urls():
     """ Load manually selected URLs for difficult museums """
@@ -150,7 +218,6 @@ def load_manual_museum_urls():
     print("valid_websites_df", len(valid_websites_df))
     assert len(valid_websites_df) > 100
     return valid_websites_df
-
 
 def generate_derived_attributes_muse_df(df):
     print("generate_derived_attributes_muse_df")
@@ -199,7 +266,7 @@ def generate_stratified_museum_sample():
     print("selected museums for sampling:", len(df))
     
     # generate sample
-    fraction = .03
+    fraction = .06
     sample_n = int(len(df) * fraction)
     print("sample_n", sample_n)
     cols = ["region","size","accreditation","gov"]
@@ -216,6 +283,116 @@ def generate_stratified_museum_sample():
     fout = 'tmp/museums_stratified_sample_{}.tsv'.format(len(sample_df))
     sample_df.to_csv(fout, sep="\t", index=False)
     print(fout)
+
+
+def get_weighted_sum(musname, weighteddict, joiningwords):
+    """ @returns the sum of the weights for museum name """
+    weightsum=0
+    for word in musname:
+        if  word not in joiningwords:
+            if word == 'and':
+                weightsum = weightsum+weighteddict["&"]
+            else:
+                if word in weighteddict.keys():
+                    weightsum = weightsum+weighteddict[word]
+                else:
+                    weightsum=weightsum+1
+    return weightsum
+
+def get_musname_score(musname, str_from_url, weighteddict, joiningwords, weightsum):
+    """ @returns the normalised weighted score of the museum name """
+    poolelementscore=0
+    for word in musname:
+        if  word not in joiningwords:
+            if  word != "and" and word not in joiningwords:
+                score = fuzz.partial_ratio(word, str_from_url)
+                if word in weighteddict.keys():
+                    score = score*(1/(weightsum/weighteddict[word]))
+                else:
+                    score = score*(1/(weightsum/1))
+                poolelementscore=poolelementscore+score
+            
+        if word == 'and':
+            score = fuzz.partial_ratio("&", str_from_url)
+            score = score*(1/(weightsum/weighteddict["&"]))
+            poolelementscore=poolelementscore+score
+            
+    return poolelementscore
+def get_abbreviation_score(musname, str_from_url, joiningwords):
+    """ @returns a score based on an abreviation it generates from the museum name """
+    newphrase=""
+    for word in musname:
+        
+        if word not in joiningwords :
+            if word == "and":
+                newphrase = newphrase+"&"
+            elif re.search("^[0-9][0-9]*th", word) or re.search("^[0-9][0-9]*st", word):
+                a = re.sub('[^0-9]','', word)
+                newphrase = newphrase+a
+            else:
+                newphrase = newphrase+word[0]
+    if len(newphrase)<3:
+        return 0
+    score = fuzz.partial_ratio(newphrase, str_from_url)
+    return score
+
+def generate_weighted_fuzzy_scores(mname, str_from_url, weighteddict, location):
+    """ @returns maximum score for fuzzy string match with each word weighted based on number of occurances in all museum names """
+    joiningwords=["or", "the", "a", "for", "th", ""]
+    joiningwordswand=["or", "the", "a", "for", "th", "", "and"]
+    scores = []
+    mnamewithmus=mname+" museum"
+    mnamewithloc=mname+" "+location
+    mnamewlocandmus=mname+" "+location+" museum"
+    musname=mname.split(" ")
+    musnamewithmus = mnamewithmus.split(" ")
+    musnamewithloc= mnamewithloc.split(" ")
+    musnamewlocandmus=mnamewlocandmus.split(" ")
+    
+    weightsum=get_weighted_sum(musname, weighteddict, joiningwordswand)
+
+    
+    scores.append(get_musname_score(musname, str_from_url, weighteddict, joiningwordswand, weightsum))
+
+    
+    weightsum = weightsum+weighteddict["museum"]
+    
+    
+    scores.append(get_musname_score(musnamewithmus, str_from_url, weighteddict, joiningwordswand, weightsum))
+
+    weightsum=get_weighted_sum(musnamewithloc, weighteddict, joiningwordswand)
+    scores.append(get_musname_score(musnamewithloc, str_from_url, weighteddict, joiningwordswand, weightsum))
+    weightsum = weightsum+weighteddict["museum"]
+    scores.append(get_musname_score(musnamewlocandmus, str_from_url, weighteddict, joiningwordswand, weightsum))
+    
+    weightsum=get_weighted_sum(musname, weighteddict, joiningwords)
+    
+    
+    scores.append(get_musname_score(musname, str_from_url, weighteddict, joiningwords, weightsum))
+
+    
+    
+    weightsum = weightsum+weighteddict["museum"]
+    scores.append(get_musname_score(musnamewithmus, str_from_url, weighteddict, joiningwords, weightsum))
+
+    weightsum=get_weighted_sum(musnamewithloc, weighteddict, joiningwords)
+    scores.append(get_musname_score(musnamewithloc, str_from_url, weighteddict, joiningwords, weightsum))
+    weightsum = weightsum+weighteddict["museum"]
+    scores.append(get_musname_score(musnamewlocandmus, str_from_url, weighteddict, joiningwords, weightsum))
+
+    
+    scores.append(get_abbreviation_score(musname, str_from_url, joiningwordswand))
+    scores.append(get_abbreviation_score(musname, str_from_url, joiningwords))
+    scores.append(get_abbreviation_score(musnamewithmus, str_from_url, joiningwordswand))
+    scores.append(get_abbreviation_score(musnamewithmus, str_from_url, joiningwords))
+    scores.append(get_abbreviation_score(musnamewithloc, str_from_url, joiningwordswand))
+    scores.append(get_abbreviation_score(musnamewithloc, str_from_url, joiningwords))
+    scores.append(get_abbreviation_score(musnamewlocandmus, str_from_url, joiningwordswand))
+    scores.append(get_abbreviation_score(musnamewlocandmus, str_from_url, joiningwords))
+
+    
+    max_score = max(scores)
+    return max_score
 
 
 def generate_string_pool_from_museum_name(mname):
@@ -347,6 +524,7 @@ def generate_combined_dataframe():
 
 def match_museum_name_with_string(mname, str_from_url):
     """@returns max similarity score between variants of mname and str_from_url)"""
+    
     pool = generate_string_pool_from_museum_name(mname)
     scores = []
     print(mname)
@@ -361,13 +539,19 @@ def match_museum_name_with_string(mname, str_from_url):
 
 def get_fuzzy_string_match_scores(musdf):
     scorerow=[]
+    museweight = generate_weighted_museum_names()
     for row in musdf.iterrows():
         urlstring=row[1].url.split("/")[3].lower()
         if(urlstring=='events'):
             urlstring=row[1].url.split("/")[4].lower()
         musename = row[1].Museum_Name.lower()
+        location=row[1].location
+        if not isinstance(location, float) and not isinstance(location, int):
+            location=location.lower()
+        else:
+            location=""
         if urlstring !='':
-            scorerow.append(match_museum_name_with_string(musename, urlstring))
+            scorerow.append(generate_weighted_fuzzy_scores(musename, urlstring, museweight, location))
         else:
             scorerow.append(0)
     musdf['score']=scorerow
@@ -378,6 +562,23 @@ def get_fuzzy_string_match_scores(musdf):
     finaldf.to_csv('tmp/fuzzy_museum_scores.tsv', index=False, sep='\t')
     return None
 
+def generate_weighted_museum_names():
+    df1 = pd.read_csv('data/museums/museum_names_and_postcodes-2020-01-26.tsv', sep='\t')
+    joiningwords=["or", "the", "a", "for", "th",""]
+    weighteddict = {}
+    for row in df1.iterrows():
+        musname = row[1]["Museum_Name"].split(" ")
+        for word in musname:
+            nameword = word.lower()
+            if nameword not in joiningwords:
+                if nameword in weighteddict:
+                    weighteddict[nameword] = weighteddict[nameword]+1
+                else:
+                    weighteddict[nameword]=1
+    for item in weighteddict:
+        weighteddict[item]=1/weighteddict[item]
+    return weighteddict
+            
 
 def combinedatasets():
     df1 = pd.read_csv('tmp/all_museum_id.tsv', sep='\t')

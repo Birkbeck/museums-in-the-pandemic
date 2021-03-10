@@ -144,6 +144,19 @@ def split_dataframe(df, chunk_size):
             chunks.append(subdf)
     return chunks
 
+def get_url_domain_with_search(url, search):
+    assert url
+    if search=='web':
+        dom = urlparse(url).netloc
+        dom = dom.replace("www.","")
+    elif search=='facebook':
+        if url.split("/")[3]=='events':
+            dom = url.split("/")[4]
+        else:
+            dom = url.split("/")[3]
+    else:
+        dom = url.split("/")[3]
+    return dom
 
 def _wrap_cdata_text(s):
     ss = "<![CDATA[\n" + s + "\n]]>"

@@ -18,12 +18,12 @@ from scrapers.scraper_twitter import scrape_twitter_account
 from scrapers.scraper_websites import scrape_websites
 from scrapers.scraper_facebook import scrape_facebook
 from analytics.an_websites import analyse_museum_websites
-from museums import load_input_museums, load_extracted_museums, combinedatasets, get_fuzzy_string_match_scores, load_fuzzy_museums
+from museums import load_input_museums, load_extracted_museums, combinedatasets, get_fuzzy_string_match_scores, load_fuzzy_museums, compare_result_to_sample
 from db.db import is_postgresql_db_accessible
 from tests.run_tests import get_all_tests
 import unittest
 
-COMMANDS = ["tests","scrape_google","extract_google",'scrape_twitter','scrape_websites','an_websites','scrape_facebook']
+COMMANDS = ["tests","scrape_google","extract_google",'scrape_twitter','scrape_websites','an_websites', 'scrape_facebook','compare_sample']
 cmd = None
 
 # %% Operations
@@ -105,7 +105,13 @@ def main():
             print("an_websites")
             assert is_postgresql_db_accessible()
             analyse_museum_websites()
-
+            
+        if cmd == "compare_sample":
+            print("compare_sample")
+            search="facebook"
+            percentage=compare_result_to_sample(search)
+            print(percentage)
+            
         if cmd == "tests":
             logger.info("tests")
             unittest.TextTestRunner().run(get_all_tests())

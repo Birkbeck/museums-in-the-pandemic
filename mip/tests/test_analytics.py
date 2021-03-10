@@ -9,6 +9,7 @@ from db.db import open_sqlite, connect_to_postgresql_db, is_postgresql_db_access
 from analytics.an_websites import *
 from analytics.text_models import *
 from museums import *
+from scrapers.scraper_websites import check_for_url_redirection
 
 class TestTextExtraction(unittest.TestCase):
     def setUp(self):        
@@ -38,9 +39,16 @@ class TestTextModel(unittest.TestCase):
 class TestVal(unittest.TestCase):
     def setUp(self):        
         i = 0
-
-    def test_combined_dataframe(self):
-        generate_combined_dataframe()
+    #def test_stratified_sample(self):
+        #generate_stratified_museum_sample()
+    def test_loading_sample(self):
+        #load_manual_museum_urls()
+        print(check_for_url_redirection("https://www.facebook.com/pages/The-Scottish-Fisheries-Museum/168840906463849?ref=hl"))
+    #def test_fuzzy_string_match(self):
+       # musdf = load_fuzzy_museums()
+        #get_fuzzy_string_match_scores(musdf)
+    #def test_combined_dataframe(self):
+        #generate_combined_dataframe()
     
     
 class TestCentralDB(unittest.TestCase):
