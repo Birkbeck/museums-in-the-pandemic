@@ -21,14 +21,14 @@ SELECT table_name FROM information_schema.tables WHERE table_schema='websites';
 select * from websites.web_pages_dump_20210303 limit 100;
 select page_id, url, referer_url, depth from websites.web_pages_dump_20210303 limit 100;
 
--- number of scraped pages
+-- number of scraped pages in a single session
 select count(page_id) from websites.web_pages_dump_20210304;
 
 select muse_id, count(page_id) as page_n from websites.web_pages_dump_20210304 group by muse_id;
 
 select muse_id, url_domain, count(page_id) as page_n from websites.web_pages_dump_20210304 group by url_domain, muse_id;
 
--- how many museums
+-- how many museums are in a scraping session
 select count(distinct muse_id) as muse_n from websites.web_pages_dump_20210304;
 
 select * from websites.web_pages_dump_20210304 wpd where is_start_url;
