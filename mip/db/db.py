@@ -77,6 +77,13 @@ def run_select_sql(sql, db_conn):
     return df
 
 
+def check_dbconnection_status(db_conn):
+    assert db_conn
+    if not db_conn.closed == 0:
+        raise RuntimeError('Connection to Postgresql DB is closed, it should be open!')
+    return True
+
+
 def url_exists(con, targeturl):
     
     df = pd.read_sql("SELECT * from google_pages_dump WHERE url==\""+targeturl+"\"", con)
@@ -104,4 +111,5 @@ def connect_to_postgresql_db():
     logger.debug("connect_to_postgresql_db")
     db_conn = psycopg2.connect(host=pg_config['ip'], dbname=pg_config['dbname'], 
         user=pg_config['user'], password=pg_config['pwd'], connect_timeout=2)
+    check_dbconnection_status(db_conn)
     return db_conn

@@ -24,6 +24,9 @@ select page_id, url, referer_url, depth from websites.web_pages_dump_20210303 li
 -- number of scraped pages in a single session
 select count(page_id) from websites.web_pages_dump_20210304;
 
+-- test speed of URL/session query
+select page_id from websites.web_pages_dump_20210304 wpd where session_id = '20210304' and url = 'https://www.britishmuseum.org/';
+
 select muse_id, count(page_id) as page_n from websites.web_pages_dump_20210304 group by muse_id;
 
 select muse_id, url_domain, count(page_id) as page_n from websites.web_pages_dump_20210304 group by url_domain, muse_id;
@@ -33,12 +36,16 @@ select count(distinct muse_id) as muse_n from websites.web_pages_dump_20210304;
 
 select * from websites.web_pages_dump_20210304 wpd where is_start_url;
 
+select muse_id, url,is_start_url,a.* from websites.web_pages_dump_20210304 p, websites.web_pages_dump_20210304_attr a where p.page_id = a.page_id and p.is_start_url;
 
 https://marblebar.org.au/company/st-peters-heritage-centre-hall-1460398/
 select * from websites.web_pages_dump_20210303 where muse_id = 'mm.domus.SW005';
+
+sele 
+
 -
 ------------------------------------------------
 -- Clear DB
 ------------------------------------------------
 
-drop table twitter.tweets_dump;
+--drop table twitter.tweets_dump;

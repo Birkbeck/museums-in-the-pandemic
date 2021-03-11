@@ -9,21 +9,46 @@ from db.db import open_sqlite, connect_to_postgresql_db, is_postgresql_db_access
 from analytics.an_websites import *
 from analytics.text_models import *
 from museums import *
+import pandas as pd
 from scrapers.scraper_websites import check_for_url_redirection
 
 class TestTextExtraction(unittest.TestCase):
     def setUp(self):        
-        self.db_con = open_sqlite('data/test_data/websites_sample_2020-02-01.db')
-        self.out_db_con = open_sqlite('tmp/websites_sample_textattr.db')
+        #self.db_con = open_sqlite('data/test_data/websites_sample_2020-02-01.db')
+        #self.out_db_con = open_sqlite('tmp/websites_sample_textattr.db')
+        pass
+
+    def test_create_text_sample(self):
+        db_conn = connect_to_postgresql_db()
+        
+        table = get_scraping_session_tables(db_conn)[1]
+        muse_ids = ('mm.domus.SE245','mm.domus.SW096','mm.misc.007')
+        sql = "select * from {} where is_start_url and muse_id in ('{}','{}','{}');".format(table,muse_ids[0],muse_ids[1],muse_ids[2])
+        df = pd.read_sql(sql, db_conn)
+        print(len(df))
+        
+        out_table = create_webpage_attribute_table(table, db_conn)
+        clear_attribute_table(out_table, db_conn)
+        #clear_attribute_table(out_table, db_conn)
+        # extract attributes
+        for muse_id in muse_ids:
+            extract_text_from_websites(table, out_table, db_conn, muse_id)
+
+        sql = """select muse_id, url, is_start_url, a.* 
+        from {} p, {} a 
+        where p.page_id = a.page_id and p.is_start_url;""".format(table, out_table)
+        attr_df = pd.read_sql(sql, db_conn)
+
+        attr_df = join_museum_info(attr_df, 'muse_id')
+
+        attr_df.to_excel('tmp/sample_museum_web_text-20210310.xlsx', index=False)
+        pass
 
 
     def test_create_attr_db(self):
-        create_webpage_attribute_table(self.out_db_con)
-        extract_text_from_websites(self.db_con, self.out_db_con)
-
-
-    def test_2(self):
-        assert 1 + 1 == 2
+        pass
+        #create_webpage_attribute_table(self.out_db_con)
+        #extract_text_from_websites(self.db_con, self.out_db_con)
 
 
 class TestTextModel(unittest.TestCase):

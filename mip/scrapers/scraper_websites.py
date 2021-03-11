@@ -15,7 +15,7 @@ import urllib
 import numpy as np
 from urllib.parse import urlparse
 from museums import load_all_google_results
-from db.db import connect_to_postgresql_db
+from db.db import connect_to_postgresql_db, check_dbconnection_status
 # scrapy imports
 import scrapy
 from scrapy.crawler import CrawlerProcess
@@ -312,6 +312,7 @@ class MultiWebsiteSpider(CrawlSpider):
         if url_session_exists(url, scraping_session_id, self.db_con):
             return
         # valid URL, save it in DB
+        check_dbconnection_status(self.db_con)
         insert_website_page_in_db(self.table_name, muse_id, url, referer_url, b_base_url, 
                     html, response.status, self.session_id, depth, self.db_con)
         logger.debug('url saved: ' + url)
@@ -339,6 +340,7 @@ def get_scraping_session_tables(db_conn):
     sql = "SELECT table_name FROM information_schema.tables WHERE table_schema='websites';"
     res = pd.read_sql(sql, db_conn)['table_name'].tolist()
     res = ["websites."+r for r in res if not 'attr' in r]
+    res = sorted(res)
     return res
 
 
