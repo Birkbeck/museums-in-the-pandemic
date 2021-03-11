@@ -46,6 +46,7 @@ def scrape_websites():
     # open DB
     global db_conn
     db_conn = connect_to_postgresql_db()
+    init_url_redirection_db(db_conn)
     init_website_dump_db(db_conn, session_id)
     
     # init crawler pool
@@ -54,7 +55,7 @@ def scrape_websites():
     # DEBUG
     #url_df = url_df[url_df.url=='https://marblebar.org.au/company/st-peters-heritage-centre-hall-1460398/']
     #url_df.to_excel("tmp/museum_scraping_input.xlsx",index=False)
-    #url_df = url_df.sample(10, random_state=7134)
+    #url_df = url_df.sample(20, random_state=7134)
     
     max_urls_single_crawler = 5000
     # split df and create a new crawler for each chunk
@@ -92,20 +93,22 @@ def check_redirections_before_scraping(df):
     msg = "check_redirections_before_scraping urls={}".format(len(df))
     logger.info(msg)
     print(msg)
+    local_db_conn = connect_to_postgresql_db()
     redirected_url_df = pd.DataFrame()
 
     for ind in range(len(df)):
         if ind % 200 == 0:
             logger.debug("   redir n={}".format(ind))
         row = df.iloc[ind]
-        redirect_url = check_for_url_redirection(row.url)
-        if redirect_url:
-            row['url'] = redirect_url
+        redirect_url = check_for_url_redirection(row.url, True, local_db_conn)
+        
+        row['url'] = redirect_url
         redirected_url_df = redirected_url_df.append(row)
 
     assert len(redirected_url_df) == len(df)
     assert len(redirected_url_df)>0
     redirected_url_df['domain'] = redirected_url_df['url'].apply(get_url_domain)
+    local_db_conn.close()
     return redirected_url_df
 
 
@@ -139,8 +142,25 @@ def load_urls_for_wide_scrape():
     return df
 
 
+def init_url_redirection_db(db_con):
+    check_dbconnection_status(db_con)
+    c = db_con.cursor()
+    c.execute('''CREATE TABLE IF NOT EXISTS websites.url_redirections (
+            url text PRIMARY KEY,
+            redirected_to_url text,
+            ts timestamp DEFAULT CURRENT_TIMESTAMP);
+            ''')
+    # TODO: add indices on url and muse_id
+    # CREATE INDEX IF NOT EXISTS idx1 ON websites.web_pages_dump_20210304 USING btree(muse_id);
+    # CREATE INDEX IF NOT EXISTS idx2 ON websites.web_pages_dump_20210304 USING btree(url);
+    # TODO: add website ranking
+    db_con.commit()
+    logger.debug('init_url_redirection_db')
+
+
 def init_website_dump_db(db_con, session_id):
     assert session_id
+    check_dbconnection_status(db_con)
     c = db_con.cursor()
     table_name = get_webdump_table_name(session_id)
     
@@ -189,7 +209,7 @@ def is_valid_website(url):
 def insert_website_page_in_db(table_name, muse_id, url, referer_url, b_base_url, page_content, response_status, 
                             session_id, depth, db_conn):
     """ Insert page dump """
-    c = db_conn.cursor()
+    #c = db_conn.cursor()
     # TODO: add website ranking
     sql = '''INSERT INTO {} (url, referer_url, is_start_url, url_domain, muse_id, 
                                         page_content, page_content_length, depth, session_id)
@@ -328,20 +348,50 @@ class MultiWebsiteSpider(CrawlSpider):
         logger.debug('page_counter: ' + str(page_counter))
 
 
-def check_for_url_redirection(url):
+def get_url_redirection_from_db(url, db_conn):
+    # check if redirection is in DB
+    sql = "select redirected_to_url from websites.url_redirections where url=%s;"
+    cur = db_conn.cursor()
+    #res = cur.execute(sql, [url])
+    res1 = pd.read_sql(sql, db_conn, params=[url])
+    res = res1['redirected_to_url'].tolist()
+    if len(res)>0:
+        assert len(res)==1
+        return res[0]
+    else: 
+        return None
+
+
+def check_for_url_redirection(url, check_db=False, db_conn=None):
     """ Useful to include redirected domain for scraping """
     assert url
+    res = None
+    if check_db:
+        check_dbconnection_status(db_conn)
+        db_res = get_url_redirection_from_db(url, db_conn)
+        if db_res:
+            if db_res != 'timeout':
+                return db_res
+            else:
+                # timeout, return same URL
+                return url
+
+    new_url = 'timeout'
     try:
         # user agent must be defined, otherwise some sites says 403
         req = urllib.request.Request(url, headers={'User-Agent': user_agent})
         response = urllib.request.urlopen(req, timeout=5)
         new_url = response.geturl()
         redirected = new_url != url
-        if redirected:
-            return new_url
     except:
         logger.warning("MIP check_for_url_redirection: could not check redirection for "+url)
-    return None
+    
+    if check_db:
+        sql = "insert into websites.url_redirections(url, redirected_to_url) VALUES(%s, %s);"
+        cur = db_conn.cursor()
+        cur.execute(sql, [url, new_url])
+        db_conn.commit() 
+    return new_url
 
 
 def get_scraping_session_tables(db_conn):
