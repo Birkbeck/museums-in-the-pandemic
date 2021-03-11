@@ -232,7 +232,10 @@ class CustomLinkExtractor(LinkExtractor):
         allowed = super()._link_allowed(link)
         if not allowed:
             return False
-            
+        
+        if not is_valid_website(link.url):
+            return False
+
         global session_id
         global db_conn
         assert session_id

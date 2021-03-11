@@ -20,7 +20,7 @@ class TestTextExtraction(unittest.TestCase):
 
     def test_create_text_sample(self):
 
-        s = make_string_sql_safe("mulaccio's fungaccio")
+        s = make_string_sql_safe("urls with 's don't work")
 
         db_conn = connect_to_postgresql_db()
         

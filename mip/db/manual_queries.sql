@@ -45,7 +45,7 @@ select muse_id, url,is_start_url,a.* from websites.web_pages_dump_20210304 p, we
 https://marblebar.org.au/company/st-peters-heritage-centre-hall-1460398/
 select * from websites.web_pages_dump_20210303 where muse_id = 'mm.domus.SW005';
 
-sele 
+
 
 -
 ------------------------------------------------
