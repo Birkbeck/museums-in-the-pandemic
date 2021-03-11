@@ -598,3 +598,13 @@ def load_all_google_results():
     print(df.year_closed.value_counts())
     print(df.scrape_target.value_counts())
     return df
+
+
+def join_museum_info(df, muse_id_column):
+    """ Add museum info based on muse_id_column in DF. 
+    Useful to make DF more interpretable """
+    assert len(df) > 0
+    museums_df = load_input_museums()
+    mdf = df.merge(museums_df, left_on=muse_id_column, right_on='id', how="left")
+    assert len(mdf) == len(df)
+    return mdf
