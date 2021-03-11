@@ -35,8 +35,9 @@ def scrape_websites():
     app_settings = get_app_settings()
 
     url_df = load_urls_for_wide_scrape()
+    # shuffle URLs
+    url_df = url_df.sample(frac=1)
     print("scrape_websites urls =", len(url_df))
-
     # generate session and timestamp for scraping
     global session_id
     # DEBUG <<<< REMOVE <<<<<< IMPORTANT
@@ -137,7 +138,7 @@ def load_urls_for_wide_scrape():
     
     df = df.drop_duplicates(subset=['url'])
     assert df['url'].is_unique
-    msg = "load_urls_for_wide_scrape Museums={} URLs={}".format(df.muse_id.nunique(),len(df))
+    msg = "load_urls_for_wide_scrape Museums={} URLs={}".format(df.muse_id.nunique(), len(df))
     print(msg)
     logger.info(msg)
     return df
@@ -206,6 +207,11 @@ def is_valid_website(url):
             if blocked_site.lower() in dom.lower():
                 valid = False
     return valid
+
+
+#def get_museum_ids_from_session(session_id, db_conn):
+#    TODO "select distinct muse_id as muse_id from {};".format()
+
 
 
 def insert_website_page_in_db(table_name, muse_id, url, referer_url, b_base_url, page_content, response_status, 
