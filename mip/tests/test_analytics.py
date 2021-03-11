@@ -5,7 +5,7 @@ logger = logging.getLogger(__name__)
 
 import unittest
 import urllib
-from db.db import open_sqlite, connect_to_postgresql_db, is_postgresql_db_accessible
+from db.db import open_sqlite, connect_to_postgresql_db, is_postgresql_db_accessible, make_string_sql_safe
 from analytics.an_websites import *
 from analytics.text_models import *
 from museums import *
@@ -19,6 +19,9 @@ class TestTextExtraction(unittest.TestCase):
         pass
 
     def test_create_text_sample(self):
+
+        s = make_string_sql_safe("mulaccio's fungaccio")
+
         db_conn = connect_to_postgresql_db()
         
         table = get_scraping_session_tables(db_conn)[1]

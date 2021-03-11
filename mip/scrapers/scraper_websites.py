@@ -15,7 +15,7 @@ import urllib
 import numpy as np
 from urllib.parse import urlparse
 from museums import load_all_google_results
-from db.db import connect_to_postgresql_db, check_dbconnection_status
+from db.db import connect_to_postgresql_db, check_dbconnection_status, make_string_sql_safe
 # scrapy imports
 import scrapy
 from scrapy.crawler import CrawlerProcess
@@ -215,7 +215,7 @@ def get_webdump_table_name(session_id):
 def url_session_exists(url, session_id, db_conn):
     """ Check if the page has been scraped already in this session """
     cur = db_conn.cursor()
-    sql = "select page_id from {} where url = '{}';".format(get_webdump_table_name(session_id), url)
+    sql = "select page_id from {} where url = '{}';".format(get_webdump_table_name(session_id), make_string_sql_safe(url))
     res = pd.read_sql(sql, db_conn)
     if len(res) > 0: 
         return True

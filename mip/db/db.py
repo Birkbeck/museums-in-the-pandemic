@@ -113,3 +113,9 @@ def connect_to_postgresql_db():
         user=pg_config['user'], password=pg_config['pwd'], connect_timeout=2)
     check_dbconnection_status(db_conn)
     return db_conn
+
+
+def make_string_sql_safe(s):
+    """ Escape quotes """
+    s = s.replace("'","''")
+    return s
