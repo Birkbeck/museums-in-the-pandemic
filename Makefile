@@ -26,5 +26,8 @@ logs:
 	@ls -lh tmp/logs/*
 	@tail tmp/logs/nohup*txt
 
+errors:
+	@grep -i error tmp/logs/nohup*txt 
+
 wait:
 	sleep 3;
