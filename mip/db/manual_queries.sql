@@ -24,6 +24,10 @@ select page_id, url, referer_url, depth from websites.web_pages_dump_20210303 li
 -- number of scraped pages in a single session
 select count(page_id) from websites.web_pages_dump_20210304;
 
+CREATE INDEX IF NOT EXISTS idx1 ON websites.web_pages_dump_20210304 USING btree(muse_id);
+CREATE INDEX IF NOT EXISTS idx2 ON websites.web_pages_dump_20210304 USING btree(url);
+
+
 -- test speed of URL/session query
 select page_id from websites.web_pages_dump_20210304 wpd where session_id = '20210304' and url = 'https://www.britishmuseum.org/';
 

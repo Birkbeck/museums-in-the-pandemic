@@ -164,6 +164,11 @@ def init_website_dump_db(db_con, session_id):
             ts timestamp DEFAULT CURRENT_TIMESTAMP,
             UNIQUE(url, session_id));
             '''.format(table_name))
+    # TODO: add indices on url and muse_id
+    # CREATE INDEX IF NOT EXISTS idx1 ON websites.web_pages_dump_20210304 USING btree(muse_id);
+    # CREATE INDEX IF NOT EXISTS idx2 ON websites.web_pages_dump_20210304 USING btree(url);
+
+    # TODO: add website ranking
     db_con.commit()
     logger.debug('init_website_dump_db')
 
@@ -185,6 +190,7 @@ def insert_website_page_in_db(table_name, muse_id, url, referer_url, b_base_url,
                             session_id, depth, db_conn):
     """ Insert page dump """
     c = db_conn.cursor()
+    # TODO: add website ranking
     sql = '''INSERT INTO {} (url, referer_url, is_start_url, url_domain, muse_id, 
                                         page_content, page_content_length, depth, session_id)
               VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s);'''.format(table_name)

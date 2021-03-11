@@ -25,7 +25,7 @@ class TestTextExtraction(unittest.TestCase):
         muse_ids = ('mm.domus.SE245','mm.domus.SW096','mm.misc.007')
         sql = "select * from {} where is_start_url and muse_id in ('{}','{}','{}');".format(table,muse_ids[0],muse_ids[1],muse_ids[2])
         df = pd.read_sql(sql, db_conn)
-        print(len(df))
+        assert len(df)>0
         
         out_table = create_webpage_attribute_table(table, db_conn)
         clear_attribute_table(out_table, db_conn)
