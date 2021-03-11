@@ -180,7 +180,7 @@ def is_valid_website(url):
         valid = False
     else:
         dom = get_url_domain(url)
-        for blocked_site in ['facebook','twitter','tripadvisor','.google.co','linkedin.','expedia.']:
+        for blocked_site in ['facebook.','twitter.','tripadvisor.','.google.co','linkedin.','expedia.']:
             if blocked_site.lower() in dom.lower():
                 valid = False
     return valid
