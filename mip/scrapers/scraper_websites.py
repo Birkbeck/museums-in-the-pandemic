@@ -101,8 +101,9 @@ def check_redirections_before_scraping(df):
             logger.debug("   redir n={}".format(ind))
         row = df.iloc[ind]
         redirect_url = check_for_url_redirection(row.url, True, local_db_conn)
+        if redirect_url != 'timeout':
+            row['url'] = redirect_url
         
-        row['url'] = redirect_url
         redirected_url_df = redirected_url_df.append(row)
 
     assert len(redirected_url_df) == len(df)
@@ -196,6 +197,7 @@ def init_website_dump_db(db_con, session_id):
 def is_valid_website(url):
     """ This is to find simple museum websites and not platforms """
     valid = True
+    assert url != 'timeout'
     if not(isinstance(url, str) and len(url)>5):
         valid = False
     else:
