@@ -29,11 +29,12 @@ def load_input_museums():
 
 def load_fuzzy_museums():
     """ Load MM museum data that includes ALL museums """
-    df = pd.read_csv('data/google_results/google_extracted_results_twitter_noloc.tsv', sep='\t')
-    
+    df = pd.read_csv('data/google_results/results_source_files/google_extracted_results_reg.tsv.gz', sep='\t')
+    df2=df[df['google_rank']<11]
+
     #df = exclude_closed(df)
-    print("loaded museums:",len(df))
-    return df
+    print("loaded urls:",len(df2))
+    return df2
 
 
 def load_input_museums_wattributes():
@@ -77,24 +78,18 @@ def get_fb_tw_links():
     res_df.to_csv('tmp/google_tw_fb_links_df.tsv', index=False, sep='\t')
 
 
-def load_extracted_museums():
+def load_extracted_museums(df):
     """ TODO: document """
-    df = pd.read_csv('data/google_results/museum_searches_all-2021-02-18.tsv', sep='\t')
-    dfcheck1=pd.DataFrame(columns=["google_rank","url","search", "muse_id"])
-    museidlist=["mm.fcm.186","mm.domus.YH153","mm.domus.SE481","mm.wiki.220","mm.aim82NM.130","mm.ace.1101","mm.musa.285","mm.mald.111","mm.domus.NW191","mm.fcm.130","mm.ace.1163","mm.domus.SE270","mm.domus.EM031","mm.ace.1258","mm.misc.015","mm.musa.295","mm.New.26","mm.ace.685","mm.aim82NM.012","mm.domus.SC280","mm.domus.SC314","mm.domus.WA017","mm.musa.345","mm.domus.SC074","mm.hha.119","mm.domus.NW031","mm.domus.YH123","mm.domus.SC096","mm.musa.349","mm.wiki.105"]
-    for item in df.iterrows():
-        if item[1].muse_id in museidlist:
-            list1=[item[1].google_rank, item[1].url, item[1].search, item[1].muse_id]
-            dftoadd=pd.DataFrame([list1],columns=["google_rank","url","search", "muse_id"])
-            dfcheck1=dfcheck1.append(dftoadd)
-    dfcheck1.to_excel("tmp/tocheck_sample.xlsx", index=False)
+    
+  
+    
 
     comparedf = pd.read_csv('data/websites_to_flag.tsv', sep='\t')
     
     urldict={}
     
-    dfaccurate=pd.DataFrame(columns=["url","search", "muse_id", "location"])
-    dfcheck=pd.DataFrame(columns=["google_rank","url","search", "muse_id", "location"])
+    
+    dfcheck=pd.DataFrame(columns=["google_rank","url","search", "muse_id", "location", "Museum_Name"])
     
     dfaccurate=pd.DataFrame(columns=["url","search", "muse_id", "location"])
     addedtocheck = False
@@ -102,30 +97,63 @@ def load_extracted_museums():
         
         urlstring = item[1].url.split("/")[2]
         if item[1].google_rank ==1:
-            #print(item)
+            addedtocheck = False
             if comparedf['website'].str.contains(urlstring).any():
                 
 
-                list1=[item[1].google_rank, item[1].url, item[1].search, item[1].muse_id, item[1].location]
-                dftoadd=pd.DataFrame([list1],columns=["google_rank","url","search", "muse_id", "location"])
+                list1=[item[1].google_rank, item[1].url, item[1].search, item[1].muse_id, item[1].location, item[1].Museum_Name]
+                dftoadd=pd.DataFrame([list1],columns=["google_rank","url","search", "muse_id", "location", "Museum_Name"])
                 dfcheck=dfcheck.append(dftoadd)
                 addedtocheck=True
             else:
-                list1=[item[1].url, item[1].search, item[1].muse_id, item[1].location]
-                dftoadd=pd.DataFrame([list1],columns=["url","search", "muse_id", "location"])
+                list1=[item[1].google_rank,item[1].url, item[1].search, item[1].muse_id, item[1].location, item[1].Museum_Name]
+                dftoadd=pd.DataFrame([list1],columns=["google_rank","url","search", "muse_id", "location", "Museum_Name"])
                 dfaccurate=dfaccurate.append(dftoadd)
                 addedtocheck=False  
         else:
             if addedtocheck == True and (item[1].google_rank >1 and item[1].google_rank <11):
-                list1=[item[1].google_rank, item[1].url, item[1].search, item[1].muse_id, item[1].location]
-                dftoadd=pd.DataFrame([list1],columns=["google_rank","url","search", "muse_id", "location"])
+                list1=[item[1].google_rank, item[1].url, item[1].search, item[1].muse_id, item[1].location, item[1].Museum_Name]
+                dftoadd=pd.DataFrame([list1],columns=["google_rank","url","search", "muse_id", "location", "Museum_Name"])
                 dfcheck=dfcheck.append(dftoadd)
+                if not comparedf['website'].str.contains(urlstring).any():
+                    list1=[item[1].google_rank,item[1].url, item[1].search, item[1].muse_id, item[1].location, item[1].Museum_Name]
+                    dftoadd=pd.DataFrame([list1],columns=["google_rank","url","search", "muse_id", "location", "Museum_Name"])
+                    dfaccurate=dfaccurate.append(dftoadd)
+            elif(item[1].google_rank >1 and item[1].google_rank <11):
+                if not comparedf['website'].str.contains(urlstring).any():
+                    list1=[item[1].google_rank,item[1].url, item[1].search, item[1].muse_id, item[1].location, item[1].Museum_Name]
+                    dftoadd=pd.DataFrame([list1],columns=["google_rank","url","search", "muse_id", "location", "Museum_Name"])
+                    dfaccurate=dfaccurate.append(dftoadd)
 
-    dfaccurate.to_excel("tmp/accurate_results_view.xlsx", index=False)  
+    dfaccurate.to_csv('tmp/accurate_results.tsv', index=False, sep='\t')
     dfcheck.to_excel("tmp/tocheck_results_view.xlsx", index=False)
-    return None
+    return dfaccurate
 
+def generate_samples():
+        resultsdf=pd.read_csv("data/google_results/results_source_files/fuzzy_museum_scores_twitter.tsv", sep='\t')
+        idealdf=load_museum_samples()
+        search='twitter'
+        score=0
+        total=0
+        res_df=pd.DataFrame()
+        total=0
+        for row in idealdf.iterrows():
+            
+            if row[1].search == search:
+                total=total+1
+                print(total)
+                for item in resultsdf.iterrows():
+                    rowfound=False
+                    if item[1].id==row[1].muse_id:
+                        rowfound=True
+                        targetrow = pd.DataFrame({'muse_id':item[1].id, 'muse_name': item[1].Museum_Name, 'url': item[1].url, 'coorect_url':row[1].correct_url, 'google_rank': item[1].google_rank, 'score':item[1].score}, index=[item[1].id])
+                        res_df = res_df.append(targetrow)
+                    elif(rowfound==True):
+                        break
+        res_df.to_excel("tmp/result_sample.xlsx", index=False)
+        return None
 
+        
 def exclude_closed(df):
     """ TODO: document """
     df=df[df.year_closed == '9999:9999']
@@ -133,7 +161,8 @@ def exclude_closed(df):
     return df
 
 def compare_result_to_sample(search):
-    resultsdf=pd.read_csv("data/google_results/results_source_files/google_extracted_results_facebook.tsv.gz", sep='\t')
+    """ Returns a percentage based on correctness of input file to the verified website sample. """
+    resultsdf=pd.read_csv("data/google_results/results_source_files/fuzzy_museum_scores_twitter.tsv", sep='\t')
     idealdf=load_museum_samples()
     score=0
     total=0
@@ -141,19 +170,32 @@ def compare_result_to_sample(search):
         if row[1].search == search:
             total=total+1
             print(total)
+            itemfound=False
             for item in resultsdf.iterrows():
                 if item[1].id==row[1].muse_id:
-                    if not row[1].correct_url.lower()=='no_resource':
-                        if get_url_domain_with_search(item[1].url.lower().split("?lang=")[0], search)==get_url_domain_with_search(row[1].correct_url.lower().split("?lang=")[0], search):
-                            print("yes "+get_url_domain_with_search(item[1].url.lower().split("?lang=")[0], search)+" "+get_url_domain_with_search(row[1].correct_url.lower().split("?lang=")[0], search))
+                    itemfound=True
+                    correcturl=row[1].correct_url.lower()
+                    itemurl=item[1].url.lower()
+                    if search != 'web':
+                        correcturl=correcturl.split('?')[0]
+                        correcturl=correcturl.split('#')[0]
+                        itemurl=itemurl.split('?')[0]
+                        itemurl=itemurl.split('#')[0]
+                    if not correcturl=='no_resource':
+                        if get_url_domain_with_search(itemurl, search)==get_url_domain_with_search(correcturl, search):
+                            print("yes "+get_url_domain_with_search(itemurl, search)+" "+get_url_domain_with_search(correcturl, search))
                             score=score+1
                         else:
-                            print("no "+get_url_domain_with_search(item[1].url.lower().split("?lang=")[0], search)+" "+get_url_domain_with_search(row[1].correct_url.lower().split("?lang=")[0], search))
+                            print("no "+get_url_domain_with_search(itemurl, search)+" "+get_url_domain_with_search(correcturl, search))
                         print(item[1].url+" "+row[1].correct_url)
                     else:
                         print("no_resource")
                         total=total-1
                     break
+            if itemfound==False:
+                total=total-1
+            itemfound=False
+                
     percentage=score/(total/100)
     return percentage
 
@@ -266,7 +308,7 @@ def generate_stratified_museum_sample():
     print("selected museums for sampling:", len(df))
     
     # generate sample
-    fraction = .06
+    fraction = .126
     sample_n = int(len(df) * fraction)
     print("sample_n", sample_n)
     cols = ["region","size","accreditation","gov"]
@@ -537,13 +579,17 @@ def match_museum_name_with_string(mname, str_from_url):
     max_score = max(scores)
     return max_score
 
-def get_fuzzy_string_match_scores(musdf):
+def get_fuzzy_string_match_scores(musdf, search):
     scorerow=[]
     museweight = generate_weighted_museum_names()
     for row in musdf.iterrows():
-        urlstring=row[1].url.split("/")[3].lower()
+        if search=='web':
+            urlstring=row[1].url
+        else:
+            urlstring=row[1].url.split("/")[3].lower()
         if(urlstring=='events'):
             urlstring=row[1].url.split("/")[4].lower()
+        
         musename = row[1].Museum_Name.lower()
         location=row[1].location
         if not isinstance(location, float) and not isinstance(location, int):
@@ -556,9 +602,9 @@ def get_fuzzy_string_match_scores(musdf):
             scorerow.append(0)
     musdf['score']=scorerow
     finaldf=pd.DataFrame()
-    for score, muse_df in musdf.groupby('muse_id'):
-        newdf=muse_df.sort_values(by=['score'], ascending=False)
-        finaldf=pd.concat([finaldf, newdf])
+    
+    newdf=musdf.sort_values(['muse_id','score','google_rank'], ascending=[True,False,True])
+    finaldf=pd.concat([finaldf, newdf])
     finaldf.to_csv('tmp/fuzzy_museum_scores.tsv', index=False, sep='\t')
     return None
 

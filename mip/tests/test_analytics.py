@@ -69,15 +69,39 @@ class TestVal(unittest.TestCase):
         i = 0
     #def test_stratified_sample(self):
         #generate_stratified_museum_sample()
-    def test_loading_sample(self):
+    def test_assign_urls_to_sample(self):
+        stratdf = pd.read_csv('data/museums/museums_stratified_sample_400.tsv', sep='\t')
+        googledf=pd.read_csv('data/google_results/results_source_files/google_extracted_results_reg.tsv.gz', sep='\t')
+        facebookdf=pd.read_csv('data/google_results/results_source_files/google_extracted_results_facebook.tsv.gz', sep='\t')
+        twitterdf=pd.read_csv('data/google_results/results_source_files/google_extracted_results_twitter.tsv.gz', sep='\t')
+        stratdf=stratdf.filter(['muse_id','musname'], axis=1)
+        googledf=googledf.filter(['muse_id','search_type', 'google_rank', 'url'], axis=1)
+        facebookdf=facebookdf.filter(['muse_id','search_type', 'google_rank', 'url'], axis=1)
+        twitterdf=twitterdf.filter(['muse_id','search_type', 'google_rank', 'url'], axis=1)
+        outputdfg = pd.merge(stratdf,googledf,on='muse_id')
+        outputdff = pd.merge(stratdf,facebookdf,on='muse_id')
+        outputdft = pd.merge(stratdf,twitterdf,on='muse_id')
+        outputdf=outputdfg.append(outputdff)
+        outputdf=outputdf.append(outputdft)
+        outputdf=outputdf[outputdf.google_rank<11]
+        outputdf=outputdf.sort_values(['muse_id','search_type','google_rank'], ascending=[True,True,True])
+        outputdf.to_excel("tmp/merged_stratified_sample_400.xlsx", index=False)
+        outputdf.to_csv('tmp/merged_stratified_sample_400.tsv', index=False, sep='\t')
+    #def test_loading_sample(self):
         #load_manual_museum_urls()
-        print(check_for_url_redirection("https://www.facebook.com/pages/The-Scottish-Fisheries-Museum/168840906463849?ref=hl"))
+        #print(check_for_url_redirection("https://www.facebook.com/pages/The-Scottish-Fisheries-Museum/168840906463849?ref=hl"))
     #def test_fuzzy_string_match(self):
-       # musdf = load_fuzzy_museums()
-        #get_fuzzy_string_match_scores(musdf)
+        #musdf = load_fuzzy_museums()
+        #generate_samples()
+        #musdf=load_extracted_museums(musdf)
+        #get_fuzzy_string_match_scores(musdf, 'web')
+    #def test_generate_samples(self):
+        #generate_samples()
     #def test_combined_dataframe(self):
         #generate_combined_dataframe()
     
+
+                
     
 class TestCentralDB(unittest.TestCase):
     def setUp(self):        

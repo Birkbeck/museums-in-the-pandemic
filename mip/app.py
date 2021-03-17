@@ -84,7 +84,7 @@ def main():
             print("extract_google")                      
             df = load_input_museums()
             extract_google_results(df)
-            #load_extracted_museums()
+            load_extracted_museums()
         
         if cmd == "scrape_twitter":
             print("scrape_twitter")
@@ -105,10 +105,10 @@ def main():
             print("an_websites")
             assert is_postgresql_db_accessible()
             analyse_museum_websites()
-            
+
         if cmd == "compare_sample":
             print("compare_sample")
-            search="facebook"
+            search="twitter"
             percentage=compare_result_to_sample(search)
             print(percentage)
             

@@ -152,6 +152,8 @@ def get_url_domain_with_search(url, search):
     elif search=='facebook':
         if url.split("/")[3]=='events':
             dom = url.split("/")[4]
+        elif url.split("/")[3]=='pages' and url.split("/")[4]=='category':
+            dom = url.split("/")[6]
         else:
             dom = url.split("/")[3]
     else:
