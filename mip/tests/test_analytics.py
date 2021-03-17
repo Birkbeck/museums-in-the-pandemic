@@ -74,7 +74,7 @@ class TestVal(unittest.TestCase):
         googledf=pd.read_csv('data/google_results/results_source_files/google_extracted_results_reg.tsv.gz', sep='\t')
         facebookdf=pd.read_csv('data/google_results/results_source_files/google_extracted_results_facebook.tsv.gz', sep='\t')
         twitterdf=pd.read_csv('data/google_results/results_source_files/google_extracted_results_twitter.tsv.gz', sep='\t')
-        stratdf=stratdf.filter(['muse_id','musname'], axis=1)
+        stratdf=stratdf.filter(['muse_id','musname','town'], axis=1)
         googledf=googledf.filter(['muse_id','search_type', 'google_rank', 'url'], axis=1)
         facebookdf=facebookdf.filter(['muse_id','search_type', 'google_rank', 'url'], axis=1)
         twitterdf=twitterdf.filter(['muse_id','search_type', 'google_rank', 'url'], axis=1)
