@@ -70,19 +70,35 @@ class TestVal(unittest.TestCase):
     #def test_stratified_sample(self):
         #generate_stratified_museum_sample()
     def test_assign_urls_to_sample(self):
-        stratdf = pd.read_csv('data/museums/museums_stratified_sample_400.tsv', sep='\t')
+        stratdf = pd.read_csv('data/museums/museums_wattributes-2020-02-23.tsv', sep='\t')
         googledf=pd.read_csv('data/google_results/results_source_files/google_extracted_results_reg.tsv.gz', sep='\t')
         facebookdf=pd.read_csv('data/google_results/results_source_files/google_extracted_results_facebook.tsv.gz', sep='\t')
         twitterdf=pd.read_csv('data/google_results/results_source_files/google_extracted_results_twitter.tsv.gz', sep='\t')
-        stratdf=stratdf.filter(['muse_id','musname','town'], axis=1)
+        museweight = generate_weighted_museum_names()
+        stratdf=stratdf.filter(['muse_id','musname','size', 'governance', 'town'], axis=1)
         googledf=googledf.filter(['muse_id','search_type', 'google_rank', 'url'], axis=1)
+        googledf['url_size']=googledf['url'].str.len() 
+        googledf['N_slash']=googledf['url'].str.split('/')
+        googledf['N_slash']=googledf['N_slash'].apply(lambda x: len(x))
+        
         facebookdf=facebookdf.filter(['muse_id','search_type', 'google_rank', 'url'], axis=1)
+        facebookdf['url_size']=facebookdf['url'].str.len() 
+        facebookdf['N_slash']=facebookdf['url'].str.split('/')
+        facebookdf['N_slash']=facebookdf['N_slash'].apply(lambda x: len(x))
         twitterdf=twitterdf.filter(['muse_id','search_type', 'google_rank', 'url'], axis=1)
+        twitterdf['url_size']=twitterdf['url'].str.len() 
+        twitterdf['N_slash']=twitterdf['url'].str.split('/')
+        twitterdf['N_slash']=twitterdf['N_slash'].apply(lambda x: len(x))
         outputdfg = pd.merge(stratdf,googledf,on='muse_id')
         outputdff = pd.merge(stratdf,facebookdf,on='muse_id')
         outputdft = pd.merge(stratdf,twitterdf,on='muse_id')
         outputdf=outputdfg.append(outputdff)
         outputdf=outputdf.append(outputdft)
+        outputdf['fuzzy_score']=outputdf.apply(lambda row: (generate_weighted_fuzzy_scores(row['musname'], row['url'], museweight, row['town'])), axis=1)
+        #score=[]
+        #for item in outputdf.iterrows():
+
+            #score.append(generate_weighted_fuzzy_scores(item[1].musname, item[1].url, museweight, item[1].town))
         outputdf=outputdf[outputdf.google_rank<11]
         outputdf=outputdf.sort_values(['muse_id','search_type','google_rank'], ascending=[True,True,True])
         outputdf.to_excel("tmp/merged_stratified_sample_400.xlsx", index=False)

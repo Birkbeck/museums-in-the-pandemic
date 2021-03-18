@@ -383,6 +383,8 @@ def generate_weighted_fuzzy_scores(mname, str_from_url, weighteddict, location):
     joiningwords=["or", "the", "a", "for", "th", ""]
     joiningwordswand=["or", "the", "a", "for", "th", "", "and"]
     scores = []
+    if(location!=location):
+        location=""
     mnamewithmus=mname+" museum"
     mnamewithloc=mname+" "+location
     mnamewlocandmus=mname+" "+location+" museum"
