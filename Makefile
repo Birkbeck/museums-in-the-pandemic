@@ -20,7 +20,7 @@ scrape_websites:
 
 an_websites:
 	@echo ">>> Run NLP";
-	./run_app_server.sh an_websites > tmp/logs/nohup_${DATE}_log.txt;
+	nohup ./run_app_server.sh an_websites > tmp/logs/nohup_${DATE}_log.txt &
 
 
 running:
