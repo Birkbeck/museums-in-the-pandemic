@@ -17,6 +17,15 @@ scrape_websites:
 	# nohup perl perl/run_experiment_parallel_ant.pl > nohup_perl_exp_logfile.${date} 2>&1 &
  	# echo ">>> Experiment running in background."
 
+
+an_websites:
+	@echo ">>> Run NLP";
+	run_app_server.sh an_websites > tmp/logs/nohup_${DATE}_log.txt;
+	# nohup perl perl/run_experiment_parallel_ant.pl > nohup_perl_exp_logfile.${date} 2>&1 &
+ 	# echo ">>> Experiment running in background."
+
+
+
 running:
 	-@ps auxw | grep 'mip/app.py';
 	#-@ps auxw | grep '[t]or';

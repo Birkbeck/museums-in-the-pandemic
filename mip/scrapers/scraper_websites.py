@@ -406,6 +406,7 @@ def get_scraping_session_tables(db_conn):
     """  """
     sql = "SELECT table_name FROM information_schema.tables WHERE table_schema='websites';"
     res = pd.read_sql(sql, db_conn)['table_name'].tolist()
+    res = [r for r in res if 'web_pages' in r]
     res = ["websites."+r for r in res if not 'attr' in r]
     res = sorted(res)
     return res
