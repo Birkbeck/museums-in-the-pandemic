@@ -40,8 +40,7 @@ def scrape_websites():
     print("scrape_websites urls =", len(url_df))
     # generate session and timestamp for scraping
     global session_id
-    # DEBUG <<<< REMOVE <<<<<< IMPORTANT
-    session_id = "20210304" #gen_scraping_session_id() 
+    session_id = gen_scraping_session_id() # first scrape ID "20210304" 
     logger.info("scraping session_id: "+str(session_id))
 
     # open DB
@@ -179,18 +178,18 @@ def init_website_dump_db(db_con, session_id):
             session_id text NOT NULL,
             is_start_url boolean NOT NULL,
             url_domain text NOT NULL,
-            muse_id text NOT NULL, 
+            muse_id text NOT NULL,
             page_content text NOT NULL,
             page_content_length numeric NOT NULL,
             depth numeric NOT NULL,
+            google_rank numeric,
             ts timestamp DEFAULT CURRENT_TIMESTAMP,
             UNIQUE(url, session_id));
-            '''.format(table_name))
-    # TODO: add indices on url and muse_id
-    # CREATE INDEX IF NOT EXISTS idx1 ON websites.web_pages_dump_20210304 USING btree(muse_id);
-    # CREATE INDEX IF NOT EXISTS idx2 ON websites.web_pages_dump_20210304 USING btree(url);
 
-    # TODO: add website ranking
+            CREATE INDEX IF NOT EXISTS idx1 ON {} USING btree(muse_id);
+            CREATE INDEX IF NOT EXISTS idx2 ON {} USING btree(url);
+            '''.format(table_name))
+    
     db_con.commit()
     logger.debug('init_website_dump_db')
 
@@ -333,7 +332,7 @@ class MultiWebsiteSpider(CrawlSpider):
             if dom in url:
                 b_allowed = False
         del dom
-        # check if url is 
+        # check if url is allowed
         allowed_doms = [get_url_domain(surl.lower()) for surl in self.start_urls]
         cur_dom = get_url_domain(url.lower())
         found_doms = [dom in cur_dom for dom in allowed_doms]
@@ -348,12 +347,20 @@ class MultiWebsiteSpider(CrawlSpider):
             return 
         if url_session_exists(url, scraping_session_id, self.db_con):
             return
+
+        # TODO: check if URL is present in the previous session
+        
         # valid URL, save it in DB
         check_dbconnection_status(self.db_con)
         insert_website_page_in_db(self.table_name, muse_id, url, referer_url, b_base_url, 
                     html, response.status, self.session_id, depth, self.db_con)
         logger.debug('url saved: ' + url)
         logger.debug('page_counter: ' + str(page_counter))
+
+
+def get_previous_session_id(session_id):
+    #TODO: find previous ID
+    pass
 
 
 def get_url_redirection_from_db(url, db_conn):

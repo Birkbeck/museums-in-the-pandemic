@@ -56,7 +56,9 @@ def clear_attribute_table(table_name, db_con):
     db_con.commit()
     return True
 
+
 def insert_page_attribute(db_con, table_name, page_id, session_id, attrib_name, attrib_val):
+    """  """
     assert attrib_name in ['title','headers','all_text']
     assert page_id >= 0
     if attrib_val == '':
@@ -67,8 +69,14 @@ def insert_page_attribute(db_con, table_name, page_id, session_id, attrib_name, 
               VALUES(%s,%s,%s,%s);'''.format(table_name)
     
     cur = db_con.cursor()
-    cur.execute(sql, [page_id, session_id, attrib_name, attrib_val])
-    db_con.commit()
+    try:
+        cur.execute(sql, [page_id, session_id, attrib_name, attrib_val])
+        db_con.commit()
+    except UnicodeEncodeError as e:
+        logger.warn(str(page_id))
+        logger.warn(str(e));
+        raise e
+
     return True
 
 
@@ -130,7 +138,7 @@ def extract_text_from_websites(in_table, out_table, db_conn, target_museum_id=No
     assert in_table
     assert table_suffix in out_table
     #clear_attribute_table(out_table, db_conn)
-    block_sz = 50
+    block_sz = 10000
     offset = 0
     keep_scanning = True
     

@@ -36,6 +36,10 @@ def setup_ling_model():
     logger.debug('setup_ling_model')
     indic_df, annot_df = get_indicator_annotations()
 
-    
 
+def bert_model():
+    """
+    - https://towardsdatascience.com/first-time-using-and-fine-tuning-the-bert-framework-for-classification-799def68a5e4
+    """
+    pass
 
