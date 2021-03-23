@@ -90,6 +90,10 @@ def clean_text(s):
 def extract_attributes_from_page_html(page_id, session_id, page_html, attr_table, db_con):
     """ Extract text attributes from HTML code of a museum web page """
     assert page_id >= 0
+    if len(page_html)==0: 
+        logger.warning("page_id {page_id} is empty".format(page_id))
+        return False
+
     assert len(page_html) > 0
     soup = BeautifulSoup(page_html, 'html.parser')
 
@@ -118,7 +122,7 @@ def extract_attributes_from_page_html(page_id, session_id, page_html, attr_table
         logger.debug("page ID "+str(page_id)+" has no HTML content")
 
     # TODO: extract other page fields/links here
-
+    return True
 
 def extract_text_from_websites(in_table, out_table, db_conn, target_museum_id=None):
     """ Scan all pages in in_website_db and generate attributes in out_attr_db"""
