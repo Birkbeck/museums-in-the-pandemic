@@ -54,6 +54,10 @@ https://marblebar.org.au/company/st-peters-heritage-centre-hall-1460398/
 select * from websites.web_pages_dump_20210303 where muse_id = 'mm.domus.SW005';
 
 
+select session_id, muse_id, count(page_id) as page_n, sum(page_content_length) as data_size from websites.url_redirections group by session_id, muse_id;        
+
+select count(*) from websites.web_pages_dump_20210304_attr wpda;
+
 -
 ------------------------------------------------
 -- Clear DB
