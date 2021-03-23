@@ -91,7 +91,7 @@ def extract_attributes_from_page_html(page_id, session_id, page_html, attr_table
     """ Extract text attributes from HTML code of a museum web page """
     assert page_id >= 0
     if len(page_html)==0: 
-        logger.warning("page_id {page_id} is empty".format(page_id))
+        logger.warning("page_id {} is empty".format(page_id))
         return False
 
     assert len(page_html) > 0
