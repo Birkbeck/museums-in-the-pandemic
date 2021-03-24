@@ -78,6 +78,7 @@ def insert_page_attribute(db_con, table_name, page_id, session_id, attrib_name, 
     except UnicodeEncodeError as e:
         logger.warn(str(page_id))
         logger.warn(str(e))
+        print("broken page_id",page_id)
         # TODO: fix utf 
         raise e
         #cur.execute(sql, [page_id, session_id, attrib_name, attrib_val])
