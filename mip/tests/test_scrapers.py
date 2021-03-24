@@ -10,6 +10,8 @@ import pandas as pd
 import requests
 import json
 from scrapers.scraper_twitter import scrape_twitter_account, scrape_twitter_accounts
+from scrapers.scraper_websites import *
+from analytics.an_websites import *
 from museums import get_fb_tw_links
 import datetime
 #import nest_asyncio
@@ -51,13 +53,39 @@ class TestWebsiteScraper(unittest.TestCase):
     def setUp(self):        
         self.somevar = 0
 
-    def test_1(self):
-        assert 1 + 1 == 2
+    def test_delta_calculation(self):
+        db_conn = connect_to_postgresql_db()
+        session_id = '20210323'
+        tab = get_previous_session_table(session_id, db_conn)
+        old_text = """Things to Do What’s On Where to stay Conferences & Exhibitions Getting Around Our Story News Suppliers Contact Us Get Listed Search Things to Do What’s On Where to stay Conferences & Exhibitions Getting Around Our Story News Suppliers Contact Us Get Listed Bed & Breakfast Home
+                    /
+                    Where to Stay
+                    /
+                    """
+        for url in ["https://www.destinationmiltonkeynes.co.uk/where-to-stay/bed-breakfast/",
+            "https://www.broughtonhouse.com/"]:
+            prev_text = get_previous_version_of_page_text(url, tab, db_conn)
+            print(prev_text)
+            diffs = diff_texts(prev_text, old_text)
+            diffs_json = json.dumps(diffs)
 
-    def test_2(self):
-        assert 1 + 1 == 2
+        aa = ['thesame','this is a test\npiach\nnonpiach','this is another test\ntestino testaccio','this is another test\n   testino testaccio\n  s s travell  ']
+        bb = ['thesame','this is a not test\npiach\nnonpiach','this is another test\n  s travell  \n   testino testaccio','this is new text','this is old text']
+        for a in aa:
+            for b in bb:
+                print("="*50)
+                print(a)
+                print("-"*30)
+                print(b)
+                print("-"*30)
+                diffs = diff_texts(a,b)
+                print(diffs)
+
+        pass
+
 
     def test_get_fb_tw_links(self):
+        return
         get_fb_tw_links()
 
     def test_problematic_sites(self):

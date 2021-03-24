@@ -4,7 +4,7 @@
 Analyse scraped websites
 """
 
-from db.db import connect_to_postgresql_db, check_dbconnection_status
+from db.db import connect_to_postgresql_db, check_dbconnection_status, make_string_sql_safe
 import pandas as pd
 from bs4 import BeautifulSoup
 from bs4.element import Comment
@@ -12,6 +12,8 @@ from scrapers.scraper_websites import get_scraping_session_tables, get_scraping_
 import re
 from utils import remove_empty_elem_from_list, remove_multiple_spaces_tabs
 import logging
+import difflib
+
 logger = logging.getLogger(__name__)
 
 # constants
@@ -47,6 +49,7 @@ def create_webpage_attribute_table(table_name, db_con):
     logger.info('create_webpage_attribute_table: '+attr_table)
     return attr_table
 
+
 def clear_attribute_table(table_name, db_con):
     """ This does not delete the source pages, only the extracted attributes """
     logger.debug("clear_attribute_table: "+ table_name)
@@ -74,8 +77,11 @@ def insert_page_attribute(db_con, table_name, page_id, session_id, attrib_name, 
         db_con.commit()
     except UnicodeEncodeError as e:
         logger.warn(str(page_id))
-        logger.warn(str(e));
+        logger.warn(str(e))
+        # TODO: fix utf 
         raise e
+        #cur.execute(sql, [page_id, session_id, attrib_name, attrib_val])
+        #db_con.commit()
 
     return True
 
@@ -138,7 +144,7 @@ def extract_text_from_websites(in_table, out_table, db_conn, target_museum_id=No
     assert in_table
     assert table_suffix in out_table
     #clear_attribute_table(out_table, db_conn)
-    block_sz = 10000
+    block_sz = 100
     offset = 0
     keep_scanning = True
     
@@ -151,7 +157,9 @@ def extract_text_from_websites(in_table, out_table, db_conn, target_museum_id=No
         pages_df = pd.read_sql(sql, db_conn)
         
         for index, row in pages_df.iterrows():
+            if index % 100 == 0: print('\t',index)
             page_id = row['page_id']
+            url = row['url']
             session_id = row['session_id']
             page_html = row['page_content']
             if not exists_attrib_page(page_id, session_id, db_conn):
@@ -162,6 +170,8 @@ def extract_text_from_websites(in_table, out_table, db_conn, target_museum_id=No
         offset += block_sz
         if len(pages_df) < block_sz:
             keep_scanning = False
+        else: 
+            print("next block")
     return True
 
 

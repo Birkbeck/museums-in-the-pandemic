@@ -171,7 +171,7 @@ def init_website_dump_db(db_con, session_id):
     # SELECT table_name FROM information_schema.tables WHERE table_schema='public'
 
     # Create table
-    c.execute('''CREATE TABLE IF NOT EXISTS {} (
+    sql = '''CREATE TABLE IF NOT EXISTS {0} (
             page_id serial PRIMARY KEY,
             url text NOT NULL,
             referer_url text,
@@ -183,12 +183,16 @@ def init_website_dump_db(db_con, session_id):
             page_content_length numeric NOT NULL,
             depth numeric NOT NULL,
             google_rank numeric,
+            prev_session_diff json,
+            prev_session_id text,
+            prev_session_page_id numeric,
             ts timestamp DEFAULT CURRENT_TIMESTAMP,
             UNIQUE(url, session_id));
 
-            CREATE INDEX IF NOT EXISTS idx1 ON {} USING btree(muse_id);
-            CREATE INDEX IF NOT EXISTS idx2 ON {} USING btree(url);
-            '''.format(table_name))
+            CREATE INDEX IF NOT EXISTS idx1 ON {0} USING btree(muse_id);
+            CREATE INDEX IF NOT EXISTS idx2 ON {0} USING btree(url);
+            '''.format(table_name)
+    c.execute(sql)
     
     db_con.commit()
     logger.debug('init_website_dump_db')
@@ -219,7 +223,7 @@ def insert_website_page_in_db(table_name, muse_id, url, referer_url, b_base_url,
     #c = db_conn.cursor()
     # TODO: add website ranking
     sql = '''INSERT INTO {} (url, referer_url, is_start_url, url_domain, muse_id, 
-                                        page_content, page_content_length, depth, session_id)
+                            page_content, page_content_length, depth, session_id)
               VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s);'''.format(table_name)
     cur = db_conn.cursor()
     try:
@@ -344,11 +348,13 @@ class MultiWebsiteSpider(CrawlSpider):
 
         if not b_allowed:
             logger.debug("MIP debug: url "+url+" is not allowed. Skipping.")
-            return 
+            return
         if url_session_exists(url, scraping_session_id, self.db_con):
             return
 
         # TODO: check if URL is present in the previous session
+        prev_text = get_previous_version_of_page_text(url, self.table_name, self.db_con)
+        TODO
         
         # valid URL, save it in DB
         check_dbconnection_status(self.db_con)
@@ -358,9 +364,14 @@ class MultiWebsiteSpider(CrawlSpider):
         logger.debug('page_counter: ' + str(page_counter))
 
 
-def get_previous_session_id(session_id):
-    #TODO: find previous ID
-    pass
+def get_previous_session_table(session_id, db_conn):
+    """ to get previous version of pages """
+    #global db_conn
+    tabs = get_scraping_session_tables(db_conn)
+    other_tabs = [t for t in tabs if not session_id in t]
+    assert len(other_tabs)>0
+    previous_session_table = other_tabs[-1]
+    return previous_session_table
 
 
 def get_url_redirection_from_db(url, db_conn):
@@ -427,3 +438,49 @@ def get_scraping_session_stats_by_museum(table_name, db_conn):
         """.format(table_name)
     df = pd.read_sql(sql, db_conn)
     return df
+
+
+def get_previous_version_of_page_text(url, table_name, db_conn):
+    """ look for page in previous scraping session """
+    assert table_name
+    sql = """select d.page_id, d.url, d.session_id, a.attrib_name, a.attrib_val from {} d left join {} a 
+        on d.page_id = a.page_id 
+        where url = '{}';""".format(table_name, table_name + table_suffix, make_string_sql_safe(url))
+    df = pd.read_sql(sql, db_conn)
+    print(df.columns, len(df))
+    if len(df) == 0:
+        return None
+    resdf = df[df.attrib_name=='all_text']
+    
+    if len(resdf) == 1:
+        # text found, return it
+        text = resdf['attrib_val'].tolist()[0]
+        return text
+    # text not found
+    return None
+
+
+def diff_texts(text_a, text_b):
+    """ find deltas between texts (to calculate page differences) """
+    if text_a is None: text_a = ''
+    if text_b is None: text_b = ''
+    
+    a = clean_text_for_diff(text_a)
+    b = clean_text_for_diff(text_b)
+    diffs = difflib.unified_diff(a, b)
+    diff_lines = [line for line in diffs]
+    return diff_lines
+
+
+def clean_text_for_diff(text):
+    """ remove all special chars and flatten text """
+    text = re.sub(r'\n+', '\n', text)
+    lines = text.split('\n')
+    res = []
+    
+    for l in lines:
+        l_clean = re.sub('\W+', ' ', l.lower())
+        l_clean = re.sub(' +', ' ', l_clean).strip()
+        if l_clean is not None and len(l_clean)>0:
+            res.append(l_clean)
+    return res

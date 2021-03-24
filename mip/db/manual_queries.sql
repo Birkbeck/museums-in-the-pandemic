@@ -58,6 +58,40 @@ select session_id, muse_id, count(page_id) as page_n, sum(page_content_length) a
 
 select count(*) from websites.web_pages_dump_20210304_attr wpda;
 
+select * from websites.web_pages_dump_20210304_attr wpda offset 10000 limit 100;
+
+select * from websites.web_pages_dump_20210304_attr wpda limit 100;
+
+select d.page_id, d.url, d.session_id, a.attrib_name, a.attrib_val from websites.web_pages_dump_20210304 d left join websites.web_pages_dump_20210304_attr a 
+on d.page_id = a.page_id 
+where d.page_id = 181901;
+where url = 'https://www.broughtonhouse.com/';
+
+select * from websites.web_pages_dump_20210304_attr wpda where page_id = 1015310;
+
+
+select d.page_id, d.url, d.session_id, a.attrib_name, a.attrib_val from websites.web_pages_dump_20210304 d left join websites.web_pages_dump_20210304_attr a 
+        on d.page_id = a.page_id 
+        where url = 'https://www.destinationmiltonkeynes.co.uk/where-to-stay/bed-breakfast/';
+
+CREATE TABLE IF NOT EXISTS websites.test12 (
+            page_id serial PRIMARY KEY,
+            url text NOT NULL,
+            referer_url text,
+            session_id text NOT NULL,
+            is_start_url boolean NOT NULL,
+            url_domain text NOT NULL,
+            muse_id text NOT NULL,
+            page_content text NOT NULL,
+            page_content_length numeric NOT NULL,
+            depth numeric NOT NULL,
+            ts timestamp DEFAULT CURRENT_TIMESTAMP,
+            google_rank numeric,
+            prev_session_diff json,
+            prev_session_id text,
+            prev_session_page_id numeric,
+            UNIQUE(url, session_id));
+       
 -
 ------------------------------------------------
 -- Clear DB
