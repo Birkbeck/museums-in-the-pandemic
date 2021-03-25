@@ -64,7 +64,7 @@ class TestWebsiteScraper(unittest.TestCase):
                     """
         for url in ["https://www.destinationmiltonkeynes.co.uk/where-to-stay/bed-breakfast/",
             "https://www.broughtonhouse.com/"]:
-            prev_text = get_previous_version_of_page_text(url, tab, db_conn)
+            page_id, prev_text = get_previous_version_of_page_text(url, tab, db_conn)
             print(prev_text)
             diffs = diff_texts(prev_text, old_text)
             diffs_json = json.dumps(diffs)
@@ -82,6 +82,9 @@ class TestWebsiteScraper(unittest.TestCase):
                 print(diffs)
 
         pass
+
+    def test_unicode_issues(self):
+        clean_unicode_issues_string("test 123")
 
 
     def test_get_fb_tw_links(self):

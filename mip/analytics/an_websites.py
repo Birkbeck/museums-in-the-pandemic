@@ -10,26 +10,22 @@ from bs4 import BeautifulSoup
 from bs4.element import Comment
 from scrapers.scraper_websites import get_scraping_session_tables, get_scraping_session_stats_by_museum, get_webdump_table_name
 import re
-from utils import remove_empty_elem_from_list, remove_multiple_spaces_tabs
+from utils import remove_empty_elem_from_list, remove_multiple_spaces_tabs, get_soup_from_html, get_all_text_from_soup
 import logging
 import difflib
+import constants
 
 logger = logging.getLogger(__name__)
 
-# constants
-field_sep = '\n'
-table_suffix = '_attr'
-
-
 def get_webdump_attr_table_name(session_id):
-    tablen = get_webdump_table_name(session_id) + table_suffix
+    tablen = get_webdump_table_name(session_id) + constants.table_suffix
     return tablen
 
 
 def create_webpage_attribute_table(table_name, db_con):
     """ create table for attributes """
     assert table_name
-    attr_table = table_name + table_suffix
+    attr_table = table_name + constants.table_suffix
     c = db_con.cursor()
     # Create table
     # #page_attr_id integer PRIMARY KEY AUTOINCREMENT,
@@ -53,7 +49,7 @@ def create_webpage_attribute_table(table_name, db_con):
 def clear_attribute_table(table_name, db_con):
     """ This does not delete the source pages, only the extracted attributes """
     logger.debug("clear_attribute_table: "+ table_name)
-    assert table_suffix in table_name
+    assert constants.table_suffix in table_name
     c = db_con.cursor()
     c.execute('''DELETE from {};'''.format(table_name))
     db_con.commit()
@@ -61,9 +57,10 @@ def clear_attribute_table(table_name, db_con):
 
 
 def insert_page_attribute(db_con, table_name, page_id, session_id, attrib_name, attrib_val):
-    """  """
+    """ insert page attribute into DB """
     assert attrib_name in ['title','headers','all_text']
     assert page_id >= 0
+    attrib_val = clean_unicode_issues_string(attrib_val)
     if attrib_val == '':
         attrib_val = None
     
@@ -75,25 +72,29 @@ def insert_page_attribute(db_con, table_name, page_id, session_id, attrib_name, 
     try:
         cur.execute(sql, [page_id, session_id, attrib_name, attrib_val])
         db_con.commit()
-    except UnicodeEncodeError as e:
+    except (UnicodeEncodeError,ValueError) as e:
         logger.warn(str(page_id))
         logger.warn(str(e))
-        print("broken page_id",page_id)
-        # TODO: fix utf 
+        msg = "broken page_id, fixing unicode"+str(page_id)
+        print(msg)
+        logger.warn(msg)
         raise e
-        #cur.execute(sql, [page_id, session_id, attrib_name, attrib_val])
+        # reinsert cleaned string
+        #clean_attrib_val = clean_unicode_issues_string(attrib_val)
+        #cur.execute(sql, [page_id, session_id, attrib_name, clean_attrib_val])
         #db_con.commit()
 
     return True
 
 
-def tag_visible(element):
-    """ Returns True if html tag is a visible one """
-    if element.parent.name in ['style', 'script', 'head', 'title', 'meta', '[document]']:
-        return False
-    if isinstance(element, Comment):
-        return False
-    return True
+def clean_unicode_issues_string(s):
+    """ Bug fix for unicode issues """
+    if s is None: return s
+    if s == '': return ''
+
+    cs = s.replace("\x00", "\uFFFD").strip()
+    #cs = s.decode("utf-8", errors="replace").replace("\x00", "\uFFFD")
+    return cs
 
 
 def clean_text(s):
@@ -105,12 +106,12 @@ def clean_text(s):
 def extract_attributes_from_page_html(page_id, session_id, page_html, attr_table, db_con):
     """ Extract text attributes from HTML code of a museum web page """
     assert page_id >= 0
-    if len(page_html)==0: 
+    if len(page_html)==0:
         logger.warning("page_id {} is empty".format(page_id))
         return False
 
     assert len(page_html) > 0
-    soup = BeautifulSoup(page_html, 'html.parser')
+    soup = get_soup_from_html(page_html)
 
     # get page title
     if soup.title:
@@ -122,15 +123,12 @@ def extract_attributes_from_page_html(page_id, session_id, page_html, attr_table
     headers = soup.find_all(re.compile('^h[1-6]$'))
     headers = [clean_text(h.text).strip() for h in headers if h.text]
     headers = remove_empty_elem_from_list(headers)
-    headers = field_sep.join(headers)
+    headers = constants.field_sep.join(headers)
     insert_page_attribute(db_con, attr_table, page_id, session_id, 'headers', remove_multiple_spaces_tabs(headers))
 
     # get all text
     if soup.body:
-        texts = soup.body.findAll(text=True)
-        visible_texts = remove_empty_elem_from_list(filter(tag_visible, texts))
-        page_all_text = field_sep.join(t.strip() for t in visible_texts if t)
-        page_all_text = remove_multiple_spaces_tabs(page_all_text)
+        page_all_text = get_all_text_from_soup(soup)
         insert_page_attribute(db_con, attr_table, page_id, session_id, 'all_text', page_all_text)
     else:
         insert_page_attribute(db_con, attr_table, page_id, session_id, 'all_text', None)
@@ -141,16 +139,18 @@ def extract_attributes_from_page_html(page_id, session_id, page_html, attr_table
 
 def extract_text_from_websites(in_table, out_table, db_conn, target_museum_id=None):
     """ Scan all pages in in_website_db and generate attributes in out_attr_db"""
-    logger.info("extract_text_from_websites {} -> {}".format(in_table, out_table))
+    msg = "extract_text_from_websites {} -> {}".format(in_table, out_table)
+    logger.info(msg)
+    print(msg)
     assert in_table
-    assert table_suffix in out_table
+    assert constants.table_suffix in out_table
     #clear_attribute_table(out_table, db_conn)
-    block_sz = 100
+    block_sz = 10000
     offset = 0
     keep_scanning = True
     
     while keep_scanning:
-        print(offset)
+        print('offset =',offset)
         where = ''
         if target_museum_id:
             where = " where muse_id ='{}'".format(target_museum_id)
@@ -158,7 +158,7 @@ def extract_text_from_websites(in_table, out_table, db_conn, target_museum_id=No
         pages_df = pd.read_sql(sql, db_conn)
         
         for index, row in pages_df.iterrows():
-            if index % 100 == 0: print('\t',index)
+            if index % 100 == 0: print('\tidx=',index)
             page_id = row['page_id']
             url = row['url']
             session_id = row['session_id']

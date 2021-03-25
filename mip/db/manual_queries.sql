@@ -56,23 +56,30 @@ select * from websites.web_pages_dump_20210303 where muse_id = 'mm.domus.SW005';
 
 select session_id, muse_id, count(page_id) as page_n, sum(page_content_length) as data_size from websites.url_redirections group by session_id, muse_id;        
 
-select count(*) from websites.web_pages_dump_20210304_attr wpda;
+select count(*) from websites.web_pages_dump_20210304 union;
+-- how many extracted pages attr 
+select count(distinct page_id) from websites.web_pages_dump_20210304_attr;
+
+select count(distinct page_id) from websites.web_pages_dump_20210304;
+
 
 select * from websites.web_pages_dump_20210304_attr wpda offset 10000 limit 100;
 
 select * from websites.web_pages_dump_20210304_attr wpda limit 100;
+
+select * from websites.web_pages_dump_20210324 wpd where prev_session_page_id is not null;
 
 select d.page_id, d.url, d.session_id, a.attrib_name, a.attrib_val from websites.web_pages_dump_20210304 d left join websites.web_pages_dump_20210304_attr a 
 on d.page_id = a.page_id 
 where d.page_id = 181901;
 where url = 'https://www.broughtonhouse.com/';
 
-select * from websites.web_pages_dump_20210304_attr wpda where page_id = 1015310;
+select * from websites.web_pages_dump_20210304 wpda where page_id = 290427;
 
 
 select d.page_id, d.url, d.session_id, a.attrib_name, a.attrib_val from websites.web_pages_dump_20210304 d left join websites.web_pages_dump_20210304_attr a 
         on d.page_id = a.page_id 
-        where url = 'https://www.destinationmiltonkeynes.co.uk/where-to-stay/bed-breakfast/';
+        where url = 'https://www.thisisdurham.com/northernsaints/see-and-do/activities/cycling';
 
 CREATE TABLE IF NOT EXISTS websites.test12 (
             page_id serial PRIMARY KEY,
@@ -91,7 +98,18 @@ CREATE TABLE IF NOT EXISTS websites.test12 (
             prev_session_id text,
             prev_session_page_id numeric,
             UNIQUE(url, session_id));
+
+           
+select d.page_id, d.url, d.session_id, a.attrib_name, a.attrib_val from websites.web_pages_dump_20210304 d left join websites.web_pages_dump_20210304_attr a 
+        on d.page_id = a.page_id 
+        where url = 'https://www.ducksters.com/';
        
+select d.page_id, d.url, d.session_id, a.attrib_name, a.attrib_val from websites.web_pages_dump_20210304 d left join websites.web_pages_dump_20210304_attr a 
+        on d.page_id = a.page_id 
+        where url = 'https://www.timeout.com/london/museums/alexander-fleming-laboratory-museum';
+       
+select * from websites.web_pages_dump_20210304_attr wpda limit 100;
+
 -
 ------------------------------------------------
 -- Clear DB
