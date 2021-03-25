@@ -57,7 +57,7 @@ def scrape_websites():
     # DEBUG
     #url_df = url_df[url_df.url=='https://marblebar.org.au/company/st-peters-heritage-centre-hall-1460398/']
     #url_df.to_excel("tmp/museum_scraping_input.xlsx",index=False)
-    url_df = url_df.sample(20, random_state=7134)
+    #url_df = url_df.sample(20, random_state=7134)
     
     max_urls_single_crawler = 5000
     # split df and create a new crawler for each chunk
@@ -181,10 +181,11 @@ def init_website_dump_db(db_con, session_id):
             is_start_url boolean NOT NULL,
             url_domain text NOT NULL,
             muse_id text NOT NULL,
-            page_content text NOT NULL,
+            page_content text,
             page_content_length numeric NOT NULL,
             depth numeric NOT NULL,
             google_rank numeric,
+            new_page_b boolean,
             prev_session_diff_b boolean,
             prev_session_diff json,
             prev_session_table text,
@@ -194,6 +195,8 @@ def init_website_dump_db(db_con, session_id):
 
             CREATE INDEX IF NOT EXISTS idx1 ON {0} USING btree(muse_id);
             CREATE INDEX IF NOT EXISTS idx2 ON {0} USING btree(url);
+            CREATE INDEX IF NOT EXISTS idx3 ON {0} USING btree(prev_session_diff_b);
+            CREATE INDEX IF NOT EXISTS idx4 ON {0} USING btree(new_page_b);
             '''.format(table_name)
     c.execute(sql)
     
@@ -218,23 +221,30 @@ def is_valid_website(url):
 #def get_museum_ids_from_session(session_id, db_conn):
 #    TODO "select distinct muse_id as muse_id from {};".format()
 
-
-
 def insert_website_page_in_db(table_name, muse_id, url, referer_url, b_base_url, page_content, response_status, 
                             session_id, depth, db_conn, prev_session_diff_b,
-                            prev_session_diff, prev_session_table, prev_session_page_id):
+                            prev_session_diff, prev_session_table, prev_session_page_id, new_page_b):
     """ Insert page dump """
+
+    if not new_page_b and not prev_session_diff_b:
+        assert page_content is None
+
+    if page_content is None:
+        page_length = 0
+    else:
+        page_length = len(page_content)
+
     #c = db_conn.cursor()
     # TODO: add website ranking
     sql = '''INSERT INTO {} (url, referer_url, is_start_url, url_domain, muse_id, 
                             page_content, page_content_length, depth, session_id, 
-                            prev_session_diff, prev_session_table, prev_session_page_id, prev_session_diff_b)
-              VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);'''.format(table_name)
+                            prev_session_diff, prev_session_table, prev_session_page_id, prev_session_diff_b, new_page_b)
+              VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);'''.format(table_name)
     cur = db_conn.cursor()
     try:
         cur.execute(sql, [url, referer_url, b_base_url, get_url_domain(url), muse_id, page_content, 
-                    len(page_content), depth, session_id, prev_session_diff, prev_session_table, prev_session_page_id, 
-                    prev_session_diff_b])
+                    page_length, depth, session_id, prev_session_diff, prev_session_table, prev_session_page_id, 
+                    prev_session_diff_b, new_page_b])
         db_conn.commit()
     except Exception as e:
         logger.error('error while inserting in insert_website_page_in_db')
@@ -247,6 +257,12 @@ def get_webdump_table_name(session_id):
     """ Table for a single scraping session """
     table_name = "websites.web_pages_dump_"+str(session_id)
     return table_name
+
+
+def get_session_id_from_table_name(table):
+    session_id = table.replace("websites.web_pages_dump_",'')
+    assert len(session_id) == 8
+    return session_id
 
 
 def url_session_exists(url, session_id, db_conn):
@@ -361,28 +377,37 @@ class MultiWebsiteSpider(CrawlSpider):
         # check if URL is present in the previous session
         prev_session_table = get_previous_session_table(session_id, self.db_con)
         assert prev_session_table
-        prev_page_id, prev_text = get_previous_version_of_page_text(url, prev_session_table, self.db_con)
-        prev_session_diff = None
-        changed = False
-        if prev_text is not None:
-            soup = get_soup_from_html(html)
-            new_text = get_all_text_from_soup(soup)
-            changed = new_text != prev_text
-            if changed:
-                # prev_session_diff prev_session_id prev_session_page_id
-                prev_session_diff = diff_texts(prev_text, new_text)
-            else:
-                assert not changed
-                # page is identical to previous version, don't save
-                html = None
-            del soup
+        # check if url exists in previous session
+        new_page_b = not url_session_exists(url, get_session_id_from_table_name(prev_session_table), self.db_con)
+        
+        if not new_page_b:
+            prev_page_id, prev_text = get_previous_version_of_page_text(url, prev_session_table, self.db_con)
+            prev_session_diff = None
+            changed = False
+            if prev_text is not None:
+                soup = get_soup_from_html(html)
+                new_text = get_all_text_from_soup(soup)
+                changed = new_text != prev_text
+                if changed:
+                    # prev_session_diff prev_session_id prev_session_page_id
+                    prev_session_diff = diff_texts(prev_text, new_text)
+                    # save as json
+                    prev_session_diff = json.dumps(prev_session_diff)
+                del soup
 
         # valid URL, save it in DB
+        if not new_page_b and not changed:
+            # make sure not to save the same page more than once
+            # page is identical to previous version, don't save (save storage space)
+            html = None
+
         check_dbconnection_status(self.db_con)
         insert_website_page_in_db(self.table_name, muse_id, url, referer_url, b_base_url, 
                     html, response.status, self.session_id, depth, self.db_con, 
                     prev_session_diff_b=changed,
-                    prev_session_diff=prev_session_diff, prev_session_table=prev_session_table, 
+                    new_page_b=new_page_b,
+                    prev_session_diff=prev_session_diff, 
+                    prev_session_table=prev_session_table, 
                     prev_session_page_id=prev_page_id)
         logger.debug('url saved: ' + url)
         logger.debug('page_counter: ' + str(page_counter))
@@ -399,6 +424,7 @@ def get_previous_session_table(session_id, db_conn):
 
 
 def get_url_redirection_from_db(url, db_conn):
+    """  """
     # check if redirection is in DB
     sql = "select redirected_to_url from websites.url_redirections where url=%s;"
     cur = db_conn.cursor()

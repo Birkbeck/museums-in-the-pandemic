@@ -137,6 +137,7 @@ def extract_attributes_from_page_html(page_id, session_id, page_html, attr_table
     # TODO: extract other page fields/links here
     return True
 
+
 def extract_text_from_websites(in_table, out_table, db_conn, target_museum_id=None):
     """ Scan all pages in in_website_db and generate attributes in out_attr_db"""
     msg = "extract_text_from_websites {} -> {}".format(in_table, out_table)
@@ -171,7 +172,7 @@ def extract_text_from_websites(in_table, out_table, db_conn, target_museum_id=No
         offset += block_sz
         if len(pages_df) < block_sz:
             keep_scanning = False
-        else: 
+        else:
             print("next block")
     return True
 
