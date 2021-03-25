@@ -110,6 +110,8 @@ select d.page_id, d.url, d.session_id, a.attrib_name, a.attrib_val from websites
        
 select * from websites.web_pages_dump_20210304_attr wpda limit 100;
 
+select count(*) as pages, count(distinct muse_id) n_museums from websites.web_pages_dump_20210325 wpda;
+
 -
 ------------------------------------------------
 -- Clear DB
