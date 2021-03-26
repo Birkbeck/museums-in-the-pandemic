@@ -112,7 +112,12 @@ select * from websites.web_pages_dump_20210304_attr wpda limit 100;
 
 select count(*) as pages, count(distinct muse_id) n_museums from websites.web_pages_dump_20210325 wpda;
 
-select distinct muse_id from websites.web_pages_dump_20210325 wpd order by muse_id; 
+select distinct muse_id from websites.web_pages_dump_20210325 wpd order by muse_id;
+
+-- bug fix
+select * from websites.web_pages_dump_20210304 wpd where page_id = 950935;
+
+
 
 -
 ------------------------------------------------

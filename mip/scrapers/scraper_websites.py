@@ -234,8 +234,6 @@ def insert_website_page_in_db(table_name, muse_id, url, referer_url, b_base_url,
     else:
         page_length = len(page_content)
 
-    #c = db_conn.cursor()
-    # TODO: add website ranking
     sql = '''INSERT INTO {} (url, referer_url, is_start_url, url_domain, muse_id, 
                             page_content, page_content_length, depth, session_id, 
                             prev_session_diff, prev_session_table, prev_session_page_id, prev_session_diff_b, new_page_b)

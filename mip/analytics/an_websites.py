@@ -13,6 +13,7 @@ import re
 from utils import remove_empty_elem_from_list, remove_multiple_spaces_tabs, get_soup_from_html, get_all_text_from_soup
 import logging
 import difflib
+import unicodedata
 import constants
 
 logger = logging.getLogger(__name__)
@@ -80,7 +81,7 @@ def insert_page_attribute(db_con, table_name, page_id, session_id, attrib_name, 
         logger.warn(msg)
         raise e
         # reinsert cleaned string
-        #clean_attrib_val = clean_unicode_issues_string(attrib_val)
+        #clean_attrib_val = unicodedata.normalize("NFKD", attrib_val)
         #cur.execute(sql, [page_id, session_id, attrib_name, clean_attrib_val])
         #db_con.commit()
 
@@ -93,8 +94,15 @@ def clean_unicode_issues_string(s):
     if s == '': return ''
 
     cs = s.replace("\x00", "\uFFFD").strip()
+    # normalise unicode string
+    cs2 = unicodedata.normalize("NFKD", cs)
+    try:
+        cs2.encode()
+    except UnicodeEncodeError as e:
+        cs2 = cs2.encode('utf-8', "backslashreplace").decode('utf-8')
+        cs2.encode()
     #cs = s.decode("utf-8", errors="replace").replace("\x00", "\uFFFD")
-    return cs
+    return cs2
 
 
 def clean_text(s):
@@ -133,7 +141,7 @@ def extract_attributes_from_page_html(page_id, session_id, page_html, attr_table
     else:
         insert_page_attribute(db_con, attr_table, page_id, session_id, 'all_text', None)
         logger.debug("page ID "+str(page_id)+" has no HTML content")
-
+    
     # TODO: extract other page fields/links here
     return True
 
@@ -204,5 +212,5 @@ def analyse_museum_websites():
         # prepare table
         out_table = create_webpage_attribute_table(tab, db_conn)
         # extract attributes
-        extract_text_from_websites(tab, out_table, db_conn)
+        extract_text_from_websites(tab, out_table, db_conn) # DEBUG mm.musa.016
     
