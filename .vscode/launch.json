@@ -10,6 +10,7 @@
 
 
 
+
         {
             "name": "scrape_websites",
             "type": "python",
@@ -33,6 +34,14 @@
             "program": "mip/app.py",
             "console": "integratedTerminal",
             "args": ["tests"]
+        },
+        {
+            "name": "db_stats",
+            "type": "python",
+            "request": "launch",
+            "program": "mip/app.py",
+            "console": "integratedTerminal",
+            "args": ["db_stats"]
         },
         {
             "name": "scrape_google",

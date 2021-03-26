@@ -18,6 +18,11 @@ scrape_websites:
  	# echo ">>> Experiment running in background."
 
 
+db_stats:
+	@echo ">>> DB stats";
+	./run_app_server.sh db_stats;
+
+
 an_websites:
 	@echo ">>> Run NLP";
 	nohup ./run_app_server.sh an_websites > tmp/logs/nohup_${DATE}_log.txt &
