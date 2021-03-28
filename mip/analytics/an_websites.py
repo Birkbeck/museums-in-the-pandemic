@@ -154,7 +154,7 @@ def extract_text_from_websites(in_table, out_table, db_conn, target_museum_id=No
     assert in_table
     assert constants.table_suffix in out_table
     #clear_attribute_table(out_table, db_conn)
-    block_sz = 10000
+    block_sz = 20000
     offset = 0
     keep_scanning = True
     
@@ -196,7 +196,7 @@ def exists_attrib_page(page_id, session_id, db_conn):
 
 
 def analyse_museum_websites():
-    """ Main function analyse_museum_websites"""
+    """ Main function analyse_museum_websites """
     # input data (museum sample)
     db_conn = connect_to_postgresql_db()
 
@@ -214,3 +214,4 @@ def analyse_museum_websites():
         # extract attributes
         extract_text_from_websites(tab, out_table, db_conn) # DEBUG mm.musa.016
     
+    return True

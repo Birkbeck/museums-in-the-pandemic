@@ -125,6 +125,7 @@ def main():
     cleanup()
     logger.info(sw.tick("OK"))
     logger.info("OK")
+    print('OK')
 
 if __name__ == '__main__':
     main()

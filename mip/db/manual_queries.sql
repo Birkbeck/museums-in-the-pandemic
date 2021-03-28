@@ -76,7 +76,6 @@ where url = 'https://www.broughtonhouse.com/';
 
 select * from websites.web_pages_dump_20210304 wpda where page_id = 290427;
 
-
 select d.page_id, d.url, d.session_id, a.attrib_name, a.attrib_val from websites.web_pages_dump_20210304 d left join websites.web_pages_dump_20210304_attr a 
         on d.page_id = a.page_id 
         where url = 'https://www.thisisdurham.com/northernsaints/see-and-do/activities/cycling';
@@ -108,7 +107,7 @@ select d.page_id, d.url, d.session_id, a.attrib_name, a.attrib_val from websites
         on d.page_id = a.page_id 
         where url = 'https://www.timeout.com/london/museums/alexander-fleming-laboratory-museum';
        
-select count(page_id) from websites.web_pages_dump_20210304_attr wpda;
+select count(page_id) as attr_n, count(distinct page_id) as page_n from websites.web_pages_dump_20210304_attr wpda;
 
 select count(*) as pages, count(distinct muse_id) n_museums from websites.web_pages_dump_20210325 wpda;
 
