@@ -9,6 +9,7 @@ import logging
 from tldextract import extract
 import numpy as np
 import constants
+import gc
 import pandas as pd
 from bs4 import BeautifulSoup
 from bs4.element import Comment
@@ -190,6 +191,11 @@ def get_url_domain_with_search(url, search):
 def _wrap_cdata_text(s):
     ss = "<![CDATA[\n" + s + "\n]]>"
     return ss
+
+
+def garbage_collect():
+    print("garbage_collect")
+    gc.collect()
 
 
 def _read_str_from_file(fn):

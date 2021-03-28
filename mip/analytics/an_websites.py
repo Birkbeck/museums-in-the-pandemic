@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 from bs4.element import Comment
 from scrapers.scraper_websites import get_scraping_session_tables, get_scraping_session_stats_by_museum, get_webdump_table_name
 import re
-from utils import remove_empty_elem_from_list, remove_multiple_spaces_tabs, get_soup_from_html, get_all_text_from_soup
+from utils import remove_empty_elem_from_list, remove_multiple_spaces_tabs, get_soup_from_html, get_all_text_from_soup, garbage_collect
 import logging
 import difflib
 import unicodedata
@@ -187,6 +187,7 @@ def extract_text_from_websites(in_table, out_table, db_conn, target_museum_id=No
             keep_scanning = False
         else:
             print("next block")
+        garbage_collect()
     return True
 
 
