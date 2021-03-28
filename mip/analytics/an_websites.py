@@ -143,6 +143,10 @@ def extract_attributes_from_page_html(page_id, session_id, page_html, attr_table
         logger.debug("page ID "+str(page_id)+" has no HTML content")
     
     # TODO: extract other page fields/links here
+    
+    # clear up soup
+    soup.decompose()
+    del soup
     return True
 
 
@@ -154,7 +158,7 @@ def extract_text_from_websites(in_table, out_table, db_conn, target_museum_id=No
     assert in_table
     assert constants.table_suffix in out_table
     #clear_attribute_table(out_table, db_conn)
-    block_sz = 20000
+    block_sz = 5000
     offset = 0
     keep_scanning = True
     
@@ -174,7 +178,8 @@ def extract_text_from_websites(in_table, out_table, db_conn, target_museum_id=No
             page_html = row['page_content']
             if not exists_attrib_page(page_id, session_id, db_conn):
                 extract_attributes_from_page_html(page_id, session_id, page_html, out_table, db_conn)
-                
+            del page_html, page_id, session_id
+
         # process pages
         # scanning logic
         offset += block_sz
@@ -209,9 +214,10 @@ def analyse_museum_websites():
         df = get_scraping_session_stats_by_museum(tab, db_conn)
         #df = sample_df.merge(stats_df, how='left', left_on='mm_id', right_on='muse_id')
         df.to_excel('tmp/analytics/websites-stats-{}.xlsx'.format(tab), index=False)
+        del df
         # prepare table
         out_table = create_webpage_attribute_table(tab, db_conn)
         # extract attributes
         extract_text_from_websites(tab, out_table, db_conn) # DEBUG mm.musa.016
-    
+
     return True
