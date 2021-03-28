@@ -212,6 +212,7 @@ def analyse_museum_websites():
     tables = get_scraping_session_tables(db_conn)
 
     for tab in tables:
+        print(tab)
         df = get_scraping_session_stats_by_museum(tab, db_conn)
         #df = sample_df.merge(stats_df, how='left', left_on='mm_id', right_on='muse_id')
         df.to_excel('tmp/analytics/websites-stats-{}.xlsx'.format(tab), index=False)
