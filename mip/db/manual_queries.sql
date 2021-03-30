@@ -127,6 +127,15 @@ WHERE
   pgNamespace.nspname NOT IN ('pg_catalog', 'information_schema') AND
   pgClass.relkind='r'
 order by pgClass.relname;
+
+
+-- ALTER TABLE websites.web_pages_dump_20210304
+  -- ADD new_page_b boolean;
+-- update websites.web_pages_dump_20210304 set new_page_b = true; 
+
+--ALTER TABLE websites.web_pages_dump_20210304
+  --ADD prev_session_diff_b boolean;
+--update websites.web_pages_dump_20210304 set prev_session_diff_b = true;
 -
 ------------------------------------------------
 -- Clear DB
