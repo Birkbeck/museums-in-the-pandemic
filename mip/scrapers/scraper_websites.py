@@ -535,7 +535,7 @@ def get_scraping_session_tables(db_conn):
     res = pd.read_sql(sql, db_conn)['table_name'].tolist()
     res = [r for r in res if 'web_pages' in r]
     res = ["websites."+r for r in res if not 'attr' in r]
-    res = sorted(res)
+    res = sorted(res, reverse=True)
     return res
 
 
