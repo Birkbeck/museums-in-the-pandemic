@@ -114,7 +114,7 @@ def clean_text(s):
 def extract_attributes_from_page_html(page_id, session_id, page_html, attr_table, db_con):
     """ Extract text attributes from HTML code of a museum web page """
     assert page_id >= 0
-    if len(page_html)==0:
+    if page_html is None or len(page_html)==0:
         logger.warning("page_id {} is empty".format(page_id))
         return False
 
@@ -176,7 +176,14 @@ def extract_text_from_websites(in_table, out_table, db_conn, target_museum_id=No
             url = row['url']
             session_id = row['session_id']
             page_html = row['page_content']
-            if not exists_attrib_page(page_id, session_id, db_conn):
+
+            to_extract = True
+            if 'prev_session_diff_b' in row:
+                new_page = row['new_page_b']
+                prev_session_diff_b = row['prev_session_diff_b']
+                if not new_page and not prev_session_diff_b:
+                    to_extract = False
+            if to_extract and not exists_attrib_page(page_id, session_id, db_conn):
                 extract_attributes_from_page_html(page_id, session_id, page_html, out_table, db_conn)
             del page_html, page_id, session_id
 
