@@ -333,8 +333,13 @@ def compare_html_with_previous_versions(url, html, current_session_id, db_conn):
             if changed:
                 # prev_session_diff prev_session_id prev_session_page_id
                 prev_session_diff = diff_texts(prev_text, new_text)
-                # save as json
-                prev_session_diff = json.dumps(prev_session_diff)
+                if prev_session_diff is not None:
+                    # save as json
+                    assert len(prev_session_diff) > 0
+                    prev_session_diff = json.dumps(prev_session_diff)
+                else: 
+                    # there are actually no differences between versions
+                    changed = False
             soup.decompose()
             del soup
 
@@ -352,6 +357,7 @@ def compare_html_with_previous_versions(url, html, current_session_id, db_conn):
     res['new_page_b'] = new_page_b
     res['html'] = html
     return res
+
 
 class CustomLinkExtractor(LinkExtractor):
     """ This is to avoid rescraping the same URL in the same session. """
@@ -581,6 +587,8 @@ def diff_texts(text_a, text_b):
     diffs = difflib.unified_diff(a, b)
     diff_lines = [line for line in diffs]
     assert diff_lines is not None
+    if len(diff_lines) == 0:
+        return None
     return diff_lines
 
 
