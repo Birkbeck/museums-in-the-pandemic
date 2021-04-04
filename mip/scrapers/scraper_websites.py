@@ -58,10 +58,10 @@ def scrape_websites():
     # DEBUG
     #url_df = url_df[url_df.url=='https://marblebar.org.au/company/st-peters-heritage-centre-hall-1460398/']
     #url_df = url_df[url_df.url=='https://www.nvr.org.uk/']
-    url_df = url_df.sample(15, random_state=7134)
+    #url_df = url_df.sample(15, random_state=7134)
     #url_df.to_pickle('tmp/museum_scraping_input_debug.pik')
-    url_df = pd.read_pickle('tmp/museum_scraping_input_debug.pik')
-    url_df.to_excel("tmp/museum_scraping_input_debug.xlsx",index=False)
+    #url_df = pd.read_pickle('tmp/museum_scraping_input_debug.pik')
+    #url_df.to_excel("tmp/museum_scraping_input_debug.xlsx",index=False)
     # END DEBUG
 
     assert len(url_df) > 0
