@@ -174,9 +174,8 @@ def split_dataframe(df, chunk_size):
 
 def get_url_domain_with_search(url, search):
     assert url
-    if search=='web':
-        dom = urlparse(url).netloc
-        dom = dom.replace("www.","")
+    if search=='web'or search=='website':
+        dom = get_url_domain(url)
     elif search=='facebook':
         if url.split("/")[3]=='events':
             dom = url.split("/")[4]

@@ -10,6 +10,10 @@ from analytics.an_websites import *
 from analytics.text_models import *
 from museums import *
 import pandas as pd
+from analytics.url_learning import repair_valid_column
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelBinarizer
 from scrapers.scraper_websites import check_for_url_redirection
 
 class TestTextExtraction(unittest.TestCase):
@@ -69,40 +73,59 @@ class TestVal(unittest.TestCase):
         i = 0
     #def test_stratified_sample(self):
         #generate_stratified_museum_sample()
-    def test_assign_urls_to_sample(self):
-        stratdf = pd.read_csv('data/museums/museums_wattributes-2020-02-23.tsv', sep='\t')
-        googledf=pd.read_csv('data/google_results/results_source_files/google_extracted_results_reg.tsv.gz', sep='\t')
-        facebookdf=pd.read_csv('data/google_results/results_source_files/google_extracted_results_facebook.tsv.gz', sep='\t')
-        twitterdf=pd.read_csv('data/google_results/results_source_files/google_extracted_results_twitter.tsv.gz', sep='\t')
-        museweight = generate_weighted_museum_names()
-        stratdf=stratdf.filter(['muse_id','musname','size', 'governance', 'town'], axis=1)
-        googledf=googledf.filter(['muse_id','search_type', 'google_rank', 'url'], axis=1)
-        googledf['url_size']=googledf['url'].str.len() 
-        googledf['N_slash']=googledf['url'].str.split('/')
-        googledf['N_slash']=googledf['N_slash'].apply(lambda x: len(x))
-        
-        facebookdf=facebookdf.filter(['muse_id','search_type', 'google_rank', 'url'], axis=1)
-        facebookdf['url_size']=facebookdf['url'].str.len() 
-        facebookdf['N_slash']=facebookdf['url'].str.split('/')
-        facebookdf['N_slash']=facebookdf['N_slash'].apply(lambda x: len(x))
-        twitterdf=twitterdf.filter(['muse_id','search_type', 'google_rank', 'url'], axis=1)
-        twitterdf['url_size']=twitterdf['url'].str.len() 
-        twitterdf['N_slash']=twitterdf['url'].str.split('/')
-        twitterdf['N_slash']=twitterdf['N_slash'].apply(lambda x: len(x))
-        outputdfg = pd.merge(stratdf,googledf,on='muse_id')
-        outputdff = pd.merge(stratdf,facebookdf,on='muse_id')
-        outputdft = pd.merge(stratdf,twitterdf,on='muse_id')
-        outputdf=outputdfg.append(outputdff)
-        outputdf=outputdf.append(outputdft)
-        outputdf['fuzzy_score']=outputdf.apply(lambda row: (generate_weighted_fuzzy_scores(row['musname'], row['url'], museweight, row['town'])), axis=1)
-        #score=[]
-        #for item in outputdf.iterrows():
+    
 
-            #score.append(generate_weighted_fuzzy_scores(item[1].musname, item[1].url, museweight, item[1].town))
-        outputdf=outputdf[outputdf.google_rank<11]
-        outputdf=outputdf.sort_values(['muse_id','search_type','google_rank'], ascending=[True,True,True])
-        outputdf.to_excel("tmp/merged_stratified_sample_400.xlsx", index=False)
-        outputdf.to_csv('tmp/merged_stratified_sample_400.tsv', index=False, sep='\t')
+
+    def test_ml(self):
+        #df_matrix_1 = pd.read_excel(r'tmp/merged_stratified_sample_400_1.xlsx')
+        #df_matrix_2 = pd.read_excel(r'tmp/merged_stratified_sample_400_2.xlsx')
+        #df_matrix_3 = pd.read_excel(r'tmp/merged_stratified_sample_400_3.xlsx')
+        #outputdf=pd.concat([df_matrix_1, df_matrix_2], ignore_index=True)
+        #outputdf=pd.concat([outputdf, df_matrix_3], ignore_index=True)
+        
+        #outputdf['url_size']=outputdf['url'].str.len() 
+        #outputdf['N_slash']=outputdf['url'].str.split('/')
+        outputdf=pd.read_excel(r'tmp/outputdf.xlsx')
+        outputdf['N_slash']=outputdf['N_slash'].apply(lambda x: len(x))
+        
+        
+        
+        
+        #outputdf['has_visit']=outputdf.apply(lambda row: (hasvisit(row['url'],row['search_type'])), axis=1)
+        #outputdf['has_museum']=outputdf.apply(lambda row: (hasmuseum(row['url'],row['search_type'])), axis=1)
+        #outputdf['has_location']=outputdf.apply(lambda row: (haslocation(row['url'],row['town'])), axis=1)
+        #museweight = generate_weighted_museum_names()
+       # outputdf['fuzzy_score_full_url']=outputdf.apply(lambda row: (generate_weighted_fuzzy_scores(get_musname_pool(row['musname'], row['town']), row['url'], museweight, "", False, row['search_type'])), axis=1)
+        #outputdf['fuzzy_score_domain']=outputdf.apply(lambda row: (generate_weighted_fuzzy_scores(get_musname_pool(row['musname'], row['town']), row['url'], museweight, "", True, row['search_type'])), axis=1)
+        #outputdf['fuzzy_score_domain_inverse']=outputdf.apply(lambda row: (get_fuzzy_string_score(get_url_domain_with_search(row['url'], row['search_type']),row['musname'] )), axis=1)
+        #outputdf['withloc_fuzzy_score_full_url']=outputdf.apply(lambda row: (generate_weighted_fuzzy_scores(get_musname_pool(row['musname'], row['town']), row['url'], museweight, row['town'], False, row['search_type'])), axis=1)
+        #outputdf['withloc_fuzzy_score_domain']=outputdf.apply(lambda row: (generate_weighted_fuzzy_scores(get_musname_pool(row['musname'], row['town']), row['url'], museweight, row['town'], True, row['search_type'])), axis=1)
+        
+        #outputdf['exact_score_url']=outputdf.apply(lambda row: (get_exact_match(row['musname'], row['url'])), axis=1)
+        #outputdf['exact_score_url_inverse']=outputdf.apply(lambda row: (get_exact_match(row['url'],row['musname'])), axis=1)
+        #outputdf['exact_score_domain']=outputdf.apply(lambda row: (get_exact_match(row['musname'], get_url_domain_with_search(row['url'], row['search_type']))), axis=1)
+        #outputdf['exact_score_domain_inverse']=outputdf.apply(lambda row: (get_exact_match(get_url_domain_with_search(row['url'], row['search_type']),row['musname'])), axis=1)
+
+        #outputdf.to_excel(r'tmp/outputdftest.xlsx')
+        df_matrix=pd.read_excel(r'tmp/outputdftest.xlsx')
+        df_matrix['valid']=df_matrix.apply(lambda row: (repair_valid_column(row['valid'])), axis=1)
+        #df_matrix.to_excel(r'tmp/outputdftest2.xlsx')
+        df_matrix['iscorrect']=df_matrix['valid']
+        df_ml_matrix=df_matrix.loc[df_matrix['iscorrect']!='',[	'google_rank',	'url_size',	'N_slash',	'has_visit',	'has_museum',	'has_location',	'fuzzy_score_full_url',	'fuzzy_score_domain',	'fuzzy_score_domain_inverse',	'withloc_fuzzy_score_full_url',	'withloc_fuzzy_score_domain',	'exact_score_url',	'exact_score_url_inverse',	'exact_score_domain',	'exact_score_domain_inverse',	'iscorrect']]
+        df_ml_matrix=df_ml_matrix.round(4)
+        df_ml_matrix=df_ml_matrix.fillna(0)
+        
+        #df_ml_matrix_2=pd.get_dummies(df_ml_matrix, columns=["size", "governance"], prefix=["size", "gov"])
+        
+        y=df_ml_matrix['iscorrect']
+        y=y.astype('int')
+        x=df_ml_matrix.drop(['iscorrect'], axis=1)
+        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.20, random_state=101)
+        x_train.to_excel(r'tmp/xtrain.xlsx')
+        x_test.to_excel(r'tmp/xtest.xlsx')
+        df_ml_matrix.to_excel("tmp/ml_museum_matrix.xlsx", index=False)
+        rf_Model=RandomForestClassifier()
+        rf_Model.fit(x_train, y_train)
     #def test_loading_sample(self):
         #load_manual_museum_urls()
         #print(check_for_url_redirection("https://www.facebook.com/pages/The-Scottish-Fisheries-Museum/168840906463849?ref=hl"))
@@ -115,6 +138,9 @@ class TestVal(unittest.TestCase):
         #generate_samples()
     #def test_combined_dataframe(self):
         #generate_combined_dataframe()
+        print(f'Train Accuracy - :{rf_Model.score(x_train,y_train):.3f}')
+        print(f'Test Accuracy - :{rf_Model.score(x_test,y_test):.3f}')
+        print("end")
     
 
                 

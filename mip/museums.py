@@ -8,6 +8,7 @@ import pandas as pd
 import re 
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
+from tldextract import extract
 from utils import get_url_domain, get_url_domain_with_search
 
 def load_museums_df_complete():
@@ -234,7 +235,7 @@ def load_museum_samples():
             musid.append(row[1].mm_id)
             url.append(row[1].twitter)
             search.append("twitter")
-    sampledict={'muse_id': musid, 'correct_url':url, 'search':search}
+    sampledict={'muse_id': musid, 'correct_url':url, 'search_type':search}
     valid_websites_df=pd.DataFrame(sampledict)
     
     print("valid_websites_df", len(valid_websites_df))
@@ -327,112 +328,184 @@ def generate_stratified_museum_sample():
     print(fout)
 
 
-def get_weighted_sum(musname, weighteddict, joiningwords):
+def get_weighted_sum(musname, weighteddict):
     """ @returns the sum of the weights for museum name """
     weightsum=0
     for word in musname:
-        if  word not in joiningwords:
-            if word == 'and':
-                weightsum = weightsum+weighteddict["&"]
+        if word !='':
+        
+            if word in weighteddict.keys():
+                weightsum = weightsum+weighteddict[word]
             else:
-                if word in weighteddict.keys():
-                    weightsum = weightsum+weighteddict[word]
-                else:
-                    weightsum=weightsum+1
+                weightsum=weightsum+1
     return weightsum
 
-def get_musname_score(musname, str_from_url, weighteddict, joiningwords, weightsum):
+def get_fuzzy_musname_score(musname, str_from_url, weighteddict, weightsum):
     """ @returns the normalised weighted score of the museum name """
     poolelementscore=0
+    
     for word in musname:
-        if  word not in joiningwords:
-            if  word != "and" and word not in joiningwords:
-                score = fuzz.partial_ratio(word, str_from_url)
-                if word in weighteddict.keys():
-                    score = score*(1/(weightsum/weighteddict[word]))
-                else:
-                    score = score*(1/(weightsum/1))
-                poolelementscore=poolelementscore+score
-            
-        if word == 'and':
-            score = fuzz.partial_ratio("&", str_from_url)
-            score = score*(1/(weightsum/weighteddict["&"]))
+        if word!='':
+        
+    
+            score = fuzz.partial_ratio(word, str_from_url)
+            if word in weighteddict.keys():
+                score = score*(1/(weightsum/weighteddict[word]))
+            else:
+                score = score*(1/(weightsum/1))
             poolelementscore=poolelementscore+score
             
-    return poolelementscore
-def get_abbreviation_score(musname, str_from_url, joiningwords):
-    """ @returns a score based on an abreviation it generates from the museum name """
-    newphrase=""
-    for word in musname:
         
-        if word not in joiningwords :
-            if word == "and":
-                newphrase = newphrase+"&"
-            elif re.search("^[0-9][0-9]*th", word) or re.search("^[0-9][0-9]*st", word):
-                a = re.sub('[^0-9]','', word)
-                newphrase = newphrase+a
-            else:
-                newphrase = newphrase+word[0]
-    if len(newphrase)<3:
+            
+    return poolelementscore
+def get_fuzzy_string_score(string1, string2):
+    """ @returns a score based on an abreviation it generates from the museum name """
+    
+    
+    if len(string1)<3 or len(string2)<3:
         return 0
-    score = fuzz.partial_ratio(newphrase, str_from_url)
+    score = fuzz.partial_ratio(string1, string2)
     return score
 
-def generate_weighted_fuzzy_scores(mname, str_from_url, weighteddict, location):
-    """ @returns maximum score for fuzzy string match with each word weighted based on number of occurances in all museum names """
-    joiningwords=["or", "the", "a", "for", "th", ""]
-    joiningwordswand=["or", "the", "a", "for", "th", "", "and"]
-    scores = []
-    if(location!=location):
+
+def hasvisit(url, search):
+    """ @returns True if the given url has visit in the domain """
+    domain=get_url_domain_with_search(url, search)
+    if 'visit' in domain.lower():
+        return True
+    else:
+        return False
+
+def hasmuseum(url, search):
+    """ @returns True if the given url has museum in the domain """
+    domain=get_url_domain_with_search(url, search)
+    if 'museum' in domain.lower():
+        return True
+    else:
+        return False
+
+def haslocation(url, location):
+    """ @returns True if the given url has location within it """
+    
+    if isinstance(location, float) or isinstance(location, int):
         location=""
+    if location.lower() in url.lower():
+        return True
+    else:
+        return False
+
+def striphtml(string1):
+    string1=string1.replace('www','')
+    string1=string1.replace('https','')
+    string1=string1.replace('http','')
+    string1=string1.replace('.com','')
+    string1=string1.replace('.org.uk','')
+    string1=string1.replace('.org','')
+    string1=string1.replace('.co.uk','')
+    string1=string1.replace('.gov','')
+    string1=re.sub(r'\W+', '', string1).lower()
+    return string1
+
+def get_exact_match(string1,string2):
+    
+    string1=striphtml(string1)
+    string2=striphtml(string2)
+    score=fuzz.ratio(string1,string2)
+    return score
+def get_musname_pool(mname, location):
+    joiningwords=["or", "the", "a", "for", "th", ""]
+    
+    mnamepool={}
+    namepool={}
+    mname=mname.lower()
+    if isinstance(location, float) or isinstance(location, int):
+        location=""
+    location=location.lower()
+    mnamepool['musname']=mname.split(" ")
     mnamewithmus=mname+" museum"
+    mnamepool['mnamewithmus']=mnamewithmus.split(" ")
     mnamewithloc=mname+" "+location
+    mnamepool['musnamewithloc']= mnamewithloc.split(" ")
     mnamewlocandmus=mname+" "+location+" museum"
-    musname=mname.split(" ")
-    musnamewithmus = mnamewithmus.split(" ")
-    musnamewithloc= mnamewithloc.split(" ")
-    musnamewlocandmus=mnamewlocandmus.split(" ")
+    mnamepool['musnamewlocandmus']=mnamewlocandmus.split(" ")
+    for key, value in mnamepool.items():
+        newvalue=''
+        newvaluewand=''
+        abbreviation=''
+        abbreviationwand=''
+        for word in value:
+            if  word not in joiningwords:
+                                  
+            
+                if word == 'and':
+                    newvaluewand=newvaluewand+' &'
+                    abbreviationwand=abbreviationwand+"&"
+                elif re.search("^[0-9][0-9]*th", word) or re.search("^[0-9][0-9]*st", word):
+                    a = re.sub('[^0-9]','', word)
+                    abbreviationwand=abbreviationwand+a
+                    abbreviation=abbreviation+a
+                    newvalue=newvalue+" "+word
+                    newvaluewand=newvaluewand+" "+word
+                else:
+                    abbreviationwand=abbreviationwand+word[0]
+                    abbreviation=abbreviation+word[0]
+                    newvalue=newvalue+" "+word
+                    newvaluewand=newvaluewand+" "+word
+        namepool[key]=newvalue.split(' ')
+        newkey = key+'wand'
+        namepool[newkey]=newvaluewand.split(' ')
+        abbrevkey=key+'abbrev'
+        namepool[abbrevkey]=abbreviation
+        abbrevkeywand=key+'abbrevwand'
+        namepool[abbrevkeywand]=abbreviationwand
     
-    weightsum=get_weighted_sum(musname, weighteddict, joiningwordswand)
+    
+    return namepool
 
-    
-    scores.append(get_musname_score(musname, str_from_url, weighteddict, joiningwordswand, weightsum))
 
+def generate_weighted_fuzzy_scores(mname, str_from_url, weighteddict, location, domainonly, search):
+    """ @returns maximum score for fuzzy string match with each word weighted based on number of occurances in all museum names """
     
-    weightsum = weightsum+weighteddict["museum"]
+    if domainonly==True:
+        str_from_url=get_url_domain_with_search(str_from_url, search)
+    str_from_url=str_from_url.lower()
+    scores = []
+    if isinstance(location, float) or isinstance(location, int):
+        location=""
+    
+    for key in mname:
+        if location != "":
+            if 'loc'in key:
+                if 'abbrev' in key:
+                    score=get_fuzzy_string_score(mname[key],str_from_url)
+                    scores.append(score)
+                    #print(key)
+                    #print(score)
+                else:
+                    weightsum=get_weighted_sum(mname[key], weighteddict)
+                    score=get_fuzzy_musname_score(mname[key], str_from_url, weighteddict, weightsum)
+                    scores.append(score)
+                    #print(key)
+                    #print(score)
+        
+                
+        else:
+            if 'loc' not in key:
+                if 'abbrev' in key:
+                    score=get_fuzzy_string_score(mname[key],str_from_url)
+                    scores.append(score)
+                    #print(key)
+                    #print(score)
+                else:
+                    weightsum=get_weighted_sum(mname[key], weighteddict)
+                    score=get_fuzzy_musname_score(mname[key], str_from_url, weighteddict, weightsum)
+                    scores.append(score)
+                    #print(key)
+                    #print(score)
+           
+            
     
     
-    scores.append(get_musname_score(musnamewithmus, str_from_url, weighteddict, joiningwordswand, weightsum))
-
-    weightsum=get_weighted_sum(musnamewithloc, weighteddict, joiningwordswand)
-    scores.append(get_musname_score(musnamewithloc, str_from_url, weighteddict, joiningwordswand, weightsum))
-    weightsum = weightsum+weighteddict["museum"]
-    scores.append(get_musname_score(musnamewlocandmus, str_from_url, weighteddict, joiningwordswand, weightsum))
-    
-    weightsum=get_weighted_sum(musname, weighteddict, joiningwords)
-    
-    
-    scores.append(get_musname_score(musname, str_from_url, weighteddict, joiningwords, weightsum))
-
-    
-    
-    weightsum = weightsum+weighteddict["museum"]
-    scores.append(get_musname_score(musnamewithmus, str_from_url, weighteddict, joiningwords, weightsum))
-
-    weightsum=get_weighted_sum(musnamewithloc, weighteddict, joiningwords)
-    scores.append(get_musname_score(musnamewithloc, str_from_url, weighteddict, joiningwords, weightsum))
-    weightsum = weightsum+weighteddict["museum"]
-    scores.append(get_musname_score(musnamewlocandmus, str_from_url, weighteddict, joiningwords, weightsum))
-
-    
-    scores.append(get_abbreviation_score(musname, str_from_url, joiningwordswand))
-    scores.append(get_abbreviation_score(musname, str_from_url, joiningwords))
-    scores.append(get_abbreviation_score(musnamewithmus, str_from_url, joiningwordswand))
-    scores.append(get_abbreviation_score(musnamewithmus, str_from_url, joiningwords))
-    scores.append(get_abbreviation_score(musnamewithloc, str_from_url, joiningwordswand))
-    scores.append(get_abbreviation_score(musnamewithloc, str_from_url, joiningwords))
-    scores.append(get_abbreviation_score(musnamewlocandmus, str_from_url, joiningwordswand))
-    scores.append(get_abbreviation_score(musnamewlocandmus, str_from_url, joiningwords))
 
     
     max_score = max(scores)
@@ -565,7 +638,15 @@ def generate_combined_dataframe():
     finaldf.to_csv('data/google_results/google_results_all_02_03_2021.tsv', index=False, sep='\t')
 
 
+def has_correct_url(url, correct_url):
+    if not isinstance(correct_url, float) or isinstance(correct_url, int):
+        if url.lower()==correct_url.lower():
+            return 1
+        else: return 0
+    else:
+        return ''
 
+    
 def match_museum_name_with_string(mname, str_from_url):
     """@returns max similarity score between variants of mname and str_from_url)"""
     
