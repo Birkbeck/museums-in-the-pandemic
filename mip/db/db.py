@@ -106,6 +106,24 @@ def is_postgresql_db_accessible():
         return False
 
 
+def count_all_db_rows():
+    assert is_postgresql_db_accessible()
+    db_conn = connect_to_postgresql_db()
+    sql = """
+    SELECT pgClass.relname, pgClass.reltuples AS n_rows
+    FROM
+        pg_class pgClass
+    LEFT JOIN
+        pg_namespace pgNamespace ON (pgNamespace.oid = pgClass.relnamespace)
+    WHERE
+        pgNamespace.nspname NOT IN ('pg_catalog', 'information_schema') 
+        AND pgClass.relkind='r'
+    order by pgClass.relname;
+    """
+    df = pd.read_sql(sql, db_conn)
+    print(df)
+    return df
+
 def connect_to_postgresql_db():
     """ Connect to central DB using a singleton """
     logger.debug("connect_to_postgresql_db")

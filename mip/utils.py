@@ -8,11 +8,15 @@ import re
 import logging
 from tldextract import extract
 import numpy as np
+import constants
+import gc
 import pandas as pd
+from bs4 import BeautifulSoup
+from bs4.element import Comment
 from multiprocessing import Pool
 logger = logging.getLogger(__name__)
 
-""" 
+"""
 Utility functions 
 """
 def select_random_sublist(l, n):
@@ -134,6 +138,30 @@ def get_url_domain(url):
     return dom
 
 
+def get_soup_from_html(page_html):
+    """  """
+    soup = BeautifulSoup(page_html, 'html.parser')
+    return soup
+
+
+def tag_visible(element):
+    """ Returns True if html tag is a visible one """
+    if element.parent.name in ['style', 'script', 'head', 'title', 'meta', '[document]']:
+        return False
+    if isinstance(element, Comment):
+        return False
+    return True
+
+
+def get_all_text_from_soup(soup):
+    """ @returns full text from HTML beautiful soup"""
+    texts = soup.body.findAll(text=True)
+    visible_texts = remove_empty_elem_from_list(filter(tag_visible, texts))
+    page_all_text = constants.field_sep.join(t.strip() for t in visible_texts if t)
+    page_all_text = remove_multiple_spaces_tabs(page_all_text)
+    return page_all_text
+
+
 def split_dataframe(df, chunk_size):
     """ Split a dataframe into sub dataframes """
     chunks = list()
@@ -163,6 +191,11 @@ def get_url_domain_with_search(url, search):
 def _wrap_cdata_text(s):
     ss = "<![CDATA[\n" + s + "\n]]>"
     return ss
+
+
+def garbage_collect():
+    print("garbage_collect")
+    gc.collect()
 
 
 def _read_str_from_file(fn):

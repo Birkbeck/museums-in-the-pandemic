@@ -54,9 +54,93 @@ https://marblebar.org.au/company/st-peters-heritage-centre-hall-1460398/
 select * from websites.web_pages_dump_20210303 where muse_id = 'mm.domus.SW005';
 
 
+select session_id, muse_id, count(page_id) as page_n, sum(page_content_length) as data_size from websites.url_redirections group by session_id, muse_id;        
+
+-- how many extracted pages attr
+select count(distinct page_id) from websites.web_pages_dump_20210304 union
+   select count(distinct page_id) from websites.web_pages_dump_20210304_attr;
+
+select count(distinct page_id) from websites.web_pages_dump_20210304;
+
+
+select * from websites.web_pages_dump_20210304_attr wpda offset 10000 limit 100;
+
+select * from websites.web_pages_dump_20210304_attr wpda limit 100;
+
+select * from websites.web_pages_dump_20210324 wpd where prev_session_page_id is not null;
+
+select d.page_id, d.url, d.session_id, a.attrib_name, a.attrib_val from websites.web_pages_dump_20210304 d left join websites.web_pages_dump_20210304_attr a 
+on d.page_id = a.page_id 
+where d.page_id = 181901;
+where url = 'https://www.broughtonhouse.com/';
+
+select * from websites.web_pages_dump_20210304 wpda where page_id = 290427;
+
+select d.page_id, d.url, d.session_id, a.attrib_name, a.attrib_val from websites.web_pages_dump_20210304 d left join websites.web_pages_dump_20210304_attr a 
+        on d.page_id = a.page_id 
+        where url = 'https://www.thisisdurham.com/northernsaints/see-and-do/activities/cycling';
+
+CREATE TABLE IF NOT EXISTS websites.test12 (
+            page_id serial PRIMARY KEY,
+            url text NOT NULL,
+            referer_url text,
+            session_id text NOT NULL,
+            is_start_url boolean NOT NULL,
+            url_domain text NOT NULL,
+            muse_id text NOT NULL,
+            page_content text NOT NULL,
+            page_content_length numeric NOT NULL,
+            depth numeric NOT NULL,
+            ts timestamp DEFAULT CURRENT_TIMESTAMP,
+            google_rank numeric,
+            prev_session_diff json,
+            prev_session_id text,
+            prev_session_page_id numeric,
+            UNIQUE(url, session_id));
+
+           
+select d.page_id, d.url, d.session_id, a.attrib_name, a.attrib_val from websites.web_pages_dump_20210304 d left join websites.web_pages_dump_20210304_attr a 
+        on d.page_id = a.page_id 
+        where url = 'https://www.ducksters.com/';
+       
+select d.page_id, d.url, d.session_id, a.attrib_name, a.attrib_val from websites.web_pages_dump_20210304 d left join websites.web_pages_dump_20210304_attr a 
+        on d.page_id = a.page_id 
+        where url = 'https://www.timeout.com/london/museums/alexander-fleming-laboratory-museum';
+       
+select count(page_id) as attr_n, count(distinct page_id) as page_n from websites.web_pages_dump_20210304_attr wpda;
+
+select count(*) as pages, count(distinct muse_id) n_museums from websites.web_pages_dump_20210325 wpda;
+
+select distinct muse_id from websites.web_pages_dump_20210325 wpd order by muse_id;
+
+-- bug fix
+select * from websites.web_pages_dump_20210304 wpd where page_id = 950935;
+
+
+SELECT
+  pgClass.relname, pgClass.reltuples AS n_rows
+FROM
+  pg_class pgClass
+LEFT JOIN
+  pg_namespace pgNamespace ON (pgNamespace.oid = pgClass.relnamespace)
+WHERE
+  pgNamespace.nspname NOT IN ('pg_catalog', 'information_schema') AND
+  pgClass.relkind='r'
+order by pgClass.relname;
+
+
+-- ALTER TABLE websites.web_pages_dump_20210304
+  -- ADD new_page_b boolean;
+-- update websites.web_pages_dump_20210304 set new_page_b = true; 
+
+--ALTER TABLE websites.web_pages_dump_20210304
+  --ADD prev_session_diff_b boolean;
+--update websites.web_pages_dump_20210304 set prev_session_diff_b = true;
 -
 ------------------------------------------------
 -- Clear DB
 ------------------------------------------------
 
 --drop table twitter.tweets_dump;
+
+

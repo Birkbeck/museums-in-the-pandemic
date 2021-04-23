@@ -13,8 +13,10 @@ from datetime import date
 import pandas as pd
 import urllib
 import numpy as np
+import constants
 from urllib.parse import urlparse
 from museums import load_all_google_results
+from scrapy.exceptions import CloseSpider
 from db.db import connect_to_postgresql_db, check_dbconnection_status, make_string_sql_safe
 # scrapy imports
 import scrapy
@@ -22,13 +24,14 @@ from scrapy.crawler import CrawlerProcess
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.dupefilters import RFPDupeFilter
-from utils import get_url_domain, get_app_settings, split_dataframe, parallel_dataframe_apply
+import re
+import difflib
+from utils import get_url_domain, get_app_settings, split_dataframe, parallel_dataframe_apply, get_soup_from_html, get_all_text_from_soup, garbage_collect
 
 import logging
 logger = logging.getLogger(__name__)
 
 page_counter = 0
-user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36"
 
 def scrape_websites():
     """ Main """
@@ -40,8 +43,7 @@ def scrape_websites():
     print("scrape_websites urls =", len(url_df))
     # generate session and timestamp for scraping
     global session_id
-    # DEBUG <<<< REMOVE <<<<<< IMPORTANT
-    session_id = "20210304" #gen_scraping_session_id() 
+    session_id = gen_scraping_session_id() # first scrape ID "20210304" 
     logger.info("scraping session_id: "+str(session_id))
 
     # open DB
@@ -55,9 +57,14 @@ def scrape_websites():
 
     # DEBUG
     #url_df = url_df[url_df.url=='https://marblebar.org.au/company/st-peters-heritage-centre-hall-1460398/']
-    #url_df.to_excel("tmp/museum_scraping_input.xlsx",index=False)
-    #url_df = url_df.sample(20, random_state=7134)
-    
+    #url_df = url_df[url_df.url=='https://www.nvr.org.uk/']
+    #url_df = url_df.sample(15, random_state=7134)
+    #url_df.to_pickle('tmp/museum_scraping_input_debug.pik')
+    #url_df = pd.read_pickle('tmp/museum_scraping_input_debug.pik')
+    #url_df.to_excel("tmp/museum_scraping_input_debug.xlsx",index=False)
+    # END DEBUG
+
+    assert len(url_df) > 0
     max_urls_single_crawler = 5000
     # split df and create a new crawler for each chunk
     chunks = split_dataframe(url_df, max_urls_single_crawler)
@@ -83,7 +90,8 @@ def scrape_websites():
             donotfollow_domains=donotfollow_domains,
             start_urls=start_urls,
             db_con=db_conn)
-
+    
+    garbage_collect()
     # start crawling (hangs here)
     crawler_process.start()
     global page_counter
@@ -91,6 +99,7 @@ def scrape_websites():
 
 
 def check_redirections_before_scraping(df):
+    """ called in parallel """
     msg = "check_redirections_before_scraping urls={}".format(len(df))
     logger.info(msg)
     print(msg)
@@ -108,7 +117,7 @@ def check_redirections_before_scraping(df):
         redirected_url_df = redirected_url_df.append(row)
 
     assert len(redirected_url_df) == len(df)
-    assert len(redirected_url_df)>0
+    assert len(redirected_url_df)>=0
     redirected_url_df['domain'] = redirected_url_df['url'].apply(get_url_domain)
     local_db_conn.close()
     return redirected_url_df
@@ -172,25 +181,34 @@ def init_website_dump_db(db_con, session_id):
     # SELECT table_name FROM information_schema.tables WHERE table_schema='public'
 
     # Create table
-    c.execute('''CREATE TABLE IF NOT EXISTS {} (
+    sql = '''CREATE TABLE IF NOT EXISTS {0} (
             page_id serial PRIMARY KEY,
             url text NOT NULL,
             referer_url text,
             session_id text NOT NULL,
             is_start_url boolean NOT NULL,
             url_domain text NOT NULL,
-            muse_id text NOT NULL, 
-            page_content text NOT NULL,
+            muse_id text NOT NULL,
+            page_content text,
             page_content_length numeric NOT NULL,
             depth numeric NOT NULL,
+            google_rank numeric,
+            new_page_b boolean,
+            prev_session_diff_b boolean,
+            prev_session_diff json,
+            prev_session_table text,
+            prev_session_page_id numeric,
             ts timestamp DEFAULT CURRENT_TIMESTAMP,
             UNIQUE(url, session_id));
-            '''.format(table_name))
-    # TODO: add indices on url and muse_id
-    # CREATE INDEX IF NOT EXISTS idx1 ON websites.web_pages_dump_20210304 USING btree(muse_id);
-    # CREATE INDEX IF NOT EXISTS idx2 ON websites.web_pages_dump_20210304 USING btree(url);
 
-    # TODO: add website ranking
+            CREATE INDEX IF NOT EXISTS idx1 ON {0} USING btree(muse_id);
+            CREATE INDEX IF NOT EXISTS idx2 ON {0} USING btree(url);
+            CREATE INDEX IF NOT EXISTS idx3 ON {0} USING btree(prev_session_diff_b);
+            CREATE INDEX IF NOT EXISTS idx4 ON {0} USING btree(prev_session_page_id);
+            CREATE INDEX IF NOT EXISTS idx5 ON {0} USING btree(new_page_b);
+            '''.format(table_name)
+    c.execute(sql)
+    
     db_con.commit()
     logger.debug('init_website_dump_db')
 
@@ -212,20 +230,28 @@ def is_valid_website(url):
 #def get_museum_ids_from_session(session_id, db_conn):
 #    TODO "select distinct muse_id as muse_id from {};".format()
 
-
-
 def insert_website_page_in_db(table_name, muse_id, url, referer_url, b_base_url, page_content, response_status, 
-                            session_id, depth, db_conn):
+                            session_id, depth, db_conn, prev_session_diff_b,
+                            prev_session_diff, prev_session_table, prev_session_page_id, new_page_b):
     """ Insert page dump """
-    #c = db_conn.cursor()
-    # TODO: add website ranking
+
+    if not new_page_b and not prev_session_diff_b:
+        assert page_content is None
+
+    if page_content is None:
+        page_length = 0
+    else:
+        page_length = len(page_content)
+
     sql = '''INSERT INTO {} (url, referer_url, is_start_url, url_domain, muse_id, 
-                                        page_content, page_content_length, depth, session_id)
-              VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s);'''.format(table_name)
+                            page_content, page_content_length, depth, session_id, 
+                            prev_session_diff, prev_session_table, prev_session_page_id, prev_session_diff_b, new_page_b)
+              VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);'''.format(table_name)
     cur = db_conn.cursor()
     try:
         cur.execute(sql, [url, referer_url, b_base_url, get_url_domain(url), muse_id, page_content, 
-                    len(page_content), depth, session_id])
+                    page_length, depth, session_id, prev_session_diff, prev_session_table, prev_session_page_id, 
+                    prev_session_diff_b, new_page_b])
         db_conn.commit()
     except Exception as e:
         logger.error('error while inserting in insert_website_page_in_db')
@@ -240,6 +266,12 @@ def get_webdump_table_name(session_id):
     return table_name
 
 
+def get_session_id_from_table_name(table):
+    session_id = table.replace("websites.web_pages_dump_",'')
+    assert len(session_id) == 8
+    return session_id
+
+
 def url_session_exists(url, session_id, db_conn):
     """ Check if the page has been scraped already in this session """
     cur = db_conn.cursor()
@@ -249,6 +281,82 @@ def url_session_exists(url, session_id, db_conn):
         return True
     else: 
         return False
+
+
+def compare_html_with_previous_versions(url, html, current_session_id, db_conn):
+    """ Scraper Logic """
+    res = {}
+    # check if URL is present in the previous session
+    prev_session_tables = get_previous_session_tables(current_session_id, db_conn)
+    assert len(prev_session_tables) > 0
+
+    def get_url_from_session(url, tab, db_conn):
+        cur = db_conn.cursor()
+        sql = """select page_id, page_content
+            from {} where url = '{}' and page_content_length > 0;""".format(tab, make_string_sql_safe(url))
+        res = pd.read_sql(sql, db_conn)
+        if len(res) == 0:
+            return None
+        return res
+    
+    # init variables
+    changed = None
+    prev_session_diff = None
+    prev_page_id = None
+    new_page_b = True
+    html_found = False
+    page_content = None
+    session_table = None
+
+    # check if url exists in previous sessions in reverse order
+    # find session where page was new
+    # look for previous version of page (HTML)
+    for tab in prev_session_tables:
+        page_d = get_url_from_session(url, tab, db_conn)
+            # break
+        if page_d is not None and len(page_d) > 0:
+            # found
+            prev_page_id = page_d['page_id'].tolist()[0]
+            page_content = page_d['page_content'].tolist()[0]
+            html_found = True
+            session_table = tab
+            break
+    
+    new_page_b = not html_found
+    if html_found:
+        prev_page_id, prev_text = get_previous_version_of_page_text(url, session_table, db_conn)
+        changed = False
+        if prev_text is not None:
+            soup = get_soup_from_html(html)
+            new_text = get_all_text_from_soup(soup)
+            changed = new_text != prev_text
+            if changed:
+                # prev_session_diff prev_session_id prev_session_page_id
+                prev_session_diff = diff_texts(prev_text, new_text)
+                if prev_session_diff is not None:
+                    # save as json
+                    assert len(prev_session_diff) > 0
+                    prev_session_diff = json.dumps(prev_session_diff)
+                else: 
+                    # there are actually no differences between versions
+                    changed = False
+            soup.decompose()
+            del soup
+
+        # valid URL, save it in DB
+        if not changed:
+            # make sure not to save the same page more than once
+            # page is identical to previous version, don't save (save storage space)
+            html = None
+
+    # pack results
+    res['changed'] = changed
+    res['prev_session_diff'] = prev_session_diff
+    res['prev_session_table'] = session_table
+    res['prev_page_id'] = prev_page_id
+    res['new_page_b'] = new_page_b
+    res['html'] = html
+    return res
 
 
 class CustomLinkExtractor(LinkExtractor):
@@ -284,9 +392,10 @@ class MultiWebsiteSpider(CrawlSpider):
     https://docs.scrapy.org/en/latest/
     """
     custom_settings = {
-        'USER_AGENT': user_agent,
+        'USER_AGENT': constants.user_agent,
         'DOWNLOAD_DELAY': .2,
         'DEPTH_LIMIT': 1
+        #'CLOSESPIDER_ERRORCOUNT': 1
     }
     name = 'website_scraper'
     rules = [
@@ -306,6 +415,7 @@ class MultiWebsiteSpider(CrawlSpider):
         """ Parse cralwed HTML page and save it in DB """
         global page_counter
         page_counter += 1
+        #try:
         # call back from scraper
         # extract fields
         # response.text and not response.body! body is a bytestring
@@ -333,7 +443,7 @@ class MultiWebsiteSpider(CrawlSpider):
             if dom in url:
                 b_allowed = False
         del dom
-        # check if url is 
+        # check if url is allowed
         allowed_doms = [get_url_domain(surl.lower()) for surl in self.start_urls]
         cur_dom = get_url_domain(url.lower())
         found_doms = [dom in cur_dom for dom in allowed_doms]
@@ -345,18 +455,41 @@ class MultiWebsiteSpider(CrawlSpider):
 
         if not b_allowed:
             logger.debug("MIP debug: url "+url+" is not allowed. Skipping.")
-            return 
+            return
         if url_session_exists(url, scraping_session_id, self.db_con):
             return
-        # valid URL, save it in DB
+        
+        # get previous version
+        version_comparison_d = compare_html_with_previous_versions(url, html, self.session_id, self.db_con)
+        
         check_dbconnection_status(self.db_con)
         insert_website_page_in_db(self.table_name, muse_id, url, referer_url, b_base_url, 
-                    html, response.status, self.session_id, depth, self.db_con)
+                    version_comparison_d['html'], response.status, self.session_id, depth, self.db_con,
+                    prev_session_diff_b=version_comparison_d['changed'],
+                    new_page_b=version_comparison_d['new_page_b'],
+                    prev_session_diff=version_comparison_d['prev_session_diff'],
+                    prev_session_table=version_comparison_d['prev_session_table'],
+                    prev_session_page_id=version_comparison_d['prev_page_id'])
         logger.debug('url saved: ' + url)
         logger.debug('page_counter: ' + str(page_counter))
+        
+        #except Exception as e:
+        #    logger.error(e)
+        #    print(e)
+        #    raise CloseSpider(str(e))
+
+def get_previous_session_tables(session_id, db_conn):
+    """ to get previous version of pages """
+    #global db_conn
+    tabs = get_scraping_session_tables(db_conn)
+    other_tabs = [t for t in tabs if not session_id in t]
+    assert len(other_tabs)>0
+    previous_session_tables = sorted(other_tabs, reverse=True)
+    return previous_session_tables
 
 
 def get_url_redirection_from_db(url, db_conn):
+    """  """
     # check if redirection is in DB
     sql = "select redirected_to_url from websites.url_redirections where url=%s;"
     cur = db_conn.cursor()
@@ -406,8 +539,9 @@ def get_scraping_session_tables(db_conn):
     """  """
     sql = "SELECT table_name FROM information_schema.tables WHERE table_schema='websites';"
     res = pd.read_sql(sql, db_conn)['table_name'].tolist()
+    res = [r for r in res if 'web_pages' in r]
     res = ["websites."+r for r in res if not 'attr' in r]
-    res = sorted(res)
+    res = sorted(res, reverse=True)
     return res
 
 
@@ -419,3 +553,54 @@ def get_scraping_session_stats_by_museum(table_name, db_conn):
         """.format(table_name)
     df = pd.read_sql(sql, db_conn)
     return df
+
+
+def get_previous_version_of_page_text(url, table_name, db_conn):
+    """ look for page in previous scraping session """
+    assert table_name
+    sql = """select d.page_id, d.url, d.session_id, a.attrib_name, a.attrib_val from {} d left join {} a 
+        on d.page_id = a.page_id 
+        where url = '{}';""".format(table_name, table_name + constants.table_suffix, make_string_sql_safe(url))
+    df = pd.read_sql(sql, db_conn)
+    #print(df.columns, len(df))
+    if len(df) == 0:
+        return None, None
+    # get all_text for HTML page
+    resdf = df.loc[df['attrib_name']=='all_text']
+    
+    if len(resdf) == 1:
+        # text found, return it
+        page_id = resdf['page_id'].tolist()[0]
+        text = resdf['attrib_val'].tolist()[0]
+        return page_id, text
+    # text not found
+    return None, None
+
+
+def diff_texts(text_a, text_b):
+    """ find deltas between texts (to calculate page differences) """
+    if text_a is None: text_a = ''
+    if text_b is None: text_b = ''
+    
+    a = clean_text_for_diff(text_a)
+    b = clean_text_for_diff(text_b)
+    diffs = difflib.unified_diff(a, b)
+    diff_lines = [line for line in diffs]
+    assert diff_lines is not None
+    if len(diff_lines) == 0:
+        return None
+    return diff_lines
+
+
+def clean_text_for_diff(text):
+    """ remove all special chars and flatten text """
+    text = re.sub(r'\n+', '\n', text)
+    lines = text.split('\n')
+    res = []
+    
+    for l in lines:
+        l_clean = re.sub('\W+', ' ', l.lower())
+        l_clean = re.sub(' +', ' ', l_clean).strip()
+        if l_clean is not None and len(l_clean)>0:
+            res.append(l_clean)
+    return res

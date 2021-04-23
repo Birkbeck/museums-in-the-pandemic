@@ -19,11 +19,12 @@ from scrapers.scraper_websites import scrape_websites
 from scrapers.scraper_facebook import scrape_facebook
 from analytics.an_websites import analyse_museum_websites
 from museums import load_input_museums, load_extracted_museums, combinedatasets, get_fuzzy_string_match_scores, load_fuzzy_museums, compare_result_to_sample
-from db.db import is_postgresql_db_accessible
+from db.db import is_postgresql_db_accessible, count_all_db_rows
 from tests.run_tests import get_all_tests
 import unittest
 
-COMMANDS = ["tests","scrape_google","extract_google",'scrape_twitter','scrape_websites','an_websites', 'scrape_facebook','compare_sample']
+COMMANDS = ["tests","scrape_google","extract_google",'scrape_twitter','scrape_websites',
+    'an_websites', 'scrape_facebook','compare_sample','db_stats']
 cmd = None
 
 # %% Operations
@@ -116,9 +117,15 @@ def main():
             logger.info("tests")
             unittest.TextTestRunner().run(get_all_tests())
 
+        if cmd == "db_stats":
+            logger.info("db_stats")
+            assert is_postgresql_db_accessible()
+            count_all_db_rows()
+
     cleanup()
     logger.info(sw.tick("OK"))
     logger.info("OK")
+    print('OK')
 
 if __name__ == '__main__':
     main()
