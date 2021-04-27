@@ -10,10 +10,14 @@ from analytics.an_websites import *
 from analytics.text_models import *
 from museums import *
 import pandas as pd
-from analytics.url_learning import repair_valid_column
+from analytics.url_learning import repair_valid_column, get_best_forest
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelBinarizer
+import matplotlib.pyplot as plt  
+from sklearn.metrics import plot_confusion_matrix
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import precision_score
 from scrapers.scraper_websites import check_for_url_redirection
 
 class TestTextExtraction(unittest.TestCase):
@@ -111,36 +115,23 @@ class TestVal(unittest.TestCase):
         df_matrix['valid']=df_matrix.apply(lambda row: (repair_valid_column(row['valid'])), axis=1)
         #df_matrix.to_excel(r'tmp/outputdftest2.xlsx')
         df_matrix['iscorrect']=df_matrix['valid']
-        df_ml_matrix=df_matrix.loc[df_matrix['iscorrect']!='',[	'google_rank',	'url_size',	'N_slash',	'has_visit',	'has_museum',	'has_location',	'fuzzy_score_full_url',	'fuzzy_score_domain',	'fuzzy_score_domain_inverse',	'withloc_fuzzy_score_full_url',	'withloc_fuzzy_score_domain',	'exact_score_url',	'exact_score_url_inverse',	'exact_score_domain',	'exact_score_domain_inverse',	'iscorrect']]
-        df_ml_matrix=df_ml_matrix.round(4)
-        df_ml_matrix=df_ml_matrix.fillna(0)
-        
-        #df_ml_matrix_2=pd.get_dummies(df_ml_matrix, columns=["size", "governance"], prefix=["size", "gov"])
-        
-        y=df_ml_matrix['iscorrect']
-        y=y.astype('int')
-        x=df_ml_matrix.drop(['iscorrect'], axis=1)
-        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.20, random_state=101)
-        x_train.to_excel(r'tmp/xtrain.xlsx')
-        x_test.to_excel(r'tmp/xtest.xlsx')
-        df_ml_matrix.to_excel("tmp/ml_museum_matrix.xlsx", index=False)
-        rf_Model=RandomForestClassifier()
-        rf_Model.fit(x_train, y_train)
-    #def test_loading_sample(self):
-        #load_manual_museum_urls()
-        #print(check_for_url_redirection("https://www.facebook.com/pages/The-Scottish-Fisheries-Museum/168840906463849?ref=hl"))
-    #def test_fuzzy_string_match(self):
-        #musdf = load_fuzzy_museums()
-        #generate_samples()
-        #musdf=load_extracted_museums(musdf)
-        #get_fuzzy_string_match_scores(musdf, 'web')
-    #def test_generate_samples(self):
-        #generate_samples()
-    #def test_combined_dataframe(self):
-        #generate_combined_dataframe()
-        print(f'Train Accuracy - :{rf_Model.score(x_train,y_train):.3f}')
-        print(f'Test Accuracy - :{rf_Model.score(x_test,y_test):.3f}')
-        print("end")
+        stratdf = pd.read_csv('data/museums/museums_wattributes-2020-02-23.tsv', sep='\t')
+        stratdf=stratdf.filter(['muse_id','size', 'governance'], axis=1)
+        df_matrix = pd.merge(stratdf,df_matrix,on='muse_id')
+        dummy1=pd.get_dummies(df_matrix['size'])
+        dummy2=pd.get_dummies(df_matrix['governance'])
+        df_matrix=pd.concat([df_matrix, dummy1], axis=1)
+        df_matrix=pd.concat([df_matrix, dummy2], axis=1)
+        #df_matrix.to_excel(r'tmp/outputdftest2.xlsx')
+        df_ml_matrix_fb=df_matrix.loc[df_matrix['search_type'] == 'facebook']
+        df_ml_matrix_tw=df_matrix.loc[df_matrix['search_type'] == 'twitter']
+        df_ml_matrix_wb=df_matrix.loc[df_matrix['search_type'] == 'website']
+        print("facebook")
+        get_best_forest(df_ml_matrix_fb, 'fb')
+        print("twitter")
+        get_best_forest(df_ml_matrix_tw, 'tw')
+        print("websites")
+        get_best_forest(df_ml_matrix_wb, 'wb')
     
 
                 
