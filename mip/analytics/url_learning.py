@@ -101,6 +101,7 @@ def repair_valid_column(valid):
         return False
 
 def get_best_forest(df_ml_matrix, name):
+        df_ml_matrix_out=df_ml_matrix.loc[df_ml_matrix['iscorrect']!='',[	'muse_id',	'url', 'musname']]
         df_ml_matrix=df_ml_matrix.loc[df_ml_matrix['iscorrect']!='',[	'google_rank',	'url_size',	'N_slash',	'has_visit',	'has_museum',	'has_location',	'fuzzy_score_full_url',	'fuzzy_score_domain',	'fuzzy_score_domain_inverse',	'withloc_fuzzy_score_full_url',	'withloc_fuzzy_score_domain',	'exact_score_url',	'exact_score_url_inverse',	'exact_score_domain',	'exact_score_domain_inverse',	'iscorrect', 'huge',	'large',	'medium',	'small',	'unknown',	'Government:Cadw',	'Government:Local Authority',	'Government:National',	'Independent:English Heritage',	'Independent:Historic Environment Scotland',	'Independent:National Trust',	'Independent:National Trust for Scotland',	'Independent:Not for profit',	'Independent:Private',	'Independent:Unknown',	'University',	'Unknown'
 ]]
 
@@ -117,32 +118,33 @@ def get_best_forest(df_ml_matrix, name):
         #best_x_test=pd.DataFrame()
         #best_y_train=pd.DataFrame()
         #best_y_test=pd.DataFrame()
-        p_best_precision=None
-        p_best_forest=None
-        p_best_confusemat=None
-        p_best_sensitivity=None
-        p_best_specificity=None
-        p_best_accuracy=None
-        p_x_test=None
-        p_y_test=None
 
-        sn_best_precision=None
-        sn_best_forest=None
-        sn_best_confusemat=None
-        sn_best_sensitivity=None
-        sn_best_specificity=None
-        sn_best_accuracy=None
-        sn_x_test=None
-        sn_y_test=None
+        #p_best_precision=None
+        #p_best_forest=None
+        #p_best_confusemat=None
+        #p_best_sensitivity=None
+        #p_best_specificity=None
+        #p_best_accuracy=None
+        #p_x_test=None
+        #p_y_test=None
 
-        sp_best_precision=None
-        sp_best_forest=None
-        sp_best_confusemat=None
-        sp_best_sensitivity=None
-        sp_best_specificity=None
-        sp_best_accuracy=None
-        sp_x_test=None
-        sp_y_test=None
+        #sn_best_precision=None
+        #sn_best_forest=None
+        #sn_best_confusemat=None
+        #sn_best_sensitivity=None
+        #sn_best_specificity=None
+        #sn_best_accuracy=None
+        #sn_x_test=None
+        #sn_y_test=None
+
+        #sp_best_precision=None
+        #sp_best_forest=None
+        #sp_best_confusemat=None
+        #sp_best_sensitivity=None
+        #sp_best_specificity=None
+        #sp_best_accuracy=None
+        #sp_x_test=None
+        #sp_y_test=None
 
         a_best_precision=None
         a_best_forest=None
@@ -152,7 +154,10 @@ def get_best_forest(df_ml_matrix, name):
         a_best_accuracy=None
         a_x_test=None
         a_y_test=None
-        for z in range (0,100):
+        a_x_train=None
+        a_y_train=None
+        a_y_pred_test=None
+        for z in range (0,300):
             x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.20)
             x_train.to_excel(r'tmp/xtrain.xlsx')
             x_test.to_excel(r'tmp/xtest.xlsx')
@@ -189,16 +194,16 @@ def get_best_forest(df_ml_matrix, name):
         #generate_combined_dataframe()
             tr_a=rf_Model.score(x_train,y_train)
             ts_a=rf_Model.score(x_test,y_test)
-            if p_best_precision is not None and sn_best_sensitivity is not None and sp_best_specificity is not None and a_best_accuracy is not None:
-                if precision>p_best_precision:
-                    p_best_precision=precision
-                    p_best_confusemat=confusmat
-                    p_best_forest=rf_Model
-                    p_best_sensitivity=sensetivity
-                    p_best_specificity=specificity
-                    p_best_accuracy=accuracy
-                    p_x_test=x_test
-                    p_y_test=y_test
+            if  a_best_accuracy is not None:
+                #if precision>p_best_precision:
+                    #p_best_precision=precision
+                    #p_best_confusemat=confusmat
+                    #p_best_forest=rf_Model
+                    #p_best_sensitivity=sensetivity
+                    #p_best_specificity=specificity
+                    #p_best_accuracy=accuracy
+                    #p_x_test=x_test
+                    #p_y_test=y_test
                 if accuracy>a_best_accuracy:
                     a_best_precision=precision
                     a_best_confusemat=confusmat
@@ -208,51 +213,54 @@ def get_best_forest(df_ml_matrix, name):
                     a_best_accuracy=accuracy
                     a_x_test=x_test
                     a_y_test=y_test
-                if sensetivity>sn_best_sensitivity:
-                    sn_best_precision=precision
-                    sn_best_confusemat=confusmat
-                    sn_best_forest=rf_Model
-                    sn_best_sensitivity=sensetivity
-                    sn_best_specificity=specificity
-                    sn_best_accuracy=accuracy
-                    sn_x_test=x_test
-                    sn_y_test=y_test
-                if specificity>sp_best_specificity:
-                    sp_best_precision=precision
-                    sp_best_confusemat=confusmat
-                    sp_best_forest=rf_Model
-                    sp_best_sensitivity=sensetivity
-                    sp_best_specificity=specificity
-                    sp_best_accuracy=accuracy
-                    sp_x_test=x_test
-                    sp_y_test=y_test
+                    a_x_train=x_train
+                    a_y_train=y_train
+                    a_y_pred_test=y_pred_test
+                #if sensetivity>sn_best_sensitivity:
+                    #sn_best_precision=precision
+                    #sn_best_confusemat=confusmat
+                    #sn_best_forest=rf_Model
+                    #sn_best_sensitivity=sensetivity
+                    #sn_best_specificity=specificity
+                    #sn_best_accuracy=accuracy
+                    #sn_x_test=x_test
+                    #sn_y_test=y_test
+                #if specificity>sp_best_specificity:
+                    #sp_best_precision=precision
+                    #sp_best_confusemat=confusmat
+                    #sp_best_forest=rf_Model
+                    #sp_best_sensitivity=sensetivity
+                    #sp_best_specificity=specificity
+                    #sp_best_accuracy=accuracy
+                    #sp_x_test=x_test
+                    #sp_y_test=y_test
             else:
-                p_best_precision=precision
-                p_best_confusemat=confusmat
-                p_best_forest=rf_Model
-                p_best_sensitivity=sensetivity
-                p_best_specificity=specificity
-                p_best_accuracy=accuracy
-                p_x_test=x_test
-                p_y_test=y_test
+                #p_best_precision=precision
+                #p_best_confusemat=confusmat
+                #p_best_forest=rf_Model
+                #p_best_sensitivity=sensetivity
+                #p_best_specificity=specificity
+                #p_best_accuracy=accuracy
+                #p_x_test=x_test
+                #p_y_test=y_test
 
-                sn_best_precision=precision
-                sn_best_confusemat=confusmat
-                sn_best_forest=rf_Model
-                sn_best_sensitivity=sensetivity
-                sn_best_specificity=specificity
-                sn_best_accuracy=accuracy
-                sn_x_test=x_test
-                sn_y_test=y_test
+                #sn_best_precision=precision
+                #sn_best_confusemat=confusmat
+                #sn_best_forest=rf_Model
+                #sn_best_sensitivity=sensetivity
+                #sn_best_specificity=specificity
+                #sn_best_accuracy=accuracy
+                #sn_x_test=x_test
+                #sn_y_test=y_test
 
-                sp_best_precision=precision
-                sp_best_confusemat=confusmat
-                sp_best_forest=rf_Model
-                sp_best_sensitivity=sensetivity
-                sp_best_specificity=specificity
-                sp_best_accuracy=accuracy
-                sp_x_test=x_test
-                sp_y_test=y_test
+                #sp_best_precision=precision
+                #sp_best_confusemat=confusmat
+                #sp_best_forest=rf_Model
+                #sp_best_sensitivity=sensetivity
+                #sp_best_specificity=specificity
+                #sp_best_accuracy=accuracy
+                #sp_x_test=x_test
+                #sp_y_test=y_test
 
                 a_best_precision=precision
                 a_best_confusemat=confusmat
@@ -262,22 +270,13 @@ def get_best_forest(df_ml_matrix, name):
                 a_best_accuracy=accuracy
                 a_x_test=x_test
                 a_y_test=y_test
-        print("Results for best precision:")
-        plot_confusion_matrix(p_best_forest, p_x_test, p_y_test)  
-        plt.show() 
-        print (p_best_confusemat)
-        print ("precision:")
-        print (p_best_precision)
-        print ("accuracy: ")
-        print (p_best_accuracy)
-        print ("sensitivity: ")
-        print (p_best_sensitivity)
-        print ("specificity: ")
-        print (p_best_specificity)
-        print("")
+                a_x_train=x_train
+                a_y_train=y_train
+                a_y_pred_test=y_pred_test
+        
         print("Results for best accuracy:")
-        plot_confusion_matrix(a_best_forest, a_x_test, a_y_test)  
-        plt.show() 
+        #plot_confusion_matrix(a_best_forest, a_x_test, a_y_test)  
+        #plt.show() 
         print (a_best_confusemat)
         print ("precision:")
         print (a_best_precision)
@@ -288,35 +287,98 @@ def get_best_forest(df_ml_matrix, name):
         print ("specificity: ")
         print (a_best_specificity)
         print("")
-        print("Results for best sensitivity:")
-        plot_confusion_matrix(sn_best_forest, sn_x_test, sn_y_test)  
-        plt.show() 
-        print (sn_best_confusemat)
-        print ("precision:")
-        print (sn_best_precision)
-        print ("accuracy: ")
-        print (sn_best_accuracy)
-        print ("sensitivity: ")
-        print (sn_best_sensitivity)
-        print ("specificity: ")
-        print (sn_best_specificity)
-        print("")
-        print("Results for best specificity:")
-        plot_confusion_matrix(sp_best_forest, sp_x_test, sp_y_test)  
-        plt.show() 
-        print (sp_best_confusemat)
-        print ("precision:")
-        print (sp_best_precision)
-        print ("accuracy: ")
-        print (sp_best_accuracy)
-        print ("sensitivity: ")
-        print (sp_best_sensitivity)
-        print ("specificity: ")
-        print (sp_best_specificity)
-        print("")
         
-        #filename = 'finalized_model'+name+'.sav'
-        #pickle.dump(best_forest, open(filename, 'wb'))
+        #a_best_forest.to_excel(r'tmp/df_ml_matrix_out.xlsx')
+        
+        a_x_test.to_excel(r'tmp/a_x_test.xlsx')
+        print(a_x_test.sample(n=10, random_state=1))
+        print(a_y_test.sample(n=10, random_state=1))
+        a_x_test=pd.concat([a_x_test, a_y_test], axis=1)
+        
+        a_y_prediction = pd.DataFrame(a_y_pred_test)
+        print(a_y_prediction.sample(n=10, random_state=1))
+        print(a_x_test.sample(n=10, random_state=1))
+        a_x_test['predicted']=a_y_pred_test.tolist()
+        print(a_x_test.sample(n=10, random_state=1))
+        a_x_test=pd.concat([a_x_test, df_ml_matrix_out], axis=1)
+        print(a_x_test.sample(n=10, random_state=1))
+        a_x_test.to_excel(r'tmp/a_x_test_2.xlsx')
+        #a_x_test_2=pd.read_excel(r'tmp/a_x_test_2.xlsx')
+        
+        #df_ml_matrix_out.to_excel(r'tmp/df_ml_matrix_out.xlsx')
+        filename = 'finalized_model'+name+'.sav'
+        pickle.dump(a_best_forest, open(filename, 'wb'))
        
         print("end")
+def apply_random_forest(df_matrix):
+    print('applying forest')
+    filename='finalized_modelwb.sav'
+    ran_forest=pickle.load(open(filename, 'rb'))
+    dummy1=pd.get_dummies(df_matrix['size'])
+    dummy2=pd.get_dummies(df_matrix['governance'])
+    df_matrix=pd.concat([df_matrix, dummy1], axis=1)
+    df_matrix=pd.concat([df_matrix, dummy2], axis=1)
+    df_ml_matrix_out=df_matrix[[	'muse_id',	'url', 'musname']].copy()
+    df_ml_matrix=df_matrix[[	'google_rank',	'url_size',	'N_slash',	'has_visit',	'has_museum',	'has_location',	'fuzzy_score_full_url',	'fuzzy_score_domain',	'fuzzy_score_domain_inverse',	'withloc_fuzzy_score_full_url',	'withloc_fuzzy_score_domain',	'exact_score_url',	'exact_score_url_inverse',	'exact_score_domain',	'exact_score_domain_inverse',	 'huge',	'large',	'medium',	'small',	'unknown',	'Government:Cadw',	'Government:Local Authority',	'Government:National',	'Independent:English Heritage',	'Independent:Historic Environment Scotland',	'Independent:National Trust',	'Independent:National Trust for Scotland',	'Independent:Not for profit',	'Independent:Private',	'Independent:Unknown',	'University',	'Unknown'
+]].copy()
+    print('starting prediction')
+    y_pred_test = ran_forest.predict(df_ml_matrix)
+    a_y_prediction = pd.DataFrame(y_pred_test)
+    print(a_y_prediction.sample(n=100, random_state=2))
+    df_matrix['predicted']=y_pred_test.tolist()
+    print(df_matrix.sample(n=100, random_state=2))
+    #df_matrix.to_csv('tmp/ml_museum_scores.tsv', index=False, sep='\t')
+    print("end")
+def generate_ml_model():
+        #df_matrix_1 = pd.read_excel(r'tmp/merged_stratified_sample_400_1.xlsx')
+        #df_matrix_2 = pd.read_excel(r'tmp/merged_stratified_sample_400_2.xlsx')
+        #df_matrix_3 = pd.read_excel(r'tmp/merged_stratified_sample_400_3.xlsx')
+        #outputdf=pd.concat([df_matrix_1, df_matrix_2], ignore_index=True)
+        #outputdf=pd.concat([outputdf, df_matrix_3], ignore_index=True)
+        
+        #outputdf['url_size']=outputdf['url'].str.len() 
+        #outputdf['N_slash']=outputdf['url'].str.split('/')
+        #outputdf=pd.read_excel(r'tmp/outputdf.xlsx')
+        #outputdf['N_slash']=outputdf['N_slash'].apply(lambda x: len(x))
+        
+        
+        
+        
+        #outputdf['has_visit']=outputdf.apply(lambda row: (hasvisit(row['url'],row['search_type'])), axis=1)
+        #outputdf['has_museum']=outputdf.apply(lambda row: (hasmuseum(row['url'],row['search_type'])), axis=1)
+        #outputdf['has_location']=outputdf.apply(lambda row: (haslocation(row['url'],row['town'])), axis=1)
+        #museweight = generate_weighted_museum_names()
+       # outputdf['fuzzy_score_full_url']=outputdf.apply(lambda row: (generate_weighted_fuzzy_scores(get_musname_pool(row['musname'], row['town']), row['url'], museweight, "", False, row['search_type'])), axis=1)
+        #outputdf['fuzzy_score_domain']=outputdf.apply(lambda row: (generate_weighted_fuzzy_scores(get_musname_pool(row['musname'], row['town']), row['url'], museweight, "", True, row['search_type'])), axis=1)
+        #outputdf['fuzzy_score_domain_inverse']=outputdf.apply(lambda row: (get_fuzzy_string_score(get_url_domain_with_search(row['url'], row['search_type']),row['musname'] )), axis=1)
+        #outputdf['withloc_fuzzy_score_full_url']=outputdf.apply(lambda row: (generate_weighted_fuzzy_scores(get_musname_pool(row['musname'], row['town']), row['url'], museweight, row['town'], False, row['search_type'])), axis=1)
+        #outputdf['withloc_fuzzy_score_domain']=outputdf.apply(lambda row: (generate_weighted_fuzzy_scores(get_musname_pool(row['musname'], row['town']), row['url'], museweight, row['town'], True, row['search_type'])), axis=1)
+        
+        #outputdf['exact_score_url']=outputdf.apply(lambda row: (get_exact_match(row['musname'], row['url'])), axis=1)
+        #outputdf['exact_score_url_inverse']=outputdf.apply(lambda row: (get_exact_match(row['url'],row['musname'])), axis=1)
+        #outputdf['exact_score_domain']=outputdf.apply(lambda row: (get_exact_match(row['musname'], get_url_domain_with_search(row['url'], row['search_type']))), axis=1)
+        #outputdf['exact_score_domain_inverse']=outputdf.apply(lambda row: (get_exact_match(get_url_domain_with_search(row['url'], row['search_type']),row['musname'])), axis=1)
+
+        #outputdf.to_excel(r'tmp/outputdftest.xlsx')
+        df_matrix=pd.read_excel(r'tmp/outputdftest.xlsx')
+        df_matrix['valid']=df_matrix.apply(lambda row: (repair_valid_column(row['valid'])), axis=1)
+        #df_matrix.to_excel(r'tmp/outputdftest2.xlsx')
+        df_matrix['iscorrect']=df_matrix['valid']
+        stratdf = pd.read_csv('data/museums/museums_wattributes-2020-02-23.tsv', sep='\t')
+        stratdf=stratdf.filter(['muse_id','size', 'governance'], axis=1)
+        df_matrix = pd.merge(stratdf,df_matrix,on='muse_id')
+        dummy1=pd.get_dummies(df_matrix['size'])
+        dummy2=pd.get_dummies(df_matrix['governance'])
+        df_matrix=pd.concat([df_matrix, dummy1], axis=1)
+        df_matrix=pd.concat([df_matrix, dummy2], axis=1)
+        #df_matrix.to_excel(r'tmp/outputdftest2.xlsx')
+        df_ml_matrix_wb=df_matrix.loc[df_matrix['search_type'] == 'website']
+        df_ml_matrix_fb=df_matrix.loc[df_matrix['search_type'] == 'facebook']
+        df_ml_matrix_tw=df_matrix.loc[df_matrix['search_type'] == 'twitter']
+        print("websites")
+        get_best_forest(df_ml_matrix_wb, 'wb')
+        print("facebook")
+        get_best_forest(df_ml_matrix_fb, 'fb')
+        print("twitter")
+        get_best_forest(df_ml_matrix_tw, 'tw')
 

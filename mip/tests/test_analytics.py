@@ -10,7 +10,7 @@ from analytics.an_websites import *
 from analytics.text_models import *
 from museums import *
 import pandas as pd
-from analytics.url_learning import repair_valid_column, get_best_forest
+from analytics.url_learning import repair_valid_column, get_best_forest, apply_random_forest
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelBinarizer
@@ -81,57 +81,11 @@ class TestVal(unittest.TestCase):
 
 
     def test_ml(self):
-        #df_matrix_1 = pd.read_excel(r'tmp/merged_stratified_sample_400_1.xlsx')
-        #df_matrix_2 = pd.read_excel(r'tmp/merged_stratified_sample_400_2.xlsx')
-        #df_matrix_3 = pd.read_excel(r'tmp/merged_stratified_sample_400_3.xlsx')
-        #outputdf=pd.concat([df_matrix_1, df_matrix_2], ignore_index=True)
-        #outputdf=pd.concat([outputdf, df_matrix_3], ignore_index=True)
+        df_matrix=pd.read_excel(r'tmp/combined_museum_matrix.xlsx')
+        df_matrix=df_matrix.loc[df_matrix['search_type'] == 'website']
+        #df_matrix.to_excel(r'tmp/a_x_test_2.xlsx')
+        apply_random_forest(df_matrix)
         
-        #outputdf['url_size']=outputdf['url'].str.len() 
-        #outputdf['N_slash']=outputdf['url'].str.split('/')
-        outputdf=pd.read_excel(r'tmp/outputdf.xlsx')
-        outputdf['N_slash']=outputdf['N_slash'].apply(lambda x: len(x))
-        
-        
-        
-        
-        #outputdf['has_visit']=outputdf.apply(lambda row: (hasvisit(row['url'],row['search_type'])), axis=1)
-        #outputdf['has_museum']=outputdf.apply(lambda row: (hasmuseum(row['url'],row['search_type'])), axis=1)
-        #outputdf['has_location']=outputdf.apply(lambda row: (haslocation(row['url'],row['town'])), axis=1)
-        #museweight = generate_weighted_museum_names()
-       # outputdf['fuzzy_score_full_url']=outputdf.apply(lambda row: (generate_weighted_fuzzy_scores(get_musname_pool(row['musname'], row['town']), row['url'], museweight, "", False, row['search_type'])), axis=1)
-        #outputdf['fuzzy_score_domain']=outputdf.apply(lambda row: (generate_weighted_fuzzy_scores(get_musname_pool(row['musname'], row['town']), row['url'], museweight, "", True, row['search_type'])), axis=1)
-        #outputdf['fuzzy_score_domain_inverse']=outputdf.apply(lambda row: (get_fuzzy_string_score(get_url_domain_with_search(row['url'], row['search_type']),row['musname'] )), axis=1)
-        #outputdf['withloc_fuzzy_score_full_url']=outputdf.apply(lambda row: (generate_weighted_fuzzy_scores(get_musname_pool(row['musname'], row['town']), row['url'], museweight, row['town'], False, row['search_type'])), axis=1)
-        #outputdf['withloc_fuzzy_score_domain']=outputdf.apply(lambda row: (generate_weighted_fuzzy_scores(get_musname_pool(row['musname'], row['town']), row['url'], museweight, row['town'], True, row['search_type'])), axis=1)
-        
-        #outputdf['exact_score_url']=outputdf.apply(lambda row: (get_exact_match(row['musname'], row['url'])), axis=1)
-        #outputdf['exact_score_url_inverse']=outputdf.apply(lambda row: (get_exact_match(row['url'],row['musname'])), axis=1)
-        #outputdf['exact_score_domain']=outputdf.apply(lambda row: (get_exact_match(row['musname'], get_url_domain_with_search(row['url'], row['search_type']))), axis=1)
-        #outputdf['exact_score_domain_inverse']=outputdf.apply(lambda row: (get_exact_match(get_url_domain_with_search(row['url'], row['search_type']),row['musname'])), axis=1)
-
-        #outputdf.to_excel(r'tmp/outputdftest.xlsx')
-        df_matrix=pd.read_excel(r'tmp/outputdftest.xlsx')
-        df_matrix['valid']=df_matrix.apply(lambda row: (repair_valid_column(row['valid'])), axis=1)
-        #df_matrix.to_excel(r'tmp/outputdftest2.xlsx')
-        df_matrix['iscorrect']=df_matrix['valid']
-        stratdf = pd.read_csv('data/museums/museums_wattributes-2020-02-23.tsv', sep='\t')
-        stratdf=stratdf.filter(['muse_id','size', 'governance'], axis=1)
-        df_matrix = pd.merge(stratdf,df_matrix,on='muse_id')
-        dummy1=pd.get_dummies(df_matrix['size'])
-        dummy2=pd.get_dummies(df_matrix['governance'])
-        df_matrix=pd.concat([df_matrix, dummy1], axis=1)
-        df_matrix=pd.concat([df_matrix, dummy2], axis=1)
-        #df_matrix.to_excel(r'tmp/outputdftest2.xlsx')
-        df_ml_matrix_fb=df_matrix.loc[df_matrix['search_type'] == 'facebook']
-        df_ml_matrix_tw=df_matrix.loc[df_matrix['search_type'] == 'twitter']
-        df_ml_matrix_wb=df_matrix.loc[df_matrix['search_type'] == 'website']
-        print("facebook")
-        get_best_forest(df_ml_matrix_fb, 'fb')
-        print("twitter")
-        get_best_forest(df_ml_matrix_tw, 'tw')
-        print("websites")
-        get_best_forest(df_ml_matrix_wb, 'wb')
     
 
                 
