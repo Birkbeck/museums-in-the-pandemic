@@ -1,0 +1,18 @@
+name: mip_v1
+channels:
+  - defaults
+dependencies:
+  - python=3.7
+  - pandas
+  - nltk
+  - psycopg2
+  - sqlite
+  - spacy
+  - scipy
+  - matplotlib
+  - jupyterlab
+  - bs4
+  - scikit-learn
+  - numpy
+  - openpyxl
+  - pip
