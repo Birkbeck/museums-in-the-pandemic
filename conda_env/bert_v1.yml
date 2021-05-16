@@ -15,5 +15,5 @@ dependencies:
   - scikit-learn
   - numpy
   - openpyxl
-  - tensorflow-gpu
+  - tensorflow-gpu=1.15.0
   - pip
