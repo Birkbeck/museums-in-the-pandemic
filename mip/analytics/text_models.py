@@ -12,7 +12,7 @@ import pandas as pd
 import pickle
 import os
 import numpy as np
-import tensorflow as tf
+#import tensorflow as tf
 from bs4 import BeautifulSoup
 from bs4.element import Comment
 import re
@@ -31,6 +31,7 @@ def prep_training_data():
     # output file
     train_df.to_csv('tmp/indicator_train_df.tsv',sep='\t',index_label='id')
     return train_df
+
 
 def get_indicator_annotations():
     """  """
@@ -55,12 +56,22 @@ def setup_ling_model():
     logger.debug('setup_ling_model')
     
     train_df = prep_training_data()
+
+    get_museum_text_sample()
     
     #train_ds, dicts = load_ds(os.path.join(data_dir,'atis.train.pkl'))
     #test_ds, dicts  = load_ds(os.path.join(data_dir,'atis.test.pkl'))
   
     #bert_model()
     logger.debug("end of NLP")
+
+
+def get_museum_text_sample():
+    """
+    """
+    print("get_museum_text_sample")
+
+
 
 def bert_model():
     """
