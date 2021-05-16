@@ -13,6 +13,7 @@ dependencies:
   - matplotlib
   - jupyterlab
   - bs4
+  - seaborn
   - scikit-learn
   - numpy
   - openpyxl

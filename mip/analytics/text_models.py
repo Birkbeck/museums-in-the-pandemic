@@ -20,6 +20,18 @@ from utils import remove_empty_elem_from_list, remove_multiple_spaces_tabs
 import matplotlib.pyplot as plt
 
 
+def prep_training_data():
+    """ 
+    Columns: id, label
+    """
+    indic_df, ann_df = get_indicator_annotations()
+    print(ann_df.columns)
+    # format training set
+    train_df = ann_df[['text_phrases','indicator_code']]
+    # output file
+    train_df.to_csv('tmp/indicator_train_df.tsv',sep='\t',index_label='id')
+    return train_df
+
 def get_indicator_annotations():
     """  """
     in_fn = "data/annotations/indicators_and_annotations-v3.xlsx"
@@ -41,7 +53,8 @@ def setup_ling_model():
         https://github.com/huggingface/transformers#Migrating-from-pytorch-pretrained-bert-to-pytorch-transformers
     """
     logger.debug('setup_ling_model')
-    indic_df, annot_df = get_indicator_annotations()
+    
+    train_df = prep_training_data()
     
     #train_ds, dicts = load_ds(os.path.join(data_dir,'atis.train.pkl'))
     #test_ds, dicts  = load_ds(os.path.join(data_dir,'atis.test.pkl'))
