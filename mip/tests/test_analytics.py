@@ -14,7 +14,7 @@ from analytics.url_learning import *
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelBinarizer
-import matplotlib.pyplot as plt  
+import matplotlib.pyplot as plt
 from sklearn.metrics import plot_confusion_matrix
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import precision_score
