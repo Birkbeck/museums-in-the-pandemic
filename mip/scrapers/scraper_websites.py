@@ -15,7 +15,7 @@ import urllib
 import numpy as np
 import constants
 from urllib.parse import urlparse
-from museums import load_all_google_results
+from museums import load_all_google_results, load_museums_w_web_urls
 from scrapy.exceptions import CloseSpider
 from db.db import connect_to_postgresql_db, check_dbconnection_status, make_string_sql_safe
 # scrapy imports
@@ -37,7 +37,8 @@ def scrape_websites():
     """ Main """
     app_settings = get_app_settings()
 
-    url_df = load_urls_for_wide_scrape()
+    #url_df = load_urls_for_wide_scrape()
+    url_df = load_urls_for_narrow_scrape()
     # shuffle URLs
     url_df = url_df.sample(frac=1)
     print("scrape_websites urls =", len(url_df))
@@ -128,6 +129,20 @@ def gen_scraping_session_id():
     session_id = str(date.today()).replace('-','')
     logger.info("scraping session_id: "+str(session_id))
     return session_id
+
+
+def load_urls_for_narrow_scrape():
+    """ Load only relevant websites. Combine sample and predicted links """
+    df = load_museums_w_web_urls()
+
+    df = df[df['url'].apply(is_valid_website)]
+    assert False
+    df = df.drop_duplicates(subset=['url'])
+    assert df['url'].is_unique
+    msg = "load_urls_for_wide_scrape Museums={} URLs={}".format(df.muse_id.nunique(), len(df))
+    print(msg)
+    logger.info(msg)
+    return df
 
 
 def load_urls_for_wide_scrape():

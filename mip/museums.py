@@ -28,6 +28,48 @@ def load_input_museums():
     print("loaded museums:",len(df), fn)
     return df
 
+
+def load_museums_w_web_urls():
+    """
+
+    """
+    mdf = load_input_museums()
+
+    fn = 'data/google_results/results_source_files/museum_urls_predicted.tsv'
+    df = pd.read_csv(fn, sep="\t")
+    df = df[df.predicted == 1]
+    print(df.columns)
+    subdf = df[['muse_id','musname','town','search_type','url']]
+    print("loaded predicted museum URLs N =",len(subdf))
+
+    # load manual sample
+    sfn = 'data/google_results/results_source_files/museums_manual_url_sample_400.tsv'
+    mandf = pd.read_csv(sfn, sep="\t")
+    mandf = mandf[['muse_id','musname','town','url','search_type','valid']]
+    print(mandf.valid.describe())
+    print(mandf.valid.value_counts())
+    # filter manual sample
+    mandf = mandf[mandf.valid.isin(['T','no_resource'])]
+    # replace url with "no resource" for museums without a website
+    mandf.loc[mandf['valid']=='no_resource', 'url'] = 'no_resource'
+
+    mandf = mandf[mandf.search_type == 'website']
+    print("loaded manual museum URLs N =", len(mandf))
+
+    # replace predicted with manual values
+    preddf = subdf[~subdf.muse_id.isin(mandf.muse_id)]
+    preddf['valid'] = 'pred'
+    print('preddf',len(preddf))
+
+    alldf = pd.concat([preddf,mandf])
+
+    mdf2 = mdf.merge(alldf, left_on='id', right_on='muse_id', how='left')
+
+    mdf2.to_csv('tmp/museum_websites_urls.tsv', sep='\t')
+    mdf2.to_excel('tmp/museum_websites_urls.xlsx', index=False)
+    return subdf
+
+
 def load_fuzzy_museums():
     """ Load MM museum data that includes ALL museums """
     df = pd.read_csv('data/google_results/results_source_files/google_extracted_results_reg.tsv.gz', sep='\t')
