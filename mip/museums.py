@@ -43,7 +43,7 @@ def load_museums_w_web_urls():
     print("loaded predicted museum URLs N =",len(subdf))
 
     # load manual sample
-    sfn = 'data/google_results/results_source_files/museums_manual_url_sample_400.tsv'
+    sfn = 'data/samples/museums_manual_url_sample_400.tsv'
     mandf = pd.read_csv(sfn, sep="\t")
     mandf = mandf[['muse_id','musname','town','url','search_type','valid']]
     print(mandf.valid.describe())
@@ -67,7 +67,7 @@ def load_museums_w_web_urls():
 
     mdf2.to_csv('tmp/museum_websites_urls.tsv', sep='\t')
     mdf2.to_excel('tmp/museum_websites_urls.xlsx', index=False)
-    return subdf
+    return mdf2
 
 
 def load_fuzzy_museums():
