@@ -10,7 +10,7 @@ from analytics.an_websites import *
 from analytics.text_models import *
 from museums import *
 import pandas as pd
-from analytics.url_learning import repair_valid_column, get_best_forest, apply_random_forest
+from analytics.url_learning import *
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelBinarizer
@@ -81,10 +81,22 @@ class TestVal(unittest.TestCase):
 
 
     def test_ml(self):
+        df_matrix=pd.read_csv('tmp/ml_museum_scores.tsv', sep='\t')
+        
+        print(df_matrix['muse_id'].nunique())
+        df_matrix=df_matrix.loc[df_matrix['predicted'] == 1]
+        print(df_matrix['muse_id'].nunique())
+        resultset='website'
         df_matrix=pd.read_excel(r'tmp/combined_museum_matrix.xlsx')
-        df_matrix=df_matrix.loc[df_matrix['search_type'] == 'website']
-        #df_matrix.to_excel(r'tmp/a_x_test_2.xlsx')
+        print(df_matrix['muse_id'].nunique())
+        df_matrix=df_matrix.loc[df_matrix['search_type'] == resultset]
+        if resultset=='website':
+            df_matrix=df_matrix[~df_matrix['url'].str.contains("facebook")]
+            df_matrix=df_matrix[~df_matrix['url'].str.contains("twitter")]
+        df_matrix['google_rank']=df_matrix.groupby('muse_id').cumcount()+1
+        df_matrix.to_excel(r'tmp/a_x_test_2.xlsx')
         apply_random_forest(df_matrix)
+        #generate_ml_model()
         
     
 
