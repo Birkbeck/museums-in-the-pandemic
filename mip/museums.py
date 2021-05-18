@@ -42,21 +42,36 @@ def load_museums_w_web_urls():
     subdf = df[['muse_id','musname','town','search_type','url']]
     print("loaded predicted museum URLs N =",len(subdf))
 
-    # load manual sample
+    # load manual sample 400
     sfn = 'data/samples/museums_manual_url_sample_400.tsv'
     mandf = pd.read_csv(sfn, sep="\t")
     mandf = mandf[['muse_id','musname','town','url','search_type','valid']]
     print(mandf.valid.describe())
     print(mandf.valid.value_counts())
+
+    # load manual sample 60
+    s60fn = 'data/samples/mip_data_sample_2020_01.tsv'
+    man60df = pd.read_csv(s60fn, sep="\t")
+    man60df = man60df[['mm_id','mm_name','website']]
+    man60df.columns = ['muse_id','musname','url']
+    man60df['valid']='T'
+    man60df.loc[man60df['url'].isnull(),'valid'] = 'no_resource'
+    man60df.loc[man60df['url'].isnull(),'url'] = 'no_resource'
+    man60df['search_type']='website'
+    man60df['town']=None
+
     # filter manual sample
     mandf = mandf[mandf.valid.isin(['T','no_resource'])]
     # replace url with "no resource" for museums without a website
     mandf.loc[mandf['valid']=='no_resource', 'url'] = 'no_resource'
 
     mandf = mandf[mandf.search_type == 'website']
+    
+    mandf = pd.concat([mandf, man60df])
+
     print("loaded manual museum URLs N =", len(mandf))
 
-    # replace predicted with manual values
+    # replace predicted with manual values - 400 sample
     preddf = subdf[~subdf.muse_id.isin(mandf.muse_id)]
     preddf['valid'] = 'pred'
     print('preddf',len(preddf))
@@ -64,7 +79,21 @@ def load_museums_w_web_urls():
     alldf = pd.concat([preddf,mandf])
 
     mdf2 = mdf.merge(alldf, left_on='id', right_on='muse_id', how='left')
+    
 
+    mdf2 = mdf2.sort_values("musname")
+    
+    # Museum_Name	id	location	year_closed	muse_id	musname	town	search_type	url	valid
+    mdf2 = mdf2[['id','Museum_Name','location','url','valid']]
+    mdf2.loc[mdf2['valid']=='T','valid'] = 'manual'
+    mdf2.loc[mdf2['valid'].isnull(),'valid'] = 'no_pred'
+    # rename cols
+    mdf2.columns = ['muse_id','musname','town','url','url_source']
+    mdf2 = mdf2.drop_duplicates(subset='muse_id')
+    #mdf2['id_duplicated'] = mdf2.duplicated(subset=['muse_id'])
+    assert mdf2['muse_id'].is_unique
+
+    # save
     mdf2.to_csv('tmp/museum_websites_urls.tsv', sep='\t')
     mdf2.to_excel('tmp/museum_websites_urls.xlsx', index=False)
     return mdf2

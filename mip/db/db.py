@@ -128,7 +128,7 @@ def connect_to_postgresql_db():
     """ Connect to central DB using a singleton """
     logger.debug("connect_to_postgresql_db")
     db_conn = psycopg2.connect(host=pg_config['ip'], dbname=pg_config['dbname'], 
-        user=pg_config['user'], password=pg_config['pwd'], connect_timeout=2)
+        user=pg_config['user'], password=pg_config['pwd'], connect_timeout=3)
     check_dbconnection_status(db_conn)
     return db_conn
 
