@@ -31,7 +31,8 @@ def load_input_museums():
 
 def load_museums_w_web_urls():
     """
-
+    Merge all museum website URL data (manual samples + predicted with random forests)
+    @returns a data frame with urls
     """
     mdf = load_input_museums()
 

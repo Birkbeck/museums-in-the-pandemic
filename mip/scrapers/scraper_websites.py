@@ -133,10 +133,11 @@ def gen_scraping_session_id():
 
 def load_urls_for_narrow_scrape():
     """ Load only relevant websites. Combine sample and predicted links """
-    df = load_museums_w_web_urls()
+    # generate results
+    #df = load_museums_w_web_urls()
+    df = pd.read_csv('data/museums/museum_websites_urls.tsv', sep='\t')
 
     df = df[df['url'].apply(is_valid_website)]
-    assert False
     df = df.drop_duplicates(subset=['url'])
     assert df['url'].is_unique
     msg = "load_urls_for_wide_scrape Museums={} URLs={}".format(df.muse_id.nunique(), len(df))
