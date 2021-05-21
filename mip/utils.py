@@ -14,6 +14,7 @@ import pandas as pd
 from bs4 import BeautifulSoup
 from bs4.element import Comment
 from multiprocessing import Pool
+import validators
 logger = logging.getLogger(__name__)
 
 """
@@ -127,6 +128,16 @@ def parallel_dataframe_apply(df, func, n_cores=4):
     pool.close()
     pool.join()
     return df
+
+
+def is_url(url):
+    """ @returns True if url is a URL """
+    if url is None:
+        return False
+    if not url:
+        return False
+    valid = validators.url(url)
+    return valid == True
 
 
 def get_url_domain(url):

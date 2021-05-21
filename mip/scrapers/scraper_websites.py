@@ -15,7 +15,7 @@ import urllib
 import numpy as np
 import constants
 from urllib.parse import urlparse
-from museums import load_all_google_results, load_museums_w_web_urls
+from museums import get_museums_w_web_urls, load_all_google_results
 from scrapy.exceptions import CloseSpider
 from db.db import connect_to_postgresql_db, check_dbconnection_status, make_string_sql_safe
 # scrapy imports
@@ -26,7 +26,7 @@ from scrapy.spiders import CrawlSpider, Rule
 from scrapy.dupefilters import RFPDupeFilter
 import re
 import difflib
-from utils import get_url_domain, get_app_settings, split_dataframe, parallel_dataframe_apply, get_soup_from_html, get_all_text_from_soup, garbage_collect
+from utils import is_url, get_url_domain, get_app_settings, split_dataframe, parallel_dataframe_apply, get_soup_from_html, get_all_text_from_soup, garbage_collect
 
 import logging
 logger = logging.getLogger(__name__)
@@ -39,6 +39,7 @@ def scrape_websites():
 
     #url_df = load_urls_for_wide_scrape()
     url_df = load_urls_for_narrow_scrape()
+
     # shuffle URLs
     url_df = url_df.sample(frac=1)
     print("scrape_websites urls =", len(url_df))
@@ -72,7 +73,7 @@ def scrape_websites():
     for df in chunks:
         logger.debug("urls chunk urls={} chunks={}".format(len(df),len(chunks)))
         assert len(df)>0
-        assert df['url'].is_unique
+        #assert df['url'].is_unique
         # find redirections
         redirected_url_df = parallel_dataframe_apply(df, check_redirections_before_scraping, n_cores=8)
         # set up crawler
@@ -134,16 +135,20 @@ def gen_scraping_session_id():
 def load_urls_for_narrow_scrape():
     """ Load only relevant websites. Combine sample and predicted links """
     # generate results
-    #df = load_museums_w_web_urls()
-    df = pd.read_csv('data/museums/museum_websites_urls.tsv', sep='\t')
-
-    df = df[df['url'].apply(is_valid_website)]
-    df = df.drop_duplicates(subset=['url'])
-    assert df['url'].is_unique
-    msg = "load_urls_for_wide_scrape Museums={} URLs={}".format(df.muse_id.nunique(), len(df))
+    df = get_museums_w_web_urls()
+    df = df[df.url_source!='no_pred']
+    # keep only real URLs
+    validdf = df[df['url'].apply(is_url)]
+    #validdf['id_duplicated'] = validdf.duplicated(subset=['url'])
+    #validdf.to_csv('tmp/urls.tsv',sep='\t')
+    
+    #assert validdf['url'].is_unique
+    #df = df.drop_duplicates(subset=['url'])
+    #assert df['url'].is_unique
+    msg = "load_urls_for_narrow_scrape Museums={}; all rows={}; valid URLs={}".format(df.muse_id.nunique(), len(df), len(validdf))
     print(msg)
     logger.info(msg)
-    return df
+    return validdf
 
 
 def load_urls_for_wide_scrape():

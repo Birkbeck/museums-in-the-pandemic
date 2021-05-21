@@ -11,6 +11,9 @@ from fuzzywuzzy import process
 from tldextract import extract
 from utils import get_url_domain, get_url_domain_with_search
 
+import logging
+logger = logging.getLogger(__name__)
+
 def load_museums_df_complete():
     """ Load and combine master list of museums for scraping and analysis """
     # TODO
@@ -28,8 +31,22 @@ def load_input_museums():
     print("loaded museums:",len(df), fn)
     return df
 
+def get_museums_w_web_urls():
+    """ Get museums with website URLs """
 
-def load_museums_w_web_urls():
+    df = pd.read_csv('data/museums/museum_websites_urls-v3.tsv', sep='\t')
+
+    #df = df[df['url'].apply(is_valid_website)]
+    #df = df.drop_duplicates(subset=['url'])
+    #df['id_duplicated'] = df.duplicated(subset=['muse_id'])
+    #assert df['url'].is_unique
+    msg = "get_museums_w_web_urls Museums={} URLs={}".format(df.muse_id.nunique(), len(df))
+    print(msg)
+    logger.info(msg)
+    return df
+
+
+def combine_museums_w_web_urls():
     """
     Merge all museum website URL data (manual samples + predicted with random forests)
     @returns a data frame with urls
