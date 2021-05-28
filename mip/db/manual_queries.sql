@@ -129,6 +129,11 @@ WHERE
 order by pgClass.relname;
 
 
+select * from websites.web_pages_dump_20210503
+	where url = 'https://www.100bgmus.org.uk/';
+select d.url, d.page_content from websites.web_pages_dump_20210521 as d 
+	where d.url = 'https://www.100bgmus.org.uk/';
+
 -- ALTER TABLE websites.web_pages_dump_20210304
   -- ADD new_page_b boolean;
 -- update websites.web_pages_dump_20210304 set new_page_b = true; 

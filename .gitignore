@@ -135,3 +135,6 @@ workspace.code-workspace
 .secrets.json
 data/museums/~$manual_google_url_results_top10_2021-02-19.xlsx
 data/samples/~$sample_museum_search_with_loc.xlsx
+mip/notebooks/data/yelp_review_full_csv/readme.txt
+mip/notebooks/data/yelp_review_full_csv/test.csv
+mip/notebooks/data/yelp_review_full_csv/train.csv

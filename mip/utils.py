@@ -132,7 +132,7 @@ def parallel_dataframe_apply(df, func, n_cores=4):
 
 def is_url(url):
     """ @returns True if url is a URL """
-    if url is None:
+    if url is None or url == '':
         return False
     if not url:
         return False
