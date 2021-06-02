@@ -322,7 +322,7 @@ def get_best_forest(df_ml_matrix, name):
     
 def apply_random_forest(df_matrix):
     print('applying forest')
-    filename='finalized_modelwb.sav'
+    filename='finalized_modeltw.sav'
     ran_forest=pickle.load(open(filename, 'rb'))
     dummy1=pd.get_dummies(df_matrix['size'])
     dummy2=pd.get_dummies(df_matrix['governance'])
@@ -337,7 +337,7 @@ def apply_random_forest(df_matrix):
     print(a_y_prediction.sample(n=100, random_state=2))
     df_matrix['predicted']=y_pred_test.tolist()
     print(df_matrix.sample(n=100, random_state=2))
-    df_matrix.to_csv('tmp/ml_museum_scores.tsv', index=False, sep='\t')
+    df_matrix.to_csv('tmp/ml_museum_scores_tw.tsv', index=False, sep='\t')
     print("end")
 
 
@@ -388,9 +388,9 @@ def generate_ml_model():
         df_ml_matrix_fb=df_matrix.loc[df_matrix['search_type'] == 'facebook']
         df_ml_matrix_tw=df_matrix.loc[df_matrix['search_type'] == 'twitter']
         print("websites")
-        get_best_forest(df_ml_matrix_wb, 'wb')
+        #get_best_forest(df_ml_matrix_wb, 'wb')
         print("facebook")
         #get_best_forest(df_ml_matrix_fb, 'fb')
         print("twitter")
-        #get_best_forest(df_ml_matrix_tw, 'tw')
+        get_best_forest(df_ml_matrix_tw, 'tw')
 

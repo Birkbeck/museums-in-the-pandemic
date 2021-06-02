@@ -26,6 +26,32 @@ class TestTextExtraction(unittest.TestCase):
         #self.out_db_con = open_sqlite('tmp/websites_sample_textattr.db')
         pass
 
+     def test_fb_tw_data(self):
+        df_400 = pd.read_excel(r'tmp/outputdftest.xlsx')
+        df_400=df_400.loc[df_400['valid'] == 'T']
+        df_400=df_400.loc[df_400['search_type'] != 'website']
+        df_400=df_400[['muse_id','search_type','url']].copy()
+        df_400=df_400.rename(columns = {'muse_id': 'museum_id', 'search_type': 'type'}, inplace = False)
+        socdf = pd.read_csv('data/museums/websites_social_links_2021-05-28.tsv', sep='\t')
+        mltw = pd.read_csv('tmp/ml_museum_scores_tw.tsv', sep='\t')
+        mltw=mltw.loc[mltw['predicted'] == 1]
+        mlfb = pd.read_csv('tmp/ml_museum_scores_fb.tsv', sep='\t')
+        mlfb=mlfb.loc[mlfb['predicted'] == 1]
+        mlsoc=mltw.append(mlfb)
+        #mlsoc.to_excel(r'tmp/a_x_test2.xlsx')
+        socdf2=socdf.loc[socdf['url']=='no_resource']
+        socdf=socdf.loc[socdf['url']!='no_resource']
+        socdf2=socdf2[['row_id','museum_id','type']].copy()
+        mlsoc=mlsoc[['muse_id','search_type','url']].copy()
+        mlsoc = mlsoc.rename(columns = {'muse_id': 'museum_id', 'search_type': 'type'}, inplace = False)
+        socdfml = pd.merge(socdf2, mlsoc,  how='left', left_on=['museum_id','type'], right_on = ['museum_id','type'])
+        
+        socdf=socdf.append(socdfml)
+        
+        socdf=pd.merge(socdf, df_400,  how='left', left_on=['museum_id','type'], right_on = ['museum_id','type'])
+        socdf.to_excel(r'tmp/a_x_test2.xlsx')
+        print('end')
+
     def test_create_text_sample(self):
 
         s = make_string_sql_safe("urls with 's don't work")
@@ -81,12 +107,16 @@ class TestVal(unittest.TestCase):
 
 
     def test_ml(self):
-        df_matrix=pd.read_csv('tmp/ml_museum_scores.tsv', sep='\t')
-        
-        print(df_matrix['muse_id'].nunique())
-        df_matrix=df_matrix.loc[df_matrix['predicted'] == 1]
-        print(df_matrix['muse_id'].nunique())
-        resultset='website'
+        #generate_ml_model()
+        df_matrix=pd.read_excel(r'tmp/museum_websites_urls.xlsx')
+        df_matrix2=pd.read_csv('data/samples/mip_data_sample_2020_01.tsv', sep='\t')
+        df_matrix2=df_matrix2[['mm_id', 'website']]
+        df_matrix3=df_matrix.merge(df_matrix2, left_on='id', right_on='mm_id', how='left')
+        df_matrix3.to_excel(r'tmp/a_x_test_2.xlsx')
+        #print(df_matrix['muse_id'].nunique())
+        #df_matrix=df_matrix.loc[df_matrix['predicted'] == 1]
+        #print(df_matrix['muse_id'].nunique())
+        resultset='twitter'
         df_matrix=pd.read_excel(r'tmp/combined_museum_matrix.xlsx')
         print(df_matrix['muse_id'].nunique())
         df_matrix=df_matrix.loc[df_matrix['search_type'] == resultset]
