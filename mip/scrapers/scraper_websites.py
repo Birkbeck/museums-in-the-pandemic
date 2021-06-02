@@ -26,7 +26,7 @@ from scrapy.spiders import CrawlSpider, Rule
 from scrapy.dupefilters import RFPDupeFilter
 import re
 import difflib
-from utils import is_url, get_url_domain, get_app_settings, split_dataframe, parallel_dataframe_apply, get_soup_from_html, get_all_text_from_soup, garbage_collect
+from utils import is_url, get_url_domain, get_app_settings, split_dataframe, parallel_dataframe_apply, get_soup_from_html, get_all_text_from_soup, garbage_collect, _is_number
 
 import logging
 logger = logging.getLogger(__name__)
@@ -525,7 +525,11 @@ def get_url_redirection_from_db(url, db_conn):
 
 
 def check_for_url_redirection(url, check_db=False, db_conn=None):
-    """ Useful to include redirected domain for scraping """
+    """ 
+    Useful to include redirected domain for scraping. 
+    Uses table in DB to cache redirections.
+    @returns redirected url or the same url if there is no redirection
+    """
     assert url
     res = None
     if check_db:
@@ -557,7 +561,7 @@ def check_for_url_redirection(url, check_db=False, db_conn=None):
 
 
 def get_scraping_session_tables(db_conn):
-    """  """
+    """ table names with schema in in reversed order """
     sql = "SELECT table_name FROM information_schema.tables WHERE table_schema='websites';"
     res = pd.read_sql(sql, db_conn)['table_name'].tolist()
     res = [r for r in res if 'web_pages' in r]
@@ -575,6 +579,25 @@ def get_scraping_session_stats_by_museum(table_name, db_conn):
     df = pd.read_sql(sql, db_conn)
     return df
 
+
+def get_url_content_from_latest_session(url, db_conn):
+    """
+    get URL from website DB starting from latest table
+    """
+    #print(url)
+    if pd.isnull(url) or not is_url(url): 
+        return None
+    
+    tables = get_scraping_session_tables(db_conn)
+    for tbl in tables:
+        sql = """select d.url, d.page_content from {} as d 
+            where url = '{}';""".format(tbl, make_string_sql_safe(url))
+        resdf = pd.read_sql(sql, db_conn)
+        if len(resdf) > 0:
+            html = resdf.loc[0, 'page_content']
+            if html is not None and len(html) > 0:
+                return html
+    return None
 
 def get_previous_version_of_page_text(url, table_name, db_conn):
     """ look for page in previous scraping session """
@@ -625,3 +648,122 @@ def clean_text_for_diff(text):
         if l_clean is not None and len(l_clean)>0:
             res.append(l_clean)
     return res
+
+
+def is_valid_facebook_url(url):
+    url = url.lower().strip()
+    if not 'facebook.com' in url: return False
+    if 'sharer.php' in url: return False
+    if 'share.php?' in url: return False
+    if '/share?' in url: return False
+    if '/dialog/' in url: return False
+    if '/hashtag/' in url: return False
+    if 'twitter.co' in url: return False
+    if 'linkedin.' in url: return False
+    return True
+
+
+def is_valid_twitter_url(url):
+    url = url.lower().strip()
+    if not 'twitter.com' in url: return False
+    if '/share?' in url: return False
+    if '/intent/' in url: return False
+    if 'search?' in url: return False
+    if '/home?' in url: return False
+    if url == 'http://twitter.com/share': return False
+    if url == 'http://twitter.com/': return False
+    if url == 'http://twitter.com': return False
+    if '/hashtag/' in url: return False
+    if 'facebook.co' in url: return False
+    if 'linkedin.' in url: return False
+    if url.count('/') < 3: 
+        return False
+    return True
+
+
+def is_valid_social_url(url):
+    return is_valid_facebook_url(url) or is_valid_twitter_url(url)
+
+
+def extract_fb_tw_links_from_pages():
+    """Look for facebook and twitter links in museum websites """
+
+    def clean_fb_url(url, db_conn):
+        assert is_valid_facebook_url(url)
+        if "?" in url:
+            url = url.split("?")[0]
+        
+        if url[-1] == '/':
+            url = url[:-1]
+        rurl = check_for_url_redirection(url, True, db_conn)
+        if rurl != 'timeout':
+            rurl = url
+        return url
+
+    def clean_tw_url(url, db_conn):
+        if "?" in url:
+            url = url.split("?")[0]
+        if '/status/' in url:
+            url = url.split('/status/')[0]
+        if '/statuses/' in url:
+            url = url.split('/statuses/')[0]
+
+        if url[-1] == '/':
+            url = url[:-1]
+        
+        url = url.replace('@', '')
+        rurl = check_for_url_redirection(url, True, db_conn)
+        if rurl != 'timeout':
+            rurl = url
+        return url
+
+    print("extract_fb_tw_links_from_pages")
+    df = get_museums_w_web_urls().sample(frac = 1)
+    db_conn = connect_to_postgresql_db()
+
+    rows_list = []
+
+    for idx, mus in df.iterrows():
+        if idx % 100 == 0:
+            print(idx, end=' ')
+        
+        #if idx == 700: break # DEBUG
+        muse_id = mus['muse_id']
+        mname = mus['musname']
+        url = mus['url']
+        mus_links = []
+        #print("\n", muse_id, mname, url)
+        html = get_url_content_from_latest_session(url, db_conn)
+        if html is not None:
+            # look for links in HTML
+            sp = get_soup_from_html(html)
+            for link in sp.find_all('a', href=True):
+                child_url = link['href']
+                child_url = child_url.lower().strip()
+                if is_valid_facebook_url(child_url):
+                    mus_links.append({'museum_id':muse_id, 'type':'facebook', 'url': child_url, 
+                        'clean_url': clean_fb_url(child_url, db_conn)})
+                if is_valid_twitter_url(child_url):
+                    mus_links.append({'museum_id':muse_id, 'type':'twitter', 'url': child_url, 
+                        'clean_url': clean_tw_url(child_url, db_conn)})
+        
+        if len(mus_links)==0 or not pd.DataFrame(mus_links).type.isin(['facebook']).any():
+            # facebook not found
+            mus_links.append({'museum_id':muse_id, 'type':'facebook', 'url':'no_resource', 'clean_url':'no_resource'})
+        if len(mus_links)==0 or not pd.DataFrame(mus_links).type.isin(['twitter']).any():
+            # twitter not found
+            mus_links.append({'museum_id':muse_id, 'type':'twitter', 'url':'no_resource', 'clean_url':'no_resource'})
+        
+        rows_list.extend(mus_links)
+    print('')
+    sociallinks_df = pd.DataFrame(rows_list)
+    sociallinks_df = sociallinks_df.drop_duplicates(['museum_id','type','clean_url'])
+
+    #sociallinks_df['url_valid'] = sociallinks_df['url'].apply(is_valid_social_url)
+    valid_sociallinks_df = sociallinks_df
+    #valid_sociallinks_df = sociallinks_df[sociallinks_df['url'].apply(is_valid_social_url)]
+
+    print("sociallinks_df n =",len(valid_sociallinks_df))
+    valid_sociallinks_df.to_csv('tmp/websites_social_links.tsv', sep='\t', index_label='row_id')
+    return valid_sociallinks_df
+

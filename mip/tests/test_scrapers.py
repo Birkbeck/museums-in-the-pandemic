@@ -40,6 +40,7 @@ class TestFacebookScraper(unittest.TestCase):
     
     def test_scrape_facebook(self):
         i = 0
+        extract_fb_tw_links_from_pages()
 
 
 class TestTwitterScraper(unittest.TestCase):
