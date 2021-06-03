@@ -18,7 +18,11 @@ import constants
 
 logger = logging.getLogger(__name__)
 
+
 def get_webdump_attr_table_name(session_id):
+    """
+    get full table name from session id e.g. websites.web_pages_dump_20210420_attr
+    """
     tablen = get_webdump_table_name(session_id) + constants.table_suffix
     return tablen
 
@@ -230,3 +234,29 @@ def analyse_museum_websites():
         extract_text_from_websites(tab, out_table, db_conn) # DEBUG mm.musa.016
 
     return True
+
+
+def get_attribute_for_webpage_url(url, session_id, attrib_name, db_conn):
+    """
+    @returns attribute value (e.g. all_text) for a URL in a target scraping session;
+        None if URL or attribute does not exist 
+    """
+    page_tbl_name = get_webdump_table_name(session_id)
+    attr_tbl_name = get_webdump_attr_table_name(session_id)
+    
+    #print("get_attribute_for_webpage_url", attr_tbl_name)
+    
+    sql = """select url, a.page_id, attrib_name, attrib_val from {} p, {} a where a.page_id = p.page_id 
+        and p.url = '{}' and a.attrib_name = '{}';""".format(page_tbl_name, attr_tbl_name, make_string_sql_safe(url), attrib_name)
+    #print(sql)
+
+    attr_df = pd.read_sql(sql, db_conn)
+    df = attr_df[['url', 'page_id', 'attrib_name', 'attrib_val']]
+    #print(df)
+    if len(df) > 0:
+        assert len(df) == 1
+        val = df['attrib_val'].tolist()[0]
+        if len(val) == 0: val = None
+        return val
+    else: 
+        return None

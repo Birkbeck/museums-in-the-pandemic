@@ -5,6 +5,7 @@ Linguistic models for text analytics
 
 """
 import logging
+
 logger = logging.getLogger(__name__)
 
 from db.db import open_sqlite, run_select_sql
@@ -16,8 +17,10 @@ import numpy as np
 from bs4 import BeautifulSoup
 from bs4.element import Comment
 import re
+from analytics.an_websites import get_webdump_attr_table_name
 from utils import remove_empty_elem_from_list, remove_multiple_spaces_tabs
 import matplotlib.pyplot as plt
+from db.db import make_string_sql_safe
 
 
 def prep_training_data():
@@ -72,10 +75,23 @@ def get_museum_text_sample():
     print("get_museum_text_sample")
 
 
-
 def bert_model():
     """
     - https://towardsdatascience.com/bert-for-dummies-step-by-step-tutorial-fb90890ffe03
     - https://towardsdatascience.com/first-time-using-and-fine-tuning-the-bert-framework-for-classification-799def68a5e4
     """
     pass
+
+
+def get_attribute_for_webpage_url(url, session_id, db_conn):
+    """
+
+    """
+    attr_tbl_name = get_webdump_attr_table_name(session_id)
+    page_tbl_name = get_webdump_attr_table_name(session_id)
+    print("get_attribute_for_webpage_url", tbl_name)
+    
+    sql = "select * from {} a,  where url = '{}';".format(tbl_name, make_string_sql_safe(url))
+    print(sql)
+    attr_df = pd.read_sql(sql, db_conn)
+

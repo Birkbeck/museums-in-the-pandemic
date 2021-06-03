@@ -28,6 +28,10 @@ an_websites:
 	nohup ./run_app_server.sh an_websites > tmp/logs/nohup_${DATE}_log.txt &
 
 
+compile:
+	@python -m compileall mip/*
+
+
 running:
 	-@ps auxw | grep 'mip/app.py';
 	#-@ps auxw | grep '[t]or';

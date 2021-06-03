@@ -17,8 +17,14 @@ import pandas as pd
 import json
 
 # load postgres configuration
-with open('.secrets.json') as f:
-    pg_config = json.load(f)['postgres']
+try: 
+    with open('.secrets.json') as f:
+        pg_config = json.load(f)['postgres']
+except:
+    # look for other location
+    with open('../../.secrets.json') as f:
+        pg_config = json.load(f)['postgres']
+
 
 def open_sqlite(db_fn):
     """ Open connection to sqlite local DB """
