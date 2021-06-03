@@ -36,13 +36,15 @@ def prep_training_data():
     return train_df
 
 
-def get_indicator_annotations():
-    """  """
-    in_fn = "data/annotations/indicators_and_annotations-v3.xlsx"
+def get_indicator_annotations(data_folder=''):
+    """ @returns indicators data frame and annotations data frame """
+    in_fn = data_folder + "data/annotations/indicators_and_annotations-v3.xlsx"
     indic_df = pd.read_excel(in_fn,0)
     ann_df = pd.read_excel(in_fn,1)
+    
     # select first 4 columns
     ann_df = ann_df.iloc[:, : 4]
+    ann_df['example_id'] = range(0, len(ann_df))
     assert len(indic_df) > 0
     assert len(ann_df) > 0
     return indic_df, ann_df
@@ -82,16 +84,4 @@ def bert_model():
     """
     pass
 
-
-def get_attribute_for_webpage_url(url, session_id, db_conn):
-    """
-
-    """
-    attr_tbl_name = get_webdump_attr_table_name(session_id)
-    page_tbl_name = get_webdump_attr_table_name(session_id)
-    print("get_attribute_for_webpage_url", tbl_name)
-    
-    sql = "select * from {} a,  where url = '{}';".format(tbl_name, make_string_sql_safe(url))
-    print(sql)
-    attr_df = pd.read_sql(sql, db_conn)
 
