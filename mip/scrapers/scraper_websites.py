@@ -520,7 +520,7 @@ def get_url_redirection_from_db(url, db_conn):
     if len(res)>0:
         assert len(res)==1
         return res[0]
-    else: 
+    else:
         return None
 
 
@@ -528,6 +528,7 @@ def check_for_url_redirection(url, check_db=False, db_conn=None):
     """ 
     Useful to include redirected domain for scraping. 
     Uses table in DB to cache redirections.
+    NOTE: It does NOT work for Facebook/Twitter
     @returns redirected url or the same url if there is no redirection
     """
     assert url

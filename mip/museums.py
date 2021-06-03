@@ -31,6 +31,7 @@ def load_input_museums():
     print("loaded museums:",len(df), fn)
     return df
 
+
 def get_museums_w_web_urls():
     """ Get museums with website URLs """
     fn = 'data/museums/museum_websites_urls-v3.tsv'
