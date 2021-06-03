@@ -695,9 +695,9 @@ def extract_fb_tw_links_from_pages():
         
         if url[-1] == '/':
             url = url[:-1]
-        rurl = check_for_url_redirection(url, True, db_conn)
-        if rurl != 'timeout':
-            rurl = url
+        #rurl = check_for_url_redirection(url, True, db_conn)
+        #if rurl != 'timeout':
+        #    rurl = url
         return url
 
     def clean_tw_url(url, db_conn):
@@ -712,9 +712,9 @@ def extract_fb_tw_links_from_pages():
             url = url[:-1]
         
         url = url.replace('@', '')
-        rurl = check_for_url_redirection(url, True, db_conn)
-        if rurl != 'timeout':
-            rurl = url
+        #rurl = check_for_url_redirection(url, True, db_conn)
+        #if rurl != 'timeout':
+        #    rurl = url
         return url
 
     print("extract_fb_tw_links_from_pages")

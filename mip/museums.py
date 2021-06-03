@@ -33,8 +33,9 @@ def load_input_museums():
 
 def get_museums_w_web_urls():
     """ Get museums with website URLs """
-
-    df = pd.read_csv('data/museums/museum_websites_urls-v3.tsv', sep='\t')
+    fn = 'data/museums/museum_websites_urls-v3.tsv'
+    df = pd.read_csv(fn, sep='\t')
+    print("museums urls:",fn)
 
     #df = df[df['url'].apply(is_valid_website)]
     #df = df.drop_duplicates(subset=['url'])

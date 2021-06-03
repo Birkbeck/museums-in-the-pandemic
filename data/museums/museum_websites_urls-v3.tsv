@@ -1172,7 +1172,7 @@ mm.aim.0410	Hallaton Museum	Hallaton	https://hallaton-museum.co.uk/	pred
 mm.domus.WM030	Halls Croft	Stratford-upon-Avon	https://www.shakespeare.org.uk/visit/halls-croft/	pred	
 mm.domus.SE208	Halstead Heritage Museum	Halstead	https://www.halsteadhistory.org.uk/museum.html	pred	
 mm.domus.SE552	Ham House	Richmond	https://www.nationaltrust.org.uk/ham-house-and-garden	pred	
-mm.aim82NM.062	Hamilton House Toy Museum	Ashbourne		no_pred	
+mm.aim82NM.062	Hamilton House Toy Museum	Ashbourne	closed	manual	
 mm.wiki.377	Hammerwood Park	East Grinstead	https://www.hammerwoodpark.co.uk/	pred	
 mm.ace.1175	Hampton Court Palace	East Molesey	https://www.hrp.org.uk/hampton-court-palace/	pred	
 mm.domus.SE127	Hamptonne Country Life Museum	Jersey	https://www.jerseyheritage.org/places-to-visit/hamptonne-country-life-museum	pred	
@@ -1244,7 +1244,7 @@ mm.domus.SC218	"Herbarium, University Of Aberdeen"	Aberdeen	https://www.abdn.ac.
 mm.domus.WM058	Herbert Art Gallery And Museum	Coventry	https://www.theherbert.org/	pred	
 mm.domus.WM108	Hereford Museum And Art Gallery	Hereford	https://www.herefordshire.gov.uk/history-lives/hereford-museums-art-gallery/2	pred	
 mm.domus.WM144	Herefordshire Light Infantry Regimental Museum	Hereford	https://herefordshirelightinfantrymuseum.com/	pred	
-mm.aim.0430	Herefordshire Waterworks Museum	Brecon		no_pred	
+mm.aim.0430	Herefordshire Waterworks Museum	Brecon	https://www.waterworksmuseum.org.uk/	manual	
 mm.domus.SC225	Heriot Watt University Museum	Edinburgh	https://www.hw.ac.uk/uk/services/is/heritage/museum-and-archive.htm	pred	
 mm.misc.067	Heritage Of Golf Museum	Gullane	http://www.heritageofgolf.org/index.htm	manual	
 mm.domus.SE292	Herne Windmill	Herne Bay	https://www.hernewindmill.co.uk/	pred	
@@ -1643,7 +1643,7 @@ mm.domus.NW008	Manchester Art Gallery	Manchester	https://manchesterartgallery.or
 mm.domus.NW071	Manchester Jewish Museum	Manchester	https://www.manchesterjewishmuseum.com/	pred	
 mm.aim.0578	Manchester Masonic Museum	Manchester	https://www.culture24.org.uk/am82440	pred	
 mm.ace.1169	Manchester Metropolitan University Special Collections	Manchester	https://www.specialcollections.mmu.ac.uk/	pred	
-mm.domus.NW061	Manchester Transport Museum	Prestwich		no_pred	
+mm.domus.NW061	Heaton Park Tramway Museum	Prestwich	http://hptramway.co.uk/	manual	
 mm.aim.0579	Manchester United Fc Museum & Tour Centre	Manchester	https://www.manutd.com/en/visit-old-trafford/museum-stadium-tours	pred	
 mm.hha.155	Manderston	Duns	https://www.manderston.com/	pred	
 mm.musa.215	Mangapps Railway Museum	Burnham on Crouch	http://www.mangapps.co.uk/	pred	
@@ -1864,7 +1864,7 @@ mm.domus.SC169	Museum Of The Isles	Ardvasar	https://www.armadalecastle.com/explo
 mm.domus.WM094	Museum Of The Jewellery Quarter	Birmingham	https://www.birminghammuseums.org.uk/jewellery	pred	
 mm.domus.NW005	Museum Of The Manchester Regiment	Ashton-under-Lyne	https://www.tameside.gov.uk/LibrariesandLeisure/MuseumsandGalleries/Museum-of-the-Manchester-Regiment	pred	
 mm.domus.EM007	Museum Of The Northamptonshire Regiment	Northampton	https://www.culture24.org.uk/em000007	pred	
-mm.ace.019	Museum Of The Post Office In The Community	Telford		no_pred	
+mm.ace.019	Museum Of The Post Office In The Community	Telford	no_resource	no_pred	
 mm.domus.NI007	Museum Of The Royal Irish Regiment	Ballymena	https://www.royal-irish.com/museums/royal-irish-regiment-museum	pred	
 mm.domus.SE083	Museum Of The Royal Pharmaceutical Society	London	https://www.rpharms.com/about-us/museum	pred	
 mm.ace.1265	Museum Of The Royal Philatelic Society London	London	https://www.rpsl.org.uk/Museum	pred	
@@ -1915,7 +1915,7 @@ mm.domus.SE081	National Motor Museum	Brockenhurst	https://www.beaulieu.co.uk/att
 mm.fcm.186	National Motorcycle Museum	Solihull	https://www.nationalmotorcyclemuseum.co.uk/	pred	
 mm.domus.WA085	National Museum Cardiff	Cardiff	https://museum.wales/cardiff/	pred	
 mm.domus.SC280	National Museum Of Flight	North Berwick	https://www.nms.ac.uk/national-museum-of-flight/	manual	
-mm.domus.SC281	National Museum Of Rural Life	Newbridge		no_pred	correct page seems to be https://www.nts.org.uk/visit/places/national-museum-of-rural-life but isnt in Newbridge
+mm.domus.SC281	National Museum Of Rural Life	Newbridge	https://www.nms.ac.uk/national-museum-of-rural-life/	manual	correct page seems to be https://www.nts.org.uk/visit/places/national-museum-of-rural-life but isnt in Newbridge. ML: address in db is out of date
 mm.domus.SC277	National Museum Of Scotland	Edinburgh	https://www.nms.ac.uk/national-museum-of-scotland/	pred	
 mm.misc.092	"National Museum of The Royal Navy, Hartlepool"	Hartlepool	https://www.nmrn.org.uk/our-museums/national-museum-royal-navy-hartlepool	pred	
 mm.domus.SE351	"National Museum of The Royal Navy, Portsmouth"	Portsmouth	https://www.nmrn.org.uk/	pred	
@@ -1961,7 +1961,7 @@ mm.misc.121	New Hall Art Collection	Cambridge	https://www.art.newhall.cam.ac.uk/
 mm.musa.258	New Lanark Visitor Centre	Lanark	https://www.newlanark.org/	pred	
 mm.domus.EM101	New Mills Heritage And Information Centre	High Peak	http://visitnewmills.co.uk/things-to-do/heritage-centre/	pred	
 mm.domus.WM032	New Place / Nashs House	Stratford-upon-Avon	https://www.britainexpress.com/counties/warwickshire/az/Stratford/New-Place.htm	pred	
-mm.wiki.437	New Quay Heritage Centre	New Quay		no_pred	
+mm.wiki.437	New Quay Heritage Centre	New Quay	no_resource	manual	
 mm.domus.EM067	New Walk Museum And Art Gallery	Leicester	https://www.visitleicester.info/see-and-do/leicester-museum-and-art-gallery-p700961	pred	
 mm.domus.EM043	Newark Air Museum	Newark	http://www.newarkairmuseum.org/	pred	
 mm.domus.EM103	Newark Town Hall Museum And Art Gallery	Newark	http://www.newarktownhallmuseum.co.uk/	pred	
@@ -1982,7 +1982,7 @@ mm.domus.WA053	Newport Museum And Art Gallery	Newport	http://www.newport.gov.uk/
 mm.musa.263	Newport Pagnell Historical Society Museum	Newport Pagnell	https://www.mkheritage.org.uk/nphs/	pred	
 mm.domus.SE197	Newport Roman Villa	Newport	https://www.visitisleofwight.co.uk/things-to-do/newport-roman-villa-p152081	pred	
 mm.misc.166	Newport Street Gallery	London	https://www.newportstreetgallery.com/	pred	
-mm.wiki.042	Newquay Heritage Archive And Museum	Newquay		no_pred	
+mm.wiki.042	Newquay Heritage Archive And Museum	Newquay	no_resource	manual	
 mm.domus.NI027	Newry And Mourne Museum	Newry	https://www.newrymournedown.org/newry-and-mourne-museum	pred	
 mm.domus.EM022	Newstead Abbey	Nottingham	https://newsteadabbey.org.uk/	pred	
 mm.domus.SW080	Newton Abbot Town And Great Western Railway Museum	Newton Abbot	https://www.devonmuseums.net/Newton-Abbot-Town-and-GWR-Museum/Devon-Museums/	pred	
@@ -2150,7 +2150,7 @@ mm.aim.0750	Pinchbeck Engine Museum	Spalding	https://www.wellandidb.org.uk/about
 mm.domus.SE287	Pitstone Green Farm Museum	Leighton Buzzard	http://www.pitstonemuseum.co.uk/	manual	
 mm.domus.SE393	"Pitt Rivers Museum, University Of Oxford"	Oxford	https://www.prm.ox.ac.uk/	pred	
 mm.domus.SE129	Pitzhanger Manor Museum And Gallery	London	https://www.pitzhanger.org.uk/	pred	
-mm.mald.116	Plas Glyn Y Weddw	Abersoch		no_pred	
+mm.mald.116	Plas Glyn Y Weddw	Abersoch	https://www.oriel.org.uk/	manual	
 mm.domus.WA093	Plas Newydd	Llanfairpwll	https://www.nationaltrust.org.uk/plas-newydd-house-and-garden	pred	
 mm.domus.WA056	Plas Newydd (Llangollen)	Llangollen	https://www.denbighshire.gov.uk/en/visitor/places-to-visit/museums-and-historic-houses/plas-newydd.aspx	pred	
 mm.domus.WA095	Plas Yn Rhiw	Pwllheli	https://www.nationaltrust.org.uk/plas-yn-rhiw	pred	

@@ -26,7 +26,7 @@ class TestTextExtraction(unittest.TestCase):
         #self.out_db_con = open_sqlite('tmp/websites_sample_textattr.db')
         pass
 
-     def test_fb_tw_data(self):
+    def test_fb_tw_data(self):
         df_400 = pd.read_excel(r'tmp/outputdftest.xlsx')
         df_400=df_400.loc[df_400['valid'] == 'T']
         df_400=df_400.loc[df_400['search_type'] != 'website']
