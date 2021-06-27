@@ -217,7 +217,7 @@ def analyse_museum_text():
     nlp = en_core_web_sm.load()
     
     ann_tokens_df = get_indicator_annotation_tokens(nlp)
-    ann_tokens_df = ann_tokens_df.sample(100) # DEBUG
+    #ann_tokens_df = ann_tokens_df.sample(100) # DEBUG
 
     # tokenize text
     # TODO: call match_indicators_in_muse_page on actual data from an attribute table
