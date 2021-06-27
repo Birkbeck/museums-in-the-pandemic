@@ -82,7 +82,7 @@ def get_app_settings():
 
 def _is_number(*objs):
     for i in range(len(objs)):
-        b = isinstance(objs[i], (int, float, complex, int32, float64))
+        b = isinstance(objs[i], (int, float, complex, np.int32, np.float64))
         if not b: return False
     return True
 

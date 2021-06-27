@@ -8,7 +8,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-from db.db import open_sqlite, run_select_sql
+from db.db import connect_to_postgresql_db, create_alchemy_engine_posgresql
 import pandas as pd
 import pickle
 import os
@@ -18,9 +18,12 @@ from bs4 import BeautifulSoup
 from bs4.element import Comment
 import re
 from analytics.an_websites import get_webdump_attr_table_name
-from utils import remove_empty_elem_from_list, remove_multiple_spaces_tabs
+from utils import remove_empty_elem_from_list, remove_multiple_spaces_tabs, _is_number
 import matplotlib.pyplot as plt
 from db.db import make_string_sql_safe
+
+# constants
+tokens_table_name = 'analytics.sentence_tokens'
 
 
 def prep_training_data():
@@ -85,3 +88,292 @@ def bert_model():
     pass
 
 
+def _create_token_table(db_con):
+    """ 
+    Create table for tokens
+    "sentence_id": sent_id, "token":token.text, 'lemma':token.lemma_,
+    "pos_tag":token.pos_, 'is_stop': token.is_stop
+     """
+    c = db_con.cursor()
+    # Create table
+    
+    # #page_attr_id integer PRIMARY KEY AUTOINCREMENT,
+    sql = '''CREATE TABLE IF NOT EXISTS {0}
+            (token_id SERIAL PRIMARY KEY,
+            sentence_id integer NOT NULL,
+            page_id integer NOT NULL,
+            session_id text NOT NULL,
+            token text NOT NULL,
+            lemma text,
+            pos_tag text,
+            is_stop boolean);
+            CREATE INDEX IF NOT EXISTS {1}_sent_idx ON {0} USING btree(sentence_id);
+            CREATE INDEX IF NOT EXISTS {1}_session_idx ON {0} USING btree(session_id);
+            CREATE INDEX IF NOT EXISTS {1}_page_idx ON {0} USING btree(page_id);
+            '''.format(tokens_table_name, tokens_table_name.replace('.','_'))
+    #print(sql)
+    c.execute(sql)
+    db_con.commit()
+    
+    logger.info('_create_token_table')
+    return True
+
+
+def spacy_extract_tokens(nlp, text):
+    """ """
+    tokens_df = pd.DataFrame()
+    text_sentences = nlp(text)
+    sent_id = 0
+    # segment sentences
+    for sentence in text_sentences.sents:
+        sent_id += 1
+        # for each sentence
+        snt_text = sentence.text
+        pos_df = pd.DataFrame()
+        #print(colored('>', 'red'), snt_text)
+        for token in sentence:
+            # for each token
+            tokens_df = tokens_df.append(pd.DataFrame(
+                {"sentence_id": sent_id, 
+                "token": token.text, 'lemma': token.lemma_,
+                 "pos_tag":token.pos_, 'is_stop': token.is_stop}, 
+                index=[0]), ignore_index=True)
+    return tokens_df
+
+
+def spacy_extract_tokens_page(session_id, page_id, nlp, text, db_conn, db_engine):
+    """ 
+    [developed in notebook 01]
+    Preprocess text and writes it into the token table
+    @returns data frame with tokens with POS, lemma, stop words
+    """
+    tokens_df = spacy_extract_tokens(nlp, text)
+    tokens_df["session_id"] = session_id
+    tokens_df["page_id"] = page_id 
+    
+    # clear page
+    try:
+        sql = "delete from {} where session_id = '{}' and page_id = {}".format(tokens_table_name, session_id, page_id)
+        c = db_conn.cursor()
+        c.execute(sql)
+        db_conn.commit()
+        logger.debug('delete from '+tokens_table_name+' ok.')
+    except:
+        logger.warning('delete from '+tokens_table_name+' failed.')
+
+    # insert tokens into DB
+    tokens_df.to_sql('sentence_tokens', db_engine, schema='analytics', index=False, if_exists='append')
+
+    return tokens_df
+
+
+def get_indicator_annotation_tokens(nlp):
+    """
+    """
+    print('get_indicator_annotation_tokens')
+    indic_df, ann_df = get_indicator_annotations()
+    assert len(ann_df)>0
+    ann_tokens_df = pd.DataFrame()
+
+    for index, row in ann_df.iterrows():
+        txt = str(row['text_phrases']).strip()
+        df = spacy_extract_tokens(nlp, txt)
+        #print(df)
+        df['example_id'] = row['example_id']
+        df['indicator_code'] = row['indicator_code']
+        ann_tokens_df = pd.concat([ann_tokens_df, df])
+    
+    assert len(ann_tokens_df) > 0
+    return ann_tokens_df
+
+
+def match_indicators_in_muse_page(muse_id, session_id, page_id, nlp, annotat_tokens_df, db_conn, db_engine):
+    print('match_indicators_in_muse_page')
+    input_text = """We need your support Your support is vital and helps the Museum to share the collection with the world. Make a donation What's online... The flowers of Mary Delany 233 years after her death, Delany's detailed floral collages still delight and inspire. Take a closer look at her work in the collection. How to explore the British Museum from home Whether it's a behind-the-scenes podcast or a closer look at our galleries, here are 10 ways to explore the Museum while we're closed. British histories beyond 'Bridgerton' Inspired by the hit Netflix show, watch a panel discussion exploring the reality behind the fantasy of 'Bridgerton'. Discover the Maya World Take a trip to Mexico and explore a wealth of content from the Maya Research Project, including stories, videos and 3D explorations."""
+    # TODO: extract attribute for page
+
+    #spacy_extract_tokens(session_id, page_id, nlp, input_text, db_conn, db_engine)    
+    
+    _match_musetext_indicators(muse_id, session_id, page_id, annotat_tokens_df, db_conn, db_engine)
+
+
+def analyse_museum_text():
+    """
+    Main command: 
+    Preprocess and process museum text using NLP tools.
+    """
+    logger.info("analyse_museum_text")
+    db_conn = connect_to_postgresql_db()
+    db_engine = create_alchemy_engine_posgresql()
+    _create_token_table(db_conn)
+
+    # set up the spacy environment
+    import spacy
+    from spacy import displacy
+    from collections import Counter
+    spacy.prefer_gpu()
+    # load language model
+    import en_core_web_sm
+    nlp = en_core_web_sm.load()
+    
+    ann_tokens_df = get_indicator_annotation_tokens(nlp)
+    ann_tokens_df = ann_tokens_df.sample(100) # DEBUG
+
+    # tokenize text
+    # TODO: call match_indicators_in_muse_page on actual data from an attribute table
+    muse_id = 'test.234'
+    session_id = '20202020'
+    page_id = 1234
+    
+    # match indicators with annotations
+    match_indicators_in_muse_page(muse_id, session_id, page_id, nlp, ann_tokens_df, db_conn, db_engine)
+    #spacy_extract_tokens(session_id, page_id, nlp, input_text, db_conn, db_engine)
+
+    # add indices to table
+
+    idx_sql = """
+        ALTER TABLE analytics.text_indic_ann_matches  
+            DROP CONSTRAINT IF EXISTS text_indic_ann_matches_pk;
+        ALTER TABLE analytics.text_indic_ann_matches 
+            ADD CONSTRAINT text_indic_ann_matches_pk 
+            PRIMARY KEY (annotation_example_id, muse_text_sentence_id, page_id);"""
+    c = db_conn.cursor()
+    c.execute(idx_sql)
+    db_conn.commit()
+
+
+    logger.info('matches written in table analytics.text_indic_ann_matches.')
+
+def _filter_tokens(df, keep_stopwords=True):
+    """ Remove tokens that do not carry semantic content """
+    
+    if not keep_stopwords:
+        df = df[~df['is_stop']]
+    
+    filt_df = df[~df['pos_tag'].isin(['DET','ADP','PRON','PUNCT'])]
+    return filt_df.copy()
+
+
+def _match_tokens(musetxt_df, annot_df, case_sensitive, keep_stopwords):
+    """
+    Match tokens between museum text and annotation tokens (indicators)
+    """
+    assert len(musetxt_df)>=0
+    assert len(annot_df)>=0
+    # set up options
+    prefix = 'var_'
+    suffix = ''
+    if case_sensitive: suffix = '_csens'
+    else: suffix = '_cinsens'
+    if case_sensitive: suffix = '_csens'
+    else: suffix = '_cinsens'
+        
+    if keep_stopwords: suffix += '_wstopw'
+    else: suffix += '_nostopw'
+        
+    # filter tokens
+    filt_text_df = _filter_tokens(musetxt_df, keep_stopwords)
+    filt_ann_df = _filter_tokens(annot_df, keep_stopwords)
+    
+    # case in/sensitive
+    if not case_sensitive:
+        # make lower case
+        filt_text_df.loc[:, 'lemma'] = filt_text_df['lemma'].str.lower()
+        filt_text_df.loc[:, 'token'] = filt_text_df['token'].str.lower()
+        filt_ann_df.loc[:, 'lemma'] = filt_ann_df.loc[:, 'lemma'].str.lower()
+        filt_ann_df.loc[:, 'token'] = filt_ann_df.loc[:, 'token'].str.lower()
+        
+    # generate match variables for each example/text pair
+    lemmas_df = filt_text_df.merge(filt_ann_df, on=['lemma'])
+    tokens_df = filt_text_df.merge(filt_ann_df, on=['token'])
+    lemmas_m = " ".join(lemmas_df['lemma'].tolist())
+    tokens_m = " ".join(tokens_df['token'].tolist())
+    vars_d = {
+        prefix+'lemmas_n'+suffix:len(lemmas_df), 
+        prefix+'lemmas_m'+suffix: lemmas_m, 
+        prefix+'tokens_n'+suffix:len(tokens_df),
+        prefix+'tokens_m'+suffix: tokens_m
+    }
+    return vars_d
+
+
+def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, db_conn, db_engine):
+    """ Main match loop between set of sentences and set of annotations for a single museum """
+    assert muse_id
+    assert session_id
+    assert page_id
+    #assert len(txt_df) >= 0
+    assert len(annot_df) >= 0
+
+    # get tokens from token table
+    sql = """select * from {} where session_id = '{}' and page_id = {}""".format(tokens_table_name, session_id, page_id)
+    txt_df = pd.read_sql_query(sql, db_conn)
+    
+    df = pd.DataFrame()
+    
+    for sentence_name, txt_sent_df in txt_df.groupby('sentence_id'):
+        #print(txt_sent_df)
+        for ann_name, ann_example_df in annot_df.groupby('example_id'):
+            #print(ann_example_df)
+            tmpdf = _match_musetext_vs_indicator_example(txt_sent_df, ann_example_df)
+            assert len(tmpdf) == 1
+            # remove entries with sum == 0
+            if tmpdf['all_sum_n'].tolist()[0] > 0:
+                df = df.append(tmpdf)
+            
+    
+    df.reset_index()
+    # set general params
+    df['session_id'] = session_id
+    df['page_id'] = page_id
+    df['muse_id'] = muse_id
+
+    # clear page
+    try:
+        sql = "delete from {} where session_id = '{}' and page_id = {}".format('analytics.text_indic_ann_matches', session_id, page_id)
+        c = db_conn.cursor()
+        c.execute(sql)
+        db_conn.commit()
+        logger.debug('delete from text_indic_ann_matches ok.')
+    except:
+        logger.warning('delete from text_indic_ann_matches failed.')
+
+    # insert match results into SQL table
+    df.to_sql('text_indic_ann_matches', db_engine, schema='analytics', index=False, if_exists='append')
+
+    return df
+
+    
+def _match_musetext_vs_indicator_example(txt_df, annot_df):
+    """ 
+    Match single text sentence with single annotation example
+    """
+    #print("_match_musetext_vs_indicator_example")
+    # get txt sentence id
+    sentence_id = txt_df['sentence_id'].tolist()[0]
+    # get annotation example id and code
+    example_id = annot_df['example_id'].tolist()[0]
+    indicator_code = annot_df['indicator_code'].tolist()[0]
+    
+    d = {}
+    for cs in [True, False]:
+        for sw in [True, False]:
+            #print('debug 2')
+            match_vars_d = _match_tokens(txt_df, annot_df, cs, sw)
+            d.update(match_vars_d)
+    
+    # sum all values
+    all_nums = [x for x in d.values() if _is_number(x)]
+    d['all_sum_n'] = sum(all_nums)
+    
+    # base dictionary
+    res_d = {'muse_text_sentence_id': [sentence_id], 
+             'annotation_example_id':[example_id],
+             'annotation_example_code':[indicator_code],
+             'muse_text_sentence_len': len(txt_df), 
+             'annotation_example_len': len(annot_df)}
+    res_d.update(d)
+    
+    res_df = pd.DataFrame(data=res_d)
+    assert len(res_df)>0
+    return res_df

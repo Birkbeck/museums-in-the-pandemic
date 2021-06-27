@@ -221,7 +221,7 @@ def analyse_museum_websites():
 
     # get session stats
     tables = get_scraping_session_tables(db_conn)
-
+    
     for tab in tables:
         print(tab)
         df = get_scraping_session_stats_by_museum(tab, db_conn)

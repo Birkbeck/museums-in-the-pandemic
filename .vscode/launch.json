@@ -11,6 +11,7 @@
 
 
 
+
         {
             "name": "scrape_websites",
             "type": "python",
@@ -26,6 +27,14 @@
             "program": "mip/app.py",
             "console": "integratedTerminal",
             "args": ["an_websites"]
+        },
+        {
+            "name": "an_text",
+            "type": "python",
+            "request": "launch",
+            "program": "mip/app.py",
+            "console": "integratedTerminal",
+            "args": ["an_text"]
         },
         {
             "name": "tests",

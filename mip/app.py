@@ -18,13 +18,14 @@ from scrapers.scraper_twitter import scrape_twitter_account
 from scrapers.scraper_websites import scrape_websites
 from scrapers.scraper_facebook import scrape_facebook
 from analytics.an_websites import analyse_museum_websites
+from analytics.text_models import analyse_museum_text
 from museums import load_input_museums, load_extracted_museums, combinedatasets, get_fuzzy_string_match_scores, load_fuzzy_museums, compare_result_to_sample
 from db.db import is_postgresql_db_accessible, count_all_db_rows
 from tests.run_tests import get_all_tests
 import unittest
 
 COMMANDS = ["tests","scrape_google","extract_google",'scrape_twitter','scrape_websites',
-    'an_websites', 'scrape_facebook','compare_sample','db_stats']
+    'an_websites','scrape_facebook','compare_sample','db_stats','an_text']
 cmd = None
 
 # %% Operations
@@ -106,6 +107,11 @@ def main():
             print("an_websites")
             assert is_postgresql_db_accessible()
             analyse_museum_websites()
+
+        if cmd == "an_text":
+            print("an_text")
+            assert is_postgresql_db_accessible()
+            analyse_museum_text()
 
         if cmd == "compare_sample":
             print("compare_sample")

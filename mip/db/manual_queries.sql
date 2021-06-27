@@ -129,6 +129,19 @@ WHERE
 order by pgClass.relname;
 
 
+CREATE TABLE IF NOT EXISTS analytics.sentence_tokens
+    (token_id SERIAL PRIMARY KEY,
+    sentence_id integer NOT NULL,
+    page_id integer NOT NULL,
+    session_id text NOT NULL,
+    token text NOT NULL,
+    lemma text,
+    pos_tag text,
+    is_stop boolean);
+    CREATE INDEX IF NOT EXISTS analytics.sentence_tokens_sent_idx ON analytics.sentence_tokens USING btree(sentence_id);
+    CREATE INDEX IF NOT EXISTS analytics.sentence_tokens_session_idx ON analytics.sentence_tokens USING btree(session_id);
+    CREATE INDEX IF NOT EXISTS analytics.sentence_tokens_page_idx ON analytics.sentence_tokens USING btree(page_id);
+           
 select * from websites.web_pages_dump_20210503
 	where url = 'https://www.100bgmus.org.uk/';
 select d.url, d.page_content from websites.web_pages_dump_20210521 as d 

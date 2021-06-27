@@ -21,11 +21,11 @@ def get_all_tests():
     #test_classes.append(TestVPN)
     #test_classes.append(TestTwitterScraper)
     #test_classes.append(TestWebsiteScraper)
-    #test_classes.append(TestFacebookScraper)
+    test_classes.append(TestFacebookScraper)
     #test_classes.append(TestVPN)
     #test_classes.append(TestTextExtraction)
     #test_classes.append(TestTextModel)
-    test_classes.append(TestVal)
+    #test_classes.append(TestVal)
     
     
     # build suite

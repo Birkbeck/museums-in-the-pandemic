@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 import sqlite3
 import psycopg2
+from sqlalchemy import create_engine
 import pandas as pd
 import json
 
@@ -32,6 +33,20 @@ def open_sqlite(db_fn):
     logger.debug("open_sqlite: "+ db_fn)
     return conn
 
+
+def create_alchemy_engine_posgresql():
+    print("create_alchemy_engine_posgresql")
+    ipaddress = pg_config['ip']
+    dbname=pg_config['dbname']
+    username=pg_config['user']
+    password=pg_config['pwd']
+    port=5432
+    #postgres_str = f'postgresql://{username}:{password}@{ipaddress}:{port}/{dbname}'
+    postgres_str = f'postgresql://{username}:{password}@{ipaddress}:{port}/{dbname}'
+          
+    # Create the connection
+    db_engine = create_engine(postgres_str)
+    return db_engine
 
 def create_page_dump(db_conn):
     """ create table for Google page dump """
