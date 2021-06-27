@@ -216,7 +216,10 @@ def analyse_museum_text():
     import en_core_web_sm
     nlp = en_core_web_sm.load()
     
+    # get indicator tokens and write them to the DB
     ann_tokens_df = get_indicator_annotation_tokens(nlp)
+    ann_tokens_df.to_sql('indicator_annotation_tokens', db_engine, schema='analytics', index=False, if_exists='replace')
+
     #ann_tokens_df = ann_tokens_df.sample(100) # DEBUG
 
     # tokenize text
