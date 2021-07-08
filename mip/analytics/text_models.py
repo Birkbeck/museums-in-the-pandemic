@@ -21,6 +21,8 @@ from analytics.an_websites import get_webdump_attr_table_name
 from utils import remove_empty_elem_from_list, remove_multiple_spaces_tabs, _is_number
 import matplotlib.pyplot as plt
 from db.db import make_string_sql_safe
+from museums import get_museums_w_web_urls
+from analytics.an_websites import get_page_id_for_webpage_url, get_attribute_for_webpage_id
 
 # constants
 tokens_table_name = 'analytics.sentence_tokens'
@@ -41,7 +43,7 @@ def prep_training_data():
 
 def get_indicator_annotations(data_folder=''):
     """ @returns indicators data frame and annotations data frame """
-    in_fn = data_folder + "data/annotations/indicators_and_annotations-v3.xlsx"
+    in_fn = data_folder + "data/annotations/indicators_and_annotations-v4.xlsx"
     indic_df = pd.read_excel(in_fn,0)
     ann_df = pd.read_excel(in_fn,1)
     
@@ -189,10 +191,9 @@ def get_indicator_annotation_tokens(nlp):
 
 def match_indicators_in_muse_page(muse_id, session_id, page_id, nlp, annotat_tokens_df, db_conn, db_engine):
     print('match_indicators_in_muse_page')
-    input_text = """We need your support Your support is vital and helps the Museum to share the collection with the world. Make a donation What's online... The flowers of Mary Delany 233 years after her death, Delany's detailed floral collages still delight and inspire. Take a closer look at her work in the collection. How to explore the British Museum from home Whether it's a behind-the-scenes podcast or a closer look at our galleries, here are 10 ways to explore the Museum while we're closed. British histories beyond 'Bridgerton' Inspired by the hit Netflix show, watch a panel discussion exploring the reality behind the fantasy of 'Bridgerton'. Discover the Maya World Take a trip to Mexico and explore a wealth of content from the Maya Research Project, including stories, videos and 3D explorations."""
-    # TODO: extract attribute for page
-
-    #spacy_extract_tokens(session_id, page_id, nlp, input_text, db_conn, db_engine)    
+    input_text =  get_attribute_for_webpage_id(page_id, session_id, 'all_text', db_conn)
+    
+    spacy_extract_tokens_page(session_id, page_id, nlp, input_text, db_conn, db_engine)    
     
     _match_musetext_indicators(muse_id, session_id, page_id, annotat_tokens_df, db_conn, db_engine)
 
@@ -224,25 +225,42 @@ def analyse_museum_text():
 
     # tokenize text
     # TODO: call match_indicators_in_muse_page on actual data from an attribute table
-    muse_id = 'test.234'
-    session_id = '20202020'
-    page_id = 1234
-    
-    # match indicators with annotations
-    match_indicators_in_muse_page(muse_id, session_id, page_id, nlp, ann_tokens_df, db_conn, db_engine)
-    #spacy_extract_tokens(session_id, page_id, nlp, input_text, db_conn, db_engine)
+    df= get_museums_w_web_urls()
+    stratdf = pd.read_csv('data/museums/museums_wattributes-2020-02-23.tsv', sep='\t')
+    stratdf=stratdf.filter(['muse_id', 'governance'], axis=1)
+    df = pd.merge(stratdf,df,on='muse_id')
+    df=df.loc[df['governance'] == 'University']
+    datadict={}
+    session_id='20210304'
+    attrib_name = 'all_text'
+    for index, row in df.iterrows():
+        datadict[row['muse_id']]=get_page_id_for_webpage_url(row['url'], session_id, attrib_name, db_conn)
 
-    # add indices to table
+        for key, value in datadict.items():
+        
 
-    idx_sql = """
-        ALTER TABLE analytics.text_indic_ann_matches  
-            DROP CONSTRAINT IF EXISTS text_indic_ann_matches_pk;
-        ALTER TABLE analytics.text_indic_ann_matches 
-            ADD CONSTRAINT text_indic_ann_matches_pk 
-            PRIMARY KEY (annotation_example_id, muse_text_sentence_id, page_id);"""
-    c = db_conn.cursor()
-    c.execute(idx_sql)
-    db_conn.commit()
+
+            if(value is not None):
+                muse_id = key#for each museum in sample of 10//debug or for all in reality//filter to uni
+                #session_id = '20202020'#manual
+                for page in value:
+                    page_id = page
+                    
+                    # match indicators with annotations
+                    match_indicators_in_muse_page(muse_id, session_id, page_id, nlp, ann_tokens_df, db_conn, db_engine)
+                    #spacy_extract_tokens(session_id, page_id, nlp, input_text, db_conn, db_engine)
+
+                    # add indices to table
+
+                    idx_sql = """
+                        ALTER TABLE analytics.text_indic_ann_matches  
+                            DROP CONSTRAINT IF EXISTS text_indic_ann_matches_pk;
+                        ALTER TABLE analytics.text_indic_ann_matches 
+                            ADD CONSTRAINT text_indic_ann_matches_pk 
+                            PRIMARY KEY (annotation_example_id, muse_text_sentence_id, page_id);"""
+                    c = db_conn.cursor()
+                    c.execute(idx_sql)
+                    db_conn.commit()
 
 
     logger.info('matches written in table analytics.text_indic_ann_matches.')
@@ -277,6 +295,10 @@ def _match_tokens(musetxt_df, annot_df, case_sensitive, keep_stopwords):
     # filter tokens
     filt_text_df = _filter_tokens(musetxt_df, keep_stopwords)
     filt_ann_df = _filter_tokens(annot_df, keep_stopwords)
+    text_df_n = len(filt_text_df)
+
+    ann_df_n = len(filt_ann_df)
+    assert ann_df_n>0
     
     # case in/sensitive
     if not case_sensitive:
@@ -291,10 +313,32 @@ def _match_tokens(musetxt_df, annot_df, case_sensitive, keep_stopwords):
     tokens_df = filt_text_df.merge(filt_ann_df, on=['token'])
     lemmas_m = " ".join(lemmas_df['lemma'].tolist())
     tokens_m = " ".join(tokens_df['token'].tolist())
+    
+    ##calculate overlap for lemma
+    if text_df_n == 0:
+        lemma_text_overlap = 0
+    else:
+        lemma_text_overlap = len(lemmas_df)/text_df_n
+    lemma_ann_overlap=len(lemmas_df)/ann_df_n
+
+    ##calculate overlap for tokens
+    if text_df_n == 0:
+        token_text_overlap = 0
+    else:
+        token_text_overlap = len(tokens_df)/text_df_n
+    token_ann_overlap=len(tokens_df)/ann_df_n
+
+    
+
+    ##TODO assert token overlaps tween 0 and 1
     vars_d = {
         prefix+'lemmas_n'+suffix:len(lemmas_df), 
+        prefix+'lemmas_txt_overlap'+suffix: round(lemma_text_overlap,5),
+        prefix+'lemmas_ann_overlap'+suffix: round(lemma_ann_overlap,5),
         prefix+'lemmas_m'+suffix: lemmas_m, 
         prefix+'tokens_n'+suffix:len(tokens_df),
+        prefix+'tokens_txt_overlap'+suffix: round(token_text_overlap,5),
+        prefix+'tokens_ann_overlap'+suffix: round(token_ann_overlap,5),
         prefix+'tokens_m'+suffix: tokens_m
     }
     return vars_d
@@ -315,7 +359,7 @@ def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, db_conn, 
     df = pd.DataFrame()
     
     for sentence_name, txt_sent_df in txt_df.groupby('sentence_id'):
-        #print(txt_sent_df)
+        print(txt_sent_df)
         for ann_name, ann_example_df in annot_df.groupby('example_id'):
             #print(ann_example_df)
             tmpdf = _match_musetext_vs_indicator_example(txt_sent_df, ann_example_df)
@@ -330,6 +374,7 @@ def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, db_conn, 
     df['session_id'] = session_id
     df['page_id'] = page_id
     df['muse_id'] = muse_id
+    
 
     # clear page
     try:
@@ -370,11 +415,15 @@ def _match_musetext_vs_indicator_example(txt_df, annot_df):
     d['all_sum_n'] = sum(all_nums)
     
     # base dictionary
+    
     res_d = {'muse_text_sentence_id': [sentence_id], 
              'annotation_example_id':[example_id],
              'annotation_example_code':[indicator_code],
              'muse_text_sentence_len': len(txt_df), 
-             'annotation_example_len': len(annot_df)}
+             'annotation_example_len': len(annot_df),
+             'muse_text_sentence_full': ' '.join(txt_df.token.tolist()), # DEBUG
+             'muse_ann_sentence_full': ' '.join(annot_df.token.tolist()) # DEBUG
+             }
     res_d.update(d)
     
     res_df = pd.DataFrame(data=res_d)

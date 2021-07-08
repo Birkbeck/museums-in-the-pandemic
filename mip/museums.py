@@ -32,9 +32,9 @@ def load_input_museums():
     return df
 
 
-def get_museums_w_web_urls():
+def get_museums_w_web_urls(data_folder=''):
     """ Get museums with website URLs """
-    fn = 'data/museums/museum_websites_urls-v3.tsv'
+    fn = data_folder+'data/museums/museum_websites_urls-v3.tsv'
     df = pd.read_csv(fn, sep='\t')
     print("museums urls:",fn)
 

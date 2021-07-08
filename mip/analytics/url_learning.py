@@ -340,6 +340,84 @@ def apply_random_forest(df_matrix):
     df_matrix.to_csv('tmp/ml_museum_scores_tw.tsv', index=False, sep='\t')
     print("end")
 
+def test_ml(self):
+        #generate_ml_model()
+        df_matrix=pd.read_excel(r'tmp/museum_websites_urls.xlsx')
+        df_matrix2=pd.read_csv('data/samples/mip_data_sample_2020_01.tsv', sep='\t')
+        df_matrix2=df_matrix2[['mm_id', 'website']]
+        df_matrix3=df_matrix.merge(df_matrix2, left_on='id', right_on='mm_id', how='left')
+        df_matrix3.to_excel(r'tmp/a_x_test_2.xlsx')
+        #print(df_matrix['muse_id'].nunique())
+        #df_matrix=df_matrix.loc[df_matrix['predicted'] == 1]
+        #print(df_matrix['muse_id'].nunique())
+        resultset='twitter'
+        df_matrix=pd.read_excel(r'tmp/combined_museum_matrix.xlsx')
+        print(df_matrix['muse_id'].nunique())
+        df_matrix=df_matrix.loc[df_matrix['search_type'] == resultset]
+        if resultset=='website':
+            df_matrix=df_matrix[~df_matrix['url'].str.contains("facebook")]
+            df_matrix=df_matrix[~df_matrix['url'].str.contains("twitter")]
+        df_matrix['google_rank']=df_matrix.groupby('muse_id').cumcount()+1
+        df_matrix.to_excel(r'tmp/a_x_test_2.xlsx')
+        apply_random_forest(df_matrix)
+        #generate_ml_model()
+
+def process_tw_fb_links(urlML, urlScrape):
+        if isinstance(urlML, float) or isinstance(urlML, int):
+            urlML=""
+        if(urlML==''):
+            if(any('no_resource' in d for d in urlScrape)):
+                return 'no_resource'
+            else:
+                urllist=[]
+                for item in urlScrape:
+                    for d, value in item.items():
+                        if(value<3):
+                            urllist.append(d)
+                if(urllist==[]):
+                    return 'no_resource'#version 1
+                    for d, value in item.items():#version2                        
+                        urllist.append(d)
+                    return urllist
+                else:return urllist
+
+
+        else:
+            if(any('no_resource' in d for d in urlScrape)):
+                return urlML
+            if(any(urlML in d for d in urlScrape)):
+                return urlML+'(((both)))'
+            else:
+                #return urlML #version A
+                #urllist=[]
+                #for item in urlScrape:
+                #    for d, value in item.items():
+                #        if(value<3):
+                #            urllist.append(d)
+                #if(urllist==[]):
+                #    #return urlML#version1
+                #    for d, value in item.items():#version2                        
+                #       urllist.append(d)
+                #    urllist.append(urlML)
+                #    return urllist
+                #else:return urllist #version B
+                urllist=[]
+                for item in urlScrape:
+                    for d, value in item.items():
+                        if(value<3):
+                            urllist.append(d)
+                if(urllist==[]):
+                    return urlML#version1
+                    for d, value in item.items():#version2                        
+                        urllist.append(d)
+                    urllist.append(urlML)
+                    return urllist
+                else:
+                    urllist.append(urlML)
+                    return urllist #version C
+
+                
+
 
 def generate_ml_model():
         #df_matrix_1 = pd.read_excel(r'tmp/merged_stratified_sample_400_1.xlsx')
