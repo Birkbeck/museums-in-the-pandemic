@@ -227,14 +227,14 @@ def analyse_museum_text():
     # TODO: call match_indicators_in_muse_page on actual data from an attribute table
     df= get_museums_w_web_urls()
     stratdf = pd.read_csv('data/museums/museums_wattributes-2020-02-23.tsv', sep='\t')
-    stratdf=stratdf.filter(['muse_id', 'governance'], axis=1)
+    stratdf=stratdf.filter(['muse_id', 'governance', 'town'], axis=1)##DEBUG town should be removed
     df = pd.merge(stratdf,df,on='muse_id')
-    df=df.loc[df['governance'] == 'University']
+    #df=df.loc[df['governance'] == 'University'] ##DEBUG line should be unhashed to only use university museums
     datadict={}
     session_id='20210304'
     attrib_name = 'all_text'
     for index, row in df.iterrows():
-        datadict[row['muse_id']]=get_page_id_for_webpage_url(row['url'], session_id, attrib_name, db_conn)
+        datadict[row['muse_id']]=get_page_id_for_webpage_url(row['url'],row['muse_id'], session_id, attrib_name, db_conn)
 
         for key, value in datadict.items():
         
@@ -243,7 +243,8 @@ def analyse_museum_text():
             if(value is not None):
                 muse_id = key#for each museum in sample of 10//debug or for all in reality//filter to uni
                 #session_id = '20202020'#manual
-                for page in value:
+                
+                for page in value:##DEBUG restore line for more than main page
                     page_id = page
                     
                     # match indicators with annotations
@@ -261,6 +262,7 @@ def analyse_museum_text():
                     c = db_conn.cursor()
                     c.execute(idx_sql)
                     db_conn.commit()
+                
 
 
     logger.info('matches written in table analytics.text_indic_ann_matches.')

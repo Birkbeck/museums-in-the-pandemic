@@ -9,6 +9,7 @@ import pandas as pd
 from bs4 import BeautifulSoup
 from bs4.element import Comment
 from scrapers.scraper_websites import get_scraping_session_tables, get_scraping_session_stats_by_museum, get_webdump_table_name
+from utils import get_url_domain
 import re
 from utils import remove_empty_elem_from_list, remove_multiple_spaces_tabs, get_soup_from_html, get_all_text_from_soup, garbage_collect
 import logging
@@ -286,27 +287,28 @@ def get_attribute_for_webpage_id(page_id, session_id, attrib_name, db_conn):
     else: 
         return None
 
-def get_page_id_for_webpage_url(url, session_id, attrib_name, db_conn):
+def get_page_id_for_webpage_url(url, id, session_id, attrib_name, db_conn):
     """
     @returns attribute value (e.g. all_text) for a URL in a target scraping session;
         None if URL or attribute does not exist 
     """
     page_tbl_name = get_webdump_table_name(session_id)
     attr_tbl_name = get_webdump_attr_table_name(session_id)
+    url_domain=get_url_domain(url)
     
     #print("get_attribute_for_webpage_url", attr_tbl_name)
     
     sql = """select url, a.page_id, attrib_name, attrib_val from {} p, {} a where a.page_id = p.page_id 
-        and p.url = '{}' and a.attrib_name = '{}';""".format(page_tbl_name, attr_tbl_name, make_string_sql_safe(url), attrib_name)
+        and p.muse_id = '{}' and a.attrib_name = '{}' and p.is_start_url='True' and p.url_domain='{}';""".format(page_tbl_name, attr_tbl_name, make_string_sql_safe(id), attrib_name, url_domain)
     #print(sql)
 
     attr_df = pd.read_sql(sql, db_conn)
     df = attr_df[['url', 'page_id', 'attrib_name', 'attrib_val']]
     #print(df)
     if len(df) > 0:
-        assert len(df) == 1
+        #assert len(df) == 1
         val = df['page_id'].tolist()
         if len(val) == 0: val = None
-        return val
+        return val ##DEBUG [0] should be removed to use all pages rather than main page
     else: 
         return None
