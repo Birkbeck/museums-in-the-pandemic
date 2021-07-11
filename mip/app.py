@@ -24,8 +24,8 @@ from db.db import is_postgresql_db_accessible, count_all_db_rows
 from tests.run_tests import get_all_tests
 import unittest
 
-COMMANDS = ["tests","scrape_google","extract_google",'scrape_twitter','scrape_websites',
-    'an_websites','scrape_facebook','compare_sample','db_stats','an_text']
+COMMANDS = ["tests","scrape_google","extract_google",'scrape_twitter','scrape_websites','ex_txt_fields',
+    'scrape_facebook','compare_sample','db_stats','an_text']
 cmd = None
 
 # %% Operations
@@ -103,8 +103,8 @@ def main():
             assert is_postgresql_db_accessible()
             scrape_websites()
 
-        if cmd == "an_websites":
-            print("an_websites")
+        if cmd == "ex_txt_fields":
+            print("ex_txt_fields")
             assert is_postgresql_db_accessible()
             analyse_museum_websites()
 
