@@ -11,6 +11,7 @@ all:
 	@cat Makefile;
 	@echo "\n";
 
+
 scrape_websites:
 	@echo ">>> Scraping websites with nohup";
 	nohup ./run_app_server.sh scrape_websites > tmp/logs/nohup_${DATE}_log.txt &
@@ -23,9 +24,14 @@ db_stats:
 	./run_app_server.sh db_stats;
 
 
-an_websites:
+extract_txt_fields:
+	@echo ">>> Extract text fields";
+	nohup ./run_app_server.sh ex_txt_fields > tmp/logs/nohup_${DATE}_log.txt &
+
+
+an_text:
 	@echo ">>> Run NLP";
-	nohup ./run_app_server.sh an_websites > tmp/logs/nohup_${DATE}_log.txt &
+	nohup ./run_app_server.sh an_text > tmp/logs/nohup_${DATE}_log.txt &
 
 
 compile:
