@@ -147,6 +147,10 @@ select * from websites.web_pages_dump_20210503
 select d.url, d.page_content from websites.web_pages_dump_20210521 as d 
 	where d.url = 'https://www.100bgmus.org.uk/';
 
+
+select url, a.page_id, attrib_name, attrib_val from websites.web_pages_dump_20210304 p, websites.web_pages_dump_20210304_attr a 
+	where a.page_id = p.page_id and p.page_id = 422811 and a.attrib_name = 'all_text';
+
 -- ALTER TABLE websites.web_pages_dump_20210304
   -- ADD new_page_b boolean;
 -- update websites.web_pages_dump_20210304 set new_page_b = true; 
