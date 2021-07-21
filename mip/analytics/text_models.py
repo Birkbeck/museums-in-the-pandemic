@@ -20,7 +20,7 @@ from analytics.an_websites import get_webdump_attr_table_name
 from utils import remove_empty_elem_from_list, remove_multiple_spaces_tabs, _is_number, parallel_dataframe_apply
 import matplotlib.pyplot as plt
 from db.db import make_string_sql_safe
-from museums import get_museums_w_web_urls
+from museums import get_museums_w_web_urls, get_museums_sample_urls
 from analytics.an_websites import get_page_id_for_webpage_url, get_attribute_for_webpage_id
 
 # constants
@@ -239,7 +239,7 @@ def analyse_museum_text():
     #ann_tokens_df = ann_tokens_df.sample(100) # DEBUG
 
     # tokenize text
-    df = get_museums_w_web_urls()
+    df = get_museums_sample_urls()
     stratdf = pd.read_csv('data/museums/museums_wattributes-2020-02-23.tsv', sep='\t')
     stratdf = stratdf.filter(['muse_id', 'governance', 'town'], axis=1)##DEBUG town should be removed
     df = pd.merge(stratdf,df,on='muse_id')

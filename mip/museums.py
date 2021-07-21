@@ -34,6 +34,21 @@ def load_input_museums():
 
 def get_museums_w_web_urls(data_folder=''):
     """ Get museums with website URLs """
+    fn = data_folder+'data/museums/museum_websites_urls-v3.tsv'##DEBUG file should be -v3.tsv
+    df = pd.read_csv(fn, sep='\t')
+    print("museums urls:",fn)
+
+    #df = df[df['url'].apply(is_valid_website)]
+    #df = df.drop_duplicates(subset=['url'])
+    #df['id_duplicated'] = df.duplicated(subset=['muse_id'])
+    #assert df['url'].is_unique
+    msg = "get_museums_w_web_urls Museums={} URLs={}".format(df.muse_id.nunique(), len(df))
+    print(msg)
+    logger.info(msg)
+    return df
+
+def get_museums_sample_urls(data_folder=''):
+    """ Get museums with website URLs """
     fn = data_folder+'data/museums/museum_websites_urls-samp.tsv'##DEBUG file should be -v3.tsv
     df = pd.read_csv(fn, sep='\t')
     print("museums urls:",fn)
