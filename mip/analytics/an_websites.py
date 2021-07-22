@@ -273,7 +273,7 @@ def get_attribute_for_webpage_id(page_id, session_id, attrib_name, db_conn):
     sql = """select url, a.page_id, attrib_name, attrib_val from {} p, {} a where a.page_id = p.page_id 
         and p.page_id = {} and a.attrib_name = '{}';""".format(page_tbl_name, attr_tbl_name, page_id, attrib_name)
     #print(sql)
-
+    assert db_conn.closed == 0
     attr_df = pd.read_sql(sql, db_conn)
     df = attr_df[['url', 'page_id', 'attrib_name', 'attrib_val']]
     #print(df)

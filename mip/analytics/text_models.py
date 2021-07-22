@@ -48,7 +48,7 @@ def get_indicator_annotations(data_folder=''):
     # select first 4 columns
     ann_df = ann_df.iloc[:, : 4]
     ann_df['example_id'] = range(0, len(ann_df))
-    ann_df['example_id'] = ["ann_ex_{}".format(x) for x in ann_df['example_id']]
+    ann_df['example_id'] = ["ann_ex_{:05d}".format(x) for x in ann_df['example_id']]
     assert len(indic_df) > 0
     assert len(ann_df) > 0
     return indic_df, ann_df
@@ -89,7 +89,8 @@ def bert_model():
     pass
 
 
-def _create_token_table(db_con):
+def _OLD_create_token_table(db_con):
+    return
     """ 
     Create table for tokens
     "sentence_id": sent_id, "token":token.text, 'lemma':token.lemma_,
@@ -142,7 +143,18 @@ def spacy_extract_tokens(nlp, text):
     return tokens_df
 
 
-def spacy_extract_tokens_page(session_id, page_id, nlp, text, db_conn, db_engine):
+def _preprocess_input_text(txt):
+    """
+    preprocess text from web to make tokenisation easier
+    """
+    t = txt.replace("'re ", 'are ').strip()
+    t = txt.replace("'s ", ' ')
+    if len(t) < 3:
+        return None
+    return t
+
+
+def spacy_extract_tokens_page(session_id, page_id, nlp, text, db_conn, db_engine, insert_db=False):
     """ 
     [developed in notebook 01]
     Preprocess text and writes it into the token table
@@ -150,11 +162,15 @@ def spacy_extract_tokens_page(session_id, page_id, nlp, text, db_conn, db_engine
     """
     print('spacy_extract_tokens_page')
     logger.debug('spacy_extract_tokens_page')
+    text = _preprocess_input_text(text)
+    if text is None or len(text) < 3: 
+        return None
+
     tokens_df = spacy_extract_tokens(nlp, text)
     tokens_df["session_id"] = session_id
     tokens_df["page_id"] = page_id
     # change sentence id format
-    tokens_df['sentence_id'] = ["mus_page{}_sent{}".format(page_id,x) for x in tokens_df['sentence_id']]
+    tokens_df['sentence_id'] = ["mus_page{}_sent{:05d}".format(page_id,x) for x in tokens_df['sentence_id']]
     
     # clear page
     try:
@@ -166,10 +182,11 @@ def spacy_extract_tokens_page(session_id, page_id, nlp, text, db_conn, db_engine
     except:
         logger.warning('delete from '+tokens_table_name+' failed.')
 
-    if False:
+    if insert_db:
         # insert tokens into DB
         print("spacy_extract_tokens_page insert tokens into DB {}...".format(len(tokens_df)))
-        tokens_df.to_sql('sentence_tokens', db_engine, schema='analytics', index=False, if_exists='append', method='multi')
+        tokens_df.to_sql('mus_sentence_tokens', db_engine, schema='analytics', index=False, if_exists='append', method='multi')
+    
     return tokens_df
 
 
@@ -184,6 +201,11 @@ def get_indicator_annotation_tokens(nlp):
     for index, row in ann_df.iterrows():
         txt = str(row['text_phrases']).strip()
         df = spacy_extract_tokens(nlp, txt)
+        n = len(df)
+        df = df.drop_duplicates(['lemma'])
+        #if n != len(df1):
+        #    i = 0
+        #df = df1
         #print(df)
         df['example_id'] = row['example_id']
         df['indicator_code'] = row['indicator_code']
@@ -191,26 +213,34 @@ def get_indicator_annotation_tokens(nlp):
 
     # change sentence ID format
     ann_tokens_df['sentence_id'] = ["ex_sent_{}".format(x) for x in ann_tokens_df['sentence_id']]
+    ann_tokens_df = _filter_tokens(ann_tokens_df)
     assert len(ann_tokens_df) > 0
     return ann_tokens_df
 
 
-def match_indicators_in_muse_page(muse_id, session_id, page_id, nlp, annotat_tokens_df, db_conn, db_engine):
-    logger.info('match_indicators_in_muse_page {} {} {}'.format(muse_id, session_id, page_id))
+def match_indicators_in_muse_page(muse_id, session_id, page_id, nlp, annotat_tokens_df, keep_stopwords, db_conn, db_engine):
+    """
+    Main function to perform matching for a target museum
+    """
+    logger.info('match_indicators_in_muse_page {} {} {} stopwords={}'.format(muse_id, session_id, page_id, keep_stopwords))
     
     input_text = get_attribute_for_webpage_id(page_id, session_id, 'all_text', db_conn)
-    page_tokens_df = spacy_extract_tokens_page(session_id, page_id, nlp, input_text, db_conn, db_engine)    
+    page_tokens_df = spacy_extract_tokens_page(session_id, page_id, nlp, input_text, db_conn, db_engine, insert_db=keep_stopwords)    
     
     #page_tokens_df.to_csv('tmp/debug_page_tokens_df.csv',index=False) # DEBUG
     #annotat_tokens_df.to_csv('tmp/annotat_tokens_df.csv',index=False) # DEBUG
     
     # filter tokens based on POS
-    keep_stopwords = True
     page_tokens_df = _filter_tokens(page_tokens_df, keep_stopwords)
     annotat_tokens_df = _filter_tokens(annotat_tokens_df, keep_stopwords)
 
+    # add full text for DEBUG
+    sent_full_txt_df = page_tokens_df.groupby('sentence_id').apply(lambda x: " ".join(x['token'].tolist())).to_frame().rename(columns={0:'page_tokens'})
+    ann_full_txt_df = annotat_tokens_df.groupby('example_id').apply(lambda x: " ".join(x['token'].tolist())).to_frame().rename(columns={0:'ann_ex_tokens'})
+    
     # this will read the tokens from the DB
-    _match_musetext_indicators(muse_id, session_id, page_id, annotat_tokens_df, page_tokens_df, db_conn, db_engine)
+    _match_musetext_indicators(muse_id, session_id, page_id, annotat_tokens_df, page_tokens_df, 
+                                ann_full_txt_df, sent_full_txt_df, keep_stopwords, db_conn, db_engine)
     
 
 def analyse_museum_text():
@@ -221,7 +251,7 @@ def analyse_museum_text():
     logger.info("analyse_museum_text")
     db_conn = connect_to_postgresql_db()
     db_engine = create_alchemy_engine_posgresql()
-    _create_token_table(db_conn)
+    #_create_token_table(db_conn)
 
     # set up the spacy environment
     import spacy
@@ -238,14 +268,17 @@ def analyse_museum_text():
         ann_tokens_df.to_sql('indicator_annotation_tokens', db_engine, schema='analytics', index=False, if_exists='replace', method='multi')
     #ann_tokens_df = ann_tokens_df.sample(100) # DEBUG
 
-    # tokenize text
     df = get_museums_sample_urls()
+
+    # load museums
+    #df = get_museums_w_web_urls()
+
     stratdf = pd.read_csv('data/museums/museums_wattributes-2020-02-23.tsv', sep='\t')
-    stratdf = stratdf.filter(['muse_id', 'governance', 'town'], axis=1)##DEBUG town should be removed
+    #stratdf = stratdf.filter(['muse_id', 'governance', 'town'], axis=1) ##DEBUG town should be removed
     df = pd.merge(stratdf,df,on='muse_id')
     #df=df.loc[df['governance'] == 'University'] ##DEBUG line should be unhashed to only use university museums
-    datadict={}
-    session_id='20210304'
+    datadict = {}
+    session_id = '20210304'
     attrib_name = 'all_text'
     
     df = df.sample(10) # DEBUG
@@ -254,17 +287,24 @@ def analyse_museum_text():
     i = 0
     for index, row in df.iterrows():
         # get main page of a museum
-        datadict[row['muse_id']] = get_page_id_for_webpage_url(row['url'],row['muse_id'], session_id, attrib_name, db_conn)
+        datadict[row['muse_id']] = get_page_id_for_webpage_url(row['url'], row['muse_id'], session_id, attrib_name, db_conn)
+        msg = ">>> Processing museum {} of {}".format(i,len(df))
+        logger.info(msg)
+        print(msg)
+        
+        # TODO: VAL: fix duplications
         i += 1
-        logger.info(">>> Processing museum {} of {}".format(i,len(df)))
         for muse_id, pages in datadict.items():
+            print('   muse_id and pages:', muse_id, pages)
             if pages is not None:
                 #for each museum in sample of 10//debug or for all in reality//filter to uni
                 #session_id = '20202020' # manual
+                pages = list(set(pages)) # drop duplicates
                 for page_id in pages:
-                    # match indicators with annotations
-                    match_indicators_in_muse_page(muse_id, session_id, page_id, nlp, ann_tokens_df, db_conn, db_engine)
-                    #spacy_extract_tokens(session_id, page_id, nlp, input_text, db_conn, db_engine)
+                    for keep_stopwords in [True, False]:
+                        # match indicators with annotations
+                        match_indicators_in_muse_page(muse_id, session_id, page_id, nlp, ann_tokens_df, keep_stopwords, db_conn, db_engine)
+                        #spacy_extract_tokens(session_id, page_id, nlp, input_text, db_conn, db_engine)
 
     # add indices to table
     idx_sql = """
@@ -278,18 +318,19 @@ def analyse_museum_text():
     db_conn.commit()
     logger.info('matches written in table analytics.text_indic_ann_matches.')
 
+
 def _filter_tokens(df, keep_stopwords=True):
     """ Remove tokens that do not carry semantic content """
     
     if not keep_stopwords:
         df = df[~df['is_stop']]
     
-    filt_df = df[~df['pos_tag'].isin(['DET','ADP','PRON','PUNCT'])]
+    filt_df = df[~df['pos_tag'].isin(['DET','ADP','PRON','PUNCT','SYM','SPACE'])]
     return filt_df.copy()
 
 
 def __OLD_match_tokens(musetxt_df, annot_df, case_sensitive, keep_stopwords):
-
+    return
     """
     Match tokens between museum text and annotation tokens (indicators)
     """
@@ -365,8 +406,32 @@ def __OLD_match_tokens(musetxt_df, annot_df, case_sensitive, keep_stopwords):
     return vars_d
 
 
-def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, page_tokens_df, db_conn, db_engine):
-    """ Main match loop between set of sentences and set of annotations for a single museum """
+def _count_unique_matches(df, col, target_col_name):
+    """
+    Aggregate token/lemma matches
+    """
+    # count rows by these columns
+    aggr_cols = ['sentence_id_txt','example_id','indicator_code']
+    
+    # ignore repetitions in column 'col' to avoid overcounting tokens
+    dupl_cols = aggr_cols + [col]
+    match_df = df.drop_duplicates(dupl_cols).groupby(aggr_cols).size().reset_index().rename(columns={0:target_col_name})
+    
+    # keep repetitions
+    match_dupl_df = df.groupby(aggr_cols).size().reset_index().rename(columns={0:target_col_name+"_wdupl"})
+    
+    # aggregate results
+    assert len(match_dupl_df) == len(match_df), str(len(match_dupl_df)) + ' ' + str(len(match_df))
+    match_df = match_df.merge(match_dupl_df, on=aggr_cols)
+    assert len(match_dupl_df) == len(match_df)
+    return match_df
+
+
+def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, page_tokens_df, 
+                annotat_full_txt_df, sentences_full_txt_df, keep_stopwords, db_conn, db_engine):
+    """ 
+    Main match loop between set of sentences and set of annotations for a single museum 
+    """
     assert muse_id
     assert session_id
     assert page_id
@@ -380,24 +445,31 @@ def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, page_toke
     if len(page_tokens_df)==0: 
         return df
     
-    # count sentence length 
+    # count sentence length in input data
     txt_len_df = txt_df.groupby(['sentence_id']).size().reset_index().rename(columns={0:'sent_len'})
     ann_len_df = annot_df.groupby(['example_id']).size().reset_index().rename(columns={0:'example_len'})
 
-    # match lemmas
+    # match lemmas between page and annotations
+    #  join
     lemma_df = txt_df.merge(annot_df, on='lemma', suffixes=['_txt','_ann'])
-    lemma_match_df = lemma_df.groupby(['sentence_id_txt','example_id','indicator_code']).size().reset_index().rename(columns={0:'lemma_n'})
-    # match tokens
+    lemma_match_df = _count_unique_matches(lemma_df, 'lemma', 'lemma_n')
+    
+    # match tokens between page and annotations
+    #  join
     token_df = txt_df.merge(annot_df, on='token', suffixes=['_txt','_ann'])
-    token_match_df = token_df.groupby(['sentence_id_txt','example_id','indicator_code']).size().reset_index().rename(columns={0:'token_n'})
-
+    token_match_df = _count_unique_matches(token_df, 'token', 'token_n')
+    
     # merge lemmas and tokens results
     match_df = lemma_match_df.merge(token_match_df, on=['sentence_id_txt','example_id','indicator_code'], how='outer')
     
     # fill with zero
     match_df['lemma_n'] = match_df['lemma_n'].replace(np.nan, 0)
+    match_df['lemma_n_wdupl'] = match_df['lemma_n_wdupl'].replace(np.nan, 0)
     match_df['token_n'] = match_df['token_n'].replace(np.nan, 0)
+    match_df['token_n_wdupl'] = match_df['token_n_wdupl'].replace(np.nan, 0)
+    
     n = len(match_df)
+    
     # add sentence length
     match_df = match_df.merge(txt_len_df, left_on='sentence_id_txt', right_on='sentence_id')
     match_df = match_df.merge(ann_len_df, left_on='example_id', right_on='example_id')
@@ -407,38 +479,33 @@ def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, page_toke
 
     # calculate overlaps
     digits = 5
-    match_df['ann_overlap_lemma'] = round(match_df['lemma_n']/match_df['example_len'],digits)
-    match_df['ann_overlap_token'] = round(match_df['token_n']/match_df['example_len'],digits)
-    match_df['txt_overlap_lemma'] = round(match_df['lemma_n']/match_df['sent_len'],digits)
-    match_df['txt_overlap_token'] = round(match_df['token_n']/match_df['sent_len'],digits)
+    match_df['ann_overlap_lemma'] = round(match_df['lemma_n'] / match_df['example_len'],digits)
+    match_df['ann_overlap_token'] = round(match_df['token_n'] / match_df['example_len'],digits)
+    match_df['txt_overlap_lemma'] = round(match_df['lemma_n'] / match_df['sent_len'],digits)
+    match_df['txt_overlap_token'] = round(match_df['token_n'] / match_df['sent_len'],digits)
+
     
+    # add texts for DEBUG
+    if True:
+        n1 = len(match_df)
+        match_df = match_df.merge(annotat_full_txt_df, on='example_id')
+        match_df = match_df.merge(sentences_full_txt_df, on='sentence_id')
+        assert len(match_df) == n1
     
-    #df = df.sample(100)
-    #logger.debug(sw.tick('1'))
-    #print('matched_df', len(df))
-    
-    # count matches for each sentence and example
-    #logger.debug(sw.tick('1'))
-    
-    #print('match_df', len(match_df), match_df.columns)
-    #for sentence_id, txt_sent_df in txt_df.groupby('sentence_id'):
-    #    for example_id, ann_example_df in annot_df.groupby('example_id'):
-    #        i += 1
-    #        if i % 100 == 0:
-    ##            print('    _match_musetext_indicators {} of {}'.format(i, n_cases))
-    #        tmpdf = _match_musetext_vs_indicator_example(txt_sent_df, ann_example_df)
-    #        assert len(tmpdf) == 1
-    #        # remove entries with sum == 0
-    #        if tmpdf['all_sum_n'].tolist()[0] > 0:
-    #            df = df.append(tmpdf)
-    
-    #df.reset_index()
+    match_df.to_csv('tmp/temp.csv',index=True) # DEBUG
+
+    # check overlap score ranges
+    assert match_df.ann_overlap_lemma.between(0,1).all(), match_df.ann_overlap_lemma.sort_values()
+    assert match_df.ann_overlap_token.between(0,1).all(), match_df.ann_overlap_token.sort_values()
+    assert match_df.txt_overlap_lemma.between(0,1).all(), match_df.txt_overlap_lemma.sort_values()
+    assert match_df.txt_overlap_token.between(0,1).all(), match_df.txt_overlap_token.sort_values()
+
+
     # set general params
     match_df['session_id'] = session_id
     match_df['page_id'] = page_id
     match_df['muse_id'] = muse_id
-    
-    #match_df.to_csv('tmp/temp.csv',index=False) # DEBUG
+    match_df['keep_stopwords'] = keep_stopwords
 
     #sw.tick('1')
     # clear page before insertion
