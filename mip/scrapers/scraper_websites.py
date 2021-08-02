@@ -424,7 +424,10 @@ class MultiWebsiteSpider(CrawlSpider):
     ]
 
     def get_museum_id_for_url(self, url):
-        """  """
+        """ 
+        TODO: this is incorrect, it's using the domain instead of the actual URL. 
+            Fix with using actual URL.
+        """
         cur_dom = get_url_domain(url)
         muse_ids = self.museums_df[self.museums_df.domain == cur_dom]['muse_id']
         if len(muse_ids)==0:
