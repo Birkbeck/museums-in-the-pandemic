@@ -91,7 +91,7 @@ def main():
         if cmd == "scrape_twitter":
             print("scrape_twitter")
             df = load_input_museums()
-            scrape_twitter(df)
+            # TODO scrape_twitter(df)
 
         if cmd == "scrape_facebook":
             print("scrape_facebook")
