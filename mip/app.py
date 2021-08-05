@@ -19,8 +19,9 @@ from scrapers.scraper_websites import scrape_websites
 from scrapers.scraper_facebook import scrape_facebook
 from analytics.an_websites import analyse_museum_websites
 from analytics.text_models import analyse_museum_text
-from museums import load_input_museums, load_extracted_museums, combinedatasets, get_fuzzy_string_match_scores, load_fuzzy_museums, compare_result_to_sample
+from museums import load_input_museums, load_extracted_museums,generate_stratified_museum_sample,generate_stratified_museum_urls, combinedatasets, get_fuzzy_string_match_scores, load_fuzzy_museums, compare_result_to_sample
 from db.db import is_postgresql_db_accessible, count_all_db_rows
+
 from tests.run_tests import get_all_tests
 import unittest
 
@@ -113,6 +114,8 @@ def main():
             # RUN in terminal:
             # python -m spacy download en_core_web_sm
             assert is_postgresql_db_accessible()
+            #generate_stratified_museum_sample()
+            #generate_stratified_museum_urls()
             analyse_museum_text()
 
         if cmd == "compare_sample":

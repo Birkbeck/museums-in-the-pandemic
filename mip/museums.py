@@ -37,6 +37,9 @@ def get_museums_w_web_urls(data_folder=''):
     fn = data_folder+'data/museums/museum_websites_urls-v3.tsv'##DEBUG file should be -v3.tsv
     df = pd.read_csv(fn, sep='\t')
     print("museums urls:",fn)
+    df['domain'] = df['url'].apply(get_url_domain)
+    domaincounts_df=df['domain'].value_counts()
+    print(domaincounts_df)
 
     #df = df[df['url'].apply(is_valid_website)]
     #df = df.drop_duplicates(subset=['url'])
@@ -49,7 +52,7 @@ def get_museums_w_web_urls(data_folder=''):
 
 def get_museums_sample_urls(data_folder=''):
     """ Get museums with website URLs """
-    fn = data_folder+'data/museums/museum_websites_urls-samp.tsv'##DEBUG file should be -v3.tsv
+    fn = data_folder+'data/museums/correct_url_stratified_sample_401.tsv'##DEBUG file should be -v3.tsv
     df = pd.read_csv(fn, sep='\t')
     print("museums urls:",fn)
 
@@ -415,7 +418,7 @@ def generate_stratified_museum_sample():
     print("selected museums for sampling:", len(df))
     
     # generate sample
-    fraction = .126
+    fraction = .127
     sample_n = int(len(df) * fraction)
     print("sample_n", sample_n)
     cols = ["region","size","accreditation","gov"]
@@ -424,7 +427,7 @@ def generate_stratified_museum_sample():
         sub_smpl_f = len(subdf) * fraction
         sub_smpl_n = int(round(sub_smpl_f,0))
         print(val, len(subdf), sub_smpl_f, sub_smpl_n)
-        sample_df = sample_df.append(subdf.sample(sub_smpl_n, random_state=32))
+        sample_df = sample_df.append(subdf.sample(sub_smpl_n, random_state=30))
     
     print("sample_df", len(sample_df))
     sample_df['valid'] = ''
@@ -432,6 +435,18 @@ def generate_stratified_museum_sample():
     fout = 'tmp/museums_stratified_sample_{}.tsv'.format(len(sample_df))
     sample_df.to_csv(fout, sep="\t", index=False)
     print(fout)
+
+def generate_stratified_museum_urls():
+    fn = 'tmp/museums_stratified_sample_401.tsv'
+    sample_df = pd.read_csv(fn, sep='\t')
+    fn2='data/museums/museum_websites_urls-v3.tsv'
+    correct_df = pd.read_csv(fn2, sep='\t')
+    sample_df=sample_df.muse_id
+    correct_df=pd.merge(sample_df, correct_df, on='muse_id')
+    fout = 'tmp/correct_url_stratified_sample_401.tsv'.format(len(sample_df))
+    correct_df.to_csv(fout, sep="\t", index=False)
+    print("end")
+
 
 
 def get_weighted_sum(musname, weighteddict):

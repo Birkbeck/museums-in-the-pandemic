@@ -12,6 +12,7 @@ from db.db import connect_to_postgresql_db, create_alchemy_engine_posgresql
 import pandas as pd
 from utils import StopWatch
 import numpy as np
+import pickle
 #import tensorflow as tf
 from bs4 import BeautifulSoup
 from bs4.element import Comment
@@ -161,14 +162,18 @@ def spacy_extract_tokens_page(session_id, page_id, nlp, text, db_conn, db_engine
     @returns data frame with tokens with POS, lemma, stop words
     """
     print('spacy_extract_tokens_page')
+    if page_id==60967:
+        print("ok")
     logger.debug('spacy_extract_tokens_page')
-    text = _preprocess_input_text(text)
     if text is None or len(text) < 3: 
         return None
+    text = _preprocess_input_text(text)
+    
 
     tokens_df = spacy_extract_tokens(nlp, text)
     tokens_df["session_id"] = session_id
     tokens_df["page_id"] = page_id
+
     # change sentence id format
     tokens_df['sentence_id'] = ["mus_page{}_sent{:05d}".format(page_id,x) for x in tokens_df['sentence_id']]
     
@@ -225,22 +230,25 @@ def match_indicators_in_muse_page(muse_id, session_id, page_id, nlp, annotat_tok
     logger.info('match_indicators_in_muse_page {} {} {} stopwords={}'.format(muse_id, session_id, page_id, keep_stopwords))
     
     input_text = get_attribute_for_webpage_id(page_id, session_id, 'all_text', db_conn)
+
     page_tokens_df = spacy_extract_tokens_page(session_id, page_id, nlp, input_text, db_conn, db_engine, insert_db=keep_stopwords)    
     
     #page_tokens_df.to_csv('tmp/debug_page_tokens_df.csv',index=False) # DEBUG
     #annotat_tokens_df.to_csv('tmp/annotat_tokens_df.csv',index=False) # DEBUG
     
     # filter tokens based on POS
-    page_tokens_df = _filter_tokens(page_tokens_df, keep_stopwords)
-    annotat_tokens_df = _filter_tokens(annotat_tokens_df, keep_stopwords)
+    if page_tokens_df is not None:
+        page_tokens_df = _filter_tokens(page_tokens_df, keep_stopwords)
+        annotat_tokens_df = _filter_tokens(annotat_tokens_df, keep_stopwords)
 
-    # add full text for DEBUG
-    sent_full_txt_df = page_tokens_df.groupby('sentence_id').apply(lambda x: " ".join(x['token'].tolist())).to_frame().rename(columns={0:'page_tokens'})
-    ann_full_txt_df = annotat_tokens_df.groupby('example_id').apply(lambda x: " ".join(x['token'].tolist())).to_frame().rename(columns={0:'ann_ex_tokens'})
-    
-    # this will read the tokens from the DB
-    _match_musetext_indicators(muse_id, session_id, page_id, annotat_tokens_df, page_tokens_df, 
-                                ann_full_txt_df, sent_full_txt_df, keep_stopwords, db_conn, db_engine)
+        # add full text for DEBUG
+        sent_full_txt_df = page_tokens_df.groupby('sentence_id').apply(lambda x: " ".join(x['token'].tolist())).to_frame().rename(columns={0:'page_tokens'})
+        ann_full_txt_df = annotat_tokens_df.groupby('example_id').apply(lambda x: " ".join(x['token'].tolist())).to_frame().rename(columns={0:'ann_ex_tokens'})
+        
+        # this will read the tokens from the DB
+        _match_musetext_indicators(muse_id, session_id, page_id, annotat_tokens_df, page_tokens_df, 
+                                    ann_full_txt_df, sent_full_txt_df, keep_stopwords, db_conn, db_engine)
+
     
 
 def analyse_museum_text():
@@ -280,31 +288,43 @@ def analyse_museum_text():
     datadict = {}
     session_id = '20210304'
     attrib_name = 'all_text'
-    
-    df = df.sample(10) # DEBUG
-    
+    startmus=0
+    #with open('data/museums/startmus.pickle', 'wb') as f:
+    #     pickle.dump(startmus, f)
+    #df = df.sample(10) # DEBUG
+    with open('data/museums/startmus.pickle', 'rb') as f:
+        startmus = pickle.load(f)
     # loop over museums
     i = 0
     for index, row in df.iterrows():
-        # get main page of a museum
-        datadict[row['muse_id']] = get_page_id_for_webpage_url(row['url'], row['muse_id'], session_id, attrib_name, db_conn)
-        msg = ">>> Processing museum {} of {}".format(i,len(df))
-        logger.info(msg)
-        print(msg)
         
-        # TODO: VAL: fix duplications
+        # get main page of a museum
+        if startmus<=i:
+            datadict[row['muse_id']] = get_page_id_for_webpage_url(row['url'], row['muse_id'], session_id, attrib_name, db_conn)
+            msg = ">>> Processing museum {} of {}".format(i,len(df))
+            logger.info(msg)
+            print(msg)
+            
+            
+            
+
+            for muse_id, pages in datadict.items():
+                print('   muse_id and pages:', muse_id, pages)
+                if pages is not None:
+                    #for each museum in sample of 10//debug or for all in reality//filter to uni
+                    #session_id = '20202020' # manual
+                    pages = list(set(pages)) # drop duplicates
+                    for page_id in pages:
+                        for keep_stopwords in [True, False]:
+                            # match indicators with annotations
+                            match_indicators_in_muse_page(muse_id, session_id, page_id, nlp, ann_tokens_df, keep_stopwords, db_conn, db_engine)
+                            #spacy_extract_tokens(session_id, page_id, nlp, input_text, db_conn, db_engine)
+            startmus=startmus+1
+            with open('data/museums/startmus.pickle', 'wb') as f:
+              pickle.dump(startmus, f)
         i += 1
-        for muse_id, pages in datadict.items():
-            print('   muse_id and pages:', muse_id, pages)
-            if pages is not None:
-                #for each museum in sample of 10//debug or for all in reality//filter to uni
-                #session_id = '20202020' # manual
-                pages = list(set(pages)) # drop duplicates
-                for page_id in pages:
-                    for keep_stopwords in [True, False]:
-                        # match indicators with annotations
-                        match_indicators_in_muse_page(muse_id, session_id, page_id, nlp, ann_tokens_df, keep_stopwords, db_conn, db_engine)
-                        #spacy_extract_tokens(session_id, page_id, nlp, input_text, db_conn, db_engine)
+
+
 
     # add indices to table
     idx_sql = """
@@ -317,6 +337,7 @@ def analyse_museum_text():
     c.execute(idx_sql)
     db_conn.commit()
     logger.info('matches written in table analytics.text_indic_ann_matches.')
+    
 
 
 def _filter_tokens(df, keep_stopwords=True):

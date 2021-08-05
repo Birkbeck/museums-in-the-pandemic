@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
-
+import pandas as pd
 import logging
+import ast
 import json
 import datetime
 import time
 from db.db import open_sqlite, run_select_sql
+from db.db import connect_to_postgresql_db, create_alchemy_engine_posgresql
 from vpn import vpn_random_region
 from facebook_scraper import get_posts
 logger = logging.getLogger(__name__)
@@ -16,24 +18,34 @@ Facebook scraper based on facebook_scraper
 # initial page limit for facebook_scraper.get_posts
 page_limit = 100
 # to avoid infinite loop
-max_limit = 5000
+max_limit = 500
 
 def scrape_facebook(museums_df):
     # TODO: implement for all museum data
     print("scrape_facebook","page_limit =",page_limit)
-    db_con = open_sqlite('tmp/facebook_dump.db')
-    create_fb_dump(db_con)
+    db_con = connect_to_postgresql_db()
+    db_engine = create_alchemy_engine_posgresql()
+    
     
     date_limit = datetime.datetime(2019, 1, 1)
+    pagedf=pd.read_excel('tmp/fb_urls_final.xlsx')
 
-    pages = ["https://www.facebook.com/ntstoneywell/",
-    "https://www.facebook.com/cliffordroadairraidsheltermuseum/",
-    "https://www.facebook.com/wingdown617/"]
+
+    
     scraped_pages = 0
-    for p in pages:
-        b = scrape_facebook_page(p, "mm001.New", date_limit, db_con)
-        if b:
-            scraped_pages += 1 
+    for row in pagedf.iterrows():
+        print(row[1].url)
+        if row[1].url[0]=='[':
+            listbug=ast.literal_eval(row[1].url)
+            for item in listbug:
+                b = scrape_facebook_page(item, row[1].museum_id, date_limit, db_con, db_engine)
+                if b:
+                    scraped_pages += 1 
+        else:
+            b = scrape_facebook_page(row[1].url, row[1].museum_id, date_limit, db_con, db_engine)
+            if b:
+                scraped_pages += 1
+
     print("scraped_pages =", scraped_pages)
 
 
@@ -44,19 +56,19 @@ def get_earliest_date(fbdata):
     return min_t
 
 
-def scrape_facebook_page(url, muse_id, date_limit, db_conn):
+def scrape_facebook_page(url, muse_id, date_limit, db_conn, db_engine):
     """ 
     Scrape posts from facebook page in @url, going back at least to @date_limit
     @returns True if page was scraped or False if the page was already present in the DB
     """
     urllist = url.split("/")
-    page_name = urllist[3]
+    page_name = urllist[1]
     assert page_name
     assert muse_id
 
-    if page_exists_in_db(page_name, db_conn):
+    #if page_exists_in_db(page_name, db_conn):
         # skip page
-        return False
+        #return False
 
     limit = page_limit
     while True:
@@ -81,7 +93,7 @@ def scrape_facebook_page(url, muse_id, date_limit, db_conn):
                     # save posts to DB and move on
                     logger.warn("avoid infinite loop, saving and skipping: "+page_name)
                     print(page_name, "posts n", len(posts))
-                    insert_fb_data(page_name, posts, muse_id, db_conn)
+                    insert_fb_data(page_name, posts, muse_id, db_conn, db_engine)
                     return True
 
                 logger.debug("too few posts, increase limit to "+str(limit))
@@ -132,14 +144,15 @@ def create_fb_dump(db_conn):
     print('create_facebook_dump')
 
 
-def insert_fb_data(page_name, fbdata, muse_id, db_con):
+def insert_fb_data(page_name, fbdata, muse_id, db_con, db_engine):
     """ Insert posts from @fbdata list into Facebook dump table """
     assert muse_id
+    
     assert db_con
     if len(fbdata) == 0: 
         return
 
-    cur = db_con.cursor()
+    #cur = db_con.cursor()
     done_ids = []
     for x in fbdata:
         # extract fields
@@ -154,8 +167,11 @@ def insert_fb_data(page_name, fbdata, muse_id, db_con):
         x['time'] = ts.isoformat()
         json_attr = json.dumps(x)
         # insert sql
-        sql = '''INSERT INTO facebook_dump(page_name, post_id, user_id, muse_id, post_ts, facebook_data_json)
-              VALUES(?,?,?,?,?,?);'''
-        cur.execute(sql, [page_name, post_id_str, user_id, muse_id, ts, json_attr])
+        data = {'page_name': [page_name],'post_id':[post_id_str],'user_id':[user_id],'muse_id':[muse_id],'post_ts':[ts],'facebook_data_json':[json_attr]}
+ 
+        # Create the pandas DataFrame
+        fb_df = pd.DataFrame(data, columns = ['page_name', 'post_id','user_id','muse_id','post_ts','facebook_data_json' ])
+        
+        fb_df.to_sql('facebook_messages', db_engine, schema='facebook', index=False, if_exists='append', method='multi')
         done_ids.append(post_id_str)
-    db_con.commit()
+    #db_con.commit()
