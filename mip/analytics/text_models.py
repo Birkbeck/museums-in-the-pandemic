@@ -197,6 +197,7 @@ def spacy_extract_tokens_page(session_id, page_id, nlp, text, db_conn, db_engine
 
 def get_indicator_annotation_tokens(nlp):
     """
+    returns annotation tokens from examples
     """
     print('get_indicator_annotation_tokens')
     indic_df, ann_df = get_indicator_annotations()
@@ -284,45 +285,39 @@ def analyse_museum_text():
     stratdf = pd.read_csv('data/museums/museums_wattributes-2020-02-23.tsv', sep='\t')
     #stratdf = stratdf.filter(['muse_id', 'governance', 'town'], axis=1) ##DEBUG town should be removed
     df = pd.merge(stratdf,df,on='muse_id')
+    
     #df=df.loc[df['governance'] == 'University'] ##DEBUG line should be unhashed to only use university museums
     datadict = {}
     session_id = '20210304'
     attrib_name = 'all_text'
-    startmus=0
-    #with open('data/museums/startmus.pickle', 'wb') as f:
-    #     pickle.dump(startmus, f)
-    #df = df.sample(10) # DEBUG
-    with open('data/museums/startmus.pickle', 'rb') as f:
-        startmus = pickle.load(f)
-    # loop over museums
+    
     i = 0
     for index, row in df.iterrows():
         
         # get main page of a museum
-        if startmus<=i:
+        
             datadict[row['muse_id']] = get_page_id_for_webpage_url(row['url'], row['muse_id'], session_id, attrib_name, db_conn)
             msg = ">>> Processing museum {} of {}".format(i,len(df))
             logger.info(msg)
             print(msg)
+            i += 1
             
             
             
 
-            for muse_id, pages in datadict.items():
-                print('   muse_id and pages:', muse_id, pages)
-                if pages is not None:
-                    #for each museum in sample of 10//debug or for all in reality//filter to uni
-                    #session_id = '20202020' # manual
-                    pages = list(set(pages)) # drop duplicates
-                    for page_id in pages:
-                        for keep_stopwords in [True, False]:
-                            # match indicators with annotations
-                            match_indicators_in_muse_page(muse_id, session_id, page_id, nlp, ann_tokens_df, keep_stopwords, db_conn, db_engine)
-                            #spacy_extract_tokens(session_id, page_id, nlp, input_text, db_conn, db_engine)
-            startmus=startmus+1
-            with open('data/museums/startmus.pickle', 'wb') as f:
-              pickle.dump(startmus, f)
-        i += 1
+    for muse_id, pages in datadict.items():
+        print('   muse_id and pages:', muse_id, pages)
+        if pages is not None:
+            #for each museum in sample of 10//debug or for all in reality//filter to uni
+            #session_id = '20202020' # manual
+            pages = list(set(pages)) # drop duplicates
+            for page_id in pages:
+                for keep_stopwords in [True, False]:
+                    # match indicators with annotations
+                    match_indicators_in_muse_page(muse_id, session_id, page_id, nlp, ann_tokens_df, keep_stopwords, db_conn, db_engine)
+                    #spacy_extract_tokens(session_id, page_id, nlp, input_text, db_conn, db_engine)
+    
+        
 
 
 
@@ -513,7 +508,7 @@ def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, page_toke
         match_df = match_df.merge(sentences_full_txt_df, on='sentence_id')
         assert len(match_df) == n1
     
-    match_df.to_csv('tmp/temp.csv',index=True) # DEBUG
+   
 
     # check overlap score ranges
     assert match_df.ann_overlap_lemma.between(0,1).all(), match_df.ann_overlap_lemma.sort_values()
@@ -576,8 +571,8 @@ def _OLD_match_musetext_vs_indicator_example(txt_df, annot_df):
              'annotation_example_code': [indicator_code],
              'muse_text_sentence_len': len(txt_df), 
              'annotation_example_len': len(annot_df),
-             'muse_text_sentence_full': ' '.join(txt_df.token.tolist()), # DEBUG
-             'muse_ann_sentence_full': ' '.join(annot_df.token.tolist()) # DEBUG
+             'muse_text_sentence_full': ' '.join(txt_df.token.tolist()),
+             'muse_ann_sentence_full': ' '.join(annot_df.token.tolist()) 
              }
     res_d.update(d)
     

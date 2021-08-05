@@ -80,8 +80,9 @@ def scrape_facebook_page(url, muse_id, date_limit, db_conn, db_engine):
             # scrape fb (slow)
             posts = get_posts(page_name, pages=page_limit)
             posts = [p for p in posts]
-            
-            min_date = get_earliest_date(posts)
+            ##TODO Val Aug 2021: somehow need to reconcile the need to detect rejection (blank post) and change vpn with the need to stay
+            ##connected to DB
+            min_date = get_earliest_date(posts) ##TODO Val Aug 2021: when posts returns blank this method fails
             
             if min_date > date_limit:
                 msg = "Too few posts, increasing limit - earliest date="+ str(min_date)

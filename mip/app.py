@@ -116,7 +116,11 @@ def main():
             assert is_postgresql_db_accessible()
             #generate_stratified_museum_sample()
             #generate_stratified_museum_urls()
-            analyse_museum_text()
+            analyse_museum_text() ##TODO Val Aug 2021: now that the code has been debugged and all 400 museums in Db there needs
+                                    ## to be another check to ensure data in the DB is consistent
+            ##TODO Val Aug 2021: In the text_indic_ann_matches table we still get a lot of examples that are 1 word only. Some of those words
+            ## such as 'welcome' seem strange to be an example and certainly do not appear in the annotations document
+            ##TODO the pseudocode for text analytics must be implemented (that we wrote in the log file) in order to run the full analysis
 
         if cmd == "compare_sample":
             print("compare_sample")

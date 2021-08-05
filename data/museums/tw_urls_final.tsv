@@ -1,0 +1,3345 @@
+museum_id	url	source
+mm.hha.192	twitter.com/glenarmcastle	Both
+mm.domus.WA035	twitter.com/the_waterfront	ML
+mm.domus.NE053	['twitter.com/dumuseums', 'twitter.com/arcdurham']	Scrape
+mm.domus.NE057	twitter.com/gnm_hancock	Both
+mm.ace.1198	twitter.com/thelightbox	Both
+mm.musa.053	twitter.com/bodmingeneral	Both
+mm.domus.SE274	['twitter.com/freudmuslondon']	Scrape
+mm.aim.0545	no_resource	no_resource
+mm.ace.1244	no_resource	no_resource
+mm.domus.SC268	no_resource	no_resource
+mm.musa.212	no_resource	no_resource
+mm.aim.0112	twitter.com/bd1policemuseum	Both
+mm.wiki.424	['twitter.com/harleyabingdon']	Scrape
+mm.hha.039	no_resource	no_resource
+mm.musa.255	no_resource	no_resource
+mm.domus.SW152	twitter.com/brauntonparish	ML
+mm.ace.1152	no_resource	no_resource
+mm.domus.YH029	twitter.com/jorvikviking	Both
+mm.domus.SE042	['twitter.com/inkingstonuk', 'twitter.com/rbkheritage']	Scrape
+mm.hha.065	no_resource	no_resource
+mm.misc.225	twitter.com/crichton_royal	ML
+mm.domus.NW163	no_resource	no_resource
+mm.domus.SC062	['twitter.com/argyllandbute']	Scrape
+mm.domus.WM033	no_resource	no_resource
+mm.domus.WM106	no_resource	no_resource
+mm.domus.WM125	no_resource	no_resource
+mm.domus.SW128	twitter.com/salisburymuseum	Both
+mm.domus.NW157	twitter.com/crhs	ML
+mm.domus.WM144	no_resource	no_resource
+mm.domus.SW072	twitter.com/rj_museum	ML
+mm.misc.220	no_resource	no_resource
+mm.mgs.415	no_resource	no_resource
+mm.aim82M.061	no_resource	no_resource
+mm.wiki.169	twitter.com/royalmewslondon	ML
+mm.domus.WM017	['twitter.com/oisinthedeer']	Scrape
+mm.domus.SW189	twitter.com/nothefort	Both
+mm.domus.SE604	no_resource	no_resource
+mm.domus.WM037	['twitter.com/warwickarts']	Scrape
+mm.domus.SC154	no_resource	no_resource
+mm.musa.247	no_resource	no_resource
+mm.wiki.286	no_resource	no_resource
+mm.fcm.204	no_resource	no_resource
+mm.domus.NW031	twitter.com/steammuseum	Both
+mm.wiki.191	no_resource	no_resource
+mm.domus.SC148	no_resource	no_resource
+mm.wiki.283	no_resource	no_resource
+mm.domus.SE105	twitter.com/strangershall	ML
+mm.domus.YH168	twitter.com/bevartgallery	ML
+mm.domus.NE017	['www.twitter.com/ehhadrianswall']	Scrape
+mm.musa.397	twitter.com/zetlandmuseum	ML
+mm.misc.218	twitter.com/bathmedicalmus	Both
+mm.aim.0877	twitter.com/shereuk	ML
+mm.domus.NW073	twitter.com/armittmuseum	ML
+mm.hha.041	['twitter.com/ugbrooke', 'twitter.com/ugbrookepark']	Scrape
+mm.wiki.310	no_resource	no_resource
+mm.domus.SC222	['www.twitter.com/stiruni', 'twitter.com/artatstirling']	Scrape
+mm.domus.SE034	twitter.com/millgreenmuseum	Both
+mm.domus.SC070	no_resource	no_resource
+mm.musa.175	no_resource	no_resource
+mm.domus.NE011	twitter.com/thebowesmuseum	Both
+mm.domus.WM123	['twitter.com/comptonverney', 'twitter.com/comptonverney/status/1273245872801959946?lang=ca']	Scrape
+mm.domus.NE069	['twitter.com/durhamcathedral']	Scrape
+mm.domus.SW074	['twitter.com/swindonstory', 'twitter.com/mechanics_trust', 'twitter.com/swindoncouncil']	Scrape
+mm.domus.SE227	twitter.com/bushey_museum	ML
+mm.domus.SW102	['twitter.com/topshammuseum']	Scrape
+mm.ace.1258	twitter.com/strawbhillhouse	Both
+mm.domus.SE167	twitter.com/ipstransmuseum	ML
+mm.domus.NI015	twitter.com/folkparkomagh	ML
+mm.domus.SC258	['twitter.com/slleisculture']	Scrape
+mm.musa.342	twitter.com/thehillhousents	ML
+mm.musa.354	['twitter.com/tolpuddlefest', 'twitter.com/tolpuddletom']	Scrape
+mm.domus.YH150	no_resource	no_resource
+mm.New.125	no_resource	no_resource
+mm.ace.1145	twitter.com/erasmusdarwin	ML
+mm.domus.WA101	no_resource	no_resource
+mm.hha.122	twitter.com/markenfieldhall	Both
+mm.domus.SW136	twitter.com/museumthornbury	Both
+mm.domus.SE256	twitter.com/dunwichmuseum	ML
+mm.musa.368	twitter.com/waddesdonmanor	Both
+mm.hha.019	twitter.com/kb_house_garden	Both
+mm.domus.WM122	twitter.com/WarwickshireCCC/status/1323957752373350400	ML
+mm.domus.WM024	twitter.com/tamworthcastle	Both
+mm.wiki.026	twitter.com/sicktodeathuk	Both
+mm.domus.SC121	no_resource	no_resource
+mm.domus.SE329	twitter.com/18stafford	ML
+mm.domus.YH002	twitter.com/yorkarmymuseum/status/1254365782257139713	ML
+mm.domus.YH115	no_resource	no_resource
+mm.wiki.211	no_resource	no_resource
+mm.misc.152	no_resource	no_resource
+mm.New.49	no_resource	no_resource
+mm.wiki.399	twitter.com/merchantshseuk	Both
+mm.domus.SC149	['www.twitter.com/thinknature_', 'www.twitter.com/pathsforall', 'twitter.com/hlhsocial', 'www.twitter.com/coopuk', 'twitter.com/invmag']	Scrape
+mm.domus.SE224	twitter.com/burghleyhouse	Both
+mm.domus.SC045	no_resource	no_resource
+mm.domus.SE293	twitter.com/henfieldmuseum	Both
+mm.misc.005	no_resource	no_resource
+mm.wiki.385	twitter.com/andcompo	ML
+mm.wiki.504	['twitter.com/390thmem']	Scrape
+mm.musa.264	['twitter.com/cios_jsy']	Scrape
+mm.hha.127	['twitter.com/sledmerehouse', 'twitter.com/sledmerehouse/status/949565830530027521']	Scrape
+mm.misc.079	['twitter.com/coastalmuseumel', 'twitter.com/coastalmuseum']	Scrape
+mm.misc.056	['twitter.com/etoncollmuseums', 'twitter.com/etoncollections']	Scrape
+mm.domus.WM078	['www.twitter.com/samueljohnsonbm', 'twitter.com/samueljohnsonbm']	Scrape
+mm.wiki.209	['twitter.com/redbournvillage']	Scrape
+mm.domus.SE214	no_resource	no_resource
+mm.hha.021	twitter.com/titsey_place	ML
+mm.domus.SW137	['www.twitter.com/tivertonmuseum', 'twitter.com/tivertonmuseum']	Scrape
+mm.domus.NI036	['twitter.com/mea_bc', 'twitter.com/larnemuseum']	Scrape
+mm.musa.273	no_resource	no_resource
+mm.domus.SE033	twitter.com/ltmuseum	Both
+mm.domus.EM098	twitter.com/prclt6233	Both
+mm.domus.NE071	['twitter.com/ntlindisfarne']	Scrape
+mm.New.77	no_resource	no_resource
+mm.domus.YH005	twitter.com/abbeyhouseleeds	ML
+mm.domus.NE006	twitter.com/berwick_museum	Both
+mm.fcm.139	twitter.com/khsnb	ML
+mm.MDN.017	twitter.com/real_barge	ML
+mm.ace.1162	twitter.com/museumsheffield	ML
+mm.domus.SE059	twitter.com/modamuseum	Both
+mm.mald.154	['twitter.com/unisouthwales', 'twitter.com/pontymuseum']	Scrape
+mm.domus.SC265	['twitter.com/nacheritage']	Scrape
+mm.musa.092	no_resource	no_resource
+mm.ace.1257	twitter.com/kirkstallabbey	ML
+mm.domus.YH084	['twitter.com/smtrust']	Scrape
+mm.aim.1196	twitter.com/alfredmunnings	Both
+mm.ace.036	['www.twitter.com/wimsoc', 'twitter.com/wimbledonmuseum']	Scrape
+mm.aim.0117	no_resource	no_resource
+mm.domus.EM045	no_resource	no_resource
+mm.domus.NW177	no_resource	no_resource
+mm.fcm.120	twitter.com/aviation_museum	ML
+mm.domus.SC190	no_resource	no_resource
+mm.domus.SE090	twitter.com/powellcotton	Both
+mm.domus.SE544	twitter.com/oxburghhallnt	Both
+mm.domus.WM071	twitter.com/kingtonmuseum	ML
+mm.wiki.239	['twitter.com/1briefencounter']	Scrape
+mm.domus.SW139	twitter.com/torreabbey	Both
+mm.hha.029	['twitter.com/caerhaysgardens', 'twitter.com/caerhaysgardens/status/1101053114050928640']	Scrape
+mm.domus.NW165	['twitter.com/ruskin_lu', 'www.twitter.com/lancastermuseum', 'www.twitter.com/lancsmuseums', 'www.twitter.com/lancasterarts', 'www.twitter.com/elliecbarrett', 'www.twitter.com/ruskin_lu', 'www.twitter.com/lancasteruni']	Scrape
+mm.mgs.285	['twitter.com/robertburnsnts']	Scrape
+mm.ace.1209	no_resource	no_resource
+mm.domus.SW054	twitter.com/ilfmuseum	ML
+mm.musa.090	no_resource	no_resource
+mm.musa.201	twitter.com/lilliputmuseum	ML
+mm.hha.062	twitter.com/hestercombegdns	ML
+mm.domus.NW088	twitter.com/keswickmuseum	Both
+mm.MDN.022	twitter.com/ulsterrugby/status/1053286083742568449	ML
+mm.hha.131	twitter.com/arleyhall	Both
+mm.domus.SE556	['twitter.com/nymansnt']	Scrape
+mm.hha.075	no_resource	no_resource
+mm.wiki.088	no_resource	no_resource
+mm.domus.WA040	no_resource	no_resource
+mm.domus.WA015	twitter.com/denbighlibrary	ML
+mm.musa.298	twitter.com/sallylunns	Both
+mm.hha.008	twitter.com/avingtonpark	Both
+mm.wiki.027	twitter.com/ctshipwreck	Both
+mm.domus.SE321	no_resource	no_resource
+mm.wiki.407	no_resource	no_resource
+mm.domus.SW094	no_resource	no_resource
+mm.domus.SC239	['twitter.com/themoraycouncil', 'twitter.com/TomintoulDisco']	Scrape
+mm.wiki.281	['twitter.com/bartonhouserail', 'twitter.com/BartonHouseRail/status/911576067906916353']	Scrape
+mm.misc.157	twitter.com/stceciliashall	ML
+mm.wiki.150	twitter.com/bofbbunker	Both
+mm.mgs.295	no_resource	no_resource
+mm.wiki.472	twitter.com/edinburghcastle	Both
+mm.domus.SW215	twitter.com/lacocknt	ML
+mm.New.66	['www.twitter.com/bonessrailway', 'twitter.com/bonessrailway']	Scrape
+mm.musa.343	['twitter.com/hopfarm']	Scrape
+mm.misc.068	twitter.com/truecrimemuseum	Both
+mm.domus.SW116	no_resource	no_resource
+mm.domus.SE488	['www.twitter.com/londonbusmuseum', 'twitter.com/londonbusmuseum']	Scrape
+mm.aim.0790	['www.twitter.com/rayleighmuseum', 'twitter.com/rayleighmuseum']	Scrape
+mm.wiki.439	twitter.com/homefrontmuseum	Both
+mm.domus.SC125	twitter.com/hospitalfield	Both
+mm.ace.1275	['twitter.com/sg_soc', 'twitter.com/sg_soc']	Scrape
+mm.domus.SW120	twitter.com/trowmuseum	Both
+mm.domus.NE042	['twitter.com/nelsammuseum', 'twitter.com/nelsam_museum']	Scrape
+mm.domus.SW038	['twitter.com/totnes fashion museum']	Scrape
+mm.ace.1286	no_resource	no_resource
+mm.domus.SC199	twitter.com/thirlestanebuzz	Both
+mm.aim.0044	twitter.com/avrbitton	Both
+mm.aim.1042	twitter.com/eastridingarch	ML
+mm.mald.110	['twitter.com/visitpembs']	Scrape
+mm.domus.WA065	['//twitter.com/aberuni']	Scrape
+mm.wiki.416	no_resource	no_resource
+mm.wiki.135	no_resource	no_resource
+mm.domus.SE494	no_resource	no_resource
+mm.domus.SW219	['twitter.com/montacutent']	Scrape
+mm.wiki.126	no_resource	no_resource
+mm.domus.NW183	['twitter.com/lancsmuseums']	Scrape
+mm.domus.YH004	no_resource	no_resource
+mm.domus.SE528	twitter.com/batemansnt	Both
+mm.domus.WA077	twitter.com/ntpenrhyncastle	Both
+mm.fcm.254	no_resource	no_resource
+mm.domus.SC100	twitter.com/bdcmuseum	ML
+mm.domus.SE212	no_resource	no_resource
+mm.wiki.503	['twitter.com/merriamwebster', 'twitter.com/bygones_torquay']	Scrape
+mm.domus.WM135	twitter.com/ntwightwick	Both
+mm.ace.1261	['twitter.com/#!/seacitymuseum', 'twitter.com/#!/seacitymuseum', 'twitter.com/seacitymuseum']	Scrape
+mm.domus.WA066	['twitter.com/aberceramics']	Scrape
+mm.ace.1183	twitter.com/staircasehouse	ML
+mm.domus.SC289	no_resource	no_resource
+mm.musa.215	twitter.com/mangappsrly	ML
+mm.aim.0858	twitter.com/secretbunker	Both
+mm.hha.169	['twitter.com/blair_castle']	Scrape
+mm.domus.NW074	twitter.com/towneleyhall	Both
+mm.domus.SC250	twitter.com/islaymuseum	ML
+mm.musa.015	no_resource	no_resource
+mm.domus.WA082	twitter.com/rwfmuseum	ML
+mm.domus.SW227	['twitter.com/geevormuseum']	Scrape
+mm.ace.1168	twitter.com/thenmmc	Both
+mm.ace.1137	['twitter.com/hertsmerebc']	Scrape
+mm.domus.WM068	twitter.com/sarehole_mill	Both
+mm.domus.SW156	twitter.com/sidmouthmuseum	ML
+mm.domus.SE591	twitter.com/eatransportmus	Both
+mm.domus.SE002	twitter.com/museumealife	Both
+mm.hha.010	no_resource	no_resource
+mm.aim.0754	twitter.com/pollockstrust	ML
+mm.domus.SE444	twitter.com/npglondon	Both
+mm.hha.186	no_resource	no_resource
+mm.domus.SW216	['twitter.com/twitter.com/#!/wiltsrangersnt']	Scrape
+mm.domus.SE230	['twitter.com/portscitymuseum']	Scrape
+mm.domus.NE046	no_resource	no_resource
+mm.hha.016	['twitter.com/ardingtonhouse']	Scrape
+mm.domus.SC097	['twitter.com/ealeisure']	Scrape
+mm.domus.NW027	twitter.com/quarrybanknt	Both
+mm.domus.YH046	twitter.com/burtonconstable	Both
+mm.wiki.428	twitter.com/moelfrelifeboat	ML
+mm.domus.SW205	twitter.com/armychaplainmus	ML
+mm.ace.1227	twitter.com/whitbyabbey	Both
+mm.domus.NW099	twitter.com/tateliverpool	ML
+mm.ace.1094	twitter.com/smithyheritage	ML
+mm.aim.1346	['twitter.com/visitportsmouth', 'twitter.com/wwi_remembrance']	Scrape
+mm.aim.0049	twitter.com/aylshamheritage	Both
+mm.aim.1047	twitter.com/dinglesfhc	ML
+mm.aim.0900	['twitter.com/#!/solwayaviationm', 'twitter.com/solwayaviation/status/1256106863336271872']	Scrape
+mm.mgs.314	twitter.com/womenslibrary	Both
+mm.domus.SE606	['twitter.com/spitfiremuseum']	Scrape
+mm.domus.SW061	no_resource	no_resource
+mm.domus.NE032	twitter.com/sundmuseum	Both
+mm.domus.NW061	['twitter.com/heatonparktram']	Scrape
+mm.domus.SC008	twitter.com/search?q=%23brownsbank	ML
+mm.domus.WM104	twitter.com/staffordcastleg	ML
+mm.aim.1071	no_resource	no_resource
+mm.domus.NW192	twitter.com/smbc_museums	Both
+mm.domus.EM106	twitter.com/buxtonmuseum	Both
+mm.domus.SE081	['twitter.com/beaulieu_hants']	Scrape
+mm.domus.YH049	twitter.com/dalesmuseum	Both
+mm.domus.SW214	twitter.com/ntkingstonlacy	Both
+mm.fcm.190	twitter.com/museumnorfolk	ML
+mm.domus.SE205	twitter.com/brooklandsmuseu	Both
+mm.wiki.168	no_resource	no_resource
+mm.domus.SE191	['www.twitter.com/hallplacebexley', 'twitter.com/rafmuseum/status/1025675258358059010']	Scrape
+mm.domus.SC191	no_resource	no_resource
+mm.domus.WA071	['twitter.com/swpolice']	Scrape
+mm.wiki.085	twitter.com/mortehoemuseum	Both
+mm.hha.184	twitter.com/stradeycastle	ML
+mm.domus.NW180	twitter.com/tatton_park	Both
+mm.domus.SC201	['twitter.com/total_giving']	Scrape
+mm.domus.SE506	twitter.com/estorick	Both
+mm.domus.SC308	twitter.com/museumwhitburn	ML
+mm.musa.353	['twitter.com/cornwall_gold']	Scrape
+mm.hha.132	twitter.com/capesthornehall	Both
+mm.domus.NW060	twitter.com/nwmuseum	Both
+mm.domus.SE480	['twitter.com/wandle_wim']	Scrape
+mm.domus.SW159	['twitter.com/lyntonmuseum', 'twitter.com/lyntonmuseum/status/317296661049245696']	Scrape
+mm.domus.SW027	twitter.com/wcookworthy	Both
+mm.domus.SE350	twitter.com/rnsubmuseum	ML
+mm.aim82NM.022	['twitter.com/british_airways']	Scrape
+mm.aim82M.064	twitter.com/showcaves	ML
+mm.domus.SE043	twitter.com/leightonhouse_	ML
+mm.mald.086	no_resource	no_resource
+mm.New.20	['twitter.com/vagina_museum']	Scrape
+mm.domus.NW140	twitter.com/senhousemuseum	Both
+mm.domus.YH097	twitter.com/ncmme	Both
+mm.ace.1234	no_resource	no_resource
+mm.aim.0521	twitter.com/knutsheritcent1	Both
+mm.aim.0147	no_resource	no_resource
+mm.domus.SE016	['twitter.com/#!/dickensmuseum', 'twitter.com/dickensmuseum']	Scrape
+mm.wiki.483	['twitter.com/pa_publishinguk']	Scrape
+mm.wiki.144	twitter.com/berksmedmuseum	ML
+mm.domus.SW028	['twitter.com/thenmmc']	Scrape
+mm.domus.WA034	twitter.com/glynnvivian	Both
+mm.wiki.476	twitter.com/broraheritage	ML
+mm.domus.SW064	twitter.com/glastonburyabbe	Both
+mm.domus.SW112	no_resource	no_resource
+mm.domus.SC028	['twitter.com/banchoryfan', 'twitter.com/AbMuseums/status/887260584898637824']	Scrape
+mm.domus.SE353	twitter.com/surreyheathmuse	Both
+mm.domus.SE524	twitter.com/2willowroadnt	ML
+mm.domus.NW044	no_resource	no_resource
+mm.domus.SC033	no_resource	no_resource
+mm.domus.SE257	['www.twitter.com/dovermuseum', 'twitter.com/dovermuseum']	Scrape
+mm.domus.SW002	no_resource	no_resource
+mm.wiki.007	no_resource	no_resource
+mm.ace.1134	twitter.com/cartoonmuseumuk	Both
+mm.ace.1103	twitter.com/belpermill	Both
+mm.aim.0218	twitter.com/colnevalleyrail	Both
+mm.domus.WM066	twitter.com/blakesley_hall	Both
+mm.domus.WA092	twitter.com/chirkcastlent	ML
+mm.New.122	no_resource	no_resource
+mm.wiki.249	twitter.com/gasmuseum	ML
+mm.mald.135	twitter.com/ruthingaol	ML
+mm.musa.323	twitter.com/museumofglos	ML
+mm.domus.WA073	twitter.com/newtownm	ML
+mm.domus.SW239	no_resource	no_resource
+mm.domus.WA033	twitter.com/swanseamuseum	Both
+mm.domus.WM117	no_resource	no_resource
+mm.domus.SE272	['twitter.com/farnhammaltings', 'twitter.com/museum_farnham']	Scrape
+mm.aim.0596	['twitter.com/mcc_members']	Scrape
+mm.hha.030	twitter.com/pencarrowhouse	Both
+mm.ace.1236	['twitter.com/moirafurnace']	Scrape
+mm.New.26	no_resource	no_resource
+mm.domus.SE499	twitter.com/1066battleabbey	Both
+mm.domus.WA072	twitter.com/llandudnomuseum	Both
+mm.New.54	twitter.com/nvmuk	Both
+mm.domus.SC086	no_resource	no_resource
+mm.domus.SW188	twitter.com/beaminstermuseu	Both
+mm.domus.NW156	no_resource	no_resource
+mm.domus.NW016	no_resource	no_resource
+mm.ace.1085	twitter.com/nt_brockhampton	Both
+mm.domus.SE050	twitter.com/museumrichmond	Both
+mm.domus.YH008	twitter.com/leedsartgallery	Both
+mm.wiki.194	twitter.com/thehurstcastle	Both
+mm.domus.WA019	no_resource	no_resource
+mm.wiki.451	no_resource	no_resource
+mm.domus.SE534	twitter.com/owlettsnt	ML
+mm.domus.NE014	['twitter.com/newhamgrange']	Scrape
+mm.aim.1206	twitter.com/swanrailway	Both
+mm.domus.SE253	twitter.com/chatterismus	ML
+mm.misc.134	['twitter.com/warhorsevalley']	Scrape
+mm.domus.EM105	['twitter.com/guildhallschool']	Scrape
+mm.domus.SE165	twitter.com/rhampsm	ML
+mm.domus.SE400	no_resource	no_resource
+mm.musa.272	no_resource	no_resource
+mm.musa.276	twitter.com/orieldavies	Both
+mm.domus.SE514	twitter.com/hughendennt	Both
+mm.ace.1242	twitter.com/whshc	ML
+mm.musa.258	['twitter.com/newlanarkhotel', 'twitter.com/newlanarkwhs']	Scrape
+mm.musa.345	no_resource	no_resource
+mm.wiki.323	no_resource	no_resource
+mm.aim.0378	twitter.com/glenside_museum	Both
+mm.mgs.284	['twitter.com/dalgarvenmill']	Scrape
+mm.hha.188	['twitter.com/hbdplaces']	Scrape
+mm.aim.0014	['twitter.com/allhallowstower']	Scrape
+mm.wiki.230	['twitter.com/karuorg']	Scrape
+mm.ace.1122	no_resource	no_resource
+mm.domus.NW169	twitter.com/dunhammasseynt	Both
+mm.domus.WM052	['twitter.com/midairmuseum']	Scrape
+mm.domus.SW048	['twitter.com/dartmoorlife', 'twitter.com/dartmoorlife/status/1280796779022254081']	Scrape
+mm.hha.055	no_resource	no_resource
+mm.mgs.364	['twitter.com/museumwick', 'twitter.com/wickheritage']	Scrape
+mm.wiki.373	no_resource	no_resource
+mm.domus.WA018	['twitter.com/ygaer_brecon', 'www.twitter.com/ygaer_brecon', 'twitter.com/peterwakelin1']	Scrape
+mm.aim.1180	twitter.com/gunpowdermills	Both
+mm.domus.SC256	no_resource	no_resource
+mm.aim.1097	['twitter.com/etchescollect']	Scrape
+mm.misc.065	no_resource	no_resource
+mm.domus.SE519	twitter.com/shawscornernt	Both
+mm.mald.055	twitter.com/gowerheritage	ML
+mm.New.53	twitter.com/theriflesmuseum	Both
+mm.domus.SE030	['twitter.com/headstonemanor1']	Scrape
+mm.domus.SW046	no_resource	no_resource
+mm.domus.EM027	twitter.com/collectionusher	Both
+mm.ace.1220	twitter.com/portsunlight	Both
+mm.domus.SC011	twitter.com/johnbuchansoc/status/352759330543636481	ML
+mm.domus.SC253	['twitter.com/cne_siar', 'twitter.com/museumnaneilean/status/949331833166196738']	Scrape
+mm.domus.NW065	['twitter.com/heronmill']	Scrape
+mm.domus.SE261	twitter.com/rmaritimemuseum	ML
+mm.wiki.147	no_resource	no_resource
+mm.domus.SW134	twitter.com/museuminthepark	Both
+mm.aim.0478	twitter.com/iommotormuseum?lang=no	ML
+mm.wiki.366	twitter.com/stratfordarmour	ML
+mm.musa.278	twitter.com/peakrail1/status/799676323320852480	ML
+mm.ace.1222	twitter.com/kewpalace	ML
+mm.domus.SE150	['twitter.com/ukarmylogistics', 'twitter.com/toweroflondon']	Scrape
+mm.domus.SW017	twitter.com/thecastlebude	ML
+mm.wiki.248	['twitter.com/gcrgreat']	Scrape
+mm.New.91	no_resource	no_resource
+mm.misc.227	no_resource	no_resource
+mm.musa.045	no_resource	no_resource
+mm.domus.EM024	twitter.com/timekeepingmus	Both
+mm.ace.1157	no_resource	no_resource
+mm.MDN.018	['www.twitter.com/hmscaroline', 'twitter.com/hmscaroline']	Scrape
+mm.domus.NE037	twitter.com/fordandetal	ML
+mm.domus.WM089	['twitter.com/royalacademy']	Scrape
+mm.domus.YH123	['twitter.com/mywakefield', 'twitter.com/pontecastle']	Scrape
+mm.domus.SE117	['twitter.com/museumuffington']	Scrape
+mm.domus.NE056	['twitter.com/hattongallery', 'twitter.com/HattonGallery/status/1265221026767609856']	Scrape
+mm.domus.SE003	twitter.com/armyflying	Both
+mm.domus.SE518	twitter.com/basildonparknt	Both
+mm.aim.1142	no_resource	no_resource
+mm.domus.WM020	twitter.com/rugbygallery	ML
+mm.domus.NW025	no_resource	no_resource
+mm.fcm.098	twitter.com/sheringhmmuseum	ML
+mm.wiki.141	twitter.com/berkeleycastle	Both
+mm.domus.WM058	twitter.com/the_herbert	Both
+mm.aim.0081	twitter.com/bentley_priory	Both
+mm.domus.SE184	no_resource	no_resource
+mm.domus.SW005	twitter.com/bathpostmuseum	ML
+mm.domus.SC043	twitter.com/brodicknts	ML
+mm.domus.SE501	twitter.com/ehwalmercastle	Both
+mm.domus.SE601	twitter.com/brunelmuseum	Both
+mm.domus.SC178	twitter.com/hmuseum	Both
+mm.domus.SC112	no_resource	no_resource
+mm.domus.SE005	twitter.com/benurigallery	Both
+mm.New.63	twitter.com/crc_eduni	Both
+mm.domus.SE376	['twitter.com/plantsci']	Scrape
+mm.wiki.080	no_resource	no_resource
+mm.hha.028	twitter.com/stanstedpark	Both
+mm.aim.0588	twitter.com/marlowmuseum	ML
+mm.New.100	['twitter.com/f_w_records']	Scrape
+mm.domus.SC315	no_resource	no_resource
+mm.fcm.191	['www.twitter.com/twitter.com/norfolktanks', 'twitter.com/norfolktanks']	Scrape
+mm.domus.SW171	no_resource	no_resource
+mm.domus.NW082	no_resource	no_resource
+mm.domus.SE245	twitter.com/museumcromwell	Both
+mm.musa.285	no_resource	no_resource
+mm.aim.0159	twitter.com/caedaitrust	ML
+mm.domus.WA024	no_resource	no_resource
+mm.domus.SE219	no_resource	no_resource
+mm.misc.257	no_resource	no_resource
+mm.domus.YH104	['twitter.com/captaincooksm']	Scrape
+mm.musa.344	['www.twitter.com/scottishfield', 'twitter.com/thewallacemon']	Scrape
+mm.wiki.055	['twitter.com/_thehub_uk']	Scrape
+mm.domus.WM031	['/gp/redirect.html/ref=cm_sw_cl_tw_dp_3mk4k36rf88hwjjndcqp']	Scrape
+mm.ace.1086	twitter.com/ntbaddesley	Both
+mm.musa.151	no_resource	no_resource
+mm.ace.1151	twitter.com/museumofpower	Both
+mm.domus.SE173	twitter.com/ashwellmuseum	ML
+mm.aim.0042	['twitter.com/bbcwiltshire', '//twitter.com/atwellwilson', 'twitter.com/atwellwilson']	Scrape
+mm.ace.1235	twitter.com/bradingvilla	ML
+mm.domus.SC320	no_resource	no_resource
+mm.domus.SE380	twitter.com/whipplemuseum	Both
+mm.domus.YH089	twitter.com/richmondmuseum	Both
+mm.New.152	twitter.com/cromermuseum	ML
+mm.domus.SC235	twitter.com/millsobs	Both
+mm.musa.235	no_resource	no_resource
+mm.domus.SE304	twitter.com/ipswichmuseums	Both
+mm.domus.SC269	twitter.com/taigh_c	Both
+mm.ace.1147	twitter.com/kiplin_hall	Both
+mm.wiki.498	twitter.com/dundonaldcastle	ML
+mm.hha.087	twitter.com/melbournehalluk	ML
+mm.domus.SE364	twitter.com/stalbansmuseums	Both
+mm.hha.145	twitter.com/leighton_hall	Both
+mm.domus.SC287	twitter.com/kilmartinmuseum	ML
+mm.domus.WA030	['www.twitter.com/cynonvalleymus', 'twitter.com/cynonvalleymus']	Scrape
+mm.musa.373	['twitter.com/explorewellcome']	Scrape
+mm.domus.NI037	no_resource	no_resource
+mm.ace.1277	no_resource	no_resource
+mm.wiki.077	twitter.com/dartmouthbrnc	ML
+mm.domus.NW184	no_resource	no_resource
+mm.aim.0141	['twitter.com/redhousent']	Scrape
+mm.domus.EM005	['twitter.com/jeyeseb']	Scrape
+mm.domus.NW120	twitter.com/ruskin_the	Both
+mm.mgs.377	no_resource	no_resource
+mm.domus.SE470	['www.twitter.com/maidstonemuseum', 'twitter.com/MaidstoneMuseum/status/1114078188639064065']	Scrape
+mm.domus.WA053	twitter.com/newportmuseum	ML
+mm.aim.0791	no_resource	no_resource
+mm.domus.SW125	twitter.com/sherbornemuseum	ML
+mm.mald.124	['www.twitter.com/ntpowiscastle']	Scrape
+mm.New.37	twitter.com/wycombemuseum	ML
+mm.misc.137	no_resource	no_resource
+mm.aim.1004	no_resource	no_resource
+mm.aim.0671	twitter.com/witchmuseum	Both
+mm.domus.SE377	twitter.com/kettlesyard	Both
+mm.aim.0628	no_resource	no_resource
+mm.domus.SW217	no_resource	no_resource
+mm.domus.WM055	['twitter.com/droit_heritage']	Scrape
+mm.domus.SW004	twitter.com/beckfordstower	Both
+mm.mald.058	twitter.com/wirelessinwales	ML
+mm.ace.713	twitter.com/marriottmuseum	ML
+mm.domus.NW103	twitter.com/merseymaritime	ML
+mm.domus.SE248	no_resource	no_resource
+mm.domus.YH143	no_resource	no_resource
+mm.hha.125	twitter.com/ripleycastle	Both
+mm.mgs.368	['twitter.com/gorgeouscottage']	Scrape
+mm.domus.SE176	twitter.com/Alderney_Museum	ML
+mm.domus.EM044	no_resource	no_resource
+mm.domus.SE521	twitter.com/ntfentonhouse	Both
+mm.mald.020	no_resource	no_resource
+mm.domus.SE568	twitter.com/rcmmuseum	ML
+mm.misc.122	['twitter.com/rescuewoodboats', 'twitter.com/rescuewoodboats/status/1129336040144216064']	Scrape
+mm.domus.SW070	twitter.com/museumandart	Both
+mm.domus.EM073	['twitter.com/1620shouse']	Scrape
+mm.musa.160	no_resource	no_resource
+mm.domus.SC025	twitter.com/tolboothmuseum	ML
+mm.domus.SE073	twitter.com/britishmuseum	Both
+mm.ace.1176	twitter.com/toweroflondon	Both
+mm.domus.SE481	twitter.com/newhavenmuseum	ML
+mm.mgs.333	twitter.com/abdnspaceport	ML
+mm.domus.SW212	twitter.com/chalfieldgarden	Both
+mm.domus.NW109	twitter.com/boltonlms	ML
+mm.domus.SE442	['twitter.com/earailwaymuseum', 'twitter.com/earailwaymuseum/status/1137056627939373056']	Scrape
+mm.domus.WA007	['twitter.com/visitanglesey']	Scrape
+mm.aim.0052	['twitter.com/captainbeany']	Scrape
+mm.wiki.484	no_resource	no_resource
+mm.domus.SE252	twitter.com/cranbrookartmus	Both
+mm.aim.1153	twitter.com/bishops_palace	Both
+mm.musa.257	twitter.com/HallWoods666	ML
+mm.mgs.307	twitter.com/lighthousemus	Both
+mm.mgs.294	twitter.com/MaudMuseum	ML
+mm.domus.NI032	no_resource	no_resource
+mm.domus.NW046	twitter.com/lancastermuseum	Both
+mm.domus.SE445	twitter.com/museummethodism	Both
+mm.musa.195	no_resource	no_resource
+mm.domus.EM004	['twitter.com/ashbytcouncil', 'twitter.com/ashby_museum']	Scrape
+mm.domus.SE307	twitter.com/brightonmuseums	ML
+mm.domus.SE154	no_resource	no_resource
+mm.New.97	no_resource	no_resource
+mm.domus.SC307	no_resource	no_resource
+mm.domus.YH137	twitter.com/hull_museums	ML
+mm.domus.YH119	twitter.com/pontecastle	Both
+mm.musa.047	twitter.com/bignorvilla	Both
+mm.New.50	['twitter.com/fermanaghlakes']	Scrape
+mm.misc.251	twitter.com/coleridgemt	ML
+mm.aim.1161	twitter.com/thepostalmuseum	Both
+mm.ace.1163	twitter.com/ashmuseum	ML
+mm.domus.SE142	['twitter.com/pendonmuseum', 'twitter.com/pendonmuseum?lang=fi']	Scrape
+mm.domus.SC072	twitter.com/benniemuseum	ML
+mm.wiki.392	twitter.com/aldbournarchive	ML
+mm.New.12	['twitter.com/archdaily', 'twitter.com/windermerejetty']	Scrape
+mm.misc.062	['twitter.com/thebryanmuseum']	Scrape
+mm.musa.240	no_resource	no_resource
+mm.aim82NM.032	no_resource	no_resource
+mm.misc.158	twitter.com/tudor_world	ML
+mm.mgs.389	twitter.com/gvvtglasgow	Both
+mm.misc.013	twitter.com/dotnec_org	ML
+mm.musa.196	no_resource	no_resource
+mm.domus.WM098	twitter.com/rrfmuseumwarks	ML
+mm.domus.YH037	no_resource	no_resource
+mm.domus.WA038	twitter.com/hhmaritime	Both
+mm.wiki.419	no_resource	no_resource
+mm.hha.069	twitter.com/woburn_abbey	ML
+mm.domus.SE182	twitter.com/valeanddownland	ML
+mm.New.13	['twitter.com/museumpalestine']	Scrape
+mm.wiki.409	no_resource	no_resource
+mm.ace.1126	twitter.com/nfheritage	Both
+mm.domus.SE079	['twitter.com/kent_cc']	Scrape
+mm.wiki.448	['twitter.com/countytimes']	Scrape
+mm.domus.YH116	twitter.com/bankfieldmuseum	Both
+mm.domus.WA042	['www.twitter.com/wrexhammuseums', 'twitter.com/wrexhamcbc', 'twitter.com/wrexhammuseums']	Scrape
+mm.fcm.258	no_resource	no_resource
+mm.aim.0211	no_resource	no_resource
+mm.fcm.270	twitter.com/westrayheritage	ML
+mm.aim82NM.010	['twitter.com/hedonblog']	Scrape
+mm.mgs.394	no_resource	no_resource
+mm.wiki.204	no_resource	no_resource
+mm.domus.SC116	twitter.com/ghmuseum	Both
+mm.aim.0280	twitter.com/dcttrips	Both
+mm.aim.0337	twitter.com/nesmuseum	Both
+mm.domus.YH092	['twitter.com/visiteastyorks', 'twitter.com/wsealighthouse']	Scrape
+mm.New.158	no_resource	no_resource
+mm.domus.SW160	twitter.com/helicollections	Both
+mm.domus.SE102	twitter.com/museumofnorwich	ML
+mm.domus.NE040	['twitter.com/fordandetal']	Scrape
+mm.New.129	no_resource	no_resource
+mm.musa.386	['twitter.com/wincathedral', 'twitter.com/wincathedral/status/983389096583270400']	Scrape
+mm.domus.WA037	twitter.com/uskmuseumwales	ML
+mm.wiki.437	no_resource	no_resource
+mm.mald.068	no_resource	no_resource
+mm.ace.1250	['twitter.com/ecfrs', 'twitter.com/lfbredbridge']	Scrape
+mm.wiki.264	['twitter.com/visitnorthlincs']	Scrape
+mm.domus.WA026	twitter.com/cardiff_castle	Both
+mm.ace.1228	no_resource	no_resource
+mm.aim.0188	twitter.com/chathmuseum	ML
+mm.domus.SE352	no_resource	no_resource
+mm.aim.0677	no_resource	no_resource
+mm.domus.SE405	twitter.com/wealddownmuseum	Both
+mm.aim.0781	no_resource	no_resource
+mm.domus.SE515	['twitter.com/ascottestate']	Scrape
+mm.New.102	twitter.com/isokongallery	ML
+mm.domus.SE492	twitter.com/southendmuseums	ML
+mm.domus.SE582	twitter.com/drjohnsonshouse	Both
+mm.aim.1312	twitter.com/whitchurchmill	Both
+mm.domus.SE166	twitter.com/horsepowermus	Both
+mm.domus.YH141	no_resource	no_resource
+mm.domus.NI017	twitter.com/ulstermuseum	ML
+mm.ace.1237	twitter.com/nlamuseum	Both
+mm.ace.1191	['twitter.com/honeywoodmuseum']	Scrape
+mm.New.3	twitter.com/ssnomadic	ML
+mm.domus.EM039	no_resource	no_resource
+mm.wiki.269	no_resource	no_resource
+mm.aim.0058	twitter.com/barconventyork	Both
+mm.aim.0222	['www.twitter.com/combemill1912', 'twitter.com/combepc']	Scrape
+mm.MDN.016	twitter.com/shhomeplace	Both
+mm.aim.1274	twitter.com/utb_museum	ML
+mm.fcm.179	no_resource	no_resource
+mm.ace.1141	twitter.com/brittrolleybus	ML
+mm.domus.SC133	twitter.com/stmungomuseum	Both
+mm.domus.SE048	twitter.com/museumoflondon	Both
+mm.hha.032	no_resource	no_resource
+mm.domus.SC093	['twitter.com/vsitlanarkshire']	Scrape
+mm.domus.SE040	twitter.com/jewishmuseumldn	Both
+mm.domus.SW199	['twitter.com/#!/cotehelent', 'twitter.com/cotehelent']	Scrape
+mm.domus.SE247	no_resource	no_resource
+mm.musa.340	no_resource	no_resource
+mm.misc.219	no_resource	no_resource
+mm.fcm.045	['twitter.com/visitjerseyci']	Scrape
+mm.domus.SE213	['twitter.com/brightonmuseums']	Scrape
+mm.New.60	['twitter.com/kelvinhall_hull', 'twitter.com/kelvinhall16']	Scrape
+mm.domus.NE013	no_resource	no_resource
+mm.musa.069	no_resource	no_resource
+mm.wiki.128	no_resource	no_resource
+mm.domus.WA087	twitter.com/stfagans_museum	ML
+mm.domus.YH014	twitter.com/oakwellhall	ML
+mm.domus.SE404	twitter.com/westbury_manor	Both
+mm.aim.0560	['twitter.com/myldn']	Scrape
+mm.musa.227	no_resource	no_resource
+mm.domus.SC168	['twitter.com/wlhleadmining']	Scrape
+mm.domus.WA076	no_resource	no_resource
+mm.ace.1175	twitter.com/hcrcmary	ML
+mm.domus.NE038	['dev.twitter.com/web/overview/privacy', 'support.twitter.com/articles/20170514']	Scrape
+mm.ace.1114	twitter.com/epworthold	Both
+mm.domus.SE201	['//www.twitter.com/brightlingseamu', 'www.twitter.com/brightlingseamu', 'twitter.com/brightlingseamu']	Scrape
+mm.misc.216	twitter.com/sidneynolantrst	Both
+mm.aim.0951	no_resource	no_resource
+mm.domus.SW080	no_resource	no_resource
+mm.domus.SC052	no_resource	no_resource
+mm.domus.SW127	twitter.com/ssgreatbritain	Both
+mm.aim.1209	twitter.com/thursford	Both
+mm.musa.002	['www.twitter.com/19pst', 'twitter.com/19pst']	Scrape
+mm.domus.SW165	['twitter.com/padstowm']	Scrape
+mm.domus.SE211	twitter.com/brightonmuseums	ML
+mm.domus.SE195	twitter.com/southendmuseums/status/1240254924786528257	ML
+mm.domus.SC225	['twitter.com/heriotwattuni', 'twitter.com/museumwatt']	Scrape
+mm.mgs.304	twitter.com/jm_birthplace	Both
+mm.domus.YH145	twitter.com/railwaymuseum	Both
+mm.domus.SC163	no_resource	no_resource
+mm.domus.NE005	['twitter.com/jarrowhall']	Scrape
+mm.domus.NW168	no_resource	no_resource
+mm.domus.EM013	['twitter.com/shollanddc', 'twitter.com/ayscoughfeehall/status/533631644117520385']	Scrape
+mm.domus.SC063	no_resource	no_resource
+mm.domus.SE181	twitter.com/banburymuseum	Both
+mm.hha.067	twitter.com/moggerhangerpk	ML
+mm.domus.NW021	['//twitter.com/tulliehouse', 'twitter.com/tulliehouse']	Scrape
+mm.hha.097	twitter.com/lamport_hall	Both
+mm.ace.1195	twitter.com/locomotionshd	Both
+mm.domus.SE511	twitter.com/rafmuseum	Both
+mm.domus.SW190	no_resource	no_resource
+mm.domus.NW059	no_resource	no_resource
+mm.aim.1131	['twitter.com/nra_museums']	Scrape
+mm.ace.1112	twitter.com/tbfashionmuseum	ML
+mm.musa.254	twitter.com/needlesbattery	Both
+mm.musa.310	no_resource	no_resource
+mm.wiki.078	twitter.com/brixhambattery	ML
+mm.wiki.417	no_resource	no_resource
+mm.aim.0943	twitter.com/stotfoldmill	Both
+mm.domus.WM011	no_resource	no_resource
+mm.aim.0490	twitter.com/jclarecottage	ML
+mm.domus.SC218	twitter.com/scc_aberdeen/status/916312195969044481	ML
+mm.domus.WA016	twitter.com/bigpitmuseum	ML
+mm.wiki.435	['twitter.com/dylanthomas_100']	Scrape
+mm.domus.SW117	['twitter.com/sanddhs', 'twitter.com/goldhillmuseum']	Scrape
+mm.domus.WA079	twitter.com/nantgarwcw	Both
+mm.domus.SC181	twitter.com/discoverydundee	ML
+mm.misc.109	no_resource	no_resource
+mm.domus.SW041	no_resource	no_resource
+mm.domus.SE277	twitter.com/artgallerysoton	Both
+mm.domus.SE287	no_resource	no_resource
+mm.domus.NE052	twitter.com/durhamcastle	Both
+mm.musa.296	['twitter.com/rugbyschevents', 'twitter.com/rugbyartdept']	Scrape
+mm.hha.083	['twitter.com/somerleytonhall', 'twitter.com/somerleytonhall/status/960460627742482432']	Scrape
+mm.domus.SC158	twitter.com/linlithgowh	Both
+mm.domus.SE113	twitter.com/cromermuseum	ML
+mm.domus.EM003	twitter.com/alfordmanor	Both
+mm.New.79	no_resource	no_resource
+mm.domus.NW081	['twitter.com/#!/lancsinfantry', 'twitter.com/lancsinfantry']	Scrape
+mm.domus.SC247	no_resource	no_resource
+mm.hha.181	twitter.com/duartcastle	Both
+mm.aim.1267	twitter.com/theunderfall	Both
+mm.aim.1186	twitter.com/royalmintmuseum	Both
+mm.domus.SE469	['www.twitter.com/officialoldgaol']	Scrape
+mm.wiki.010	no_resource	no_resource
+mm.wiki.170	['twitter.com/stpaulslondon']	Scrape
+mm.domus.WA069	['twitter.com/narberthmuseum']	Scrape
+mm.domus.YH021	twitter.com/kelhamisland	Both
+mm.wiki.324	no_resource	no_resource
+mm.domus.WM086	twitter.com/bramptonmuseum	ML
+mm.mald.026	twitter.com/thecardiffstory	Both
+mm.domus.NW131	['twitter.com/coopheritage']	Scrape
+mm.domus.SE301	no_resource	no_resource
+mm.New.52	no_resource	no_resource
+mm.aim.0503	no_resource	no_resource
+mm.domus.SE114	no_resource	no_resource
+mm.domus.SE101	twitter.com/norwichcastle	ML
+mm.misc.104	['www.twitter.com/leicsccc', 'twitter.com/leicsccc']	Scrape
+mm.ace.1088	twitter.com/ntgreyfriars	Both
+mm.domus.SW228	no_resource	no_resource
+mm.wiki.494	no_resource	no_resource
+mm.domus.WM113	no_resource	no_resource
+mm.musa.299	['twitter.com/salvarmyarchive', 'twitter.com/salvationarmyuk']	Scrape
+mm.ace.1100	twitter.com/elthampalace	Both
+mm.wiki.133	twitter.com/maeldunecentre	Both
+mm.domus.SC147	no_resource	no_resource
+mm.fcm.107	no_resource	no_resource
+mm.hha.133	['twitter.com/dorfoldhall']	Scrape
+mm.domus.NI029	no_resource	no_resource
+mm.misc.108	['twitter.com/enginuity_org']	Scrape
+mm.domus.SE135	twitter.com/swaffhammuseum	ML
+mm.domus.SE440	no_resource	no_resource
+mm.domus.SC118	twitter.com/gracefieldarts	ML
+mm.ace.1210	['twitter.com/museumthame', 'twitter.com/thamemuseum']	Scrape
+mm.domus.SC114	twitter.com/gleneskretreat	ML
+mm.domus.YH112	twitter.com/shibdenhall	Both
+mm.aim.1263	['www.twitter.com/twyfordwater']	Scrape
+mm.domus.SE305	twitter.com/ipswichmuseums	Both
+mm.domus.SC087	no_resource	no_resource
+mm.New.99	['twitter.com/dentheritage']	Scrape
+mm.wiki.307	['twitter.com/museumrnli', 'twitter.com/whitbymuseum']	Scrape
+mm.ace.1092	twitter.com/charlecotent	Both
+mm.mgs.392	['twitter.com/finlaystonepark']	Scrape
+mm.domus.SW135	twitter.com/tewkesmuseum	ML
+mm.domus.SE399	['www.twitter.com/wimsoc']	Scrape
+mm.musa.229	twitter.com/watercress_line	Both
+mm.fcm.026	no_resource	no_resource
+mm.domus.YH063	['twitter.com/eridinglma']	Scrape
+mm.New.36	twitter.com/museumofcomedy	Both
+mm.domus.SE333	twitter.com/maidstonemuseum	Both
+mm.wiki.201	twitter.com/hellensmusic	ML
+mm.hha.092	twitter.com/grimsthorpec	Both
+mm.domus.SE562	twitter.com/gurkhamuseum	Both
+mm.aim.0606	twitter.com/middleport_pot	Both
+mm.domus.SE560	twitter.com/coggeswitney	ML
+mm.wiki.288	no_resource	no_resource
+mm.wiki.295	twitter.com/78derngate	Both
+mm.domus.NW068	no_resource	no_resource
+mm.domus.SE507	twitter.com/sciencemuseum	Both
+mm.domus.SE449	twitter.com/sainsburycentre	Both
+mm.domus.YH060	twitter.com/harewoodhouse	Both
+mm.MDN.035	['twitter.com/lstmnews', 'twitter.com/cofepow']	Scrape
+mm.wiki.256	no_resource	no_resource
+mm.domus.SE432	no_resource	no_resource
+mm.mgs.361	twitter.com/museumcameron	ML
+mm.aim.1189	twitter.com/scottishcrannog	Both
+mm.domus.SW231	['twitter.com/ntarlington']	Scrape
+mm.wiki.377	no_resource	no_resource
+mm.domus.NW139	twitter.com/whitakermuseum	Both
+mm.domus.SE498	no_resource	no_resource
+mm.New.155	twitter.com/swedenborghouse	Both
+mm.wiki.395	twitter.com/bdacatoldsarum	ML
+mm.domus.SE374	['twitter.com/theamelia_tw']	Scrape
+mm.wiki.094	twitter.com/durhamminers/status/1169180783107616770	ML
+mm.misc.138	twitter.com/pembscastle	Both
+mm.fcm.059	no_resource	no_resource
+mm.misc.105	['twitter.com/yorkshireccc']	Scrape
+mm.domus.NE004	twitter.com/beamish_museum	Both
+mm.domus.SE490	twitter.com/hasfmfishmuseum	ML
+mm.domus.SC276	twitter.com/fiosness	ML
+mm.MDN.008	['twitter.com/goddardspiemash', 'twitter.com/ntgoddards']	Scrape
+mm.hha.187	twitter.com/fonmoncastle	Both
+mm.musa.102	no_resource	no_resource
+mm.aim.0265	twitter.com/discoverdownham	Both
+mm.domus.SC024	twitter.com/abmuseums/status/1093128711140970496	ML
+mm.aim.0107	no_resource	no_resource
+mm.wiki.084	twitter.com/houseofmarbles	ML
+mm.mgs.362	twitter.com/devils_porridge	Both
+mm.domus.WM124	no_resource	no_resource
+mm.domus.SC264	twitter.com/nacheritage	Both
+mm.domus.SC159	no_resource	no_resource
+mm.domus.SE023	twitter.com/brentmusarch	ML
+mm.domus.YH033	twitter.com/baysgarthhouse	Both
+mm.domus.SE462	['www.twitter.com/theryeart', 'twitter.com/ryeartgallery']	Scrape
+mm.domus.SC069	twitter.com/argyllsmuseum	Both
+mm.domus.SC074	twitter.com/burrellcollect	Both
+mm.domus.SW150	['twitter.com/mt_edgcumbe']	Scrape
+mm.aim.0105	twitter.com/bognormuseum	ML
+mm.aim.0054	twitter.com/bamburgh_castle	Both
+mm.domus.WM092	twitter.com/spodeworks	ML
+mm.domus.WA027	twitter.com/rmonrem	ML
+mm.domus.WM121	twitter.com/cambrianchr	ML
+mm.wiki.129	twitter.com/hylandsestate	ML
+mm.domus.SC226	no_resource	no_resource
+mm.wiki.203	no_resource	no_resource
+mm.New.134	no_resource	no_resource
+mm.domus.SE194	no_resource	no_resource
+mm.aim.0941	no_resource	no_resource
+mm.domus.SW236	no_resource	no_resource
+mm.aim.1245	twitter.com/ThreeRiversDC/status/1057958086160408576	ML
+mm.ace.1181	twitter.com/newartgallery	Both
+mm.New.123	no_resource	no_resource
+mm.domus.SC027	twitter.com/whytemuseum	ML
+mm.New.16	no_resource	no_resource
+mm.domus.SE208	no_resource	no_resource
+mm.aim.0219	['twitter.com/kandesrailway']	Scrape
+mm.domus.YH045	twitter.com/worsbrough_mill	ML
+mm.domus.NW191	twitter.com/hatworksmuseum	ML
+mm.domus.SE006	twitter.com/bethlemmuseum	Both
+mm.domus.SC281	twitter.com/somersetmuseum	ML
+mm.wiki.457	twitter.com/braemarscastle	Both
+mm.nimc.007	no_resource	no_resource
+mm.domus.SC068	twitter.com/carnegiemuseum	Both
+mm.musa.356	['twitter.com/alamy']	Scrape
+mm.hha.157	twitter.com/traquairhouse	Both
+mm.domus.SC017	no_resource	no_resource
+mm.domus.WA031	['twitter.com/visitcyfarthfa']	Scrape
+mm.domus.SC038	twitter.com/museumbw	Both
+mm.fcm.027	['twitter.com/bmouthofficial', 'twitter.com/bmthavimuseum']	Scrape
+mm.musa.271	twitter.com/oldbrookpumping	Both
+mm.misc.235	twitter.com/kbtgalleries	Both
+mm.hha.155	twitter.com/manderston_	Both
+mm.domus.YH160	twitter.com/nteastridd	ML
+mm.domus.SW018	twitter.com/falmouthartgall	Both
+mm.domus.SC083	['twitter.com/fctrust']	Scrape
+mm.New.2	no_resource	no_resource
+mm.domus.WA085	twitter.com/museum_cardiff	ML
+mm.domus.SE503	no_resource	no_resource
+mm.ace.1287	twitter.com/cheshammuseum	Both
+mm.domus.NW125	twitter.com/cwacmuseums	Both
+mm.musa.145	twitter.com/gwsr	Both
+mm.musa.352	no_resource	no_resource
+mm.domus.SC288	twitter.com/methilhc	ML
+mm.aim.0583	no_resource	no_resource
+mm.mgs.288	no_resource	no_resource
+mm.domus.SE011	['twitter.com/hadhammuseum', 'twitter.com/hadhammuseum/status/1164493534336094208?lang=bg']	Scrape
+mm.musa.216	twitter.com/manorfarmcp	Both
+mm.domus.SC180	twitter.com/therhfmuseum	ML
+mm.domus.EM097	no_resource	no_resource
+mm.domus.NE078	no_resource	no_resource
+mm.domus.SW208	no_resource	no_resource
+mm.domus.EM016	twitter.com/nottmcastle	Both
+mm.hha.121	twitter.com/castlehowardest	Both
+mm.wiki.153	twitter.com/royalfamily	Both
+mm.aim.1136	twitter.com/nationalbrewery	Both
+mm.musa.390	no_resource	no_resource
+mm.domus.EM017	no_resource	no_resource
+mm.ace.1241	['twitter.com/artskeele', 'www.twitter.com/keeleuniversity']	Scrape
+mm.wiki.364	no_resource	no_resource
+mm.ace.1123	no_resource	no_resource
+mm.wiki.177	['twitter.com/thelasttuesdays']	Scrape
+mm.ace.1098	twitter.com/b_s_museum	Both
+mm.wiki.467	['twitter.com/burns_ellisland']	Scrape
+mm.domus.SE351	twitter.com/natmuseumrn	Both
+mm.ace.1140	twitter.com/imminghammuseum	ML
+mm.domus.SC220	no_resource	no_resource
+mm.domus.YH085	['twitter.com/smtrust']	Scrape
+mm.musa.230	['twitter.com/derbyshirecc']	Scrape
+mm.domus.SW162	twitter.com/museumbatharch	Both
+mm.domus.SW229	no_resource	no_resource
+mm.misc.032	no_resource	no_resource
+mm.hha.024	twitter.com/goodwood_estate	Both
+mm.domus.YH153	twitter.com/brodsworthhall	Both
+mm.wiki.238	twitter.com/brookscollector	ML
+mm.domus.SC217	no_resource	no_resource
+mm.mgs.410	no_resource	no_resource
+mm.ace.1143	no_resource	no_resource
+mm.New.21	['twitter.com/paraheritage']	Scrape
+mm.domus.SE478	twitter.com/ehaudleyend	Both
+mm.aim.0314	twitter.com/emerywalker_org	Both
+mm.mgs.372	no_resource	no_resource
+mm.musa.016	['twitter.com/ual', 'twitter.com/portscitymuseum']	Scrape
+mm.domus.SE067	twitter.com/wabbey	Both
+mm.domus.EM061	twitter.com/wboromuseum	ML
+mm.domus.SE064	twitter.com/museumrar	Both
+mm.domus.SE111	twitter.com/lynn_museum	ML
+mm.misc.076	['twitter.com/arraspaysartois']	Scrape
+mm.aim.0295	no_resource	no_resource
+mm.misc.228	no_resource	no_resource
+mm.domus.SC005	no_resource	no_resource
+mm.hha.193	twitter.com/lissanhouse4	ML
+mm.fcm.235	no_resource	no_resource
+mm.domus.WM127	no_resource	no_resource
+mm.fcm.073	['twitter.com/derwentart', 'twitter.com/pencilmuseum']	Scrape
+mm.aim.1093	['www.twitter.com/nathistships', 'twitter.com/kmay1900']	Scrape
+mm.aim.0074	no_resource	no_resource
+mm.domus.SE412	twitter.com/wycombemuseum	Both
+mm.musa.075	no_resource	no_resource
+mm.wiki.031	no_resource	no_resource
+mm.ace.1298	['twitter.com/sciam', 'twitter.com/no42tap']	Scrape
+mm.ace.390	no_resource	no_resource
+mm.domus.NE020	['twitter.com/thisisdurham', 'twitter.com/durhamheritage']	Scrape
+mm.wiki.289	twitter.com/sandringham1870	Both
+mm.domus.SE346	twitter.com/shipwreckmuseum	Both
+mm.hha.178	no_resource	no_resource
+mm.New.153	twitter.com/Berwick_Museum/status/1189892714004992003	ML
+mm.New.57	twitter.com/norwichmason	ML
+mm.musa.322	twitter.com/thenorrismuseum	ML
+mm.aim.0050	no_resource	no_resource
+mm.ace.1215	['twitter.com/flyaspitfire']	Scrape
+mm.aim.0892	twitter.com/smethwickmuseum	ML
+mm.misc.237	twitter.com/priorybenburb	ML
+mm.MDN.009	no_resource	no_resource
+mm.domus.SE204	['www.twitter.com/bucksmuseum', 'twitter.com/bucksmuseum']	Scrape
+mm.domus.EM064	twitter.com/jewrywall/media	ML
+mm.domus.NW104	twitter.com/sudleyhouse	ML
+mm.domus.SE561	no_resource	no_resource
+mm.hha.101	twitter.com/papplewickhall	ML
+mm.misc.011	no_resource	no_resource
+mm.domus.SE447	twitter.com/hcavmuseum	Both
+mm.mald.132	no_resource	no_resource
+mm.mgs.278	no_resource	no_resource
+mm.aim.1304	twitter.com/wkmuseum	Both
+mm.domus.YH113	twitter.com/caldindusmuseum	Both
+mm.domus.SE209	['www.twitter.com/epsomewellbc', 'twitter.com/bournehallewell']	Scrape
+mm.mald.052	twitter.com/barrywarmuseum	ML
+mm.aim.1289	twitter.com/pumphousemuseum	ML
+mm.domus.SC266	no_resource	no_resource
+mm.New.121	no_resource	no_resource
+mm.fcm.239	['twitter.com/norfolkbroads']	Scrape
+mm.aim.0568	twitter.com/lymmheritage	Both
+mm.domus.NW164	['twitter.com/phmmcr']	Scrape
+mm.domus.WM119	twitter.com/norton_museum	ML
+mm.domus.SE084	twitter.com/wberksmuseum	Both
+mm.domus.NW057	['twitter.com/hyndburncouncil', 'twitter.com/haworthacc']	Scrape
+mm.wiki.350	twitter.com/rctam94th	ML
+mm.domus.SC236	twitter.com/falconermuseum	Both
+mm.domus.NW014	twitter.com/atkinsonthe	Both
+mm.domus.SE360	twitter.com/stainedglassmus	ML
+mm.ace.1255	twitter.com/uosarts	Both
+mm.aim.0983	twitter.com/cromfordmills	Both
+mm.aim82M.028	['twitter.com/jmn1news', 'twitter.com/biker_nigel', 'twitter.com/goodwoodrrc', 'twitter.com/murraysmotoiom']	Scrape
+mm.musa.326	no_resource	no_resource
+mm.domus.SW183	['www.twitter.com/love_marazion']	Scrape
+mm.wiki.232	twitter.com/rosecottageofc	Both
+mm.domus.SE585	twitter.com/wrugbymuseum	Both
+mm.fcm.148	twitter.com/ldnfilmmuseum	ML
+mm.ace.1142	no_resource	no_resource
+mm.hha.118	twitter.com/bolton__castle	Both
+mm.ace.1285	no_resource	no_resource
+mm.wiki.187	['twitter.com/eastlancsrly', 'twitter.com/burytransmuseum']	Scrape
+mm.New.161	no_resource	no_resource
+mm.New.119	twitter.com/rumblemuseum	ML
+mm.aim.1326	no_resource	no_resource
+mm.domus.SE424	no_resource	no_resource
+mm.wiki.327	no_resource	no_resource
+mm.domus.SE130	no_resource	no_resource
+mm.ace.1192	twitter.com/honeywoodmuseum	ML
+mm.domus.SE143	twitter.com/pallantgallery	Both
+mm.musa.243	['twitter.com/pitmeddengarden']	Scrape
+mm.domus.EM109	twitter.com/hinckleymuseum	ML
+mm.domus.NW005	no_resource	no_resource
+mm.misc.042	no_resource	no_resource
+mm.domus.WA046	['twitter.com/llanyrafonmanor', 'twitter.com/llanymanor']	Scrape
+mm.mald.014	['twitter.com/visitblaenavon', 'twitter.com/blaenavonmuseum/status/538327961217560577']	Scrape
+mm.wiki.371	no_resource	no_resource
+mm.domus.SW155	twitter.com/Nature_in_Art	ML
+mm.domus.WM057	twitter.com/ntthefirs	Both
+mm.wiki.213	twitter.com/kylieaferguson	ML
+mm.domus.NW160	twitter.com/millommuseum	Both
+mm.domus.SE298	twitter.com/hastings_museum	Both
+mm.aim.0234	twitter.com/motoringmuseum	Both
+mm.musa.293	['twitter.com/rmasandhurst']	Scrape
+mm.misc.103	no_resource	no_resource
+mm.domus.SE310	no_resource	no_resource
+mm.domus.SE027	twitter.com/burghhouse1704	Both
+mm.domus.NW026	twitter.com/chesmilmuseum	ML
+mm.domus.SE088	['www.twitter.com/rmgreenwich']	Scrape
+mm.wiki.127	['www.twitter.com/gibberdgallery2']	Scrape
+mm.wiki.502	no_resource	no_resource
+mm.domus.SW082	twitter.com/no1museum	Both
+mm.domus.YH035	twitter.com/bradfordmuseums/status/1024055175198244864	ML
+mm.aim.0811	['twitter.com/rockinghamcastl', 'twitter.com/rockinghamlive']	Scrape
+mm.mald.152	['www.twitter.com/#ntpembs']	Scrape
+mm.aim.0340	twitter.com/firingline	Both
+mm.domus.YH170	no_resource	no_resource
+mm.wiki.320	no_resource	no_resource
+mm.hha.115	['twitter.com/hallharvington']	Scrape
+mm.ace.399	['twitter.com/greenwichmca', 'twitter.com/charlton_house']	Scrape
+mm.domus.SE564	twitter.com/redbridgemuseum	Both
+mm.misc.081	no_resource	no_resource
+mm.ace.1166	twitter.com/romanmuseumalc	Both
+mm.domus.SE394	twitter.com/hsmoxford	Both
+mm.ace.1259	twitter.com/fastmuseum	ML
+mm.musa.292	['twitter.com/thercaconwy', 'twitter.com/TheRCAConwy']	Scrape
+mm.domus.SE036	twitter.com/mkmuseum	Both
+mm.fcm.158	no_resource	no_resource
+mm.domus.NW048	twitter.com/lancastermuseum	ML
+mm.musa.129	['twitter.com/exetercouncil', 'twitter.com/exeterpassages']	Scrape
+mm.domus.WM097	twitter.com/leomuseum	Both
+mm.mgs.346	['twitter.com/sma_shot', 'twitter.com/paisleyis']	Scrape
+mm.domus.WA074	['twitter.com/cyngorgwynedd']	Scrape
+mm.domus.NE080	twitter.com/mohartlepool	Both
+mm.domus.NW145	twitter.com/mcrmuseum	Both
+mm.aim.0723	no_resource	no_resource
+mm.aim.0336	no_resource	no_resource
+mm.New.107	twitter.com/silverstoneexp	Both
+mm.aim.0099	no_resource	no_resource
+mm.New.41	['twitter.com/belfastcc']	Scrape
+mm.domus.YH096	twitter.com/yorkartgallery	Both
+mm.domus.SW161	twitter.com/1811fairlynch	Both
+mm.ace.1138	twitter.com/segedunumfort	Both
+mm.aim.0172	twitter.com/museumofcarpet	Both
+mm.aim.1051	['twitter.com/dromolandcastle']	Scrape
+mm.aim.1316	['twitter.com/sportinghistory', 'twitter.com/expowalgoch', 'twitter.com/timhhartley', 'twitter.com/comeonwidnes']	Scrape
+mm.fcm.124	no_resource	no_resource
+mm.domus.NE082	twitter.com/ntormesbyhall	ML
+mm.wiki.468	no_resource	no_resource
+mm.musa.366	no_resource	no_resource
+mm.mgs.375	twitter.com/sw_mullmakers	ML
+mm.domus.NW011	['twitter.com/visit_mcr']	Scrape
+mm.domus.SE555	no_resource	no_resource
+mm.hha.071	twitter.com/hedinghamcastle	ML
+mm.misc.110	no_resource	no_resource
+mm.nimc.043	['twitter.com/mea_bc', 'twitter.com/NIMuseums/statuses/1258433418104356867']	Scrape
+mm.mgs.308	no_resource	no_resource
+mm.domus.YH094	twitter.com/yorkcastle	Both
+mm.fcm.257	no_resource	no_resource
+mm.wiki.376	no_resource	no_resource
+mm.hha.194	twitter.com/sausmarezm	ML
+mm.wiki.016	no_resource	no_resource
+mm.domus.EM104	twitter.com/charnwoodmuseum	Both
+mm.domus.SE291	twitter.com/hertfordmuseum	Both
+mm.domus.SE559	['twitter.com/upparknt', 'twitter.com/UpparkNT/status/1319564722526715904']	Scrape
+mm.domus.WM019	no_resource	no_resource
+mm.ace.1251	['twitter.com/weststownews', 'twitter.com/WestStowNews']	Scrape
+mm.hha.191	['twitter.com/#!/thepictoncastle', 'twitter.com/thepictoncastle']	Scrape
+mm.domus.NI002	no_resource	no_resource
+mm.aim.0578	no_resource	no_resource
+mm.misc.048	no_resource	no_resource
+mm.New.130	no_resource	no_resource
+mm.domus.SC290	['twitter.com/talbotrice75']	Scrape
+mm.aim.0282	twitter.com/dumgalaviation	ML
+mm.hha.070	no_resource	no_resource
+mm.musa.361	twitter.com/the_turnpike	Both
+mm.domus.SW029	twitter.com/coriniummuseum	Both
+mm.domus.EM023	twitter.com/greens_windmill	Both
+mm.domus.EM018	twitter.com/wollatonhall	ML
+mm.ace.1262	twitter.com/chainbridgeforg	ML
+mm.aim.1352	['twitter.com/favershamsoc']	Scrape
+mm.musa.169	['//twitter.com/heckingtonwind1']	Scrape
+mm.musa.222	no_resource	no_resource
+mm.musa.294	no_resource	no_resource
+mm.ace.1131	twitter.com/royalacademy	Both
+mm.hha.096	twitter.com/deenepark	Both
+mm.domus.EM079	twitter.com/oundleboxoffice	ML
+mm.domus.SC049	no_resource	no_resource
+mm.aim.1020	twitter.com/charterhouseec1	Both
+mm.domus.SE160	twitter.com/socantiquaries	Both
+mm.aim.0167	['twitter.com/northyorkmoors', 'twitter.com/northyorkmoors']	Scrape
+mm.domus.SE375	twitter.com/fitzmuseum_uk	Both
+mm.MDN.013	twitter.com/orangeheritage	Both
+mm.domus.WA063	twitter.com/swminersmuseum	ML
+mm.New.9	['twitter.com/kewgardens']	Scrape
+mm.aim.1119	no_resource	no_resource
+mm.domus.SW111	twitter.com/scillymuseum	ML
+mm.wiki.100	['twitter.com/trinityhouse_uk']	Scrape
+mm.misc.003	twitter.com/museumwind?lang=ga	ML
+mm.domus.YH034	['twitter.com/beckisle']	Scrape
+mm.domus.YH075	twitter.com/museumfolly	Both
+mm.domus.NI011	['www.twitter.com/ririshfmuseum', 'twitter.com/ririshfmuseum']	Scrape
+mm.domus.SW234	no_resource	no_resource
+mm.hha.034	['twitter.com/cadhayhouse', 'twitter.com/CadhayHouse/status/1162690044324438021']	Scrape
+mm.domus.SE094	twitter.com/readingmuseum	Both
+mm.domus.SE532	twitter.com/ntighthammote	Both
+mm.mald.015	['twitter.com/blaenaugwentcbc', 'twitter.com/bga2h']	Scrape
+mm.mald.130	no_resource	no_resource
+mm.hha.085	twitter.com/cattonhall	Both
+mm.domus.SE431	no_resource	no_resource
+mm.domus.YH134	twitter.com/hullferens	ML
+mm.mgs.286	twitter.com/robertburnsnts	Both
+mm.domus.SW129	no_resource	no_resource
+mm.domus.SE483	['twitter.com/kpolicemuseum', 'twitter.com/kent_police', 'twitter.com/kpolicemuseum/status/984714686154379264']	Scrape
+mm.musa.165	['twitter.com/harwichsociety']	Scrape
+mm.wiki.265	['www.twitter.com/limasectorops', 'twitter.com/search/%23onthisday', 'twitter.com/search/%23hurricanes', 'twitter.com/search/%23prestwick', 'twitter.com/search/%23scotland']	Scrape
+mm.domus.SW133	twitter.com/whealmartyn	Both
+mm.mgs.315	twitter.com/museumsunista	Both
+mm.domus.SW140	twitter.com/torringtonmus	ML
+mm.domus.YH099	twitter.com/yspsculpture	Both
+mm.domus.NW024	no_resource	no_resource
+mm.domus.NE035	['twitter.com/seeitdoitsund', 'twitter.com/sunderlanduk', 'twitter.com/sundmuseum/status/580743163037544448']	Scrape
+mm.misc.116	no_resource	no_resource
+mm.domus.SE516	twitter.com/claydonhouse	ML
+mm.domus.NI009	['twitter.com/rpsitrains']	Scrape
+mm.domus.SE482	['twitter.com/buzzrail']	Scrape
+mm.mgs.400	twitter.com/thepipingcentre	Both
+mm.musa.166	no_resource	no_resource
+mm.wiki.396	no_resource	no_resource
+mm.fcm.155	twitter.com/themadmuseum	Both
+mm.aim.0604	['twitter.com/rafmetheringham']	Scrape
+mm.hha.175	['www.twitter.com/sconepalace', 'twitter.com/sconepalace']	Scrape
+mm.musa.339	twitter.com/tenementhouse11	ML
+mm.domus.SE022	twitter.com/museumofthehome	Both
+mm.aim.1318	['twitter.com/wmboothmuseum', 'twitter.com/salvationarmyuk', 'twitter.com/WmBoothMuseum/status/1239914285800841216']	Scrape
+mm.wiki.266	['twitter.com/royalairforce', 'twitter.com/rafscampton/status/1305930154456289285']	Scrape
+mm.domus.SE264	twitter.com/eastleighmuseum	Both
+mm.aim.0310	['twitter.com/ebwmuseumherts', 'twitter.com/ebwmuseum']	Scrape
+mm.domus.SE508	twitter.com/handelhendrix	Both
+mm.domus.WM143	twitter.com/thelaceguild	Both
+mm.domus.SW206	no_resource	no_resource
+mm.aim.0593	no_resource	no_resource
+mm.domus.SC065	no_resource	no_resource
+mm.MDN.028	no_resource	no_resource
+mm.ace.1106	['twitter.com/castledonpc', 'twitter.com/cas_don_museum']	Scrape
+mm.New.74	['twitter.com/fansmuseum', 'twitter.com/safcmuseum']	Scrape
+mm.aim.0742	twitter.com/museum_pen	Both
+mm.mgs.367	twitter.com/armadalecastle	Both
+mm.misc.222	no_resource	no_resource
+mm.domus.NW029	twitter.com/cmoml	ML
+mm.mgs.388	twitter.com/aniodhlann	ML
+mm.hha.164	twitter.com/balmoral_castle	ML
+mm.domus.SE339	no_resource	no_resource
+mm.domus.SE155	twitter.com/thenorrismuseum	Both
+mm.domus.SW066	['twitter.com/gloucesterquays', 'twitter.com/#!/gloucesterquays', 'twitter.com/thefolkofglos']	Scrape
+mm.domus.SE267	twitter.com/elymuseum	Both
+mm.New.142	twitter.com/welshspitfire	ML
+mm.domus.SE388	twitter.com/ashmoleanmuseum	Both
+mm.mgs.411	twitter.com/hopetounhouse	Both
+mm.domus.SW013	no_resource	no_resource
+mm.domus.WA099	['twitter.com/visiting_conwy', 'twitter.com/shjmuseum']	Scrape
+mm.domus.EM071	['www.twitter.com/oakhamcastle', 'twitter.com/oakhamcastle']	Scrape
+mm.domus.SE537	twitter.com/smallhythent	Both
+mm.domus.NW045	['twitter.com/visitlancashire']	Scrape
+mm.hha.095	no_resource	no_resource
+mm.ace.1187	twitter.com/textilearchive	Both
+mm.domus.YH152	twitter.com/peacemuseumuk	Both
+mm.domus.YH135	['twitter.com/humbermuseums', 'twitter.com/wilberforce_pcs']	Scrape
+mm.musa.154	no_resource	no_resource
+mm.domus.SC309	no_resource	no_resource
+mm.domus.WM081	twitter.com/lapworthmuseum	Both
+mm.wiki.058	no_resource	no_resource
+mm.domus.SE236	twitter.com/thenovium	Both
+mm.domus.NW017	twitter.com/smbc_museums	ML
+mm.domus.SW115	twitter.com/wellsmuseum	Both
+mm.domus.SC061	no_resource	no_resource
+mm.domus.SW023	['www.twitter.com/holstmuseum', 'twitter.com/holstmuseum']	Scrape
+mm.musa.286	no_resource	no_resource
+mm.ace.1208	twitter.com/backtobacksnt	Both
+mm.ace.1182	['twitter.com/killhopemuseum', 'twitter.com/killhopemuseum/status/1170273241044279296']	Scrape
+mm.domus.NW144	twitter.com/whitworthart	Both
+mm.domus.SE228	twitter.com/burwellmuseum	Both
+mm.misc.067	no_resource	no_resource
+mm.domus.SC016	twitter.com/CPKMuseums/status/871739076369690625	ML
+mm.musa.337	twitter.com/teifivrailway	Both
+mm.domus.SC139	no_resource	no_resource
+mm.domus.SC153	twitter.com/samuseums	ML
+mm.aim.0651	no_resource	no_resource
+mm.misc.127	['twitter.com/henrymoorefdn', 'twitter.com/henrymooresg']	Scrape
+mm.New.163	twitter.com/britishmuseum/status/861620091607285761?lang=fi	ML
+mm.domus.SE254	twitter.com/winchcitymuseum	ML
+mm.aim.0600	['www.twitter.com/expwakefield', 'twitter.com/expwakefield', 'twitter.com/mhmwakefield']	Scrape
+mm.hha.064	no_resource	no_resource
+mm.domus.SE026	twitter.com/hackneymuseum	Both
+mm.domus.SC046	no_resource	no_resource
+mm.ace.1248	twitter.com/museumcomputing	Both
+mm.domus.EM111	['twitter.com/visitcastleton']	Scrape
+mm.domus.NW086	twitter.com/dockmuseum	Both
+mm.domus.WM005	twitter.com/leamspaartgall	ML
+mm.domus.NI025	twitter.com/ballycastlemus	ML
+mm.wiki.427	no_resource	no_resource
+mm.domus.SE129	twitter.com/pitzhanger	Both
+mm.MDN.011	twitter.com/thelinenhall	Both
+mm.domus.NI035	twitter.com/flamegasworks	ML
+mm.hha.171	no_resource	no_resource
+mm.musa.283	no_resource	no_resource
+mm.domus.SW084	twitter.com/penleehouse	Both
+mm.domus.SE583	twitter.com/nationalgallery	Both
+mm.domus.NW166	no_resource	no_resource
+mm.fcm.242	no_resource	no_resource
+mm.aim.1309	no_resource	no_resource
+mm.aim.0812	twitter.com/rowellheritage	ML
+mm.domus.SE602	['twitter.com/csm_news', 'twitter.com/ual', 'twitter.com/csmmuseum']	Scrape
+mm.domus.EM103	no_resource	no_resource
+mm.domus.SE137	twitter.com/burrellmuseum	ML
+mm.musa.281	twitter.com/perryscider	Both
+mm.domus.WA047	['twitter.com/pontypoolmuseum']	Scrape
+mm.misc.169	no_resource	no_resource
+mm.domus.SW197	twitter.com/bdcmuseum	Both
+mm.domus.YH064	twitter.com/fairfax_house	Both
+mm.domus.SC076	no_resource	no_resource
+mm.ace.1274	twitter.com/museumliverpool	ML
+mm.domus.WM080	['twitter.com/nbbcouncil']	Scrape
+mm.domus.NW040	twitter.com/fo_jll	ML
+mm.New.138	twitter.com/bdhhm	ML
+mm.wiki.384	twitter.com/railstoryingrow	Both
+mm.mgs.371	no_resource	no_resource
+mm.domus.SC023	no_resource	no_resource
+mm.domus.EM058	['www.twitter.com/kmuseumgallery', 'twitter.com/kmuseumgallery']	Scrape
+mm.ace.135	twitter.com/lancastermuseum	ML
+mm.domus.SC124	twitter.com/hmoc123	ML
+mm.hha.017	twitter.com/blenheimpalace	Both
+mm.musa.374	['twitter.com/militaryairshow']	Scrape
+mm.mald.163	['twitter.com/copper_kingdom']	Scrape
+mm.mgs.343	twitter.com/scotsmasons	Both
+mm.domus.SW211	twitter.com/ntdyrhampark	Both
+mm.domus.NW187	twitter.com/quakertapestry	Both
+mm.wiki.331	['twitter.com/lovewatchet']	Scrape
+mm.aim.0110	no_resource	no_resource
+mm.wiki.028	no_resource	no_resource
+mm.domus.SC134	twitter.com/pollokhousents	Both
+mm.mgs.075	twitter.com/castle_museum	ML
+mm.misc.022	['//twitter.com/cmboothkent']	Scrape
+mm.aim.1117	twitter.com/muckleburgh	ML
+mm.misc.148	twitter.com/World_Museum/status/1055170617446686721	ML
+mm.domus.SC054	twitter.com/dumfriesmuseum	Both
+mm.wiki.130	no_resource	no_resource
+mm.domus.WM010	twitter.com/worcestermuseum	Both
+mm.New.62	no_resource	no_resource
+mm.wiki.040	no_resource	no_resource
+mm.wiki.280	no_resource	no_resource
+mm.aim.1157	no_resource	no_resource
+mm.domus.YH169	['twitter.com/eridinglma']	Scrape
+mm.musa.290	['twitter.com/rhdr']	Scrape
+mm.domus.WA002	['twitter.com/visit_mon', 'twitter.com/caldicastleafc']	Scrape
+mm.ace.039	['www.twitter.com/hallplacebexley', 'twitter.com/hallplacebexley']	Scrape
+mm.domus.SW101	no_resource	no_resource
+mm.domus.NE033	twitter.com/arbeiaromanfort	Both
+mm.domus.WM028	no_resource	no_resource
+mm.aim.0254	twitter.com/darwen_heritage	ML
+mm.ace.1189	twitter.com/bailiffgatemuse	Both
+mm.domus.SC316	twitter.com/culture_nl/status/762654743537848320	ML
+mm.domus.SE098	twitter.com/raptcmuseum	Both
+mm.domus.WM112	['twitter.com/oakhousefoods']	Scrape
+mm.domus.SW207	['twitter.com/pkporthcurno', 'twitter.com/pkporthcurno/status/1192566901572096000']	Scrape
+mm.domus.NI003	twitter.com/ecmfcm	Both
+mm.domus.SE237	twitter.com/chilternoam	Both
+mm.domus.SE318	no_resource	no_resource
+mm.aim.1023	twitter.com/cinemamuseum	Both
+mm.domus.SE315	twitter.com/iwsteamrailway	ML
+mm.wiki.328	no_resource	no_resource
+mm.MDN.014	twitter.com/orangeheritage	ML
+mm.misc.186	no_resource	no_resource
+mm.domus.YH009	twitter.com/lothertonhall	Both
+mm.mgs.147	no_resource	no_resource
+mm.New.22	['twitter.com/cateraneco']	Scrape
+mm.domus.NW020	twitter.com/buryartmuseum	Both
+mm.ace.1256	twitter.com/mshedbristol	Both
+mm.domus.YH030	no_resource	no_resource
+mm.domus.SE543	twitter.com/felbrigghallnt	Both
+mm.aim.1353	['twitter.com/visitthanet']	Scrape
+mm.domus.WM137	twitter.com/MoseleyOldHall/status/1084834079927721985	ML
+mm.hha.180	twitter.com/sorncastle	Both
+mm.wiki.325	['twitter.com/hampton221']	Scrape
+mm.domus.YH016	twitter.com/huddsartgallery	ML
+mm.hha.073	['twitter.com/layertower']	Scrape
+mm.ace.1116	twitter.com/berksmedmuseum	ML
+mm.domus.SC071	['www.twitter.com/edlc_leisure']	Scrape
+mm.wiki.312	twitter.com/mapledurham	ML
+mm.domus.YH044	twitter.com/cooperbarnsley	Both
+mm.domus.SE517	twitter.com/westwycombent	ML
+mm.musa.100	twitter.com/cullodennts	Both
+mm.domus.YH047	twitter.com/cptcookmuseum	Both
+mm.wiki.486	no_resource	no_resource
+mm.misc.243	no_resource	no_resource
+mm.aim.0005	www.twitter.com/AberMuseum	ML
+mm.domus.EM084	['twitter.com/northamptonbc', 'twitter.com/northamptonshoe']	Scrape
+mm.misc.190	twitter.com/seallamcentre	ML
+mm.musa.304	['twitter.com/svrofficialsite', 'twitter.com/svrofficialsite/status/1297963451533471744']	Scrape
+mm.domus.NW043	twitter.com/fleetwoodmuseum	Both
+mm.hha.149	no_resource	no_resource
+mm.domus.SC306	twitter.com/shetlandtextile	ML
+mm.domus.SE226	twitter.com/museumofcamb	Both
+mm.ace.1282	twitter.com/bnss1	Both
+mm.aim82NM.046	no_resource	no_resource
+mm.domus.WA061	no_resource	no_resource
+mm.domus.SC301	['twitter.com/trimontiumtrust', 'twitter.com/trimontiumtrust/status/1296413310594830338']	Scrape
+mm.musa.197	no_resource	no_resource
+mm.domus.SE539	twitter.com/angleseyabbeynt	ML
+mm.mgs.418	['twitter.com/themoraycouncil']	Scrape
+mm.aim.1025	no_resource	no_resource
+mm.misc.217	['twitter.com/britflorida']	Scrape
+mm.domus.YH091	twitter.com/whitbymuseum	Both
+mm.hha.179	no_resource	no_resource
+mm.domus.SC080	no_resource	no_resource
+mm.New.73	['twitter.com/visitlondon']	Scrape
+mm.wiki.343	no_resource	no_resource
+mm.domus.SE029	no_resource	no_resource
+mm.wiki.208	twitter.com/hatfield_house	Both
+mm.wiki.157	twitter.com/fashiontextile	Both
+mm.aim.0581	['twitter.com/ccculibrary', 'twitter.com/janet_hills', 'twitter.com/metbpa', 'twitter.com/canterburyccuni']	Scrape
+mm.domus.SW021	twitter.com/thewilsonchelt	Both
+mm.domus.NW115	twitter.com/fusiliermuseum	Both
+mm.domus.SE435	no_resource	no_resource
+mm.domus.YH080	twitter.com/nymr	Both
+mm.domus.NW062	twitter.com/penrithmuseum	Both
+mm.domus.YH151	twitter.com/BankfieldMuseum/status/1262685748358234115	ML
+mm.ace.1202	twitter.com/rbks_textiles	Both
+mm.domus.SE319	twitter.com/waterandsteam	Both
+mm.domus.SW069	['twitter.com/steam_museum']	Scrape
+mm.wiki.131	['www.twitter.com/essexwildlife']	Scrape
+mm.mgs.289	no_resource	no_resource
+mm.hha.098	no_resource	no_resource
+mm.musa.209	no_resource	no_resource
+mm.New.34	no_resource	no_resource
+mm.domus.NW167	twitter.com/lionsaltworks	ML
+mm.misc.259	twitter.com/breadboardmuse	ML
+mm.musa.041	['twitter.com/belsay_hall']	Scrape
+mm.misc.253	['twitter.com/visit_swale']	Scrape
+mm.domus.WA090	no_resource	no_resource
+mm.domus.SE415	twitter.com/amberley_museum	Both
+mm.New.70	no_resource	no_resource
+mm.misc.069	no_resource	no_resource
+mm.aim.0471	['twitter.com/lismoreghc']	Scrape
+mm.nimc.035	no_resource	no_resource
+mm.ace.1217	twitter.com/bentwaters_cwm	Both
+mm.New.45	no_resource	no_resource
+mm.domus.SC003	twitter.com/abdnartmuseums	Both
+mm.ace.1117	twitter.com/canalmuseum1	ML
+mm.musa.332	no_resource	no_resource
+mm.aim82NM.038	no_resource	no_resource
+mm.misc.236	twitter.com/mountsorrelrail	Both
+mm.musa.376	twitter.com/llanfairline	Both
+mm.domus.NE003	['twitter.com/ilikemuseums']	Scrape
+mm.domus.SW007	twitter.com/bristolmuseum	Both
+mm.hha.144	twitter.com/hoghtontower	Both
+mm.wiki.301	no_resource	no_resource
+mm.musa.189	no_resource	no_resource
+mm.domus.SE259	twitter.com/didcotrailwayc	Both
+mm.wiki.003	no_resource	no_resource
+mm.domus.SW052	twitter.com/fashion_museum	Both
+mm.wiki.436	no_resource	no_resource
+mm.domus.SW091	['www.twitter.com/nixpriory', 'twitter.com/nixpriory']	Scrape
+mm.domus.SE196	twitter.com/beecroftgallery	ML
+mm.musa.265	twitter.com/levertonmill	ML
+mm.misc.256	twitter.com/shirehalldorset	Both
+mm.misc.129	twitter.com/tidemill_museum	Both
+mm.domus.SC151	['twitter.com/vsitlanarkshire']	Scrape
+mm.musa.126	no_resource	no_resource
+mm.domus.SW202	twitter.com/ntoldpostoffice	Both
+mm.domus.WM004	no_resource	no_resource
+mm.domus.SC160	twitter.com/paisleymuseum	Both
+mm.domus.YH133	twitter.com/hullmaritime	ML
+mm.hud.014	['twitter.com/bembridgemillnt']	Scrape
+mm.domus.SC270	['twitter.com/glencoe_museum']	Scrape
+mm.domus.SE302	twitter.com/gunnersbury1	Both
+mm.aim.0245	twitter.com/croydonairport	Both
+mm.wiki.272	twitter.com/beatlesstory	Both
+mm.ace.1280	['twitter.com/rushdenstation']	Scrape
+mm.domus.SC164	['twitter.com/rafmontrose']	Scrape
+mm.domus.SE110	twitter.com/tolhousemuseum	ML
+mm.New.124	no_resource	no_resource
+mm.misc.229	twitter.com/thegeorgiannts	ML
+mm.domus.WM014	twitter.com/bilstoncraftgal	Both
+mm.aim82NM.127	twitter.com/wsomrailway	Both
+mm.ace.1093	twitter.com/ntlittlemoreton	Both
+mm.aim.0555	twitter.com/llanellyhouse	Both
+mm.wiki.192	twitter.com/butserfarm	Both
+mm.domus.SE590	['twitter.com/rafradarmuseum']	Scrape
+mm.wiki.033	twitter.com/hayleheritage	Both
+mm.domus.NE077	no_resource	no_resource
+mm.aim.0535	twitter.com/leedscastleuk	Both
+mm.domus.SC259	no_resource	no_resource
+mm.ace.1246	twitter.com/the_lowry	Both
+mm.domus.SE235	twitter.com/chertseymuseum	ML
+mm.domus.SE285	['twitter.com/enjoy_medway', 'twitter.com/guildhallmuseum']	Scrape
+mm.misc.150	twitter.com/brodiecastlents	Both
+mm.domus.EM047	['twitter.com/museumofleather']	Scrape
+mm.misc.160	no_resource	no_resource
+mm.mgs.332	['twitter.com/inverarayjail']	Scrape
+mm.domus.EM056	['twitter.com/frameknitter', 'twitter.com/fwkmuseum']	Scrape
+mm.domus.WM001	twitter.com/avoncroftmuseum	Both
+mm.misc.153	no_resource	no_resource
+mm.domus.SW145	no_resource	no_resource
+mm.domus.SE542	twitter.com/paycockesnt	ML
+mm.domus.EM036	twitter.com/pickfordshouse	ML
+mm.aim.0994	no_resource	no_resource
+mm.aim.0228	no_resource	no_resource
+mm.domus.SE021	twitter.com/florencemuseum	Both
+mm.domus.SE348	twitter.com/sw_museum	ML
+mm.nimc.013	no_resource	no_resource
+mm.domus.WM049	twitter.com/leather_museum	ML
+mm.domus.WM038	['twitter.com/rafmuseum', 'twitter.com/rafmuseum?lang=el']	Scrape
+mm.domus.SE052	['twitter.com/grantmuseum', 'twitter.com/GrantMuseum/status/1193834871703113728']	Scrape
+mm.domus.SW200	no_resource	no_resource
+mm.domus.SC183	['twitter.com/royal_scots', 'twitter.com/theroyalscots']	Scrape
+mm.New.93	twitter.com/fusilierslondon	Both
+mm.domus.SE520	no_resource	no_resource
+mm.ace.1291	twitter.com/jacquimuseum	ML
+mm.domus.SW086	twitter.com/priestshouse	ML
+mm.domus.SE303	twitter.com/guildhallart	Both
+mm.misc.196	twitter.com/hmsb_events	ML
+mm.domus.NW143	['twitter.com/officialuom', 'twitter.com/tableyhouse']	Scrape
+mm.domus.NI013	['twitter.com/sommeassoc']	Scrape
+mm.misc.097	no_resource	no_resource
+mm.ace.1225	twitter.com/riponmuseums	ML
+mm.domus.SE552	twitter.com/hamhousent	Both
+mm.domus.SC271	no_resource	no_resource
+mm.aim.1068	no_resource	no_resource
+mm.musa.316	twitter.com/strps_rail	Both
+mm.musa.072	['twitter.com/visittours']	Scrape
+mm.wiki.009	['twitter.com/mullersbristol', 'twitter.com/mullersmuseum']	Scrape
+mm.musa.314	no_resource	no_resource
+mm.wiki.501	twitter.com/echcentre	ML
+mm.ace.569	twitter.com/themerl	Both
+mm.domus.SW245	['www.twitter.com/modipaub', 'twitter.com/modipaub']	Scrape
+mm.domus.SE202	twitter.com/brcentre	ML
+mm.domus.SE258	twitter.com/dorkingmuseum	Both
+mm.wiki.485	no_resource	no_resource
+mm.mgs.391	no_resource	no_resource
+mm.domus.WM132	twitter.com/sohohousemuseum	Both
+mm.aim.0130	['twitter.com/deafhistoryuk']	Scrape
+mm.hha.094	twitter.com/althorphouse	Both
+mm.domus.SE491	twitter.com/n_v_r	Both
+mm.domus.SE341	['twitter.com/discovernkt']	Scrape
+mm.misc.241	['twitter.com/museumforwatton', 'twitter.com/museum4watton']	Scrape
+mm.domus.YH111	twitter.com/bankfieldmuseum	Both
+mm.musa.392	twitter.com/eh_wrestpark	Both
+mm.wiki.098	no_resource	no_resource
+mm.domus.SC089	no_resource	no_resource
+mm.domus.SW186	twitter.com/dartmouthmuseum	Both
+mm.domus.WM046	twitter.com/fotmwythall	ML
+mm.domus.YH156	twitter.com/ntbeningbrough	Both
+mm.aim.1247	no_resource	no_resource
+mm.domus.SW097	twitter.com/coldharbourmill	Both
+mm.musa.138	twitter.com/flambardsuk	Both
+mm.domus.WM074	twitter.com/homeofcider	Both
+mm.domus.SE122	twitter.com/octaviahillbh	Both
+mm.domus.SW103	twitter.com/teignheritage	ML
+mm.wiki.022	['www.twitter.com/crewehc']	Scrape
+mm.domus.YH130	['twitter.com/visitharrogate', 'twitter.com/harrogatemuseum']	Scrape
+mm.wiki.305	twitter.com/yorkmansionhse	Both
+mm.domus.SE430	twitter.com/southwoldmuseum	Both
+mm.ace.1158	twitter.com/kentmasonmuseum	Both
+mm.wiki.161	no_resource	no_resource
+mm.mald.042	no_resource	no_resource
+mm.domus.EM015	twitter.com/bassetlawmuseum	Both
+mm.domus.SE526	twitter.com/ntchastleton	Both
+mm.domus.SW025	no_resource	no_resource
+mm.aim.0420	twitter.com/haveringmuseum	Both
+mm.misc.058	no_resource	no_resource
+mm.hha.182	twitter.com/invcastle	Both
+mm.mgs.310	no_resource	no_resource
+mm.domus.SE531	twitter.com/chartwellnt	Both
+mm.domus.SC115	no_resource	no_resource
+mm.musa.364	no_resource	no_resource
+mm.New.90	no_resource	no_resource
+mm.domus.NE076	twitter.com/souternt	Both
+mm.domus.SE468	twitter.com/dimbolamuseum	Both
+mm.domus.YH162	['twitter.com/nelcouncil']	Scrape
+mm.domus.YH065	['twitter.com/richmondonline', 'twitter.com/richmondyorks', 'twitter.com/thegtroyal']	Scrape
+mm.domus.WA052	twitter.com/nttredegarhouse	Both
+mm.hha.081	twitter.com/glemhamhall	Both
+mm.wiki.438	['twitter.com/conwycbc']	Scrape
+mm.domus.SE316	['twitter.com/islingtonbc', 'twitter.com/islingtonmuseum']	Scrape
+mm.domus.YH120	twitter.com/wfmuseums/status/581096241452462080	ML
+mm.wiki.302	twitter.com/blythbattery1	ML
+mm.domus.SW166	['twitter.com/portlandmuseum1', 'twitter.com/portlandmuseum1', 'twitter.com/portlandmuseum']	Scrape
+mm.hha.174	twitter.com/monzieestate	ML
+mm.ace.1238	twitter.com/barrowhill41	Both
+mm.aim.0204	['twitter.com/total_giving']	Scrape
+mm.domus.NW003	no_resource	no_resource
+mm.wiki.414	twitter.com/nibunker	ML
+mm.mgs.323	twitter.com/rcpsglasgow	Both
+mm.domus.YH022	twitter.com/bishopshouse	Both
+mm.wiki.217	no_resource	no_resource
+mm.wiki.193	['twitter.com/#']	Scrape
+mm.domus.WM139	no_resource	no_resource
+mm.domus.WM006	twitter.com/shropsregiment	Both
+mm.hha.110	twitter.com/heathhousefarm	ML
+mm.domus.NE081	no_resource	no_resource
+mm.domus.SE541	['twitter.com/wimpoleestatent']	Scrape
+mm.aim.0530	no_resource	no_resource
+mm.domus.NE073	twitter.com/wallingtonnt	Both
+mm.aim.1138	['twitter.com/holocaustcentuk', 'twitter.com/legaciesofpast']	Scrape
+mm.wiki.097	['twitter.com/hullmaritime']	Scrape
+mm.domus.SC205	no_resource	no_resource
+mm.domus.WM062	twitter.com/etruriamuseum	ML
+mm.wiki.111	no_resource	no_resource
+mm.domus.SE095	no_resource	no_resource
+mm.ace.1155	twitter.com/museumchildhood	ML
+mm.domus.NW195	no_resource	no_resource
+mm.MDN.015	twitter.com/hillscastle	ML
+mm.domus.EM087	['twitter.com/kedlestonnt', 'twitter.com/search?q=%23kedleston&lang=fr']	Scrape
+mm.domus.SC130	twitter.com/riversidemuseum	Both
+mm.New.149	no_resource	no_resource
+mm.wiki.237	['twitter.com/enginemill']	Scrape
+mm.domus.YH073	twitter.com/thackraymuseum	Both
+mm.domus.WM063	['twitter.com/bm_ag', 'twitter.com/bm_ag?lang=en-gb']	Scrape
+mm.aim.0579	['twitter.com/manutd']	Scrape
+mm.aim.1080	twitter.com/hockeymuseum	Both
+mm.domus.SE136	twitter.com/truesyardmuseum	ML
+mm.nimc.025	no_resource	no_resource
+mm.ace.1169	['www.twitter.com/mmuspecial', 'twitter.com/mmuspecial']	Scrape
+mm.musa.266	['twitter.com/nlrailway']	Scrape
+mm.domus.EM108	no_resource	no_resource
+mm.domus.SE035	no_resource	no_resource
+mm.domus.SE540	twitter.com/peckoverhousent	Both
+mm.ace.1204	twitter.com/dehavmuseum	Both
+mm.aim.0778	['twitter.com/rafburtonwood', 'twitter.com/gulliversfun']	Scrape
+mm.domus.SC185	no_resource	no_resource
+mm.domus.SE062	twitter.com/uclartmuseum	Both
+mm.aim.0713	no_resource	no_resource
+mm.mald.160	['www.twitter.com/windingh', 'twitter.com/windingh']	Scrape
+mm.domus.SC098	no_resource	no_resource
+mm.domus.NI016	twitter.com/folktransport	ML
+mm.domus.SE587	twitter.com/edenmuseumkent	Both
+mm.hha.044	['twitter.com/fordeabbey']	Scrape
+mm.misc.223	no_resource	no_resource
+mm.domus.SE382	twitter.com/classarch	Both
+mm.misc.115	['twitter.com/experiencebeds']	Scrape
+mm.aim.0589	['twitter.com/martonmuseum']	Scrape
+mm.domus.SC138	twitter.com/EdinCulture/status/1189556995025752066	ML
+mm.domus.SC119	twitter.com/transportmuseum	Both
+mm.domus.SE389	twitter.com/pbatecollection	ML
+mm.domus.YH102	no_resource	no_resource
+mm.domus.YH006	no_resource	no_resource
+mm.misc.221	twitter.com/elginmuseum?lang=el	ML
+mm.domus.YH142	no_resource	no_resource
+mm.domus.SW176	twitter.com/theyounggallery	ML
+mm.domus.SE580	no_resource	no_resource
+mm.domus.SE210	['twitter.com/brightonmuseums', 'twitter.com/BrightonMuseums/status/1258403383578439687']	Scrape
+mm.hha.162	no_resource	no_resource
+mm.wiki.073	no_resource	no_resource
+mm.musa.097	twitter.com/gemrockmuseum	Both
+mm.domus.WM142	['www.twitter.com/gmmedicalmuseum', 'twitter.com/infirmaryworc', 'twitter.com/gmmedicalmuseum']	Scrape
+mm.domus.YH038	twitter.com/cliffeparkrun	ML
+mm.musa.153	['twitter.com/guildcath', 'twitter.com/guildcathevents']	Scrape
+mm.mgs.358	no_resource	no_resource
+mm.domus.SC208	['twitter.com/museumsunista', 'twitter.com/univofstandrews']	Scrape
+mm.domus.SE589	['twitter.com/uni_of_essex', 'twitter.com/EssexCollection']	Scrape
+mm.domus.EM074	['www.twitter.com/leicsmuseums']	Scrape
+mm.aim.0678	twitter.com/civilwarcentre	Both
+mm.misc.054	no_resource	no_resource
+mm.domus.YH088	twitter.com/riponmuseums	ML
+mm.aim.0358	['twitter.com/557310497100689408', 'twitter.com/dnhc_']	Scrape
+mm.musa.307	no_resource	no_resource
+mm.misc.246	twitter.com/typawb	Both
+mm.musa.136	no_resource	no_resource
+mm.hha.134	['twitter.com/tattonestate', 'twitter.com/peoverhall']	Scrape
+mm.musa.391	no_resource	no_resource
+mm.aim.0079	['www.twitter.com/bfhouse', 'twitter.com/bfhouse']	Scrape
+mm.hha.135	['twitter.com/rode_hall', 'twitter.com/rodehallband']	Scrape
+mm.domus.EM102	twitter.com/wirks_heritage	ML
+mm.domus.YH026	no_resource	no_resource
+mm.musa.099	['twitter.com/lbofbromley', 'twitter.com/croftonvilla']	Scrape
+mm.domus.SC140	no_resource	no_resource
+mm.domus.NW100	twitter.com/world_museum	ML
+mm.aim.0679	['twitter.com/freda_davies']	Scrape
+mm.domus.SE536	['twitter.com/sissinghurstnt']	Scrape
+mm.musa.135	twitter.com/feeringparish	ML
+mm.misc.099	no_resource	no_resource
+mm.MDN.019	twitter.com/naughtongallery	Both
+mm.domus.WA093	['twitter.com/ntplasnewydd', 'twitter.com/NTPlasNewydd/statuses/1350475413353623552']	Scrape
+mm.domus.WM146	twitter.com/rugbygallery	Both
+mm.ace.1136	no_resource	no_resource
+mm.domus.SC111	twitter.com/eyemouthmuseum	Both
+mm.hha.119	twitter.com/search?q=%23BrockField&src=hash	ML
+mm.wiki.065	twitter.com/chatsworthhouse	Both
+mm.ace.1150	twitter.com/kensingtonroyal	ML
+mm.domus.SE077	twitter.com/folkestonemus	Both
+mm.domus.WM130	no_resource	no_resource
+mm.ace.1233	no_resource	no_resource
+mm.domus.SC129	['twitter.com/peoplespalacegl', 'twitter.com/PeoplesPalaceGL']	Scrape
+mm.New.35	twitter.com/ArmourgeddonUK/status/974324276764594176	ML
+mm.wiki.143	twitter.com/search?q=%23DunkirkMills&src=hash	ML
+mm.musa.301	twitter.com/chelmsmuseum	Both
+mm.domus.SW081	twitter.com/ndmmuseum	ML
+mm.domus.SC078	twitter.com/cmacphersonm	ML
+mm.misc.015	['twitter.com/nvmuk']	Scrape
+mm.hha.124	no_resource	no_resource
+mm.wiki.402	twitter.com/bwaymuseumuk	Both
+mm.domus.SW193	no_resource	no_resource
+mm.domus.SC318	twitter.com/gsofa	Both
+mm.ace.1133	twitter.com/sharpesmuseum	Both
+mm.domus.NE072	twitter.com/nt_woh	ML
+mm.musa.313	['www.twitter.com/sittingbournehm']	Scrape
+mm.domus.NE054	twitter.com/dumuseums	Both
+mm.domus.SC175	['twitter.com/orkneycom', 'twitter.com/orkneymuseums']	Scrape
+mm.domus.NW001	['twitter.com/conistonschool', 'twitter.com/ruskinsfriends', 'twitter.com/ruskinsgardens', 'twitter.com/milesmooreclay', 'twitter.com/danielcooperart', 'twitter.com/ruskinsfriends']	Scrape
+mm.fcm.072	no_resource	no_resource
+mm.wiki.036	no_resource	no_resource
+mm.domus.YH055	twitter.com/cliftonparkmus	ML
+mm.hha.116	twitter.com/westmalverncc	ML
+mm.hha.154	twitter.com/floorscastle	Both
+mm.ace.1115	no_resource	no_resource
+mm.domus.NI010	twitter.com/inniskillings	ML
+mm.wiki.226	twitter.com/lullingstone	Both
+mm.domus.SE121	twitter.com/cromanmuseum	ML
+mm.hha.167	twitter.com/dunvegan_castle	Both
+mm.New.106	no_resource	no_resource
+mm.mgs.384	twitter.com/search?q=%23staffinmuseum	ML
+mm.domus.SE581	['twitter.com/btnseafront']	Scrape
+mm.wiki.241	['twitter.com/rossendalect']	Scrape
+mm.aim.1156	['twitter.com/frogmoremill', 'twitter.com/FrogmoreMill/status/1167388927860379648']	Scrape
+mm.domus.SE039	['/gp/redirect.html/ref=cm_sw_cl_tw_dp_5dy9g3eb3dqcz4g8gpk5']	Scrape
+mm.mald.090	['twitter.com/glamcricket', 'twitter.com/welshcricketpod']	Scrape
+mm.domus.SE413	no_resource	no_resource
+mm.musa.081	['twitter.com/charlbury']	Scrape
+mm.ace.1296	no_resource	no_resource
+mm.aim.1017	twitter.com/catermuseum	Both
+domus.NE043	no_resource	no_resource
+mm.wiki.137	no_resource	no_resource
+mm.domus.EM014	twitter.com/oldhousemuseum	Both
+mm.domus.SC073	['www.twitter.com/bonessrailway', 'twitter.com/bonessrailway']	Scrape
+mm.aim.0440	['twitter.com/historicryde', 'twitter.com/HistoricRyde/status/383188646569836544']	Scrape
+mm.fcm.074	no_resource	no_resource
+mm.domus.SW003	twitter.com/museumathelstan	ML
+mm.ace.1293	twitter.com/kelmarshhall	Both
+mm.domus.SW063	twitter.com/remuseum	ML
+mm.domus.SE289	['twitter.com/favershamsoc', 'twitter.com/fleurlearning']	Scrape
+mm.wiki.212	no_resource	no_resource
+mm.aim.0724	no_resource	no_resource
+mm.wiki.378	twitter.com/bramhampark	ML
+mm.wiki.044	no_resource	no_resource
+mm.misc.107	no_resource	no_resource
+mm.musa.022	twitter.com/bachelorclubnts	ML
+mm.domus.NW138	twitter.com/ordsallhall	Both
+mm.domus.SW131	twitter.com/tankmuseum	Both
+mm.domus.YH031	twitter.com/yorkfarmmuseum	ML
+mm.aim.0459	twitter.com/huguenotmuseum	Both
+mm.musa.205	no_resource	no_resource
+mm.New.128	twitter.com/pob_heritage	ML
+mm.domus.WM094	twitter.com/mjqbirmingham	Both
+mm.New.164	no_resource	no_resource
+mm.wiki.260	no_resource	no_resource
+mm.domus.SW121	twitter.com/westonmuseum	Both
+mm.musa.389	twitter.com/wollastonmuseum	Both
+mm.domus.SE183	twitter.com/coggeswitney	Both
+mm.mald.095	no_resource	no_resource
+mm.domus.NI022	twitter.com/armrlib	ML
+mm.musa.157	no_resource	no_resource
+mm.aim.1111	no_resource	no_resource
+mm.domus.NI018	twitter.com/armagh_comuseum	ML
+mm.musa.096	['twitter.com/visitseengland']	Scrape
+mm.fcm.160	no_resource	no_resource
+mm.MDN.012	['twitter.com/andborough']	Scrape
+mm.domus.SC260	no_resource	no_resource
+mm.domus.SE425	twitter.com/marlipinsmuseum	ML
+mm.musa.394	twitter.com/yateheritageyh	Both
+mm.mgs.334	['twitter.com/britannica']	Scrape
+mm.musa.142	no_resource	no_resource
+mm.domus.SW079	twitter.com/gloswaterways	Both
+mm.misc.119	no_resource	no_resource
+mm.mgs.282	twitter.com/tarbatdiscovery	Both
+mm.aim.0220	twitter.com/museumbathstone	ML
+mm.domus.SW146	no_resource	no_resource
+mm.musa.305	twitter.com/the_globe	Both
+mm.wiki.306	no_resource	no_resource
+mm.domus.NE021	no_resource	no_resource
+mm.aim.0570	no_resource	no_resource
+mm.domus.EM001	['twitter.com/nn_bestsurprise', 'twitter.com/northamptonshoe']	Scrape
+mm.misc.139	['twitter.com/atlasobscura']	Scrape
+mm.mgs.369	twitter.com/uod_museums/status/1134381686249205761	ML
+mm.domus.SE225	twitter.com/camtechmuseum	Both
+mm.nimc.036	twitter.com/thebcrc	ML
+mm.domus.SW181	['twitter.com/museumtetbury', 'twitter.com/tetburytc', 'twitter.com/MuseumAthelstan/status/1098970029595480064']	Scrape
+mm.ace.1252	twitter.com/sk_regt_museum	Both
+mm.musa.377	['twitter.com/love_brighton', 'twitter.com/westblatchmill']	Scrape
+mm.hha.128	no_resource	no_resource
+mm.ace.1148	twitter.com/bellinghamher	Both
+mm.ace.1249	twitter.com/middyrailway	Both
+mm.domus.YH068	no_resource	no_resource
+mm.New.92	no_resource	no_resource
+mm.New.43	['www.twitter.com/rafbbmf', 'twitter.com/officiallycahc']	Scrape
+mm.domus.SE008	['www.twitter.com/thebda', 'twitter.com/TheBDA/status/1250304348543836162']	Scrape
+mm.aim.0710	['www.twitter.com/alnwickcastle', 'twitter.com/alnwickcastle']	Scrape
+mm.ace.1159	twitter.com/roalddahlmuseum	ML
+mm.aim.0057	twitter.com/boemuseum	Both
+mm.domus.SE427	twitter.com/moyseshallnews	Both
+mm.wiki.253	no_resource	no_resource
+mm.domus.NW194	no_resource	no_resource
+mm.domus.SW143	twitter.com/uob_theatre_col	Both
+mm.musa.180	twitter.com/ionaheritage	ML
+mm.musa.220	['twitter.com/visitchelt']	Scrape
+mm.wiki.059	['twitter.com/discovercarlisl']	Scrape
+mm.aim.1322	twitter.com/wiltonhousepmh	Both
+mm.domus.SC030	no_resource	no_resource
+mm.misc.140	no_resource	no_resource
+mm.aim82NM.096	['twitter.com/dowtkids']	Scrape
+mm.wiki.357	no_resource	no_resource
+mm.wiki.103	no_resource	no_resource
+mm.wiki.375	twitter.com/arundelcastle	ML
+mm.domus.SE013	twitter.com/museumofcroydon	Both
+mm.domus.SC261	no_resource	no_resource
+mm.domus.SE567	no_resource	no_resource
+mm.hha.022	twitter.com/firleplace	Both
+mm.aim.0393	twitter.com/manchesterfire/status/242154935226093568	ML
+mm.ace.022	twitter.com/nortonpriory	Both
+mm.domus.SC120	['www.twitter.com/thinknature_', 'www.twitter.com/pathsforall', 'twitter.com/hlhsocial', 'www.twitter.com/coopuk', 'twitter.com/highlandfolk']	Scrape
+mm.domus.SE080	twitter.com/colmuseums	Both
+mm.aim.1091	twitter.com/pilsudskiinst	Both
+mm.musa.274	twitter.com/cromwells_house	Both
+mm.mald.149	no_resource	no_resource
+mm.domus.WM060	twitter.com/potteriesmuseum	Both
+mm.domus.EM019	no_resource	no_resource
+mm.domus.YH144	no_resource	no_resource
+mm.domus.SW059	['twitter.com/lymeregismuseum']	Scrape
+mm.mgs.279	no_resource	no_resource
+mm.misc.242	twitter.com/morayvia	ML
+mm.hha.183	twitter.com/mountstuart	Both
+mm.musa.083	no_resource	no_resource
+mm.musa.380	twitter.com/TudorHouseWey/status/837270112977694720	ML
+mm.musa.252	twitter.com/spacecentre	Both
+mm.domus.SE335	['twitter.com/march_museum', 'twitter.com/march_museum/status/993263915164426240']	Scrape
+mm.ace.413	twitter.com/timetidemuseum	ML
+mm.wiki.474	twitter.com/johnknoxhouse	Both
+mm.domus.SE168	['twitter.com/v_and_a']	Scrape
+mm.musa.168	no_resource	no_resource
+mm.domus.NW093	['twitter.com/wigancouncil', 'twitter.com/wiganmuseum']	Scrape
+mm.musa.282	no_resource	no_resource
+mm.domus.NW042	twitter.com/LMuseums/status/1117798657334620160	ML
+mm.domus.SE603	['twitter.com/seasidemuseum', 'twitter.com/hbmuseumtrust']	Scrape
+mm.misc.195	no_resource	no_resource
+mm.domus.YH157	['twitter.com/nostellnt']	Scrape
+mm.domus.YH052	['twitter.com/cravencouncil']	Scrape
+mm.domus.WM035	['www.twitter.com/shropcouncil']	Scrape
+mm.domus.SC192	twitter.com/smithmuseum	Both
+mm.domus.YH122	['twitter.com/mywakefield', 'twitter.com/wfmuseums']	Scrape
+mm.domus.WM093	twitter.com/waterworkmuseum	Both
+mm.wiki.255	no_resource	no_resource
+mm.domus.WA070	twitter.com/greenfieldvally	Both
+mm.ace.1121	twitter.com/nwamuseum	ML
+mm.domus.YH136	no_resource	no_resource
+mm.domus.SW053	no_resource	no_resource
+mm.domus.WM129	no_resource	no_resource
+mm.domus.SC095	['twitter.com/apo11o']	Scrape
+mm.wiki.446	no_resource	no_resource
+mm.domus.SE593	['twitter.com/flixtonmuseum']	Scrape
+mm.domus.SC314	twitter.com/nl_heritage	Both
+mm.domus.SE265	['twitter.com/visitef', 'twitter.com/efdmuseum']	Scrape
+mm.domus.SE232	twitter.com/charlestontrust	ML
+mm.musa.132	no_resource	no_resource
+mm.domus.NI038	['mobile.twitter.com/colerainemuseum', 'twitter.com/colerainemuseum']	Scrape
+mm.New.64	twitter.com/gmrcnitshill	Both
+mm.wiki.430	['twitter.com/swtan1910']	Scrape
+mm.wiki.039	twitter.com/mevamuseum	ML
+mm.New.156	no_resource	no_resource
+mm.domus.WM056	['twitter.com/enjoystaffs']	Scrape
+mm.domus.WM032	no_resource	no_resource
+mm.domus.NE030	twitter.com/s_shieldsmuseum	Both
+mm.wiki.401	no_resource	no_resource
+mm.hha.147	no_resource	no_resource
+mm.domus.SE347	['twitter.com/ryecastlemuseum', 'twitter.com/ryecastlemuseum?lang=fr']	Scrape
+mm.domus.SW085	twitter.com/perranzabuloe	Both
+mm.ace.1224	twitter.com/heugh_museum	Both
+mm.domus.SE175	twitter.com/claremuseum	ML
+mm.aim.0797	twitter.com/caradrhayader	Both
+mm.domus.NW188	twitter.com/bcvmleyland	Both
+mm.domus.SE530	twitter.com/monkshousent	Both
+mm.domus.YH105	no_resource	no_resource
+mm.domus.SW099	twitter.com/herschelmuseum	Both
+mm.domus.EM069	no_resource	no_resource
+mm.domus.YH124	no_resource	no_resource
+mm.hha.002	twitter.com/syonparkhouse	ML
+mm.domus.SW167	twitter.com/sturmill	ML
+mm.domus.SE392	['twitter.com/morethanadodo', '/twitter.com/morethanadodo']	Scrape
+mm.aim.0425	['www.twitter.com/#!/heagewindmill', 'twitter.com/heagewindmill']	Scrape
+mm.domus.SE411	no_resource	no_resource
+mm.domus.WA091	no_resource	no_resource
+mm.mald.158	twitter.com/welshquilts	Both
+mm.aim.0181	twitter.com/computermuseum	Both
+mm.aim.0018	no_resource	no_resource
+mm.musa.388	['twitter.com/visit_wirral']	Scrape
+mm.ace.1139	twitter.com/bowes_railway	Both
+mm.domus.SC280	no_resource	no_resource
+mm.aim.1354	no_resource	no_resource
+mm.fcm.056	twitter.com/theclinkprison	Both
+mm.hha.027	twitter.com/st_marys_house	Both
+mm.domus.SE309	twitter.com/hornimanmuseum	Both
+mm.aim.1246	['twitter.com/alamy']	Scrape
+mm.wiki.155	twitter.com/colpolicemuseum	Both
+mm.domus.SE337	['//www.twitter.com/maryrosemuseum', 'twitter.com/maryrosemuseum']	Scrape
+mm.domus.SW118	['twitter.com/#!/fleetairarmmus']	Scrape
+mm.domus.NE064	twitter.com/woodhorn	Both
+mm.domus.SC273	no_resource	no_resource
+mm.musa.140	['twitter.com/uknatarchives']	Scrape
+mm.domus.YH110	no_resource	no_resource
+mm.domus.SE019	twitter.com/sandwichmuseum	Both
+mm.fcm.090	twitter.com/edencamp	Both
+mm.aim.0528	['twitter.com/poetsorg']	Scrape
+mm.wiki.162	twitter.com/illustrationhq	Both
+mm.aim.0616	no_resource	no_resource
+mm.domus.WM073	twitter.com/themorw	Both
+mm.domus.SE284	['twitter.com/gfdheritage', 'twitter.com/guildfordbc']	Scrape
+mm.domus.EM063	twitter.com/newarkehouses	ML
+mm.domus.SC032	['twitter.com/auchindrain']	Scrape
+mm.domus.SE554	twitter.com/hatchlandsnt	Both
+mm.ace.1267	twitter.com/panaceamuseum	Both
+mm.wiki.365	['www.twitter.com/stoneleighdave']	Scrape
+mm.domus.SC103	twitter.com/dunblanemuseum	Both
+mm.aim.0370	no_resource	no_resource
+mm.aim.0786	no_resource	no_resource
+mm.domus.SE397	twitter.com/vestryhouse	Both
+mm.domus.SW237	twitter.com/ntkillerton	Both
+mm.ace.1294	no_resource	no_resource
+mm.musa.306	['twitter.com/sheppyscider']	Scrape
+mm.musa.346	no_resource	no_resource
+mm.hha.163	twitter.com/ballindallochc	Both
+mm.domus.NW172	['twitter.com/ntsouthlakes']	Scrape
+mm.domus.SW179	['twitter.com/ntcorfecastle']	Scrape
+mm.aim.1261	twitter.com/turnershouse	Both
+mm.domus.SC169	['twitter.com/armadalecastle']	Scrape
+mm.ace.1245	twitter.com/rncmvoice	Both
+mm.misc.156	no_resource	no_resource
+mm.wiki.300	no_resource	no_resource
+mm.domus.SE522	twitter.com/osterleynt	Both
+mm.aim.0788	twitter.com/rtunnels	ML
+mm.domus.SC006	no_resource	no_resource
+mm.domus.EM033	twitter.com/chfldmuse	Both
+mm.domus.SE410	twitter.com/metmuseum/status/1294360761402363904	ML
+mm.domus.WM013	twitter.com/wolvartgallery	Both
+mm.fcm.051	no_resource	no_resource
+mm.aim.0300	twitter.com/eastsomersetrly	Both
+mm.domus.YH093	no_resource	no_resource
+mm.fcm.186	['twitter.com/thenmmuk']	Scrape
+mm.domus.SE187	twitter.com/battlemuseum	ML
+mm.mgs.390	['twitter.com/crieffvc', 'twitter.com/highlandtaste']	Scrape
+mm.domus.SW209	['twitter.com/coleridgent']	Scrape
+mm.domus.SE146	twitter.com/orleanshg	Both
+mm.fcm.082	no_resource	no_resource
+mm.hha.054	twitter.com/hardwickeafc	ML
+mm.fcm.149	no_resource	no_resource
+mm.domus.NI006	twitter.com/lisburn_museum	Both
+mm.domus.WM015	twitter.com/bantockhouse	Both
+mm.wiki.333	twitter.com/willowswetlands	Both
+mm.domus.SC022	no_resource	no_resource
+mm.domus.SE493	no_resource	no_resource
+mm.ace.1173	twitter.com/iwmduxford	ML
+mm.wiki.313	twitter.com/stonorpark	Both
+mm.aim.0447	twitter.com/hollycombesteam	Both
+mm.wiki.285	['www.twitter.com/midnorfolkrly', 'twitter.com/midnorfolkrly']	Scrape
+mm.misc.185	no_resource	no_resource
+mm.domus.YH069	twitter.com/kohimamuseum	Both
+mm.domus.NW019	twitter.com/bramall_hall	ML
+mm.domus.SC050	twitter.com/kygalleries	ML
+mm.domus.SE367	twitter.com/dealtimeball	ML
+mm.domus.SW175	twitter.com/themeaa	Both
+mm.domus.NW186	no_resource	no_resource
+mm.wiki.352	no_resource	no_resource
+mm.mgs.329	no_resource	no_resource
+mm.aim.0036	twitter.com/theassayoffice	Both
+mm.mgs.373	no_resource	no_resource
+mm.domus.SC177	twitter.com/scotsdgmuseum	Both
+mm.wiki.024	twitter.com/gawsworthhall	Both
+mm.fcm.221	twitter.com/scallowaymuseum	ML
+mm.domus.SE234	twitter.com/chelmsmuseum	Both
+mm.musa.253	twitter.com/navancentrefort	ML
+mm.domus.SW138	twitter.com/torquaymuseum	Both
+mm.musa.012	['twitter.com/arsenal']	Scrape
+mm.fcm.276	['twitter.com/wolves']	Scrape
+mm.aim.0179	no_resource	no_resource
+mm.aim.0207	twitter.com/clearwellcaves	Both
+mm.domus.SE553	twitter.com/clandonparknt	Both
+mm.mald.079	['twitter.com/visit_snowdonia']	Scrape
+mm.fcm.232	no_resource	no_resource
+mm.misc.007	twitter.com/tnmoc	Both
+mm.ace.1295	twitter.com/gc_collection	Both
+mm.mald.001	twitter.com/abervalleyhg	ML
+mm.wiki.053	no_resource	no_resource
+mm.aim.1026	['twitter.com/twotonecentral', 'twitter.com/covmusicm']	Scrape
+mm.domus.SW071	['www.twitter.com/lydiardpark', 'twitter.com/lydiardhouse']	Scrape
+mm.fcm.100	no_resource	no_resource
+mm.domus.SE308	twitter.com/horshammuseum	Both
+mm.domus.WA028	['twitter.com/cyngorcnpt', 'twitter.com/cefncoedmuseum']	Scrape
+mm.wiki.440	twitter.com/nantclwydruthin	ML
+mm.domus.WA041	twitter.com/porthcawlmuseum	ML
+mm.musa.050	no_resource	no_resource
+mm.New.143	no_resource	no_resource
+mm.domus.SW093	no_resource	no_resource
+mm.domus.EM048	twitter.com/lancers_museum	ML
+mm.mgs.383	twitter.com/rockfieldcentre	ML
+mm.domus.SE007	['twitter.com/aagbi_heritage', 'twitter.com/assoc_anaes', 'twitter.com/anaes_heritage']	Scrape
+mm.misc.234	twitter.com/bristolaero	Both
+mm.domus.SE472	no_resource	no_resource
+mm.domus.NW033	twitter.com/congletonmuseum	Both
+mm.wiki.329	no_resource	no_resource
+mm.domus.SW044	twitter.com/exmouthm	Both
+mm.domus.SW174	twitter.com/brlsi	Both
+mm.ace.1212	twitter.com/rayleigh_mill	Both
+mm.domus.SW242	twitter.com/ntchedworth	Both
+mm.New.86	twitter.com/nottindmuseum	ML
+mm.ace.1165	twitter.com/rwabristol	Both
+mm.domus.SC189	twitter.com/natminingmuseum	Both
+mm.domus.SC296	no_resource	no_resource
+mm.misc.121	twitter.com/newhallart	Both
+mm.wiki.223	no_resource	no_resource
+mm.hha.139	no_resource	no_resource
+mm.ace.1180	twitter.com/museumoflondon	Both
+mm.domus.WA084	twitter.com/momamachynlleth	Both
+mm.domus.WM041	['twitter.com/#!/railcouk', 'twitter.com/#!/railcouk']	Scrape
+mm.domus.YH138	no_resource	no_resource
+mm.musa.164	['twitter.com/visitessex']	Scrape
+mm.wiki.441	no_resource	no_resource
+mm.New.59	twitter.com/barnrailwa	ML
+mm.wiki.334	no_resource	no_resource
+mm.wiki.405	no_resource	no_resource
+mm.musa.188	no_resource	no_resource
+mm.domus.NE051	twitter.com/tynemouthvlb	ML
+mm.ace.1105	no_resource	no_resource
+mm.mald.038	['www.twitter.com/corrisrailway', 'twitter.com/corrisrailway']	Scrape
+mm.aim.0599	twitter.com/menaiheritage	Both
+mm.domus.SE306	['twitter.com/mi_intel']	Scrape
+mm.domus.WM087	twitter.com/worcsyeomanry	ML
+mm.musa.260	twitter.com/newcastlecastle	Both
+mm.domus.SE322	no_resource	no_resource
+mm.domus.WA045	['twitter.com/wrexhamcbc']	Scrape
+mm.wiki.190	twitter.com/heatonparktram	Both
+mm.ace.1132	twitter.com/lincsrtm	ML
+mm.wiki.151	twitter.com/brdgallery	ML
+mm.fcm.230	no_resource	no_resource
+mm.New.65	no_resource	no_resource
+mm.aim.1076	twitter.com/boughtonhouse	ML
+mm.domus.SE403	twitter.com/whitemillmuseum	Both
+mm.nimc.026	twitter.com/fegallery	ML
+mm.mald.007	['twitter.com/copper_kingdom']	Scrape
+mm.ace.1231	twitter.com/slaverymuseum	ML
+mm.wiki.421	twitter.com/siegemuseum	Both
+mm.aim.0952	no_resource	no_resource
+mm.ace.1221	['twitter.com/sledmerehouse']	Scrape
+mm.ace.1091	twitter.com/ntcroftcastle	Both
+mm.domus.SE428	twitter.com/railworld	ML
+mm.ace.1102	twitter.com/uremuseum	Both
+mm.domus.SE083	['twitter.com/rpharms']	Scrape
+mm.New.133	no_resource	no_resource
+mm.domus.SE260	['twitter.com/welovedartford']	Scrape
+mm.musa.006	['twitter.com/imperialnhs', 'twitter.com/fleminglondon']	Scrape
+mm.domus.SC294	twitter.com/cockburngeol	ML
+mm.domus.EM040	['//twitter.com/share']	Scrape
+mm.ace.1207	['twitter.com/worcsmasonicmus']	Scrape
+mm.mald.157	twitter.com/wiciuwchgwyrfai	ML
+mm.domus.SC184	twitter.com/royalscotacad	Both
+mm.musa.183	['twitter.com/_art_on_sea']	Scrape
+mm.domus.NE012	no_resource	no_resource
+mm.domus.YH076	no_resource	no_resource
+mm.ace.023	twitter.com/digforeboracum	ML
+mm.domus.NE029	twitter.com/theshipley	Both
+mm.domus.SW220	['twitter.com/wiltsrangersnt']	Scrape
+mm.hha.053	twitter.com/clw_chavenage	ML
+mm.domus.SC234	no_resource	no_resource
+mm.domus.SC187	twitter.com/aberdeensci	Both
+mm.New.31	twitter.com/ohyeahcentre	Both
+mm.domus.WA020	no_resource	no_resource
+mm.domus.SE158	twitter.com/remuseum	Both
+mm.fcm.231	['www.twitter.com/museumslondon', 'twitter.com/museumslondon']	Scrape
+mm.wiki.478	['twitter.com/thecastleofmey']	Scrape
+mm.fcm.001	no_resource	no_resource
+mm.domus.EM085	twitter.com/bostonguildhall	ML
+mm.domus.SW240	no_resource	no_resource
+mm.domus.NW155	twitter.com/manxheritage	Both
+mm.domus.NI024	no_resource	no_resource
+mm.domus.WM141	no_resource	no_resource
+mm.wiki.489	no_resource	no_resource
+mm.domus.SC200	['twitter.com/ullapoolmuseum']	Scrape
+mm.wiki.479	no_resource	no_resource
+mm.New.29	no_resource	no_resource
+mm.aim.1223	twitter.com/hrobinsonmuseum	ML
+mm.domus.NW113	twitter.com/phmmcr	ML
+mm.ace.333	twitter.com/shrewsmuseum	Both
+mm.aim.0443	twitter.com/historylinks1	ML
+mm.wiki.030	no_resource	no_resource
+mm.mgs.320	twitter.com/peacemuseumuk?lang=he	ML
+mm.musa.004	no_resource	no_resource
+mm.mald.019	twitter.com/borthstation	Both
+mm.mald.069	no_resource	no_resource
+mm.domus.SW223	['twitter.com/ntsouthwest']	Scrape
+mm.domus.SW130	['twitter.com/signalsmuseum', 'twitter.com/signalsmuseum/status/1095625506609917952']	Scrape
+mm.domus.SC232	twitter.com/mcmanusdundee	Both
+mm.fcm.145	no_resource	no_resource
+mm.hha.060	no_resource	no_resource
+mm.domus.SC056	['twitter.com/rbcfilmtheatre']	Scrape
+mm.wiki.083	twitter.com/goldenhindship	Both
+mm.misc.020	no_resource	no_resource
+mm.wiki.330	no_resource	no_resource
+mm.domus.SW122	twitter.com/somersetmuseum	Both
+mm.mald.111	twitter.com/carmsmuseums/status/1197410127244152833	ML
+mm.mgs.356	['twitter.com/newcastleton']	Scrape
+mm.musa.048	no_resource	no_resource
+mm.ace.1127	twitter.com/nhm_tring	Both
+mm.aim.0302	twitter.com/evworksmuseum	ML
+mm.domus.SE041	twitter.com/keatshouse	Both
+mm.MDN.023	no_resource	no_resource
+mm.misc.159	['twitter.com/eh_stonehenge', 'twitter.com/stonehenge_6114']	Scrape
+mm.domus.SE017	twitter.com/tatebritain	ML
+mm.fcm.030	no_resource	no_resource
+mm.wiki.251	twitter.com/sirjohnmoore	ML
+mm.domus.SW151	twitter.com/bridportmuseum	Both
+mm.misc.268	['www.twitter.com/thewhoshop', 'twitter.com/thewhoshop']	Scrape
+mm.domus.SC228	twitter.com/pierartscentre	Both
+mm.domus.SW036	twitter.com/deanforrailway	Both
+mm.ace.1292	['twitter.com/britisharmy', 'twitter.com/armymusicmuseum']	Scrape
+mm.domus.SW221	['twitter.com/ntstourhead']	Scrape
+mm.wiki.359	['twitter.com/srhs123', 'twitter.com/SRHS123']	Scrape
+mm.domus.SE240	twitter.com/cowpnewtmuseum	Both
+mm.domus.EM041	twitter.com/louthmuseum	ML
+mm.domus.SE312	twitter.com/dockyardchatham	Both
+mm.domus.NW052	['twitter.com/visitliverpool', 'twitter.com/croxtethhall']	Scrape
+mm.mgs.374	['twitter.com/lucs_canal']	Scrape
+mm.New.42	['twitter.com/beatlesmuseum_']	Scrape
+mm.New.159	twitter.com/manxheritage	ML
+mm.domus.NW171	twitter.com/ntspekehall	Both
+mm.domus.SC059	no_resource	no_resource
+mm.musa.035	['twitter.com/battlesbridgesx', 'twitter.com/battlesbridge']	Scrape
+mm.wiki.356	['twitter.com/chobhamnet']	Scrape
+mm.domus.YH003	twitter.com/leedscitymuseum	Both
+mm.hha.001	['www.twitter.com/rmgreenwich', 'twitter.com/tqhgreenwich']	Scrape
+mm.domus.SE369	['twitter.com/wix', 'twitter.com/dot_thorney']	Scrape
+mm.wiki.079	['twitter.com/hcolyton']	Scrape
+mm.mald.148	no_resource	no_resource
+mm.domus.SW157	no_resource	no_resource
+mm.domus.SW031	twitter.com/holburne	Both
+mm.New.98	['twitter.com/outerhebs']	Scrape
+mm.mgs.337	no_resource	no_resource
+mm.hha.088	twitter.com/tissingtonhall	Both
+mm.misc.016	twitter.com/swanseabus	Both
+mm.mgs.348	twitter.com/britanniayacht	Both
+mm.New.75	['twitter.com/aucklandproject']	Scrape
+mm.hha.043	no_resource	no_resource
+mm.mgs.290	no_resource	no_resource
+mm.fcm.202	no_resource	no_resource
+mm.ace.1264	no_resource	no_resource
+mm.aim.0389	no_resource	no_resource
+mm.domus.EM081	twitter.com/creswellcrags	Both
+mm.aim.0925	no_resource	no_resource
+mm.domus.SC291	['twitter.com/mimedinburgh', 'twitter.com/reidedinburgh']	Scrape
+mm.wiki.245	twitter.com/eastmidaeropark	ML
+mm.misc.193	['twitter.com/chelseafc']	Scrape
+mm.domus.NW118	['twitter.com/link4life', 'twitter.com/touchstones']	Scrape
+mm.domus.SE464	['www.twitter.com/officialoldgaol', 'twitter.com/officialoldgaol']	Scrape
+mm.domus.EM025	['twitter.com/_lleisure', 'twitter.com/dhlmuseum']	Scrape
+mm.aim.0720	['twitter.com/plasglyn']	Scrape
+mm.domus.NW152	['twitter.com/ribmuseum', 'twitter.com/RibRomanMuseum']	Scrape
+mm.domus.SE300	twitter.com/haslemeremuseum	Both
+mm.domus.NW101	twitter.com/walkergallery	ML
+mm.misc.164	twitter.com/tomboftheeagles	Both
+mm.mgs.408	['twitter.com/museumonmound']	Scrape
+mm.New.162	no_resource	no_resource
+mm.hha.059	no_resource	no_resource
+mm.domus.SE418	no_resource	no_resource
+mm.domus.SE461	twitter.com/stbarbemuseum	ML
+mm.domus.YH054	twitter.com/cusworth_hall	ML
+mm.ace.1129	['twitter.com/collegeoptomuk']	Scrape
+mm.New.137	no_resource	no_resource
+mm.domus.WA081	no_resource	no_resource
+mm.musa.042	['twitter.com/berkspgl']	Scrape
+mm.domus.SC252	['www.twitter.com/lonelyplanet', 'twitter.com/museumnaneilean/status/916280105764380672']	Scrape
+mm.domus.WA039	['www.twitter.com/visitmerthyr']	Scrape
+mm.wiki.496	no_resource	no_resource
+mm.aim.0959	['twitter.com/houghmill']	Scrape
+mm.misc.100	no_resource	no_resource
+mm.domus.SW001	twitter.com/BlakeMuseum	ML
+mm.domus.SE162	no_resource	no_resource
+mm.hha.141	twitter.com/mirehouselakes	Both
+mm.ace.1229	twitter.com/chasewaterrail	Both
+mm.domus.WA094	no_resource	no_resource
+mm.domus.NW129	twitter.com/pendleheritagec	ML
+mm.wiki.326	twitter.com/cheddargorge_	ML
+mm.mgs.006	['www.twitter.com/thebrochproject']	Scrape
+mm.aim.1329	twitter.com/winterbournehg	Both
+mm.wiki.225	['twitter.com/visitseengland']	Scrape
+mm.fcm.083	twitter.com/dinosaursdorch	ML
+mm.domus.YH083	twitter.com/sewerbyhall	ML
+mm.aim.0699	twitter.com/newhavenfort	Both
+mm.domus.NW150	['twitter.com/methodistherit']	Scrape
+mm.domus.SC051	no_resource	no_resource
+mm.aim.0406	twitter.com/haddenhamnet	ML
+mm.wiki.429	no_resource	no_resource
+mm.musa.052	['twitter.com/blessingbourne']	Scrape
+mm.domus.YH058	twitter.com/hedonmuseum1996	Both
+mm.mgs.281	twitter.com/glasgowgoma	Both
+mm.domus.WM045	twitter.com/cvrofficialsite	Both
+mm.domus.YH107	twitter.com/lulgalleries	Both
+mm.fcm.075	twitter.com/hmp_dartmoor	ML
+mm.domus.SW026	twitter.com/combemuseum	ML
+mm.domus.NW039	twitter.com/grundyblackpool	Both
+mm.aim.0750	no_resource	no_resource
+mm.hha.112	no_resource	no_resource
+mm.domus.NW148	twitter.com/victoriagallery	Both
+mm.domus.SC143	no_resource	no_resource
+mm.ace.1190	['twitter.com/suttonheritage']	Scrape
+mm.domus.SC157	['www.twitter.com/edlc_leisure']	Scrape
+mm.wiki.019	no_resource	no_resource
+mm.domus.SE092	['twitter.com/ramseyruralmuse', 'twitter.com/ramseyruralmuse/status/1111381223006306305']	Scrape
+mm.aim.1258	twitter.com/sbm_ruthwell	Both
+mm.domus.SW105	twitter.com/wiltshiremuseum	Both
+mm.domus.NW181	['www.twitter.com/lythamhall', 'twitter.com/LythamHall']	Scrape
+mm.ace.1223	twitter.com/hmswarrior1860	Both
+mm.aim.0077	twitter.com/bembridgepc	ML
+mm.hha.033	['twitter.com/trewithengarden', 'twitter.com/htrewithen']	Scrape
+mm.domus.SC057	twitter.com/dumfriesmuseum	Both
+mm.domus.SE069	no_resource	no_resource
+mm.wiki.304	no_resource	no_resource
+mm.aim.0173	no_resource	no_resource
+mm.domus.EM037	twitter.com/erewash_museum	ML
+mm.MDN.021	no_resource	no_resource
+mm.aim.0307	['twitter.com/elingexperience', 'twitter.com/ElingExperience/status/1072108463902388230']	Scrape
+mm.wiki.069	no_resource	no_resource
+mm.mgs.345	twitter.com/eca_edinburgh	Both
+mm.domus.EM059	['www.twitter.com/kmuseumgallery', 'twitter.com/kmuseumgallery']	Scrape
+mm.hha.146	twitter.com/samlesburyhall	Both
+mm.domus.SW141	twitter.com/totnesmuseum	Both
+mm.domus.SC092	twitter.com/cromcourthouse/media	ML
+mm.mgs.287	no_resource	no_resource
+mm.domus.SE242	twitter.com/cuckfieldmuseum	Both
+mm.wiki.379	no_resource	no_resource
+mm.musa.360	['twitter.com/tyturnerpenarth']	Scrape
+mm.aim.1115	twitter.com/thekeepmuseum	Both
+mm.misc.173	twitter.com/ComptonCastle	ML
+mm.wiki.290	twitter.com/strumpshawfair	ML
+mm.misc.266	twitter.com/body_worlds	ML
+mm.domus.WM110	twitter.com/bwhite_museum	ML
+mm.New.103	twitter.com/migrationuk	Both
+mm.wiki.034	['twitter.com/jamaicainn']	Scrape
+mm.domus.NW110	no_resource	no_resource
+mm.domus.EM068	no_resource	no_resource
+mm.wiki.311	['twitter.com/hookybrewery']	Scrape
+mm.wiki.381	no_resource	no_resource
+mm.domus.YH155	['twitter.com/nt_york', 'twitter.com/treasurersyork']	Scrape
+mm.aim.1159	['www.twitter.com/lv18miamigo']	Scrape
+mm.wiki.268	twitter.com/wickenbymembers	ML
+mm.domus.SE024	twitter.com/guards_museum	Both
+mm.musa.182	['twitter.com/jerseywartunnel', 'twitter.com/JerseyWarTunnel/status/1321386147780636672']	Scrape
+mm.aim.1147	twitter.com/jenjenbottie	ML
+mm.domus.SE338	twitter.com/markfieldbeam	Both
+mm.hha.168	twitter.com/search?q=%23SkaillHouse&src=typd	ML
+mm.wiki.220	no_resource	no_resource
+mm.domus.SE012	twitter.com/maldonmuseum	ML
+mm.domus.NI027	['twitter.com/nmdcouncil', 'twitter.com/nandmmuseum']	Scrape
+mm.domus.SE071	twitter.com/colmuseums	Both
+mm.hha.038	twitter.com/powderhamcastle	Both
+mm.domus.SE320	no_resource	no_resource
+mm.domus.SC311	twitter.com/duffhouseroyal	ML
+mm.domus.NE075	no_resource	no_resource
+mm.domus.SE598	no_resource	no_resource
+mm.musa.393	no_resource	no_resource
+mm.domus.SC176	['twitter.com/paxtonhouse', 'twitter.com/paxtonweddings']	Scrape
+mm.hha.177	twitter.com/drumlanrig1679	ML
+mm.MDN.024	['www.twitter.com/wmphistory']	Scrape
+mm.musa.270	twitter.com/gcrnottingham	Both
+mm.domus.SW243	['twitter.com/mhsibuet', 'twitter.com/ntlodgepark/status/1062692713487917056']	Scrape
+mm.aim.0227	no_resource	no_resource
+mm.ace.1266	no_resource	no_resource
+mm.domus.SC188	['www.twitter.com/scotfishmuseum', 'twitter.com/scotfishmuseum']	Scrape
+mm.fcm.067	['twitter.com/sasiacollection']	Scrape
+mm.domus.SW035	twitter.com/dawlishmuseum	Both
+mm.wiki.145	twitter.com/cefncoedmuseum	ML
+mm.domus.EM089	['twitter.com/ntwoolsthorpe', 'twitter.com/search?q=%23woolsthorpe&src=hash&lang=fr']	Scrape
+mm.wiki.308	twitter.com/jamesherriot	Both
+mm.domus.WM072	['twitter.com/bclivingmuseum']	Scrape
+mm.ace.1174	twitter.com/iwmnorth	ML
+mm.domus.NI014	['twitter.com/dcsdcouncil']	Scrape
+mm.fcm.064	no_resource	no_resource
+mm.wiki.398	['twitter.com/croftonbeamengs']	Scrape
+mm.domus.EM078	twitter.com/justicemuseum	Both
+mm.hha.165	twitter.com/cawdorcastle	Both
+mm.domus.NE062	twitter.com/old_gaol	ML
+mm.wiki.160	['twitter.com/hac_thecompany', 'twitter.com/hacevents', 'twitter.com/hacregiment']	Scrape
+mm.domus.SC302	['twitter.com/jpjbirthplace']	Scrape
+mm.domus.SC081	twitter.com/search?q=%23corrigallfarm	ML
+mm.domus.WM034	twitter.com/actonscottmuse	ML
+mm.aim.0001	twitter.com/londonfire	ML
+mm.musa.039	no_resource	no_resource
+mm.domus.WM111	['www.twitter.com/sandwellmuseums', 'twitter.com/sandwellmuseums/status/1246008472224874499']	Scrape
+mm.domus.WA086	no_resource	no_resource
+mm.domus.NW176	['twitter.com/ntsizerghcastle', 'twitter.com/sizerghcastlent']	Scrape
+mm.domus.SE547	twitter.com/polesdenlaceynt	ML
+mm.domus.NW004	['twitter.com/tamesidecbt']	Scrape
+mm.domus.NE074	twitter.com/ntcragside	Both
+mm.domus.WM053	twitter.com/foxfieldrailway	Both
+mm.domus.SW006	twitter.com/brixhammuseum	ML
+mm.wiki.426	['twitter.com/carmengaa32']	Scrape
+mm.domus.SE159	['twitter.com/wattsgallery']	Scrape
+mm.domus.EM012	twitter.com/eyammuseum	ML
+mm.aim.1085	twitter.com/hovermuseum	ML
+mm.misc.078	no_resource	no_resource
+mm.ace.1268	['twitter.com/mbarrow', 'twitter.com/ntworkhouse']	Scrape
+mm.misc.154	no_resource	no_resource
+mm.musa.046	no_resource	no_resource
+mm.domus.SW222	no_resource	no_resource
+mm.hha.190	twitter.com/cressellycc/status/1150329890144735234	ML
+mm.misc.128	no_resource	no_resource
+mm.domus.SE020	twitter.com/thefanmuseum	Both
+mm.aim.0304	['www.twitter.com/museumcorwen', 'twitter.com/museumcorwen']	Scrape
+mm.misc.172	no_resource	no_resource
+mm.hha.068	['www.twitter.com/turveyhouse', 'twitter.com/turveyhouse']	Scrape
+mm.aim.0516	['twitter.com/warmleywindmill']	Scrape
+mm.musa.308	twitter.com/shipwrecks_iow	ML
+mm.aim.0795	twitter.com/renishawhallg	Both
+mm.domus.SE200	twitter.com/museumbraintree	Both
+mm.domus.SE015	twitter.com/designmuseum	Both
+mm.domus.YH057	no_resource	no_resource
+mm.domus.SE179	twitter.com/oxonmuseum	ML
+mm.domus.SE047	twitter.com/fulham_palace	Both
+mm.New.84	no_resource	no_resource
+mm.domus.SE057	twitter.com/raggedschool	ML
+mm.musa.210	['twitter.com/theromneymarsh']	Scrape
+mm.aim.1215	twitter.com/twickmuseum	Both
+mm.domus.EM035	twitter.com/derbysilkmill	ML
+mm.aim.0556	twitter.com/llanmuseum	ML
+mm.aim.1308	twitter.com/weymouthmuseum	Both
+mm.wiki.322	no_resource	no_resource
+mm.domus.YH079	twitter.com/normanbyhall	Both
+mm.aim82M.062	no_resource	no_resource
+mm.wiki.054	twitter.com/holkerhall	Both
+mm.New.55	twitter.com/holocaust_hud	Both
+mm.musa.371	['twitter.com/waterperry']	Scrape
+mm.domus.SC039	twitter.com/shetlandmanda	Both
+mm.misc.008	no_resource	no_resource
+mm.domus.SW182	no_resource	no_resource
+mm.domus.SW172	no_resource	no_resource
+mm.domus.SE576	twitter.com/lmaritime	Both
+mm.domus.SW225	no_resource	no_resource
+mm.domus.SW042	twitter.com/dorsetmuseum	Both
+mm.domus.WA048	twitter.com/amgllynmus	Both
+mm.wiki.057	twitter.com/rydal_mount	Both
+mm.domus.SE359	twitter.com/spencercookham	Both
+mm.New.48	no_resource	no_resource
+mm.wiki.497	no_resource	no_resource
+mm.misc.258	twitter.com/classicscifimu1	ML
+mm.domus.WA021	no_resource	no_resource
+mm.wiki.156	twitter.com/dennissevershse	Both
+mm.domus.NW053	['twitter.com/wordsworthgras', 'twitter.com/wordsworthgras/status/1220754696266289153']	Scrape
+mm.domus.SC197	twitter.com/tainmuseum	Both
+mm.wiki.093	twitter.com/aucklandproject	Both
+mm.domus.WM134	twitter.com/ntpackwood	Both
+mm.domus.SW106	twitter.com/drjennershouse	Both
+mm.aim.1095	twitter.com/kemsingkent	ML
+mm.domus.SC037	['twitter.com/jimclarktrust']	Scrape
+mm.domus.EM051	twitter.com/peakmines	ML
+mm.musa.263	twitter.com/mkmuseum	ML
+mm.hha.156	twitter.com/mellerstain	Both
+mm.domus.WM054	twitter.com/gladstonemuseum	Both
+mm.misc.264	no_resource	no_resource
+mm.domus.SE157	no_resource	no_resource
+mm.domus.SC122	twitter.com/groamhouse	Both
+mm.aim.0881	no_resource	no_resource
+mm.domus.NW085	twitter.com/harrispreston	Both
+mm.misc.083	twitter.com/search?q=%23radiomuseum	ML
+mm.domus.WM077	['twitter.com/#!/astreetpress', 'twitter.com/thersc']	Scrape
+mm.mald.159	no_resource	no_resource
+mm.domus.SW107	twitter.com/americanmuseum	Both
+mm.domus.YH070	['twitter.com/visitleeds', 'twitter.com/horsforthmuseum']	Scrape
+mm.domus.SC277	twitter.com/ntlmuseumsscot	Both
+mm.aim.0373	twitter.com/glapolicemuseum	ML
+mm.wiki.042	no_resource	no_resource
+mm.aim.0140	no_resource	no_resource
+mm.New.136	twitter.com/alnvalleyrail	Both
+mm.domus.SE054	twitter.com/oldoptheatre	Both
+mm.aim.0976	twitter.com/wimbledonmuseum	ML
+mm.domus.SC090	twitter.com/scotfishmuseum	ML
+mm.ace.203	no_resource	no_resource
+mm.domus.SE161	['twitter.com/socantiquaries', 'twitter.com/kelmscottmanor']	Scrape
+mm.hha.015	no_resource	no_resource
+mm.domus.YH023	twitter.com/abbeydalehamlet	Both
+mm.New.14	no_resource	no_resource
+mm.domus.SW110	twitter.com/russell_cotes	Both
+mm.aim.1300	no_resource	no_resource
+mm.New.1	twitter.com/titanicbelfast	Both
+mm.ace.1109	twitter.com/beestoncastle	ML
+mm.domus.SE356	twitter.com/stockwooddc	Both
+mm.domus.SW238	no_resource	no_resource
+mm.domus.SE192	twitter.com/bexhillmuseum	Both
+mm.wiki.262	no_resource	no_resource
+mm.domus.WA050	['twitter.com/talyllynrailway', 'twitter.com/narrowgaugerm']	Scrape
+mm.domus.EM055	twitter.com/lancers_museum	ML
+mm.aim.0430	['twitter.com/waterworkmuseum']	Scrape
+mm.New.15	['twitter.com/w_hamond', 'twitter.com/museumwhitbyjet']	Scrape
+mm.domus.SC203	twitter.com/westhighmuseum	Both
+mm.hha.077	twitter.com/holkhamestate	Both
+mm.hha.138	['twitter.com/huttoninforest', 'twitter.com/HuttoninForest/status/1173938970281041922']	Scrape
+mm.domus.SW177	['twitter.com/radstockmuseum', 'twitter.com/RadstockMuseum']	Scrape
+mm.hha.009	twitter.com/highclerecastle	Both
+mm.domus.SE271	twitter.com/chelmsmuseum	Both
+mm.domus.SE097	twitter.com/readingmuseum/status/1167474622050254848	ML
+mm.hha.089	twitter.com/belvoircastle	Both
+mm.domus.WM043	twitter.com/dudleymuseum	ML
+mm.aim.0513	twitter.com/kingjohnshouse	Both
+mm.domus.EM032	['twitter.com/visitlincscoast', 'twitter.com/cfv_skegness']	Scrape
+mm.misc.029	['twitter.com/jjfoxcigars']	Scrape
+mm.musa.328	no_resource	no_resource
+mm.domus.SE221	twitter.com/altonmuseums	Both
+mm.fcm.161	twitter.com/montacutemuseum	Both
+mm.domus.SC196	twitter.com/summerleemuseum	Both
+mm.domus.SC186	twitter.com/sssmuseum	Both
+mm.domus.NW121	twitter.com/blackburnmuseum	Both
+mm.wiki.087	no_resource	no_resource
+mm.domus.EM034	twitter.com/derbymuseums	ML
+mm.domus.SE096	['twitter.com/wallacemuseum']	Scrape
+mm.hha.005	['www.twitter.com/cheniesmanor', 'twitter.com/cheniesmanor']	Scrape
+mm.domus.NE083	no_resource	no_resource
+mm.aim.1348	['twitter.com/wymabbey']	Scrape
+mm.wiki.456	twitter.com/alfordheritage	Both
+mm.domus.SE504	twitter.com/stneotsmuseum	Both
+mm.domus.SE523	twitter.com/suttonhousent	Both
+mm.domus.SW132	twitter.com/cornwall_museum	Both
+mm.domus.NW078	twitter.com/galleryoldham	Both
+mm.domus.SE586	['twitter.com/ryecastlemuseum', 'twitter.com/ryecastlemuseum?lang=fr']	Scrape
+mm.hha.037	['twitter.com/hartlandabbey', 'twitter.com/hartlandabbey/status/1096806124983066625']	Scrape
+mm.wiki.138	no_resource	no_resource
+mm.aim.0262	twitter.com/dinosaurinfo	Both
+mm.domus.NI007	no_resource	no_resource
+mm.hha.023	twitter.com/glyndeplace	ML
+mm.aim.0931	twitter.com/staorgantheatre	Both
+mm.domus.SC044	twitter.com/culrossnts	Both
+mm.ace.1128	no_resource	no_resource
+mm.domus.SE138	twitter.com/wymheritagemus	ML
+mm.ace.685	twitter.com/hepworthgallery	Both
+mm.misc.077	no_resource	no_resource
+mm.ace.1124	no_resource	no_resource
+mm.aim.0518	no_resource	no_resource
+mm.mald.155	no_resource	no_resource
+mm.domus.WM115	['twitter.com/sandwellmuseums', 'www.twitter.com/sandwellmuseums']	Scrape
+mm.hha.003	twitter.com/dorneycourt	Both
+mm.domus.NW067	no_resource	no_resource
+mm.domus.EM086	twitter.com/sudbury_hallnt	Both
+mm.domus.SE343	twitter.com/southsea_castle	Both
+mm.MDN.010	twitter.com/hmileeds	Both
+mm.domus.SW039	twitter.com/thekeepmuseum	Both
+mm.misc.147	twitter.com/tutexuk	ML
+mm.domus.NI020	no_resource	no_resource
+mm.domus.SE436	no_resource	no_resource
+mm.domus.WM067	['twitter.com/bm_ag', 'twitter.com/weoleycastler']	Scrape
+mm.aim.0351	twitter.com/fortamherstuk	Both
+mm.aim.0461	twitter.com/hma_norwich	Both
+mm.domus.WM009	twitter.com/wm_museumdev/status/974301355631431680	ML
+mm.domus.WA055	['twitter.com/orielynysmon']	Scrape
+mm.hha.086	twitter.com/thehaddonhall	Both
+mm.wiki.386	no_resource	no_resource
+mm.domus.SE152	twitter.com/bonnersmuseum	Both
+mm.domus.WA056	twitter.com/plasnewyddllan	ML
+mm.ace.1120	['twitter.com/essexpoliceuk', 'twitter.com/epolicemuseum']	Scrape
+mm.musa.242	twitter.com/mountfitchet	Both
+mm.domus.SE115	no_resource	no_resource
+mm.wiki.146	twitter.com/tewksheritage	Both
+mm.domus.SW126	twitter.com/shaftesabbey	ML
+mm.wiki.104	no_resource	no_resource
+mm.domus.SE527	twitter.com/ntgreyscourt	Both
+mm.MDN.025	twitter.com/1940sswansea	Both
+mm.domus.SE018	twitter.com/dulwichgallery	Both
+mm.domus.NE028	twitter.com/discovery_mus	Both
+mm.domus.SW226	['twitter.com/mayfairoffice', 'twitter.com/plymouthmuseum/status/1168603286439682049']	Scrape
+mm.domus.SE065	twitter.com/wmgallery	ML
+mm.domus.SE188	['twitter.com/thebaytrust']	Scrape
+mm.musa.329	twitter.com/ntstoneywell	Both
+mm.misc.125	twitter.com/stowaero	Both
+mm.domus.SW224	twitter.com/snowshillmanor	Both
+mm.misc.047	['twitter.com/cornwall_ahc', 'twitter.com/Cornwall_AHC/status/1100034973422284801']	Scrape
+mm.fcm.150	no_resource	no_resource
+mm.ace.1276	twitter.com/pannett_art	Both
+mm.domus.SC064	no_resource	no_resource
+mm.misc.194	no_resource	no_resource
+mm.hha.025	['twitter.com/great dixter', 'twitter.com/greatdixter']	Scrape
+mm.misc.254	['twitter.com/maidstoneinfo']	Scrape
+mm.wiki.341	['twitter.com/apedaleheritage']	Scrape
+mm.domus.WM099	twitter.com/selly_manor	Both
+mm.domus.SE454	twitter.com/crawleymuseum	Both
+mm.domus.NE061	twitter.com/weardalemuseum	ML
+mm.domus.WM036	no_resource	no_resource
+mm.domus.SE128	no_resource	no_resource
+mm.domus.NW084	no_resource	no_resource
+mm.wiki.214	twitter.com/iowbusmuseum	ML
+mm.wiki.368	no_resource	no_resource
+mm.wiki.240	['www.twitter.com/visitfyldecoast', 'twitter.com/visitfyldecoast']	Scrape
+mm.musa.379	twitter.com/westapproaches	Both
+mm.hha.084	['twitter.com/caudwellandco']	Scrape
+mm.domus.SE600	twitter.com/milestoneshct	Both
+mm.domus.SE178	twitter.com/andovermuseum	Both
+mm.domus.SW050	twitter.com/victoriaartbath	Both
+mm.domus.WM116	no_resource	no_resource
+mm.ace.1178	['www.twitter.com/ocmsm', 'twitter.com/cmsm4']	Scrape
+mm.domus.NE026	twitter.com/laingartgallery	Both
+mm.wiki.020	no_resource	no_resource
+mm.aim.1197	twitter.com/cheniesmanor	ML
+mm.hha.066	['twitter.com/beefeatergrill']	Scrape
+mm.New.67	no_resource	no_resource
+mm.domus.WA103	no_resource	no_resource
+mm.domus.EM029	twitter.com/granthammuseum	ML
+mm.domus.SC284	no_resource	no_resource
+mm.aim82M.044	twitter.com/teescottage?lang=sv	ML
+mm.wiki.066	['www.twitter.com/davidmelloruk']	Scrape
+mm.domus.NI030	no_resource	no_resource
+mm.domus.SW114	['twitter.com/kacanaltrust', 'twitter.com/kactreading']	Scrape
+mm.mald.037	no_resource	no_resource
+mm.domus.EM022	twitter.com/newstead_abbey	ML
+mm.aim.0423	twitter.com/headhuntersrail	ML
+mm.aim.1101	twitter.com/langdondown	Both
+mm.ace.1273	twitter.com/ntnuffieldplace	Both
+mm.ace.1101	twitter.com/museumfreemason	Both
+mm.domus.NE048	twitter.com/tanfieldrailway	Both
+mm.domus.SE393	twitter.com/pitt_rivers	Both
+mm.aim.0410	no_resource	no_resource
+mm.misc.101	no_resource	no_resource
+mm.ace.1097	twitter.com/newroombristol	Both
+mm.domus.NW134	['twitter.com/livcathedral']	Scrape
+mm.aim.0619	no_resource	no_resource
+mm.New.68	['www.twitter.com/universityleeds', 'twitter.com/lulgalleries']	Scrape
+mm.domus.SC126	twitter.com/elginmuseum	Both
+mm.wiki.412	no_resource	no_resource
+mm.ace.1254	twitter.com/fusilierslondon	Both
+mm.wiki.452	['twitter.com/cadwwales', 'twitter.com/blaenavoniron']	Scrape
+mm.domus.NW178	twitter.com/wordsworthnt	ML
+mm.domus.NW094	['twitter.com/visitpreston', 'twitter.com/southribblebc/status/1266408369142870018']	Scrape
+mm.wiki.046	['twitter.com/trescoisland']	Scrape
+mm.musa.158	['twitter.com/gwilirailway']	Scrape
+mm.mgs.350	no_resource	no_resource
+mm.New.33	twitter.com/tyebbwfach	ML
+mm.domus.EM092	twitter.com/mrstrawshouse	Both
+mm.wiki.261	twitter.com/lincolncastle	ML
+mm.aim.1155	twitter.com/pankhurstcentre	ML
+mm.domus.WA102	['twitter.com/bangoruni']	Scrape
+mm.misc.057	['twitter.com/eton_nhm', 'www.twitter.com/georgefussey', 'www.twitter.com/wildet', 'www.twitter.com/eton_college', 'www.twitter.com/etoncollections', 'www.twitter.com/etoncollmuseums', 'www.twitter.com/wildetonw', 'www.twitter.com/etoncollfriends', 'twitter.com/etoncollmuseums']	Scrape
+mm.musa.325	['twitter.com/ntcouncilteam']	Scrape
+mm.domus.SC036	no_resource	no_resource
+mm.hud.005	twitter.com/alfristonnt	Both
+mm.domus.EM067	no_resource	no_resource
+mm.domus.SE588	no_resource	no_resource
+mm.hha.090	twitter.com/stanfordhallcsa	ML
+mm.domus.YH043	twitter.com/cannonhall1760	ML
+mm.aim.1315	twitter.com/whitworthmuseum	Both
+mm.domus.NW079	twitter.com/htmuseum	ML
+mm.domus.NW174	['twitter.com/ntsouthlakes']	Scrape
+mm.musa.120	no_resource	no_resource
+mm.domus.SE028	twitter.com/miltonscottage	Both
+mm.musa.320	no_resource	no_resource
+mm.domus.SC127	['twitter.com/stmungomuseum']	Scrape
+mm.wiki.173	twitter.com/southsidehouse1	ML
+mm.domus.WA078	['www.twitter.com/erddignt', 'twitter.com/erddignt']	Scrape
+mm.ace.1271	twitter.com/Wilderspin_	ML
+mm.domus.SE549	twitter.com/mottisfontnt	Both
+mm.aim.0109	no_resource	no_resource
+mm.wiki.380	no_resource	no_resource
+mm.wiki.152	['twitter.com/lbofhounslow']	Scrape
+mm.domus.YH081	twitter.com/ryedalefolk	Both
+mm.domus.SE082	twitter.com/musicalmuseum	Both
+mm.domus.WM101	['twitter.com/staffordshirecc']	Scrape
+mm.domus.WM118	no_resource	no_resource
+mm.musa.341	twitter.com/fruitmarket	ML
+mm.domus.EM080	['twitter.com/chfldmuse']	Scrape
+mm.ace.1263	twitter.com/weston_park	Both
+mm.wiki.014	no_resource	no_resource
+mm.domus.YH161	twitter.com/grimsbyfishing	Both
+mm.domus.EM107	twitter.com/mrssmithcottage	Both
+mm.wiki.477	twitter.com/castleleod	ML
+mm.domus.NW080	twitter.com/maritimemuseum5	ML
+mm.domus.SC279	twitter.com/ntlmuseumsscot	Both
+mm.domus.SE032	twitter.com/eg_museum	Both
+mm.domus.WA022	twitter.com/carmsmuseums	Both
+mm.domus.SE345	['twitter.com/thecurveslough', 'twitter.com/sloughmuseum']	Scrape
+mm.domus.SE001	twitter.com/gardenmuseumldn	Both
+mm.domus.WA054	no_resource	no_resource
+mm.domus.YH090	no_resource	no_resource
+mm.domus.SE349	twitter.com/roystonmuseum	ML
+mm.domus.SE323	twitter.com/lheadmuseum	ML
+mm.ace.1213	twitter.com/thetoymuseum	Both
+mm.misc.084	no_resource	no_resource
+mm.domus.SE246	twitter.com/southendmuseums/status/1240254924786528257	ML
+mm.domus.WM022	no_resource	no_resource
+mm.domus.SC285	no_resource	no_resource
+mm.domus.SE396	twitter.com/gilbertwhites	ML
+mm.misc.232	twitter.com/kent_momi	Both
+mm.domus.SE004	twitter.com/museumbarnet	ML
+mm.domus.NW083	no_resource	no_resource
+mm.domus.SE134	twitter.com/sheringhmmuseum	ML
+mm.wiki.196	['www.twitter.com/_littlewoodies', 'twitter.com/_littlewoodies']	Scrape
+mm.fcm.162	no_resource	no_resource
+mm.domus.NE079	twitter.com/hpoolartgallery	Both
+mm.domus.WM075	['twitter.com/wedgwood_museum', 'twitter.com/worldofwedgwood']	Scrape
+mm.domus.SE495	twitter.com/greatyarmouthpt	ML
+mm.wiki.475	no_resource	no_resource
+mm.misc.192	no_resource	no_resource
+mm.domus.EM070	['twitter.com/leicsmuseums']	Scrape
+mm.wiki.460	no_resource	no_resource
+mm.domus.NW175	twitter.com/ntrufford	Both
+mm.wiki.045	no_resource	no_resource
+mm.wiki.298	no_resource	no_resource
+mm.aim.1203	['www.twitter.com/thestorymuseum', 'twitter.com/thestorymuseum']	Scrape
+mm.New.131	no_resource	no_resource
+mm.fcm.144	twitter.com/landhmuseum	ML
+mm.domus.SE139	['twitter.com/priesthouse']	Scrape
+mm.domus.SW055	no_resource	no_resource
+mm.aim.0037	no_resource	no_resource
+mm.aim.1355	twitter.com/sam_elliott82	ML
+mm.domus.EM090	twitter.com/nttattershall	Both
+mm.domus.SC298	no_resource	no_resource
+mm.aim.0466	no_resource	no_resource
+mm.ace.1090	twitter.com/uptonhousent	Both
+mm.domus.SW235	['twitter.com/castledrogont']	Scrape
+mm.domus.SE049	twitter.com/stjohnsgate	ML
+mm.aim.0803	['twitter.com/bedsrcc']	Scrape
+mm.domus.SW213	twitter.com/nthardyscottage	ML
+mm.domus.SC198	no_resource	no_resource
+mm.hha.049	['twitter.com/stockgaylard1']	Scrape
+mm.mgs.044	twitter.com/maggiebarra	ML
+mm.mgs.223	twitter.com/biggarmuseum	ML
+mm.New.139	['twitter.com/infomhha']	Scrape
+mm.domus.SW011	['twitter.com/jkgeddes', 'twitter.com/housegeorgian']	Scrape
+mm.domus.NI008	no_resource	no_resource
+mm.wiki.360	['twitter.com/surreyhillsaonb']	Scrape
+mm.domus.SE441	twitter.com/pwrr_museum	Both
+mm.wiki.267	['twitter.com/aviationlincs', 'twitter.com/rafwaddington']	Scrape
+mm.domus.SE475	twitter.com/ehosbornehouse	Both
+mm.aim.0603	['www.twitter.com/merseyfire', 'twitter.com/firemuseumlpool']	Scrape
+mm.aim.0269	twitter.com/doddingtonhall	ML
+mm.domus.SW154	no_resource	no_resource
+mm.aim.0231	['twitter.com/corbybcleisure', 'twitter.com/lovecorbyuk/status/1338024617517211649']	Scrape
+mm.aim.0155	twitter.com/brickwrksmuseum	ML
+mm.domus.SE172	twitter.com/aldeburghmuseum	Both
+mm.musa.300	twitter.com/sammymmuseum	ML
+mm.musa.268	['twitter.com/policeserviceni']	Scrape
+mm.musa.178	no_resource	no_resource
+mm.musa.109	no_resource	no_resource
+mm.ace.324	twitter.com/collectionusher	Both
+mm.domus.NW049	no_resource	no_resource
+mm.domus.SE037	twitter.com/hogarthshouse	ML
+mm.aim82M.017	no_resource	no_resource
+mm.domus.NW072	['twitter.com/lancasterarts']	Scrape
+mm.hha.050	no_resource	no_resource
+mm.domus.SW244	twitter.com/liskeard_museum	ML
+mm.ace.1154	twitter.com/tavimuseum	Both
+mm.domus.EM093	twitter.com/nthardwick	Both
+mm.domus.SW185	no_resource	no_resource
+mm.New.88	no_resource	no_resource
+mm.fcm.130	no_resource	no_resource
+mm.domus.NW008	twitter.com/mcrartgallery	Both
+mm.domus.WM002	no_resource	no_resource
+mm.hha.013	twitter.com/godinton	ML
+mm.nimc.006	twitter.com/ntmountstewart	Both
+mm.ace.1186	no_resource	no_resource
+mm.ace.1299	no_resource	no_resource
+mm.domus.SE288	no_resource	no_resource
+mm.wiki.110	twitter.com/farleyshg	Both
+mm.aim.0664	no_resource	no_resource
+mm.New.127	twitter.com/gunsgreenhouse	ML
+mm.domus.SE255	twitter.com/westgatemuseum	ML
+mm.domus.SE118	['www.twitter.com/100bgmus', 'twitter.com/100bgmus']	Scrape
+mm.fcm.214	no_resource	no_resource
+mm.aim.0283	twitter.com/dumfries_house	Both
+mm.domus.YH101	twitter.com/bronteparsonage	ML
+mm.New.166	twitter.com/nhertsmuseum	Both
+mm.domus.SE439	twitter.com/dorchesterox	ML
+mm.ace.1283	twitter.com/tudorhouseworcs	Both
+mm.wiki.397	no_resource	no_resource
+mm.domus.WM007	twitter.com/mrmworcs	ML
+mm.domus.SC142	no_resource	no_resource
+mm.domus.NE041	['twitter.com/welcome2yorks']	Scrape
+mm.wiki.404	no_resource	no_resource
+mm.wiki.013	twitter.com/GirtonCollege/status/1171726234730094593	ML
+mm.musa.026	no_resource	no_resource
+mm.domus.WA003	['twitter.com/monlifeofficial', 'twitter.com/monmouthshirecc']	Scrape
+mm.domus.NI023	no_resource	no_resource
+mm.domus.WM090	['www.twitter.com/rbsagallery', 'twitter.com/rbsagallery']	Scrape
+mm.domus.SC173	twitter.com/abmuseums	Both
+mm.domus.NW034	twitter.com/chethamslibrary	Both
+mm.domus.SW204	twitter.com/nttrerice	Both
+mm.domus.WM147	['twitter.com/judgeslodging', 'twitter.com/judgeslodging/status/602054820187545602']	Scrape
+mm.New.120	twitter.com/bigginhillmmt	Both
+mm.musa.387	['twitter.com/welcome2yorks', 'twitter.com/winkiescastle']	Scrape
+mm.domus.SE416	twitter.com/lewescastle	Both
+mm.domus.SE500	twitter.com/ehdovercastle	Both
+mm.aim.0067	twitter.com/bawdseyradar	Both
+mm.New.24	['twitter.com/midumail']	Scrape
+mm.fcm.102	no_resource	no_resource
+mm.fcm.137	no_resource	no_resource
+mm.domus.SW195	twitter.com/redhousemuseum	Both
+mm.domus.SW047	['twitter.com/finchfoundrynt']	Scrape
+mm.New.11	['twitter.com/kewgardens']	Scrape
+mm.musa.121	no_resource	no_resource
+mm.misc.197	no_resource	no_resource
+mm.domus.SE485	no_resource	no_resource
+mm.domus.NE066	twitter.com/headofsteammus	Both
+mm.domus.EM007	no_resource	no_resource
+mm.domus.WA049	['twitter.com/milfordwfront', 'twitter.com/milford_museum']	Scrape
+mm.domus.SE459	twitter.com/dover_transport/status/459947995560026112	ML
+mm.New.80	no_resource	no_resource
+mm.aim.1338	no_resource	no_resource
+mm.hha.047	twitter.com/mapperton	Both
+mm.wiki.348	no_resource	no_resource
+mm.aim.0292	no_resource	no_resource
+mm.domus.NW141	twitter.com/ribblesteam	Both
+mm.domus.SE131	twitter.com/pboromuseum	ML
+mm.domus.SW014	twitter.com/boamuseum	Both
+mm.domus.WA004	['twitter.com/visit_mon', 'twitter.com/monmouthmuseum']	Scrape
+mm.aim.0527	['twitter.com/lakemotormuseum', 'twitter.com/LakeMotorMuseum/status/1048125894538268672']	Scrape
+mm.domus.WM136	['www.twitter.com/shugboroughnt', 'twitter.com/shugboroughnt']	Scrape
+mm.hha.140	no_resource	no_resource
+mm.domus.NW153	['twitter.com/rersteam', 'twitter.com/rermuseum']	Scrape
+mm.domus.SC156	no_resource	no_resource
+mm.aim.0738	twitter.com/pdheritagecent	Both
+mm.domus.WA029	no_resource	no_resource
+mm.domus.SE546	twitter.com/long_melford	ML
+mm.musa.372	no_resource	no_resource
+mm.nimc.037	twitter.com/NIMuseums/status/1146082405637378048	ML
+mm.wiki.070	no_resource	no_resource
+mm.aim.0244	twitter.com/crossnesset	Both
+mm.ace.1297	twitter.com/bilsheritage	ML
+mm.mald.028	twitter.com/ccctmuseum	Both
+mm.domus.SE420	['twitter.com/chidd_castle', 'twitter.com/castleinnkent']	Scrape
+mm.aim.0006	no_resource	no_resource
+mm.domus.SW158	twitter.com/soldiersofglos	ML
+mm.hha.126	twitter.com/scampstonhall	Both
+mm.domus.SE031	['www.twitter.com/canalmuseum', 'twitter.com/canalmuseum']	Scrape
+mm.domus.SE363	twitter.com/bhaandm	Both
+mm.MDN.036	twitter.com/ddaycentre	ML
+mm.domus.SW170	twitter.com/tate_stives	ML
+mm.misc.230	no_resource	no_resource
+mm.aim82NM.117	twitter.com/pakenhammill	ML
+mm.domus.NW058	twitter.com/williamsonart_	Both
+mm.ace.327	twitter.com/discoversouthk	ML
+mm.domus.SE437	twitter.com/castlecornetgsy	ML
+mm.domus.SE126	twitter.com/fakenhammuseum	Both
+mm.domus.SC094	twitter.com/scotmaritime	Both
+mm.aim.0191	twitter.com/chedhamsyard	Both
+mm.misc.184	no_resource	no_resource
+mm.ace.1177	no_resource	no_resource
+mm.domus.SW187	['twitter.com/smrsetoutdoornt']	Scrape
+mm.musa.351	['www.twitter.com/tiptree', 'twitter.com/tiptree']	Scrape
+mm.domus.SC099	no_resource	no_resource
+mm.wiki.122	no_resource	no_resource
+mm.mald.162	twitter.com/yrysgwrn	Both
+mm.hha.105	no_resource	no_resource
+mm.ace.1278	twitter.com/bletchleypark	Both
+mm.musa.199	twitter.com/rnlieastbourne	Both
+mm.misc.043	no_resource	no_resource
+mm.misc.070	no_resource	no_resource
+mm.domus.WM145	no_resource	no_resource
+mm.hha.130	['twitter.com/adlingtonhall']	Scrape
+mm.musa.297	twitter.com/saatchi_gallery	Both
+mm.domus.SC047	twitter.com/houseofdun	ML
+mm.ace.1119	no_resource	no_resource
+mm.domus.SE328	twitter.com/lthalllavenham	Both
+mm.hha.014	twitter.com/hevercastle	Both
+mm.ace.1211	no_resource	no_resource
+mm.domus.SE538	twitter.com/blicklingnt	ML
+mm.aim.1255	no_resource	no_resource
+mm.aim.1202	twitter.com/storringtoninfo	ML
+mm.aim.1089	no_resource	no_resource
+mm.wiki.108	no_resource	no_resource
+mm.wiki.074	no_resource	no_resource
+mm.hha.117	['twitter.com/allertoncastle']	Scrape
+mm.wiki.250	['twitter.com/anjrailway']	Scrape
+mm.domus.SE014	no_resource	no_resource
+mm.domus.SW184	['twitter.com/stagnesturtle']	Scrape
+mm.domus.SE592	no_resource	no_resource
+mm.musa.058	no_resource	no_resource
+mm.misc.012	['twitter.com/sykescottages']	Scrape
+mm.domus.SE422	twitter.com/spelthornemuseu	Both
+mm.domus.YH048	twitter.com/yorkshiremuseum	Both
+mm.wiki.263	no_resource	no_resource
+mm.ace.1146	['twitter.com/visitnovascotia', 'twitter.com/middletonrailwa']	Scrape
+mm.domus.YH024	['twitter.com/shepherdwheelpv', 'twitter.com/ShepherdWheelPV']	Scrape
+mm.fcm.163	['twitter.com/cleanhire']	Scrape
+mm.domus.SC170	twitter.com/nairnmuseum	ML
+mm.wiki.462	no_resource	no_resource
+mm.domus.NW162	no_resource	no_resource
+mm.domus.SE233	no_resource	no_resource
+mm.aim.0625	no_resource	no_resource
+mm.domus.SE417	twitter.com/lewescastle	Both
+mm.hha.111	no_resource	no_resource
+mm.aim.0531	no_resource	no_resource
+mm.mgs.370	no_resource	no_resource
+mm.ace.1200	twitter.com/bosworthlcc	Both
+mm.domus.SC310	no_resource	no_resource
+mm.domus.SE386	twitter.com/petriemuseegypt	Both
+mm.musa.084	no_resource	no_resource
+mm.misc.126	['twitter.com/nt_suttonhoo', 'twitter.com/NT_SuttonHoo/status/1355943428568141832']	Scrape
+mm.domus.WM059	twitter.com/luntfort	Both
+mm.domus.SC227	['twitter.com/timespan']	Scrape
+mm.domus.SE220	twitter.com/willishct	ML
+mm.domus.NW182	twitter.com/footballmuseum	Both
+mm.domus.SE383	['twitter.com/courtauldstudy', 'twitter.com/courtauldgall']	Scrape
+mm.domus.SE197	no_resource	no_resource
+mm.domus.SE243	['mobile.twitter.com/crystalpmuseum', 'twitter.com/crystalpmuseum']	Scrape
+mm.domus.NW161	twitter.com/nwmortofficial	ML
+mm.aim.0382	twitter.com/grussellmuseum	ML
+mm.domus.SC255	twitter.com/museumsunista	ML
+mm.New.39	twitter.com/freiston_ww2	ML
+mm.domus.YH074	twitter.com/yorkadventurers	Both
+mm.ace.1118	no_resource	no_resource
+mm.misc.052	no_resource	no_resource
+mm.domus.SC091	no_resource	no_resource
+mm.domus.YH108	no_resource	no_resource
+mm.ace.1243	twitter.com/redfernscottage	Both
+mm.domus.YH148	['twitter.com/museestewart', 'twitter.com/yorkmuseumtrust/status/1310939857204764672']	Scrape
+mm.hha.123	twitter.com/newbyhall	Both
+mm.domus.SE099	twitter.com/romanpalace	Both
+mm.musa.303	['twitter.com/rnliselsey', 'twitter.com/selseylifeboat']	Scrape
+mm.ace.045	twitter.com/museumofenfield	Both
+mm.domus.NW022	['//twitter.com/tulliehouse']	Scrape
+mm.hha.082	['www.twitter.com/kentwellhall', 'twitter.com/KentwellHall/status/912581946743689218']	Scrape
+mm.hha.011	twitter.com/belmonthsegdns	Both
+mm.domus.SW058	twitter.com/lawrencehousemu	ML
+mm.domus.SE085	['twitter.com/rurallifelm', 'twitter.com/rurallifecentre', 'twitter.com/directorrlc']	Scrape
+mm.domus.SE596	twitter.com/museumbroads	Both
+mm.New.19	no_resource	no_resource
+mm.musa.246	no_resource	no_resource
+mm.aim.1022	no_resource	no_resource
+mm.misc.226	no_resource	no_resource
+mm.aim.0021	no_resource	no_resource
+mm.domus.SC075	no_resource	no_resource
+mm.aim.0467	twitter.com/i_w_m	ML
+mm.mgs.299	twitter.com/the_tall_ship	Both
+mm.ace.042	['twitter.com/haringeycouncil', 'twitter.com/brucecastle_n17']	Scrape
+mm.aim.0040	no_resource	no_resource
+mm.domus.YH061	twitter.com/greenhowards	Both
+mm.hha.058	['twitter.com/sudeleycastle']	Scrape
+mm.aim.0038	twitter.com/amht1	Both
+mm.domus.SE395	twitter.com/wallingfordmus	ML
+mm.domus.NW028	twitter.com/nantwichmuseum	Both
+mm.aim.0496	no_resource	no_resource
+mm.domus.SE505	['twitter.com/farmlandmuseum', 'twitter.com/FarmlandMuseum/status/1306967404816203777']	Scrape
+mm.hha.051	twitter.com/actoncourt	Both
+mm.domus.SC244	['twitter.com/uofglasgow', 'twitter.com/hunterian']	Scrape
+mm.domus.SC194	twitter.com/navermuseum	Both
+mm.hha.042	['www.twitter.com/athelhampton', 'twitter.com/athelhampton']	Scrape
+mm.mald.081	['twitter.com/visitanglesey']	Scrape
+mm.nimc.009	no_resource	no_resource
+mm.domus.WM138	['twitter.com/ntdudmaston']	Scrape
+mm.wiki.274	['twitter.com/merseyferries']	Scrape
+mm.musa.277	no_resource	no_resource
+mm.aim.0598	twitter.com/psmedwayqueen	Both
+mm.wiki.335	twitter.com/yeovilrailway	ML
+mm.domus.SC267	no_resource	no_resource
+mm.domus.SW100	twitter.com/poolemuseum	Both
+mm.domus.YH027	no_resource	no_resource
+mm.ace.1156	twitter.com/dorichhouse	Both
+mm.musa.037	['twitter.com/beaulieu_hants']	Scrape
+mm.New.95	['twitter.com/poomuseum', 'twitter.com/PooMuseum/status/1209570360187904000']	Scrape
+mm.domus.SW087	no_resource	no_resource
+mm.domus.SC117	no_resource	no_resource
+mm.ace.019	no_resource	no_resource
+mm.domus.SC243	['twitter.com/uofglasgow', 'twitter.com/hunterian']	Scrape
+mm.wiki.004	no_resource	no_resource
+mm.aim.0485	twitter.com/jetagemuseum	Both
+mm.hha.109	twitter.com/chillingtonhall	Both
+mm.misc.111	no_resource	no_resource
+mm.musa.228	no_resource	no_resource
+mm.domus.YH164	no_resource	no_resource
+mm.domus.SC144	twitter.com/@NL_Heritage/statuses/1263851796247838721	ML
+mm.domus.SE164	twitter.com/rgjmuseum	Both
+mm.mald.072	no_resource	no_resource
+mm.domus.SC014	twitter.com/cpkmuseums	ML
+mm.hha.007	twitter.com/stowehouse	Both
+mm.hha.142	twitter.com/muncastercastle	Both
+mm.domus.WA057	['twitter.com/twitter.com/pontymuseum', 'twitter.com/pontymuseum']	Scrape
+mm.musa.171	no_resource	no_resource
+mm.ace.1247	twitter.com/nthardmanshouse	ML
+mm.domus.SC145	no_resource	no_resource
+mm.aim.0448	['www.twitter.com/jordansmill', 'twitter.com/jordansmill/status/1002595642462519296']	Scrape
+mm.domus.SW104	twitter.com/bodminkeep	ML
+mm.domus.SE381	twitter.com/zoologymuseum	Both
+mm.aim.0165	twitter.com/cameramuseumuk	Both
+mm.domus.SC034	twitter.com/blairsmuseum	ML
+mm.domus.SC040	['twitter.com/shetlandmanda', 'twitter.com/shetlandamenity']	Scrape
+mm.domus.SE278	twitter.com/tudorhsegarden	Both
+mm.New.132	['twitter.com/cbhoneyfarm']	Scrape
+mm.ace.1216	no_resource	no_resource
+mm.aim.0236	no_resource	no_resource
+mm.domus.SE571	no_resource	no_resource
+mm.domus.WM027	no_resource	no_resource
+mm.domus.SE407	twitter.com/tidemill_museum	ML
+mm.misc.162	twitter.com/thedatashed	ML
+mm.New.108	twitter.com/theboxplymouth	Both
+mm.domus.NW114	twitter.com/motgm	Both
+mm.ace.1113	twitter.com/riponmuseums	ML
+mm.ace.164	['twitter.com/york_minster']	Scrape
+mm.ace.1104	twitter.com/thinktankmuseum	Both
+mm.ace.1089	twitter.com/ntberrington	Both
+mm.musa.119	twitter.com/essexqm	ML
+mm.fcm.151	no_resource	no_resource
+mm.domus.SC295	no_resource	no_resource
+mm.hha.036	twitter.com/fursdondevon	Both
+mm.aim.0174	twitter.com/cbhallgardens	Both
+mm.domus.SW210	['twitter.com/dunstercastlent']	Scrape
+mm.domus.SW173	twitter.com/axminstercentre	ML
+mm.domus.SW201	twitter.com/lanhydrocknt	ML
+mm.aim.0470	['www.twitter.com/internalfire', 'twitter.com/internalfire']	Scrape
+mm.domus.YH087	no_resource	no_resource
+mm.musa.312	twitter.com/sandklr	Both
+mm.wiki.136	no_resource	no_resource
+mm.domus.YH036	twitter.com/bradfordmuseums	Both
+mm.wiki.297	no_resource	no_resource
+mm.domus.SW019	['twitter.com/burtonbideford', 'twitter.com/burtonartgaller']	Scrape
+mm.ace.1172	twitter.com/cwr_venue	ML
+mm.New.89	no_resource	no_resource
+mm.domus.SE566	twitter.com/nhm_london	Both
+mm.domus.SW033	no_resource	no_resource
+mm.domus.SE330	twitter.com/wardownhouse	Both
+mm.musa.184	twitter.com/johngraycentre	Both
+mm.musa.112	['twitter.com/thanetcouncil']	Scrape
+mm.aim.0160	['twitter.com/caistorcentre', 'www.twitter.com/caistorcentre', 'twitter.com/caistorheritage']	Scrape
+mm.domus.SW032	twitter.com/crafts_csc	Both
+mm.wiki.188	twitter.com/claytonhalluk	ML
+mm.mgs.296	no_resource	no_resource
+mm.domus.YH053	twitter.com/doncastermuseum	ML
+mm.domus.SE336	twitter.com/deal_museum	Both
+mm.musa.289	['twitter.com/vindolandatrust']	Scrape
+mm.domus.YH149	twitter.com/royal_armouries	Both
+mm.ace.266	['twitter.com/museumercianwfr']	Scrape
+mm.aim.1210	no_resource	no_resource
+mm.domus.SW148	['twitter.com/visitchelt']	Scrape
+mm.musa.370	twitter.com/greatbarnwanbor	Both
+mm.domus.NW133	twitter.com/theworldofglass	ML
+mm.domus.SE570	twitter.com/soanemuseum	Both
+mm.aim.0691	no_resource	no_resource
+mm.ace.1125	twitter.com/thepenmuseum	Both
+mm.nimc.038	['twitter.com/anborough']	Scrape
+mm.ace.1087	twitter.com/hanburyhallnt	Both
+mm.domus.SE295	twitter.com/gosportdc	Both
+mm.wiki.056	twitter.com/therumstory	Both
+mm.aim.0533	twitter.com/leachpottery	Both
+mm.domus.SE281	twitter.com/gh_sudbury	Both
+mm.aim.0907	['twitter.com/southdevonrly', 'twitter.com/southdevonrly/status/1116683812543578113']	Scrape
+mm.domus.SC230	twitter.com/gairlochmuseum	Both
+mm.mgs.303	['twitter.com/elcouncil', 'twitter.com/dunbartownhouse']	Scrape
+mm.ace.127	['twitter.com/lancsmuseums']	Scrape
+mm.wiki.207	no_resource	no_resource
+mm.mald.116	['twitter.com/plasglyn', 'twitter.com/plasglyn/statuses/1071729802556702720']	Scrape
+mm.domus.EM095	twitter.com/canonsashbynt	Both
+mm.hha.026	twitter.com/parhaminsussex	Both
+mm.aim.0818	twitter.com/rcpmuseum	Both
+mm.musa.095	twitter.com/crabblecornmill	Both
+mm.aim.1151	no_resource	no_resource
+mm.misc.252	['www.twitter.com/funeralmuseum']	Scrape
+mm.misc.146	twitter.com/EULACMuseums/status/1069756572899921921	ML
+mm.domus.SE452	no_resource	no_resource
+mm.domus.NE008	twitter.com/pparkmuseum	Both
+mm.domus.WA009	['twitter.com/cyngorgwynedd']	Scrape
+mm.domus.NE001	no_resource	no_resource
+mm.domus.SE466	twitter.com/etoncollmuseums	Both
+mm.wiki.005	['twitter.com/shuttleworth_ow', 'twitter.com/swissgarden_ow', 'twitter.com/thehouse_ow']	Scrape
+mm.domus.WA006	twitter.com/storielbangor	Both
+mm.hha.076	twitter.com/knebworthhouse	Both
+mm.domus.EM043	twitter.com/newarkairmus	Both
+mm.ace.1288	twitter.com/claymillssteam	ML
+mm.domus.SE180	twitter.com/museumofoxford	ML
+mm.domus.SE368	['twitter.com/thurrockmuseum', 'twitter.com/thurrockcouncil', 'twitter.com/thurrockmuseum/status/1088032930067349505']	Scrape
+mm.domus.SE229	['twitter.com/ccastlemuseum', 'twitter.com/ehcarisbrooke']	Scrape
+mm.ace.1239	['twitter.com/desboroughheri1', 'twitter.com/DesboroughHeri1']	Scrape
+mm.domus.YH154	twitter.com/romanaldborough	ML
+mm.domus.SC152	['twitter.com/southayrshire', 'twitter.com/samuseums']	Scrape
+mm.domus.SE357	no_resource	no_resource
+mm.wiki.314	no_resource	no_resource
+mm.hha.161	no_resource	no_resource
+mm.domus.SE563	twitter.com/bsteamsociety	ML
+mm.musa.010	['www.twitter.com/apsleyhouse', 'twitter.com/apsleyhouse']	Scrape
+mm.nimc.016	no_resource	no_resource
+mm.domus.WM140	twitter.com/attinghamparknt	Both
+mm.aim.0817	['www.twitter.com/rcobsgyn', 'www.twitter.com/rcobsgyn']	Scrape
+mm.domus.YH159	no_resource	no_resource
+mm.domus.SE140	twitter.com/portscitymuseum	Both
+mm.domus.SE270	no_resource	no_resource
+mm.aim.1190	['twitter.com/sfrhttweet']	Scrape
+mm.musa.349	no_resource	no_resource
+mm.domus.SE297	['twitter.com/the_spring']	Scrape
+mm.wiki.174	twitter.com/spencerhouse11	ML
+mm.aim.0441	twitter.com/diving_museum	Both
+mm.wiki.495	no_resource	no_resource
+mm.mald.033	no_resource	no_resource
+mm.aim82M.015	['twitter.com/britishmuseum']	Scrape
+mm.fcm.189	['twitter.com/namesco', 'twitter.com/newbigginmc']	Scrape
+mm.domus.SE056	no_resource	no_resource
+mm.domus.SC245	twitter.com/staprestrust	ML
+mm.domus.NW102	twitter.com/leverartgallery	ML
+mm.musa.191	['twitter.com/lanccastle']	Scrape
+mm.domus.WA100	twitter.com/theegyptcentre	ML
+mm.domus.SE106	twitter.com/elizabethanhous	Both
+mm.domus.SE579	['twitter.com/homeofdarwin']	Scrape
+mm.aim.0350	twitter.com/fakenhammuseum	ML
+mm.domus.SE510	['twitter.com/magiccirclehq']	Scrape
+mm.wiki.505	['twitter.com/parhammuseum']	Scrape
+mm.domus.SE038	['twitter.com/visitlondon']	Scrape
+mm.aim.0400	['twitter.com/gretnagreen1754']	Scrape
+mm.domus.SC002	twitter.com/abdnartmuseums	ML
+mm.domus.SE292	['www.twitter.com/hernemillkent', 'twitter.com/hernemillkent']	Scrape
+mm.domus.EM066	no_resource	no_resource
+mm.domus.SE125	['twitter.com/ri_science']	Scrape
+mm.domus.SE241	twitter.com/theddaystory	Both
+mm.mgs.406	['twitter.com/celticfc', 'twitter.com/celticparkevent']	Scrape
+mm.domus.EM028	no_resource	no_resource
+mm.domus.NW070	twitter.com/sim_manchester	Both
+mm.domus.SC272	no_resource	no_resource
+mm.domus.SE093	twitter.com/royal_armouries	Both
+mm.wiki.257	['www.twitter.com/cranwellmuseum', 'twitter.com/danmadmorgan', 'twitter.com/cranwellmuseum']	Scrape
+mm.domus.SE334	['www.twitter.com/maidstonemuseum']	Scrape
+mm.domus.SW056	twitter.com/johnmooremuseum	Both
+mm.domus.SE340	['twitter.com/617367792426315776', 'twitter.com/lowewood']	Scrape
+mm.domus.SE434	twitter.com/agcmuseum	ML
+mm.domus.SE174	['twitter.com/musinarundel']	Scrape
+mm.wiki.001	no_resource	no_resource
+mm.domus.SW198	no_resource	no_resource
+mm.domus.NW095	twitter.com/catalystsdc	Both
+mm.domus.SE063	['twitter.com/lbbdcouncil', 'twitter.com/valencehouse']	Scrape
+mm.wiki.112	['twitter.com/love_brighton']	Scrape
+mm.domus.EM042	twitter.com/mansfieldmuseum	Both
+mm.aim.0993	no_resource	no_resource
+mm.mgs.386	no_resource	no_resource
+mm.domus.YH032	twitter.com/bedalemuseum	ML
+mm.domus.SE460	twitter.com/emsworthmuseum	Both
+mm.aim.1090	twitter.com/wmsontunnels	ML
+mm.misc.238	twitter.com/intbcc	Both
+mm.wiki.115	['twitter.com/opcmuseum', 'twitter.com/OPCMuseum']	Scrape
+mm.domus.SE218	['twitter.com/andovermuseum']	Scrape
+mm.wiki.431	['twitter.com/taclataid']	Scrape
+mm.domus.YH011	twitter.com/bagshawmuseum?lang=cs	ML
+mm.aim.0512	no_resource	no_resource
+mm.domus.WM029	twitter.com/shakespearebt	Both
+mm.aim82NM.062	no_resource	no_resource
+mm.domus.SC077	no_resource	no_resource
+mm.ace.1144	['www.twitter.com/aeroventuresyam', 'twitter.com/aeroventuresyam']	Scrape
+mm.fcm.109	no_resource	no_resource
+mm.domus.SE273	twitter.com/fryartgallery	Both
+mm.domus.NW147	twitter.com/garstangmuseum	Both
+mm.hha.120	twitter.com/burtonagneshall	ML
+mm.domus.NW069	['twitter.com/visitlancashire']	Scrape
+mm.domus.SE597	['twitter.com/searchrecruits', 'twitter.com/searchgosport']	Scrape
+mm.musa.122	no_resource	no_resource
+mm.wiki.189	twitter.com/gaskellshouse	Both
+mm.aim.0046	['twitter.com/avro_herimuseum', 'twitter.com/avroherimuseum']	Scrape
+mm.mgs.376	twitter.com/paisleymill	Both
+mm.musa.362	no_resource	no_resource
+mm.domus.SE599	twitter.com/basinghouse	Both
+mm.musa.130	twitter.com/ebmuseum	Both
+mm.mald.043	['twitter.com/ntcarms']	Scrape
+mm.aim.0060	no_resource	no_resource
+mm.domus.SE423	['twitter.com/wmmorrissocuk']	Scrape
+mm.mald.151	['twitter.com/seearoundbrit']	Scrape
+mm.ace.1110	no_resource	no_resource
+mm.domus.SE148	['twitter.com/harlowcouncil', 'twitter.com/harlowmuseum']	Scrape
+mm.musa.259	no_resource	no_resource
+mm.domus.WA062	twitter.com/theheritagepark	ML
+mm.hha.093	twitter.com/scawbyhall	Both
+mm.domus.NE049	twitter.com/visitcimm?lang=cs	ML
+mm.hha.150	twitter.com/chillinghamc	Both
+mm.wiki.064	no_resource	no_resource
+mm.aim.0692	twitter.com/natstonecentre	Both
+mm.domus.SC019	no_resource	no_resource
+mm.domus.SE545	twitter.com/ickworthnt	Both
+mm.domus.WM030	no_resource	no_resource
+mm.domus.NE068	no_resource	no_resource
+mm.domus.SC113	twitter.com/hmsunicornship	Both
+mm.misc.124	no_resource	no_resource
+mm.domus.NE039	no_resource	no_resource
+mm.musa.101	no_resource	no_resource
+mm.ace.1160	twitter.com/scottpolar	Both
+mm.domus.WA014	twitter.com/rhylhistoryclub	ML
+mm.domus.NW056	['www.twitter.com/gmpmuseum', 'twitter.com/gmpmuseum']	Scrape
+mm.domus.NW006	no_resource	no_resource
+mm.ace.1108	twitter.com/oldrectorylboro	ML
+mm.domus.YH125	twitter.com/maltonmuseum	Both
+mm.mgs.313	twitter.com/sfootballmuseum	Both
+mm.domus.SC195	twitter.com/stromnessmuseum	Both
+mm.wiki.124	twitter.com/finch_guildhall	Both
+mm.mald.082	['twitter.com/cadwwales']	Scrape
+mm.domus.WM126	twitter.com/blistshill	Both
+mm.musa.223	['twitter.com/meophampc']	Scrape
+mm.wiki.252	twitter.com/museumwigston	ML
+mm.wiki.342	no_resource	no_resource
+mm.domus.SE463	no_resource	no_resource
+mm.aim.0342	['twitter.com/vivacitypboro', 'twitter.com/Flag_Fen']	Scrape
+mm.domus.SE249	no_resource	no_resource
+mm.hha.063	['twitter.com/bowooduk', 'twitter.com/bowooduk', 'twitter.com/bowoodhouse']	Scrape
+mm.domus.EM088	twitter.com/beltonhousent	Both
+mm.mgs.396	no_resource	no_resource
+mm.hha.074	twitter.com/ashridgehouse	Both
+mm.wiki.459	twitter.com/haddohouse	Both
+mm.domus.SE438	no_resource	no_resource
+mm.domus.YH071	['www.twitter.com/hornseafreeport', 'twitter.com/hornseamuseum']	Scrape
+mm.aim.0641	twitter.com/britsurfmuseum	Both
+mm.domus.SE198	no_resource	no_resource
+mm.aim.0284	no_resource	no_resource
+mm.mald.062	no_resource	no_resource
+mm.misc.112	no_resource	no_resource
+mm.aim.0753	no_resource	no_resource
+mm.hha.048	['twitter.com/castleenquiries', 'twitter.com/sherbornecastle']	Scrape
+mm.misc.114	twitter.com/bottishamairmus	ML
+mm.domus.NW132	no_resource	no_resource
+mm.domus.SC293	['twitter.com/teviotplace']	Scrape
+mm.domus.SW065	twitter.com/museumofglos	Both
+mm.misc.151	twitter.com/cannants	ML
+mm.hha.143	twitter.com/browsholme	Both
+mm.domus.SE573	twitter.com/nam_london	Both
+mm.hha.080	no_resource	no_resource
+mm.hha.173	twitter.com/glamiscastle	Both
+mm.domus.YH077	['www.twitter.com/northlincscnews', 'twitter.com/northlincmuseum']	Scrape
+mm.domus.SW163	twitter.com/lostmus	ML
+mm.domus.YH171	twitter.com/richmondmuseum	ML
+mm.musa.032	no_resource	no_resource
+mm.hha.159	twitter.com/gosfordhouse	ML
+mm.domus.SE169	twitter.com/aldershotmuseum	ML
+mm.mgs.093	['twitter.com/uoamuseums', 'twitter.com/uoacollections']	Scrape
+mm.domus.SW049	twitter.com/romanbathsbath	Both
+mm.domus.EM083	twitter.com/n16boilerhouse	ML
+mm.domus.NE002	no_resource	no_resource
+mm.aim.0200	no_resource	no_resource
+mm.aim.1063	twitter.com/goldenhinde_	Both
+mm.musa.067	['twitter.com/calbournemill']	Scrape
+mm.wiki.023	twitter.com/romandewa	ML
+mm.domus.SC013	twitter.com/almondvalleyhc	Both
+mm.aim.0422	twitter.com/haynesmuseum	Both
+mm.domus.SE317	no_resource	no_resource
+mm.domus.WM103	no_resource	no_resource
+mm.domus.SC079	twitter.com/wdcheritage/status/1032578152692965376	ML
+mm.wiki.332	twitter.com/wgtnmuseum	ML
+mm.wiki.123	['twitter.com/castlepointbc']	Scrape
+mm.wiki.029	no_resource	no_resource
+mm.domus.SE390	['twitter.com/chch_oxford', 'twitter.com/chchgallery']	Scrape
+mm.domus.YH020	twitter.com/museumsheffield	ML
+mm.wiki.458	no_resource	no_resource
+mm.domus.SE372	twitter.com/tanddmuseum	ML
+mm.domus.YH072	twitter.com/templenewsam	ML
+mm.domus.SE296	['twitter.com/bursledonmill']	Scrape
+mm.domus.WM079	no_resource	no_resource
+mm.domus.SE595	no_resource	no_resource
+mm.wiki.041	['twitter.com/newlynexchange']	Scrape
+mm.musa.219	twitter.com/darfieldmuseum	Both
+mm.ace.1161	no_resource	no_resource
+mm.domus.SC096	twitter.com/dick_institute	ML
+mm.domus.SE060	twitter.com/slg_artupdates	Both
+mm.musa.350	twitter.com/tilburyfort	ML
+mm.domus.EM011	twitter.com/papplewick_ps	Both
+mm.domus.EM057	['twitter.com/nam_london', 'twitter.com/museumercianwfr']	Scrape
+mm.New.141	['twitter.com/manutd', 'twitter.com/mufcduncan6']	Scrape
+mm.domus.SW246	twitter.com/fromemuseum	ML
+mm.domus.SW203	['www.twitter.com/ntmichaelsmount', 'twitter.com/ntmichaelsmount/status/1072132715942686720']	Scrape
+mm.fcm.078	['twitter.com/richardf_derby']	Scrape
+mm.domus.YH158	twitter.com/nunningtonhall	ML
+mm.musa.055	no_resource	no_resource
+mm.wiki.422	twitter.com/museumfreederry	ML
+mm.domus.WM061	['twitter.com/fordgreenhall']	Scrape
+mm.misc.118	['twitter.com/lavenhamnt']	Scrape
+mm.misc.026	no_resource	no_resource
+mm.domus.SE557	twitter.com/petworthnt	Both
+mm.wiki.393	twitter.com/arundells	Both
+mm.aim82NM.108	twitter.com/saltfordbrass	ML
+mm.domus.EM031	twitter.com/gainsoldhall	ML
+mm.wiki.382	['twitter.com/wkfdhistsoc', 'twitter.com/gissingtrust']	Scrape
+mm.domus.SC162	['twitter.com/inverclyde']	Scrape
+mm.domus.SE529	no_resource	no_resource
+mm.domus.SE451	['twitter.com/#!/kent_life', 'twitter.com/kent_life']	Scrape
+mm.domus.NW170	['www.twitter.com/ntlymepark', 'twitter.com/ntlymepark']	Scrape
+mm.wiki.012	twitter.com/horrorathh	ML
+mm.domus.SC082	no_resource	no_resource
+mm.domus.SC171	no_resource	no_resource
+mm.domus.YH050	twitter.com/museumgolcar	ML
+mm.wiki.449	['twitter.com/quiltassoc']	Scrape
+mm.domus.SE127	no_resource	no_resource
+mm.hha.045	twitter.com/highcliffec	Both
+mm.ace.504	twitter.com/stortfordmuseum	ML
+mm.misc.142	['twitter.com/clackscouncil']	Scrape
+mm.aim.0288	no_resource	no_resource
+mm.domus.SC313	no_resource	no_resource
+mm.domus.SE533	twitter.com/knolent	Both
+mm.domus.SE231	twitter.com/portsmouthnhm	Both
+mm.mgs.301	twitter.com/surgeonshall	Both
+mm.MDN.006	twitter.com/northlincmuseum	ML
+mm.mald.024	no_resource	no_resource
+mm.domus.NW185	no_resource	no_resource
+mm.mgs.327	no_resource	no_resource
+mm.ace.1107	no_resource	no_resource
+mm.ace.1205	twitter.com/scotneycastlent	Both
+mm.mgs.325	twitter.com/abdnartmuseums	Both
+mm.domus.EM072	twitter.com/rutlandmuseum	Both
+mm.hha.078	twitter.com/houghtonhall2	Both
+mm.domus.NW189	no_resource	no_resource
+mm.domus.SE171	twitter.com/airassaultmuse	ML
+mm.misc.131	['twitter.com/visitmidwales']	Scrape
+mm.hha.035	twitter.com/thechambercombe	ML
+mm.New.148	twitter.com/swarthmoorhall	Both
+mm.domus.WA083	no_resource	no_resource
+mm.musa.074	['//twitter.com/carlislecath', 'twitter.com/carlislecath']	Scrape
+mm.misc.231	no_resource	no_resource
+mm.domus.SE406	twitter.com/wwindmillmuseum	Both
+mm.aim.0796	twitter.com/charlton_house	Both
+mm.mald.053	no_resource	no_resource
+mm.domus.SE116	twitter.com/ancienthousemus	ML
+mm.wiki.164	['twitter.com/thekennelclubuk', 'twitter.com/akcmod']	Scrape
+mm.aim.0317	no_resource	no_resource
+mm.misc.010	twitter.com/donald_mcgill	ML
+mm.domus.SE409	no_resource	no_resource
+mm.domus.EM096	['twitter.com/ntgunbyhall']	Scrape
+mm.domus.EM077	twitter.com/museumrar	ML
+mm.wiki.345	no_resource	no_resource
+mm.musa.319	no_resource	no_resource
+mm.domus.WM065	twitter.com/astonhallmuseum	Both
+mm.ace.436	twitter.com/warwickuniart	ML
+mm.domus.SC031	twitter.com/kelvingroveart	Both
+mm.hha.006	['//twitter.com/nwhousecouk', 'twitter.com/nwhousecouk']	Scrape
+mm.domus.WM085	no_resource	no_resource
+mm.musa.076	no_resource	no_resource
+mm.domus.SE290	['twitter.com/gfdheritage', 'twitter.com/guildfordbc']	Scrape
+mm.domus.WA075	no_resource	no_resource
+mm.ace.1099	twitter.com/clevedoncourtNH	ML
+mm.domus.SW123	twitter.com/somersetrlm	Both
+mm.New.150	no_resource	no_resource
+mm.domus.WA096	no_resource	no_resource
+mm.wiki.362	no_resource	no_resource
+mm.ace.1197	['twitter.com/7stories']	Scrape
+mm.domus.SE326	twitter.com/ltonmuseum	ML
+mm.domus.WM025	['twitter.com/ely_cathedral', 'twitter.com/almonryevesham']	Scrape
+mm.wiki.500	no_resource	no_resource
+mm.ace.516	twitter.com/chippmuseum	Both
+mm.domus.SE496	['www.twitter.com/stephenshouse']	Scrape
+mm.domus.SE331	twitter.com/longshopmuseum	ML
+mm.domus.NE031	twitter.com/stephensonrail	Both
+mm.domus.SE366	['www.twitter.com/oxcots']	Scrape
+mm.domus.SE199	['twitter.com/brentwood_bc']	Scrape
+mm.domus.EM010	['twitter.com/sudbury_hallnt']	Scrape
+mm.domus.SW178	no_resource	no_resource
+mm.domus.SC018	no_resource	no_resource
+mm.nimc.017	no_resource	no_resource
+mm.wiki.202	no_resource	no_resource
+mm.domus.SE061	twitter.com/jbunyanmuseum	Both
+mm.aim.0217	no_resource	no_resource
+mm.ace.1226	no_resource	no_resource
+mm.misc.250	['www.twitter.com/vadundee', 'twitter.com/vadundee']	Scrape
+mm.nimc.018	twitter.com/niwarmemorial	Both
+mm.wiki.142	no_resource	no_resource
+mm.wiki.229	['twitter.com/visitashtent']	Scrape
+mm.wiki.219	['twitter.com/maidstoneinfo']	Scrape
+mm.domus.SE362	no_resource	no_resource
+mm.misc.143	twitter.com/gawthorpe_hall	ML
+mm.mald.071	['twitter.com/ntllanerchaeron']	Scrape
+mm.domus.EM026	twitter.com/daventrymuseum	Both
+mm.mald.030	twitter.com/carmsmuseums	ML
+mm.domus.SE419	twitter.com/museumartcraft	Both
+mm.domus.SC155	twitter.com/largsmuseum	ML
+mm.New.118	twitter.com/museumoflondon	ML
+mm.domus.NW106	twitter.com/smithillshall	ML
+mm.aim.1040	no_resource	no_resource
+mm.wiki.037	['twitter.com/trinityhouse_uk']	Scrape
+mm.domus.SW083	no_resource	no_resource
+mm.ace.1135	twitter.com/royalacadmusic	Both
+mm.wiki.444	twitter.com/tithebarn	ML
+mm.domus.SC135	twitter.com/edinculture	Both
+mm.musa.396	twitter.com/theyounggallery	ML
+mm.domus.EM009	twitter.com/harleygallery	Both
+mm.hha.061	twitter.com/woodchesmansion	Both
+mm.domus.SE551	no_resource	no_resource
+mm.domus.SE087	twitter.com/bishopswmuseum	Both
+mm.misc.123	no_resource	no_resource
+mm.misc.166	twitter.com/npsgallery	ML
+mm.New.40	['www.twitter.com/irishfatours', 'twitter.com/visitbelfast', 'twitter.com/irishfatours']	Scrape
+mm.aim.1305	['twitter.com/wsomrailway']	Scrape
+mm.wiki.490	twitter.com/athollpalace	Both
+mm.domus.SW012	twitter.com/blaisemuseum	Both
+mm.aim.1005	['twitter.com/southdownshc', 'twitter.com/museumgardening']	Scrape
+mm.musa.224	no_resource	no_resource
+mm.musa.149	twitter.com/grtormetramway	ML
+mm.hha.160	twitter.com/lennoxlovehouse	ML
+mm.musa.321	['twitter.com/stbrideschurch', 'twitter.com/stbrides_choir']	Scrape
+mm.wiki.221	['twitter.com/visitkent']	Scrape
+mm.domus.YH132	['twitter.com/visitharrogate', 'twitter.com/knaresbrocastle']	Scrape
+mm.musa.031	['twitter.com/barleylands', 'twitter.com/barleylandsfarm']	Scrape
+mm.domus.WM108	['twitter.com/hfdscouncil', 'twitter.com/herefordmuseums']	Scrape
+mm.domus.SE548	['twitter.com/hintonampner_nt']	Scrape
+mm.wiki.227	twitter.com/margate_museums	Both
+mm.hha.153	twitter.com/abbotsfordscott	Both
+mm.aim.0287	twitter.com/dmoft	Both
+mm.aim.0353	no_resource	no_resource
+mm.domus.NW002	['twitter.com/motherpost', 'twitter.com/thebeaconmuseum']	Scrape
+mm.mald.066	no_resource	no_resource
+mm.mgs.412	no_resource	no_resource
+mm.wiki.491	no_resource	no_resource
+mm.ace.1111	twitter.com/janeaustenhouse	Both
+mm.ace.1096	['twitter.com/oxfordshirecc']	Scrape
+mm.musa.217	['twitter.com/ritplatforms']	Scrape
+mm.domus.SW060	no_resource	no_resource
+mm.domus.YH066	['twitter.com/embsaysteam', 'twitter.com/embsaystation']	Scrape
+mm.domus.EM094	['twitter.com/ntcalkeabbey', 'twitter.com/NTCalkeAbbey/statuses/1167467062198984704']	Scrape
+mm.domus.SC042	['www.twitter.com/britgolfmuseum', 'twitter.com/britgolfmuseum']	Scrape
+mm.ace.1199	twitter.com/courtbarnmuseum	Both
+mm.domus.SE525	no_resource	no_resource
+mm.domus.YH103	['twitter.com/yorkarmymuseum']	Scrape
+mm.wiki.488	twitter.com/kilwinningh	Both
+mm.domus.SE378	['www.twitter.com/maacambridge', 'twitter.com/maacambridge']	Scrape
+mm.hha.148	twitter.com/rabycastle	Both
+mm.domus.NW136	twitter.com/salfordmuseum	Both
+mm.domus.SE535	no_resource	no_resource
+mm.domus.SE455	['twitter.com/crawleymuseum']	Scrape
+mm.domus.SE578	twitter.com/amershammuseum	Both
+mm.MDN.026	twitter.com/artskeele	Both
+mm.domus.SE051	['www.twitter.com/welhatcouncil', 'twitter.com/romanbathmuseum/status/1131907702433636352']	Scrape
+mm.New.101	no_resource	no_resource
+mm.fcm.032	no_resource	no_resource
+mm.wiki.206	no_resource	no_resource
+mm.ace.380	twitter.com/higginsbedford	ML
+mm.wiki.116	no_resource	no_resource
+mm.domus.EM076	twitter.com/crichtramway	Both
+mm.domus.SC303	['twitter.com/outerhebs']	Scrape
+mm.fcm.131	['twitter.com/islandturfcraft']	Scrape
+mm.New.71	twitter.com/thebme	Both
+mm.wiki.351	twitter.com/saxmuseum	Both
+mm.wiki.076	no_resource	no_resource
+mm.domus.SE408	twitter.com/wisbechmuseum	Both
+mm.ace.1153	twitter.com/explosionmuseum	ML
+mm.domus.NI019	twitter.com/downrail	Both
+mm.misc.066	['twitter.com/daily_record', 'twitter.com/dcm_twynholm']	Scrape
+mm.domus.SE282	no_resource	no_resource
+mm.domus.SE215	twitter.com/whitsmuseum/status/1016583467495194625	ML
+mm.wiki.372	twitter.com/redhousecone	ML
+mm.domus.WM088	twitter.com/covtm	ML
+mm.domus.SE565	twitter.com/museumtangmere	Both
+mm.musa.367	no_resource	no_resource
+mm.domus.YH106	['twitter.com/artfund', 'twitter.com/artcollectionhu']	Scrape
+mm.domus.SC174	twitter.com/haa_old	Both
+mm.hha.031	['twitter.com/porteliotestate']	Scrape
+mm.domus.SE156	twitter.com/windsor_museum	Both
+mm.musa.334	['twitter.com/swaledalemuseum', 'twitter.com/thisisswaledale']	Scrape
+mm.domus.NW050	twitter.com/lancastermuseum	ML
+mm.domus.SW124	['twitter.com/somersetmuseum', 'twitter.com/somersetmuseum/status/913375266017353728']	Scrape
+mm.domus.NW096	twitter.com/galleriesmuseum	Both
+mm.domus.SC182	['twitter.com/verdantworks']	Scrape
+mm.domus.SE572	twitter.com/pfieldmuseum	Both
+mm.domus.SE153	twitter.com/norwichaviation	ML
+mm.domus.SC257	['twitter.com/slleisculture']	Scrape
+mm.aim.0639	twitter.com/museumofbrands	Both
+mm.domus.SE058	twitter.com/hunterianlondon	Both
+mm.domus.YH146	twitter.com/mediamuseum	Both
+mm.domus.NE016	twitter.com/vindolandatrust	Both
+mm.domus.SE550	twitter.com/thevynent	Both
+mm.misc.145	['twitter.com/paisleyis']	Scrape
+mm.domus.NW023	twitter.com/kendalmuseum	Both
+mm.domus.SW037	['twitter.com/twitter']	Scrape
+mm.wiki.299	no_resource	no_resource
+mm.musa.073	twitter.com/ehcarlisle	Both
+mm.wiki.195	twitter.com/chawtonhouse	Both
+mm.domus.NE047	twitter.com/ryhopeengines	ML
+mm.domus.SE584	no_resource	no_resource
+mm.wiki.363	no_resource	no_resource
+mm.domus.SC249	no_resource	no_resource
+mm.domus.WM016	['twitter.com/oisinthedeer']	Scrape
+mm.musa.347	no_resource	no_resource
+mm.aim82NM.012	no_resource	no_resource
+mm.misc.149	no_resource	no_resource
+mm.domus.SE177	twitter.com/altonmuseums	Both
+mm.domus.WM039	twitter.com/bewdleymuseum	ML
+mm.wiki.086	['twitter.com/discoverdart']	Scrape
+mm.aim.1006	twitter.com/bugattitrust	Both
+mm.aim.0566	no_resource	no_resource
+mm.aim.1335	twitter.com/polemanjan	ML
+mm.domus.SE269	twitter.com/eghammuseum	Both
+mm.domus.SW230	no_resource	no_resource
+mm.domus.SE170	['twitter.com/sofotrust', 'twitter.com/wallingfordmus', 'twitter.com/abingdontc', 'twitter.com/abingdonmuseum']	Scrape
+mm.domus.SW024	['twitter.com/visitplymouth', 'www.twitter.com/visitplymouth', 'twitter.com/plymouthmuseum']	Scrape
+mm.domus.EM101	['twitter.com/visitnewmills']	Scrape
+mm.wiki.067	no_resource	no_resource
+mm.hha.158	['twitter.com/arnistonestate', 'twitter.com/arnistonh']	Scrape
+mm.wiki.418	no_resource	no_resource
+mm.domus.SW010	twitter.com/redlodgemuseum	ML
+mm.New.85	no_resource	no_resource
+mm.aim.1342	no_resource	no_resource
+mm.domus.WM008	twitter.com/staffsregiment	Both
+mm.domus.WA005	twitter.com/ceredigionmus	Both
+mm.domus.WM082	twitter.com/barberinstitute	ML
+mm.MDN.020	twitter.com/ulsteraviation	ML
+mm.ace.1253	twitter.com/ropewalkbarton	Both
+mm.domus.NW064	['twitter.com/engageexplore']	Scrape
+mm.New.30	no_resource	no_resource
+mm.domus.SE373	twitter.com/townergallery	Both
+mm.aim.0249	twitter.com/cuparheritage	Both
+mm.hha.004	twitter.com/shaw_house	Both
+mm.mgs.352	no_resource	no_resource
+mm.wiki.258	['twitter.com/visitlincscoast']	Scrape
+mm.wiki.032	twitter.com/sjsmheritage	ML
+mm.wiki.347	no_resource	no_resource
+mm.musa.335	no_resource	no_resource
+mm.domus.YH140	no_resource	no_resource
+mm.domus.SE190	['twitter.com/exchangeerith']	Scrape
+mm.domus.YH010	no_resource	no_resource
+mm.domus.WM095	twitter.com/bridgnorthscout	ML
+mm.domus.SC137	no_resource	no_resource
+mm.domus.WM042	twitter.com/bclivingmuseum	ML
+mm.domus.SW218	no_resource	no_resource
+mm.aim.0335	no_resource	no_resource
+mm.domus.SE486	twitter.com/river_rowing	Both
+mm.domus.SW169	['twitter.com/dorsettourism']	Scrape
+mm.ace.1149	twitter.com/cuttysark	ML
+mm.domus.SW068	twitter.com/morwellham	ML
+mm.domus.EM052	twitter.com/midrlybutterley	Both
+mm.Mus70Cal.027	twitter.com/museumsunista	ML
+mm.hha.057	twitter.com/stanwayhouse	Both
+mm.domus.SW045	['twitter.com/blandfordmuseum']	Scrape
+mm.aim.0981	no_resource	no_resource
+mm.hha.136	['twitter.com/dalemainmansion', 'twitter.com/marmaladeawards']	Scrape
+mm.aim.0338	twitter.com/surreyfiretrust	ML
+mm.domus.SW196	no_resource	no_resource
+mm.domus.EM099	twitter.com/villamuseum	ML
+mm.domus.SE398	no_resource	no_resource
+mm.domus.SC317	['twitter.com/mocburntisland', 'twitter.com/mocburntisland/status/497701185227599872']	Scrape
+mm.aim.0405	['twitter.com/visitcheshire']	Scrape
+mm.domus.SC104	['twitter.com/onatdclg']	Scrape
+mm.domus.WM120	twitter.com/bmmuseum	Both
+mm.domus.SE370	twitter.com/foundlingmuseum	Both
+mm.wiki.008	['twitter.com/royalfamily', 'twitter.com/clarencehouse', 'twitter.com/kensingtonroyal', '//twitter.com']	Scrape
+mm.musa.118	twitter.com/dtcswansea	Both
+mm.domus.EM110	twitter.com/cottagemuseum	ML
+mm.domus.SE426	twitter.com/michelhampriory	Both
+mm.domus.SW020	no_resource	no_resource
+mm.domus.SC066	no_resource	no_resource
+mm.aim.0213	['twitter.com/visitcolchester']	Scrape
+mm.domus.WA098	['twitter.com/ntsnowdoniallyn', 'twitter.com/ygeryrillyn']	Scrape
+mm.aim.0898	twitter.com/sofotrust	Both
+mm.misc.092	twitter.com/hpoolquay	ML
+mm.aim.0098	no_resource	no_resource
+mm.domus.NW007	twitter.com/mining_museum	ML
+mm.New.4	['twitter.com/rafingham']	Scrape
+mm.domus.WM107	no_resource	no_resource
+mm.domus.YH007	twitter.com/templenewsam	Both
+mm.domus.WA060	twitter.com/rmrw_brecon	Both
+mm.fcm.058	['twitter.com/coffinworks', 'twitter.com/coffinworks/status/1294214794908700673']	Scrape
+mm.hha.040	twitter.com/tivertoncastle	Both
+mm.hha.056	no_resource	no_resource
+mm.misc.120	['twitter.com/paradisewlpark']	Scrape
+mm.musa.311	no_resource	no_resource
+mm.aim.0135	no_resource	no_resource
+mm.hha.185	twitter.com/bodrhyddan	Both
+mm.hha.102	no_resource	no_resource
+mm.fcm.274	['twitter.com/wingsmuseumuk']	Scrape
+mm.domus.NI028	twitter.com/ntcastleward	Both
+mm.domus.SW241	twitter.com/saltramhousent	ML
+mm.domus.SE474	no_resource	no_resource
+mm.aim.1182	twitter.com/rhchelsea	Both
+mm.wiki.487	no_resource	no_resource
+mm.ace.1265	twitter.com/the_rpsl	ML
+mm.domus.SE358	['twitter.com/stevenagebc', 'twitter.com/stevenagemuseum']	Scrape
+mm.domus.SW088	['www.twitter.com/rammuseum', 'twitter.com/rammuseum']	Scrape
+mm.domus.YH017	no_resource	no_resource
+mm.domus.SE402	twitter.com/whittleseyww1	ML
+mm.musa.036	no_resource	no_resource
+mm.domus.SE379	twitter.com/sedgwickmuseum	Both
+mm.musa.291	twitter.com/roundchurchcam	Both
+mm.ace.1167	no_resource	no_resource
+mm.domus.SE558	twitter.com/standennt	Both
+mm.domus.SE473	twitter.com/chiswick_house	Both
+mm.domus.SC283	twitter.com/natgalleriessco	Both
+mm.fcm.041	no_resource	no_resource
+mm.domus.SW057	twitter.com/johnmooremuseum	Both
+mm.domus.SW034	no_resource	no_resource
+mm.musa.163	['twitter.com/harwichsociety', 'twitter.com/harwichrnli']	Scrape
+mm.aim.0565	twitter.com/lutt_museum	ML
+mm.domus.SC274	twitter.com/pg_museum	Both
+mm.mgs.378	no_resource	no_resource
+mm.domus.SE577	no_resource	no_resource
+mm.ace.1164	twitter.com/bluebellrailway	ML
+mm.hha.020	twitter.com/loseleypark	Both
+mm.mgs.354	no_resource	no_resource
+mm.domus.WA064	['www.twitter.com/tenbymuseum', 'twitter.com/tenbymuseum']	Scrape
+mm.domus.NW098	twitter.com/warringtonmus	Both
+mm.mald.080	['twitter.com/silvermountexp']	Scrape
+mm.mgs.292	no_resource	no_resource
+mm.aim.0882	['twitter.com/shorehammuseum', 'twitter.com/shorehammuseum/status/828893154833231872']	Scrape
+mm.musa.141	no_resource	no_resource
+mm.wiki.121	no_resource	no_resource
+mm.domus.WA095	['twitter.com/ntsnowdoniallyn', 'twitter.com/ygeryrillyn']	Scrape
+mm.musa.023	twitter.com/bacupnow	ML
+mm.domus.SW096	twitter.com/bathatwork	ML
+mm.hha.018	twitter.com/broughtoncastle	ML
+mm.domus.YH131	twitter.com/mercergallery	Both
+mm.domus.NW158	no_resource	no_resource
+mm.aim.1295	no_resource	no_resource
+mm.domus.SC020	no_resource	no_resource
+mm.New.78	twitter.com/isleglass	ML
+mm.ace.1214	twitter.com/colezoology	Both
+mm.domus.EM006	twitter.com/sulgravemanor	ML
+mm.fcm.197	no_resource	no_resource
+mm.domus.WM003	no_resource	no_resource
+mm.domus.SC048	['twitter.com/broughtonhouse']	Scrape
+mm.musa.162	twitter.com/hartlandquay218	ML
+mm.domus.SC246	no_resource	no_resource
+mm.mgs.321	['www.twitter.com/thesalmonbothy', 'twitter.com/thesalmonbothy']	Scrape
+mm.wiki.114	['twitter.com/atlasobscura']	Scrape
+mm.New.61	['twitter.com/onatdclg']	Scrape
+mm.New.151	['twitter.com/visitkelso']	Scrape
+mm.hha.046	twitter.com/lulworthestate	Both
+mm.misc.247	no_resource	no_resource
+mm.New.10	twitter.com/scrivenersbooks	ML
+mm.domus.NW071	twitter.com/mcrjewishmuseum	Both
+mm.musa.117	no_resource	no_resource
