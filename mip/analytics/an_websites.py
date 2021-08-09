@@ -289,26 +289,26 @@ def get_attribute_for_webpage_id(page_id, session_id, attrib_name, db_conn):
 
 def get_page_id_for_webpage_url(url, id, session_id, attrib_name, db_conn):
     """
-    @returns attribute value (e.g. all_text) for a URL in a target scraping session;
+    @returns a list of page IDs for a URL in a target scraping session;
         None if URL or attribute does not exist 
     """
     page_tbl_name = get_webdump_table_name(session_id)
     attr_tbl_name = get_webdump_attr_table_name(session_id)
-    url_domain=get_url_domain(url)
+    url_domain = get_url_domain(url)
     
     #print("get_attribute_for_webpage_url", attr_tbl_name)
     
     sql = """select url, a.page_id, attrib_name, attrib_val from {} p, {} a where a.page_id = p.page_id 
          and a.attrib_name = '{}' and p.url='{}';""".format(page_tbl_name, attr_tbl_name, attrib_name, url)
     #print(sql)
-
     attr_df = pd.read_sql(sql, db_conn)
     df = attr_df[['url', 'page_id', 'attrib_name', 'attrib_val']]
     #print(df)
     if len(df) > 0:
         #assert len(df) == 1
         val = df['page_id'].tolist()
-        if len(val) == 0: val = None
-        return val 
+        if len(val) == 0: 
+            val = None
+        return val
     else: 
         return None

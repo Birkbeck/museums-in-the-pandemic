@@ -41,6 +41,8 @@ def get_museums_w_web_urls(data_folder=''):
     domaincounts_df=df['domain'].value_counts()
     print(domaincounts_df)
 
+    
+
     #df = df[df['url'].apply(is_valid_website)]
     #df = df.drop_duplicates(subset=['url'])
     #df['id_duplicated'] = df.duplicated(subset=['muse_id'])

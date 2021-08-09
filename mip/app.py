@@ -19,7 +19,9 @@ from scrapers.scraper_websites import scrape_websites
 from scrapers.scraper_facebook import scrape_facebook
 from analytics.an_websites import analyse_museum_websites
 from analytics.text_models import analyse_museum_text
-from museums import load_input_museums, load_extracted_museums,generate_stratified_museum_sample,generate_stratified_museum_urls, combinedatasets, get_fuzzy_string_match_scores, load_fuzzy_museums, compare_result_to_sample
+from museums import load_input_museums, load_input_museums_wattributes, load_extracted_museums, \
+    generate_stratified_museum_sample,generate_stratified_museum_urls, combinedatasets, \
+    get_fuzzy_string_match_scores, load_fuzzy_museums, compare_result_to_sample
 from db.db import is_postgresql_db_accessible, count_all_db_rows
 
 from tests.run_tests import get_all_tests
@@ -98,6 +100,7 @@ def main():
             print("scrape_facebook")
             df = load_input_museums()
             scrape_facebook(df)
+            # TODO scrape facebook
 
         if cmd == "scrape_websites":
             logger.info("scrape_websites")
@@ -116,8 +119,9 @@ def main():
             assert is_postgresql_db_accessible()
             #generate_stratified_museum_sample()
             #generate_stratified_museum_urls()
-            analyse_museum_text() ##TODO Val Aug 2021: now that the code has been debugged and all 400 museums in Db there needs
-                                    ## to be another check to ensure data in the DB is consistent
+            analyse_museum_text() 
+            ##TODO Val Aug 2021: now that the code has been debugged and all 400 museums in Db there needs
+            ## to be another check to ensure data in the DB is consistent
             ##TODO Val Aug 2021: In the text_indic_ann_matches table we still get a lot of examples that are 1 word only. Some of those words
             ## such as 'welcome' seem strange to be an example and certainly do not appear in the annotations document
             ##TODO the pseudocode for text analytics must be implemented (that we wrote in the log file) in order to run the full analysis

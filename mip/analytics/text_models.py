@@ -21,7 +21,7 @@ from analytics.an_websites import get_webdump_attr_table_name
 from utils import remove_empty_elem_from_list, remove_multiple_spaces_tabs, _is_number, parallel_dataframe_apply
 import matplotlib.pyplot as plt
 from db.db import make_string_sql_safe
-from museums import get_museums_w_web_urls, get_museums_sample_urls
+from museums import get_museums_w_web_urls, get_museums_sample_urls, load_input_museums_wattributes
 from analytics.an_websites import get_page_id_for_webpage_url, get_attribute_for_webpage_id
 
 # constants
@@ -275,52 +275,40 @@ def analyse_museum_text():
     ann_tokens_df = get_indicator_annotation_tokens(nlp)
     if True:
         ann_tokens_df.to_sql('indicator_annotation_tokens', db_engine, schema='analytics', index=False, if_exists='replace', method='multi')
-    #ann_tokens_df = ann_tokens_df.sample(100) # DEBUG
+    
+    # ann_tokens_df = ann_tokens_df.sample(100) # DEBUG
 
     df = get_museums_sample_urls()
-
-    # load museums
+    
+    # load all museums
     #df = get_museums_w_web_urls()
 
-    stratdf = pd.read_csv('data/museums/museums_wattributes-2020-02-23.tsv', sep='\t')
+    attr_df = load_input_museums_wattributes()
     #stratdf = stratdf.filter(['muse_id', 'governance', 'town'], axis=1) ##DEBUG town should be removed
-    df = pd.merge(stratdf,df,on='muse_id')
-    
+    df = pd.merge(df, attr_df, on='muse_id')
+    print("museum df len", len(df))
     #df=df.loc[df['governance'] == 'University'] ##DEBUG line should be unhashed to only use university museums
-    datadict = {}
     session_id = '20210304'
     attrib_name = 'all_text'
     
     i = 0
     for index, row in df.iterrows():
-        
+        i += 1
+        muse_id = row['muse_id']
+        msg = ">>> Processing museum {} of {}, muse_id={}, session={}".format(i,len(df),muse_id,session_id)
         # get main page of a museum
-        
-            datadict[row['muse_id']] = get_page_id_for_webpage_url(row['url'], row['muse_id'], session_id, attrib_name, db_conn)
-            msg = ">>> Processing museum {} of {}".format(i,len(df))
-            logger.info(msg)
-            print(msg)
-            i += 1
-            
-            
-            
-
-    for muse_id, pages in datadict.items():
-        print('   muse_id and pages:', muse_id, pages)
-        if pages is not None:
-            #for each museum in sample of 10//debug or for all in reality//filter to uni
-            #session_id = '20202020' # manual
-            pages = list(set(pages)) # drop duplicates
-            for page_id in pages:
-                for keep_stopwords in [True, False]:
-                    # match indicators with annotations
-                    match_indicators_in_muse_page(muse_id, session_id, page_id, nlp, ann_tokens_df, keep_stopwords, db_conn, db_engine)
-                    #spacy_extract_tokens(session_id, page_id, nlp, input_text, db_conn, db_engine)
+        main_page_ids = get_page_id_for_webpage_url(row['url'], muse_id, session_id, attrib_name, db_conn)
+        if main_page_ids is None:
+            continue
+        assert len(main_page_ids) == 1
+        logger.info(msg)
+        print(msg)
+        for page_id in main_page_ids:
+            for keep_stopwords in [True, False]:
+                # match indicators with annotations
+                match_indicators_in_muse_page(muse_id, session_id, page_id, nlp, ann_tokens_df, keep_stopwords, db_conn, db_engine)
+                #spacy_extract_tokens(session_id, page_id, nlp, input_text, db_conn, db_engine)
     
-        
-
-
-
     # add indices to table
     idx_sql = """
         ALTER TABLE analytics.text_indic_ann_matches  
@@ -499,7 +487,6 @@ def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, page_toke
     match_df['ann_overlap_token'] = round(match_df['token_n'] / match_df['example_len'],digits)
     match_df['txt_overlap_lemma'] = round(match_df['lemma_n'] / match_df['sent_len'],digits)
     match_df['txt_overlap_token'] = round(match_df['token_n'] / match_df['sent_len'],digits)
-
     
     # add texts for DEBUG
     if True:
@@ -507,8 +494,6 @@ def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, page_toke
         match_df = match_df.merge(annotat_full_txt_df, on='example_id')
         match_df = match_df.merge(sentences_full_txt_df, on='sentence_id')
         assert len(match_df) == n1
-    
-   
 
     # check overlap score ranges
     assert match_df.ann_overlap_lemma.between(0,1).all(), match_df.ann_overlap_lemma.sort_values()
@@ -516,14 +501,12 @@ def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, page_toke
     assert match_df.txt_overlap_lemma.between(0,1).all(), match_df.txt_overlap_lemma.sort_values()
     assert match_df.txt_overlap_token.between(0,1).all(), match_df.txt_overlap_token.sort_values()
 
-
     # set general params
     match_df['session_id'] = session_id
     match_df['page_id'] = page_id
     match_df['muse_id'] = muse_id
     match_df['keep_stopwords'] = keep_stopwords
-
-    #sw.tick('1')
+    
     # clear page before insertion
     try:
         sql = "delete from {} where session_id = '{}' and page_id = {};".format('analytics.text_indic_ann_matches', session_id, page_id)
@@ -557,7 +540,8 @@ def _OLD_match_musetext_vs_indicator_example(txt_df, annot_df):
     d = {}
     for cs in [False]: # True, 
         for sw in [True, False]:
-            match_vars_d = _match_tokens(txt_df, annot_df, cs, sw)
+            match_vars_d = None
+            #match_vars_d = _match_tokens(txt_df, annot_df, cs, sw)
             if match_vars_d is not None:
                 d.update(match_vars_d)
     
