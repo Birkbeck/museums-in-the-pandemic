@@ -123,6 +123,7 @@ def extract_attributes_from_page_html(page_id, session_id, page_html, attr_table
         logger.warning("page_id {} is empty".format(page_id))
         return False
 
+    logger.debug("\textract page ID="+str(page_id))
     assert len(page_html) > 0
     soup = get_soup_from_html(page_html)
 
