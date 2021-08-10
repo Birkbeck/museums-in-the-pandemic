@@ -163,7 +163,7 @@ def extract_text_from_websites(in_table, out_table, db_conn, target_museum_id=No
     assert in_table
     assert constants.table_suffix in out_table
     #clear_attribute_table(out_table, db_conn)
-    block_sz = 5000
+    block_sz = 3000
     offset = 0
     keep_scanning = True
     
@@ -199,7 +199,7 @@ def extract_text_from_websites(in_table, out_table, db_conn, target_museum_id=No
             keep_scanning = False
         else:
             print("next block")
-        garbage_collect()
+        #garbage_collect() # TODO: memory leak here
     return True
 
 

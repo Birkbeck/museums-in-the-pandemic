@@ -251,7 +251,6 @@ def match_indicators_in_muse_page(muse_id, session_id, page_id, nlp, annotat_tok
         _match_musetext_indicators(muse_id, session_id, page_id, annotat_tokens_df, page_tokens_df, 
                                     ann_full_txt_df, sent_full_txt_df, keep_stopwords, db_conn, db_engine)
 
-    
 
 def analyse_museum_text():
     """
@@ -309,6 +308,7 @@ def analyse_museum_text():
                 # match indicators with annotations
                 match_indicators_in_muse_page(muse_id, session_id, page_id, nlp, ann_tokens_df, keep_stopwords, db_conn, db_engine)
                 #spacy_extract_tokens(session_id, page_id, nlp, input_text, db_conn, db_engine)
+    del i
     
     # add indices to table
     idx_sql = """
@@ -316,7 +316,7 @@ def analyse_museum_text():
             DROP CONSTRAINT IF EXISTS text_indic_ann_matches_pk;
         ALTER TABLE analytics.text_indic_ann_matches 
             ADD CONSTRAINT text_indic_ann_matches_pk 
-            PRIMARY KEY (sentence_id, example_id, page_id);"""
+            PRIMARY KEY (sentence_id, example_id, page_id, keep_stopwords);"""
     c = db_conn.cursor()
     c.execute(idx_sql)
     db_conn.commit()
