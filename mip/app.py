@@ -117,8 +117,6 @@ def main():
             # RUN in terminal:
             # python -m spacy download en_core_web_sm
             assert is_postgresql_db_accessible()
-            #generate_stratified_museum_sample()
-            #generate_stratified_museum_urls()
             analyse_museum_text() 
             ##TODO Val Aug 2021: now that the code has been debugged and all 400 museums in Db there needs
             ## to be another check to ensure data in the DB is consistent

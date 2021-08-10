@@ -169,6 +169,8 @@ select count(*) from analytics.text_indic_ann_matches t;
 select count(distinct muse_id) from analytics.text_indic_ann_matches t;
 select * from analytics.text_indic_ann_matches t order by t.ann_overlap_lemma desc limit 100;
 
+select count(*) from analytics.indicator_annotation_tokens k;
+
 -- quartiles of lemmas
 select
   percentile_disc(0.0) within group (order by t.lemma_n),
@@ -176,7 +178,7 @@ select
   percentile_disc(0.5) within group (order by t.lemma_n),
   percentile_disc(0.75) within group (order by t.lemma_n),
   percentile_disc(1.0) within group (order by t.lemma_n)
-from analytics.text_indic_ann_matches t
+from analytics.text_indic_ann_matches t;
 
 -
 ------------------------------------------------

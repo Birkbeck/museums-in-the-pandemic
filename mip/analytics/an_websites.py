@@ -307,7 +307,7 @@ def get_page_id_for_webpage_url(url, id, session_id, attrib_name, db_conn):
     if len(df) > 0:
         #assert len(df) == 1
         val = df['page_id'].tolist()
-        if len(val) == 0: 
+        if len(val) == 0:
             val = None
         return val
     else: 

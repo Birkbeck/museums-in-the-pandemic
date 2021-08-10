@@ -439,6 +439,8 @@ def generate_stratified_museum_sample():
     print(fout)
 
 def generate_stratified_museum_urls():
+    """
+    """
     fn = 'tmp/museums_stratified_sample_401.tsv'
     sample_df = pd.read_csv(fn, sep='\t')
     fn2='data/museums/museum_websites_urls-v3.tsv'
@@ -448,7 +450,6 @@ def generate_stratified_museum_urls():
     fout = 'tmp/correct_url_stratified_sample_401.tsv'.format(len(sample_df))
     correct_df.to_csv(fout, sep="\t", index=False)
     print("end")
-
 
 
 def get_weighted_sum(musname, weighteddict):

@@ -232,6 +232,7 @@ def match_indicators_in_muse_page(muse_id, session_id, page_id, nlp, annotat_tok
     
     input_text = get_attribute_for_webpage_id(page_id, session_id, 'all_text', db_conn)
 
+    # save page tokens only once
     page_tokens_df = spacy_extract_tokens_page(session_id, page_id, nlp, input_text, db_conn, db_engine, insert_db=keep_stopwords)    
     
     #page_tokens_df.to_csv('tmp/debug_page_tokens_df.csv',index=False) # DEBUG
@@ -506,10 +507,10 @@ def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, page_toke
     match_df['page_id'] = page_id
     match_df['muse_id'] = muse_id
     match_df['keep_stopwords'] = keep_stopwords
-    
+
     # clear page before insertion
     try:
-        sql = "delete from {} where session_id = '{}' and page_id = {};".format('analytics.text_indic_ann_matches', session_id, page_id)
+        sql = "delete from {} where session_id = '{}' and page_id = {} and keep_stopwords = {};".format('analytics.text_indic_ann_matches', session_id, page_id, keep_stopwords)
         c = db_conn.cursor()
         c.execute(sql)
         db_conn.commit()
