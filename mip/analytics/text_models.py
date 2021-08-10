@@ -189,7 +189,7 @@ def spacy_extract_tokens_page(session_id, page_id, nlp, text, db_conn, db_engine
 
     if insert_db:
         # insert tokens into DB
-        print("spacy_extract_tokens_page insert tokens into DB {}...".format(len(tokens_df)))
+        print("spacy_extract_tokens_page insert tokens into DB (n={})...".format(len(tokens_df)))
         tokens_df.to_sql('mus_sentence_tokens', db_engine, schema='analytics', index=False, if_exists='append', method='multi')
     
     return tokens_df
@@ -309,7 +309,7 @@ def analyse_museum_text():
                 match_indicators_in_muse_page(muse_id, session_id, page_id, nlp, ann_tokens_df, keep_stopwords, db_conn, db_engine)
                 #spacy_extract_tokens(session_id, page_id, nlp, input_text, db_conn, db_engine)
     del i
-    
+
     # add indices to table
     idx_sql = """
         ALTER TABLE analytics.text_indic_ann_matches  
@@ -321,7 +321,6 @@ def analyse_museum_text():
     c.execute(idx_sql)
     db_conn.commit()
     logger.info('matches written in table analytics.text_indic_ann_matches.')
-    
 
 
 def _filter_tokens(df, keep_stopwords=True):

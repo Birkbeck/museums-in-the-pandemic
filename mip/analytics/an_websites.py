@@ -176,7 +176,8 @@ def extract_text_from_websites(in_table, out_table, db_conn, target_museum_id=No
         pages_df = pd.read_sql(sql, db_conn)
         
         for index, row in pages_df.iterrows():
-            if index % 5000 == 0: print('\tidx=',index)
+            # print progress
+            if index % block_sz == 0: print('\tidx=',index)
             page_id = row['page_id']
             url = row['url']
             session_id = row['session_id']
