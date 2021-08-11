@@ -206,6 +206,7 @@ def extract_text_from_websites(in_table, out_table, db_conn, target_museum_id=No
 
 
 def exists_attrib_page(page_id, session_id, db_conn):
+    """ @returns True if page exists in table """
     check_dbconnection_status(db_conn)
     table = get_webdump_attr_table_name(session_id)
     sql = "select page_id from {} where page_id = {}".format(table, page_id)

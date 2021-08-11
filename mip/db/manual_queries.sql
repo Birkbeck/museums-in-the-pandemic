@@ -169,9 +169,11 @@ select count(*) from analytics.text_indic_ann_matches t;
 select count(distinct muse_id) from analytics.text_indic_ann_matches t;
 select * from analytics.text_indic_ann_matches t order by t.ann_overlap_lemma desc limit 100;
 
-select * from analytics.text_indic_ann_matches t where t.keep_stopwords; 
+select * from analytics.text_indic_ann_matches t where t.keep_stopwords limit 100; 
 
 select count(*) from analytics.indicator_annotation_tokens k;
+
+select * from analytics.indicator_annotation_tokens t where t.example_id = 'ann_ex_00245';
 
 -- quartiles of lemmas
 select
