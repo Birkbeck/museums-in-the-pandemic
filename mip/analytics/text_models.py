@@ -43,8 +43,8 @@ def prep_training_data():
 def get_indicator_annotations(data_folder=''):
     """ @returns indicators data frame and annotations data frame """
     in_fn = data_folder + "data/annotations/indicators_and_annotations-v4.xlsx"
-    indic_df = pd.read_excel(in_fn,0)
-    ann_df = pd.read_excel(in_fn,1)
+    indic_df = pd.read_excel(in_fn, 0)
+    ann_df = pd.read_excel(in_fn, 1)
     
     # select first 4 columns
     ann_df = ann_df.iloc[:, : 4]
@@ -203,6 +203,7 @@ def get_indicator_annotation_tokens(nlp):
     indic_df, ann_df = get_indicator_annotations()
     assert len(ann_df)>0
     ann_tokens_df = pd.DataFrame()
+    print('Annotations n =', len(ann_df))
 
     for index, row in ann_df.iterrows():
         txt = str(row['text_phrases']).strip()
@@ -215,10 +216,17 @@ def get_indicator_annotation_tokens(nlp):
         #print(df)
         df['example_id'] = row['example_id']
         df['indicator_code'] = row['indicator_code']
+        assert len(df) > 1, txt
         ann_tokens_df = pd.concat([ann_tokens_df, df])
 
     # change sentence ID format
     ann_tokens_df['sentence_id'] = ["ex_sent_{}".format(x) for x in ann_tokens_df['sentence_id']]
+
+    # fix PRON 
+    mfilter = ann_tokens_df["lemma"] == '-PRON-'
+    ann_tokens_df.loc[mfilter, "lemma"] = ann_tokens_df.loc[mfilter, "token"]
+    ann_tokens_df["lemma"] = ann_tokens_df["lemma"].str.lower()
+    # filter tokens
     ann_tokens_df = _filter_tokens(ann_tokens_df)
     assert len(ann_tokens_df) > 0
     return ann_tokens_df
@@ -279,7 +287,8 @@ def analyse_museum_text():
     # ann_tokens_df = ann_tokens_df.sample(100) # DEBUG
 
     df = get_museums_sample_urls()
-    
+    #df = df.sample(5) # DEBUG
+
     # load all museums
     #df = get_museums_w_web_urls()
 
@@ -324,12 +333,21 @@ def analyse_museum_text():
 
 
 def _filter_tokens(df, keep_stopwords=True):
-    """ Remove tokens that do not carry semantic content """
+    """ IMPORTANT METHOD: Remove tokens that do not carry semantic content. """
     
     if not keep_stopwords:
         df = df[~df['is_stop']]
-    # TODO:
-    filt_df = df[~df['pos_tag'].isin(['DET','ADP','PRON','PUNCT','SYM','SPACE'])]
+
+    # filter all tokens shorter than 2
+    df = df[df.lemma.str.len() > 1]
+
+    # remove specific words
+    filt_df = df[~df['lemma'].isin(['of','the','a','this','i','as'])]
+    
+    # remove based on POS
+    pos_to_exclude = ['CCONJ','SCONJ','ADP','PUNCT','SYM','SPACE','NUM','AUX']
+    filt_df = filt_df[~filt_df['pos_tag'].isin(pos_to_exclude)]
+
     return filt_df.copy()
 
 
@@ -337,7 +355,7 @@ def __OLD_match_tokens(musetxt_df, annot_df, case_sensitive, keep_stopwords):
     return
     """
     Match tokens between museum text and annotation tokens (indicators)
-    """
+    
     sw = StopWatch("_match_tokens")
     assert len(musetxt_df) >= 0
     assert len(annot_df) > 0, annot_df
@@ -408,6 +426,7 @@ def __OLD_match_tokens(musetxt_df, annot_df, case_sensitive, keep_stopwords):
     }
     #logger.debug(sw.tick())
     return vars_d
+    """
 
 
 def _count_unique_matches(df, col, target_col_name):
@@ -446,7 +465,7 @@ def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, page_toke
     txt_df = page_tokens_df # pd.read_sql_query(sql, db_conn)
     
     df = pd.DataFrame()
-    if len(page_tokens_df)==0: 
+    if len(page_tokens_df)==0:
         return df
     
     # count sentence length in input data
