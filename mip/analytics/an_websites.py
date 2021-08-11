@@ -122,8 +122,11 @@ def extract_attributes_from_page_html(page_id, session_id, page_html, attr_table
     if page_html is None or len(page_html)==0:
         logger.warning("page_id {} is empty".format(page_id))
         return False
+    
+    msg = "\textract page ID="+str(page_id)
+    logger.debug(msg)
+    print(msg)
 
-    logger.debug("\textract page ID="+str(page_id))
     assert len(page_html) > 0
     soup = get_soup_from_html(page_html)
 
@@ -191,6 +194,7 @@ def extract_text_from_websites(in_table, out_table, db_conn, target_museum_id=No
                 if not new_page and not prev_session_diff_b:
                     to_extract = False
             if to_extract and not exists_attrib_page(page_id, session_id, db_conn):
+                print('\t extracting page_id=', page_id)
                 extract_attributes_from_page_html(page_id, session_id, page_html, out_table, db_conn)
             del page_html, page_id, session_id
 

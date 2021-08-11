@@ -328,7 +328,7 @@ def _filter_tokens(df, keep_stopwords=True):
     
     if not keep_stopwords:
         df = df[~df['is_stop']]
-    
+    # TODO:
     filt_df = df[~df['pos_tag'].isin(['DET','ADP','PRON','PUNCT','SYM','SPACE'])]
     return filt_df.copy()
 
