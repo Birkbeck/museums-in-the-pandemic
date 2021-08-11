@@ -305,8 +305,14 @@ def get_page_id_for_webpage_url(url, id, session_id, attrib_name, db_conn):
     
     #print("get_attribute_for_webpage_url", attr_tbl_name)
     
+    if url[-1] == '/':
+        alt_url = url[:-1]
+    else: 
+        alt_url = url + '/'
+
     sql = """select url, a.page_id, attrib_name, attrib_val from {} p, {} a where a.page_id = p.page_id 
-         and a.attrib_name = '{}' and p.url='{}';""".format(page_tbl_name, attr_tbl_name, attrib_name, url)
+         and a.attrib_name = '{}' and (p.url='{}' or p.url='{}');""".format(page_tbl_name, attr_tbl_name, 
+         attrib_name, make_string_sql_safe(url), make_string_sql_safe(alt_url))
     #print(sql)
     attr_df = pd.read_sql(sql, db_conn)
     df = attr_df[['url', 'page_id', 'attrib_name', 'attrib_val']]

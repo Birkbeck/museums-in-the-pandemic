@@ -309,7 +309,7 @@ def analyse_museum_text():
         main_page_ids = get_page_id_for_webpage_url(row['url'], muse_id, session_id, attrib_name, db_conn)
         if main_page_ids is None:
             continue
-        assert len(main_page_ids) == 1
+        assert len(main_page_ids) >= 1 and len(main_page_ids) <= 2
         logger.info(msg)
         print(msg)
         for page_id in main_page_ids:
