@@ -169,7 +169,6 @@ def spacy_extract_tokens_page(session_id, page_id, nlp, text, db_conn, db_engine
         return None
     text = _preprocess_input_text(text)
     
-
     tokens_df = spacy_extract_tokens(nlp, text)
     tokens_df["session_id"] = session_id
     tokens_df["page_id"] = page_id
@@ -177,6 +176,8 @@ def spacy_extract_tokens_page(session_id, page_id, nlp, text, db_conn, db_engine
     # change sentence id format
     tokens_df['sentence_id'] = ["mus_page{}_sent{:05d}".format(page_id,x) for x in tokens_df['sentence_id']]
     
+    tokens_df = _fix_token_lemmas(tokens_df)
+
     # clear page
     try:
         sql = "delete from {} where session_id = '{}' and page_id = {}".format(tokens_table_name, session_id, page_id)
@@ -193,6 +194,15 @@ def spacy_extract_tokens_page(session_id, page_id, nlp, text, db_conn, db_engine
         tokens_df.to_sql('mus_sentence_tokens', db_engine, schema='analytics', index=False, if_exists='append', method='multi')
     
     return tokens_df
+
+
+def _fix_token_lemmas(df):
+    """ Fix minor issues in token/lemma data frame and make everything lowercase """
+    mfilter = df["lemma"] == '-PRON-'
+    df.loc[mfilter, "lemma"] = df.loc[mfilter, "token"]
+    df["lemma"] = df["lemma"].str.lower()
+    df["token"] = df["token"].str.lower()
+    return df
 
 
 def get_indicator_annotation_tokens(nlp):
@@ -222,10 +232,9 @@ def get_indicator_annotation_tokens(nlp):
     # change sentence ID format
     ann_tokens_df['sentence_id'] = ["ex_sent_{}".format(x) for x in ann_tokens_df['sentence_id']]
 
-    # fix PRON 
-    mfilter = ann_tokens_df["lemma"] == '-PRON-'
-    ann_tokens_df.loc[mfilter, "lemma"] = ann_tokens_df.loc[mfilter, "token"]
-    ann_tokens_df["lemma"] = ann_tokens_df["lemma"].str.lower()
+    # fix PRON
+    ann_tokens_df = _fix_token_lemmas(ann_tokens_df)
+    
     # filter tokens
     ann_tokens_df = _filter_tokens(ann_tokens_df)
     assert len(ann_tokens_df) > 0
@@ -257,7 +266,7 @@ def match_indicators_in_muse_page(muse_id, session_id, page_id, nlp, annotat_tok
         
         # this will read the tokens from the DB
         _match_musetext_indicators(muse_id, session_id, page_id, annotat_tokens_df, page_tokens_df, 
-                                    ann_full_txt_df, sent_full_txt_df, keep_stopwords, db_conn, db_engine)
+                                ann_full_txt_df, sent_full_txt_df, keep_stopwords, db_conn, db_engine)
 
 
 def analyse_museum_text():
@@ -313,7 +322,7 @@ def analyse_museum_text():
         logger.info(msg)
         print(msg)
         for page_id in main_page_ids:
-            for keep_stopwords in [True, False]:
+            for keep_stopwords in [True]: # False
                 # match indicators with annotations
                 match_indicators_in_muse_page(muse_id, session_id, page_id, nlp, ann_tokens_df, keep_stopwords, db_conn, db_engine)
                 #spacy_extract_tokens(session_id, page_id, nlp, input_text, db_conn, db_engine)
@@ -342,7 +351,7 @@ def _filter_tokens(df, keep_stopwords=True):
     df = df[df.lemma.str.len() > 1]
 
     # remove specific words
-    filt_df = df[~df['lemma'].isin(['of','the','a','this','i','as'])]
+    filt_df = df[~df['lemma'].isin(['of','the','a','this','i','as','that','any','all','for','with'])]
     
     # remove based on POS
     pos_to_exclude = ['CCONJ','SCONJ','ADP','PUNCT','SYM','SPACE','NUM','AUX']
@@ -499,6 +508,9 @@ def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, page_toke
     assert n == len(match_df)
 
     match_df = match_df.drop(columns=['sentence_id_txt'])
+
+    if page_id == 391623:
+        k = 0
 
     # calculate overlaps
     digits = 5
