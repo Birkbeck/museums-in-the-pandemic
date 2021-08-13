@@ -351,7 +351,7 @@ def _filter_tokens(df, keep_stopwords=True):
     df = df[df.lemma.str.len() > 1]
 
     # remove specific words
-    filt_df = df[~df['lemma'].isin(['of','the','a','this','i','as','that','any','all','for','with'])]
+    filt_df = df[~df['lemma'].isin(['of','the','a','this','i','as','that','any','all','for','with','and'])]
     
     # remove based on POS
     pos_to_exclude = ['CCONJ','SCONJ','ADP','PUNCT','SYM','SPACE','NUM','AUX']
