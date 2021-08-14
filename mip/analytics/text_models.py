@@ -162,8 +162,9 @@ def spacy_extract_tokens_page(session_id, page_id, nlp, text, db_conn, db_engine
     @returns data frame with tokens with POS, lemma, stop words
     """
     print('spacy_extract_tokens_page')
-    if page_id==60967:
-        print("ok")
+    #if page_id==60967:
+    #    print("ok")
+
     logger.debug('spacy_extract_tokens_page')
     if text is None or len(text) < 3: 
         return None
@@ -509,8 +510,8 @@ def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, page_toke
 
     match_df = match_df.drop(columns=['sentence_id_txt'])
 
-    if page_id == 391623:
-        k = 0
+    if page_id == 391623: # DEBUG
+        k = 0 
 
     # calculate overlaps
     digits = 5
@@ -525,6 +526,10 @@ def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, page_toke
         match_df = match_df.merge(annotat_full_txt_df, on='example_id')
         match_df = match_df.merge(sentences_full_txt_df, on='sentence_id')
         assert len(match_df) == n1
+
+    # NOTE: lemma_n > token_n should be true but sometimes it's correct to have tokens > lemmas
+    #kk = match_df.lemma_n >= match_df.token_n
+    #assert kk.all():
 
     # check overlap score ranges
     assert match_df.ann_overlap_lemma.between(0,1).all(), match_df.ann_overlap_lemma.sort_values()
