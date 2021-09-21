@@ -42,7 +42,7 @@ def prep_training_data():
 
 def get_indicator_annotations(data_folder=''):
     """ @returns indicators data frame and annotations data frame """
-    in_fn = data_folder + "data/annotations/indicators_and_annotations-v4.xlsx"
+    in_fn = data_folder + "data/annotations/indicators_and_annotations-v6.xlsx"
     indic_df = pd.read_excel(in_fn, 0)
     ann_df = pd.read_excel(in_fn, 1)
     
@@ -216,25 +216,34 @@ def get_indicator_annotation_tokens(nlp):
     ann_tokens_df = pd.DataFrame()
     print('Annotations n =', len(ann_df))
 
+    # loop through annotations
     for index, row in ann_df.iterrows():
-        txt = str(row['text_phrases']).strip()
+        txt = str(row['text_phrases']).lower().strip()
         df = spacy_extract_tokens(nlp, txt)
         n = len(df)
         df = df.drop_duplicates(['lemma'])
-        #if n != len(df1):
-        #    i = 0
-        #df = df1
-        #print(df)
+        
+        # add 'critical' flag to tokens
+        crit_df = spacy_extract_tokens(nlp, str(row['critical_words']).lower().strip())
+        crit_df['critical_word'] = True
+        n = len(df)
+        assert len(df) > 0, 'must have at least a critical word'
+        df = df.merge(crit_df[['token','critical_word']], on=['token'], how='left')
+        assert len(df) == n
+        df['critical_word'] = df['critical_word'].fillna(False)
+        assert df['critical_word'].any()
         df['example_id'] = row['example_id']
         df['indicator_code'] = row['indicator_code']
+        
         assert len(df) > 1, txt
+        df = _fix_token_lemmas(df)
         ann_tokens_df = pd.concat([ann_tokens_df, df])
 
     # change sentence ID format
     ann_tokens_df['sentence_id'] = ["ex_sent_{}".format(x) for x in ann_tokens_df['sentence_id']]
 
     # fix PRON
-    ann_tokens_df = _fix_token_lemmas(ann_tokens_df)
+    #ann_tokens_df = _fix_token_lemmas(ann_tokens_df)
     
     # filter tokens
     ann_tokens_df = _filter_tokens(ann_tokens_df)
@@ -481,6 +490,7 @@ def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, page_toke
     # count sentence length in input data
     txt_len_df = txt_df.groupby(['sentence_id']).size().reset_index().rename(columns={0:'sent_len'})
     ann_len_df = annot_df.groupby(['example_id']).size().reset_index().rename(columns={0:'example_len'})
+    ann_crit_len_df = annot_df[annot_df.critical_word].groupby(['example_id']).size().reset_index().rename(columns={0:'example_crit_len'})
 
     # match lemmas between page and annotations
     #  join
@@ -491,32 +501,47 @@ def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, page_toke
     #  join
     token_df = txt_df.merge(annot_df, on='token', suffixes=['_txt','_ann'])
     token_match_df = _count_unique_matches(token_df, 'token', 'token_n')
+
+    # match critical words between page and annotations
+    #  join
+    critic_df = txt_df.merge(annot_df[annot_df.critical_word], on='token', suffixes=['_txt','_ann'])
+    critic_match_df = _count_unique_matches(critic_df, 'token', 'criticalwords_n')
+    # verify that each annotation example has critical words
+    for ex, exdf in annot_df.groupby('example_id'):
+        assert exdf.critical_word.any(),str(exdf)
+
+    if False:
+        # find missing cases
+        diff = set(critic_df.example_id.unique()).difference(set(annot_df.example_id.unique()))
+        diff1 = set(annot_df.example_id.unique()).difference(set(critic_df.example_id.unique()))
     
     # merge lemmas and tokens results
     match_df = lemma_match_df.merge(token_match_df, on=['sentence_id_txt','example_id','indicator_code'], how='outer')
+    match_df = match_df.merge(critic_match_df, on=['sentence_id_txt','example_id','indicator_code'], how='outer')
     
     # fill with zero
     match_df['lemma_n'] = match_df['lemma_n'].replace(np.nan, 0)
     match_df['lemma_n_wdupl'] = match_df['lemma_n_wdupl'].replace(np.nan, 0)
     match_df['token_n'] = match_df['token_n'].replace(np.nan, 0)
     match_df['token_n_wdupl'] = match_df['token_n_wdupl'].replace(np.nan, 0)
+    match_df['criticalwords_n'] = match_df['criticalwords_n'].replace(np.nan, 0)
+    match_df['criticalwords_n_wdupl'] = match_df['criticalwords_n_wdupl'].replace(np.nan, 0)
     
     n = len(match_df)
     
     # add sentence length
     match_df = match_df.merge(txt_len_df, left_on='sentence_id_txt', right_on='sentence_id')
     match_df = match_df.merge(ann_len_df, left_on='example_id', right_on='example_id')
-    assert n == len(match_df)
+    match_df = match_df.merge(ann_crit_len_df, left_on='example_id', right_on='example_id', how='left')
+    assert n == len(match_df), str(len(match_df))
 
     match_df = match_df.drop(columns=['sentence_id_txt'])
-
-    if page_id == 391623: # DEBUG
-        k = 0 
 
     # calculate overlaps
     digits = 5
     match_df['ann_overlap_lemma'] = round(match_df['lemma_n'] / match_df['example_len'],digits)
     match_df['ann_overlap_token'] = round(match_df['token_n'] / match_df['example_len'],digits)
+    match_df['ann_overlap_criticwords'] = round(match_df['criticalwords_n'] / match_df['example_crit_len'],digits)
     match_df['txt_overlap_lemma'] = round(match_df['lemma_n'] / match_df['sent_len'],digits)
     match_df['txt_overlap_token'] = round(match_df['token_n'] / match_df['sent_len'],digits)
     
@@ -534,6 +559,7 @@ def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, page_toke
     # check overlap score ranges
     assert match_df.ann_overlap_lemma.between(0,1).all(), match_df.ann_overlap_lemma.sort_values()
     assert match_df.ann_overlap_token.between(0,1).all(), match_df.ann_overlap_token.sort_values()
+    assert match_df.ann_overlap_criticwords.between(0,1).all(), match_df.ann_overlap_criticwords.sort_values()
     assert match_df.txt_overlap_lemma.between(0,1).all(), match_df.txt_overlap_lemma.sort_values()
     assert match_df.txt_overlap_token.between(0,1).all(), match_df.txt_overlap_token.sort_values()
 

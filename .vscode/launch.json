@@ -21,14 +21,6 @@
             "args": ["scrape_websites"]
         },
         {
-            "name": "an_websites",
-            "type": "python",
-            "request": "launch",
-            "program": "mip/app.py",
-            "console": "integratedTerminal",
-            "args": ["an_websites"]
-        },
-        {
             "name": "an_text",
             "type": "python",
             "request": "launch",

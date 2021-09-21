@@ -276,8 +276,8 @@ def get_attribute_for_webpage_id(page_id, session_id, attrib_name, db_conn):
     print("get_attribute_for_webpage_id", page_id)
     page_tbl_name = get_webdump_table_name(session_id)
     attr_tbl_name = get_webdump_attr_table_name(session_id)
-    if page_id==60967:
-        print('ok')
+    #if page_id==60967:
+    #    print('ok')
     sql = """select url, a.page_id, attrib_name, attrib_val from {} p, {} a where a.page_id = p.page_id 
         and p.page_id = {} and a.attrib_name = '{}';""".format(page_tbl_name, attr_tbl_name, page_id, attrib_name)
     #print(sql)
