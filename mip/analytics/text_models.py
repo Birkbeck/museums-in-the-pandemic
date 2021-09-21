@@ -341,10 +341,9 @@ def analyse_museum_text():
     # add indices to table
     idx_sql = """
         ALTER TABLE analytics.text_indic_ann_matches  
-            DROP CONSTRAINT IF EXISTS text_indic_ann_matches_pk;
+            DROP CONSTRAINT IF EXISTS text_indic_ann_matches_pkey;
         ALTER TABLE analytics.text_indic_ann_matches 
-            ADD CONSTRAINT text_indic_ann_matches_pk 
-            PRIMARY KEY (sentence_id, example_id, page_id, keep_stopwords);"""
+            ADD PRIMARY KEY (sentence_id, example_id, page_id, keep_stopwords);"""
     c = db_conn.cursor()
     c.execute(idx_sql)
     db_conn.commit()
