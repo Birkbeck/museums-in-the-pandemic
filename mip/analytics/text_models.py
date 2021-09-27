@@ -503,8 +503,9 @@ def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, page_toke
 
     # match critical words between page and annotations
     #  join
-    critic_df = txt_df.merge(annot_df[annot_df.critical_word], on='token', suffixes=['_txt','_ann'])
-    critic_match_df = _count_unique_matches(critic_df, 'token', 'criticalwords_n')
+    # TODO: lemma vs token is important
+    critic_df = txt_df.merge(annot_df[annot_df.critical_word], on='lemma', suffixes=['_txt','_ann'])
+    critic_match_df = _count_unique_matches(critic_df, 'lemma', 'criticalwords_n')
     # verify that each annotation example has critical words
     for ex, exdf in annot_df.groupby('example_id'):
         assert exdf.critical_word.any(),str(exdf)
