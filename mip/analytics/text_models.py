@@ -13,6 +13,7 @@ import pandas as pd
 from utils import StopWatch
 import numpy as np
 import pickle
+import time
 #import tensorflow as tf
 from bs4 import BeautifulSoup
 from bs4.element import Comment
@@ -281,7 +282,7 @@ def match_indicators_in_muse_page(muse_id, session_id, page_id, nlp, annotat_tok
 
 def analyse_museum_text():
     """
-    Main command: 
+    Main command:
     Preprocess and process museum text using NLP tools.
     """
     logger.info("analyse_museum_text")
@@ -303,52 +304,68 @@ def analyse_museum_text():
     if True:
         ann_tokens_df.to_sql('indicator_annotation_tokens', db_engine, schema='analytics', index=False, if_exists='replace', method='multi')
     
-    # ann_tokens_df = ann_tokens_df.sample(100) # DEBUG
-
-    df = get_museums_sample_urls()
-    #df = df.sample(5) # DEBUG
-
-    # load all museums
-    #df = get_museums_w_web_urls()
-
+    # load all museums with URL and attributes
+    df = get_museums_w_web_urls()
+    print("museums url N:",len(df))
     attr_df = load_input_museums_wattributes()
-    #stratdf = stratdf.filter(['muse_id', 'governance', 'town'], axis=1) ##DEBUG town should be removed
-    df = pd.merge(df, attr_df, on='muse_id')
-    print("museum df len", len(df))
-    #df=df.loc[df['governance'] == 'University'] ##DEBUG line should be unhashed to only use university museums
-    session_id = '20210304'
+    df = pd.merge(df, attr_df, on='muse_id', how='left')
+    print("museum df with attributes: len", len(df))
+
+    #df = df.sample(3) # DEBUG
+    
+    # set target scraping session
+    session_ids = ['20210304','20210404']
+    print('session_ids',str(session_ids))
     attrib_name = 'all_text'
     
-    i = 0
-    for index, row in df.iterrows():
-        i += 1
-        muse_id = row['muse_id']
-        msg = ">>> Processing museum {} of {}, muse_id={}, session={}".format(i,len(df),muse_id,session_id)
-        # get main page of a museum
-        main_page_ids = get_page_id_for_webpage_url(row['url'], muse_id, session_id, attrib_name, db_conn)
-        if main_page_ids is None:
-            continue
-        assert len(main_page_ids) >= 1 and len(main_page_ids) <= 2
-        logger.info(msg)
-        print(msg)
-        for page_id in main_page_ids:
-            for keep_stopwords in [True]: # False
+    urls_not_found = []
+
+    # scan sessions
+    for session_id in session_ids:
+        i = 0
+        logger.info('>\t\t\t\tProcessing session ' + session_id)
+        # scan museums
+        for index, row in df.iterrows():
+            i += 1
+            muse_id = row['muse_id']
+            msg = ">>> Processing museum {} of {}, muse_id={}, session={}".format(i, len(df), muse_id, session_id)
+            # get main page of a museum
+            main_page_ids = get_page_id_for_webpage_url(row['url'], muse_id, session_id, attrib_name, db_conn)
+            if main_page_ids is None:
+                logger.warning('museum URL not found: '+str(row['url']) + "for museum id="+muse_id)
+                urls_not_found.append({'museum_id':muse_id, 'session_id':session_id, 'url':row['url']})
+                continue
+            assert len(main_page_ids) >= 1 and len(main_page_ids) <= 2
+            logger.info(msg)
+            print(msg)
+            for page_id in main_page_ids:
                 # match indicators with annotations
-                match_indicators_in_muse_page(muse_id, session_id, page_id, nlp, ann_tokens_df, keep_stopwords, db_conn, db_engine)
+                match_indicators_in_muse_page(muse_id, session_id, page_id, nlp, ann_tokens_df, True, db_conn, db_engine)
                 #spacy_extract_tokens(session_id, page_id, nlp, input_text, db_conn, db_engine)
-    del i
+                # add pause to avoid DB transaction failures
+                time.sleep(.1)
+        del i
 
-    # add indices to table
-    idx_sql = """
-        ALTER TABLE analytics.text_indic_ann_matches  
-            DROP CONSTRAINT IF EXISTS text_indic_ann_matches_pkey;
-        ALTER TABLE analytics.text_indic_ann_matches 
-            ADD PRIMARY KEY (sentence_id, example_id, page_id, keep_stopwords);"""
-    c = db_conn.cursor()
-    c.execute(idx_sql)
-    db_conn.commit()
-    logger.info('matches written in table analytics.text_indic_ann_matches.')
-
+        # add indices to table
+        idx_sql = """
+            ALTER TABLE {0}  
+                DROP CONSTRAINT IF EXISTS {1}_pkey;
+            ALTER TABLE {0} 
+                ADD PRIMARY KEY (sentence_id, example_id, page_id, keep_stopwords);""".format(
+                                _get_museum_indic_match_table_name(session_id),
+                                _get_museum_indic_match_table_name(session_id,False))
+        c = db_conn.cursor()
+        c.execute(idx_sql)
+        db_conn.commit()
+        
+        # write URLs not found to DB
+        notfound_df = pd.DataFrame(data=urls_not_found)
+        notfound_table = _get_museum_indic_match_table_name(session_id,False)+'_notfound'
+        notfound_df.to_sql(notfound_table, db_engine, schema='analytics', index=False, if_exists='replace', method='multi')
+        
+        logger.info('Session done. Matches written in table '+_get_museum_indic_match_table_name(session_id))
+        del session_id, notfound_df
+    
 
 def _filter_tokens(df, keep_stopwords=True):
     """ IMPORTANT METHOD: Remove tokens that do not carry semantic content. """
@@ -468,6 +485,18 @@ def _count_unique_matches(df, col, target_col_name):
     return match_df
 
 
+def _get_museum_indic_match_table_name(session_id, add_schema=True):
+    """" 
+    This table stores indicator matches.
+    Name format: analytics.text_indic_ann_matches_2020xxxx 
+    """
+    assert session_id
+    tab = 'text_indic_ann_matches_' + session_id
+    if add_schema:
+        tab='analytics.'+tab
+    return tab
+
+
 def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, page_tokens_df, 
                 annotat_full_txt_df, sentences_full_txt_df, keep_stopwords, db_conn, db_engine):
     """ 
@@ -571,17 +600,18 @@ def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, page_toke
 
     # clear page before insertion
     try:
-        sql = "delete from {} where session_id = '{}' and page_id = {} and keep_stopwords = {};".format('analytics.text_indic_ann_matches', session_id, page_id, keep_stopwords)
+        sql = "delete from {} where session_id = '{}' and page_id = {} and keep_stopwords = {};".format(_get_museum_indic_match_table_name(session_id), session_id, page_id, keep_stopwords)
         c = db_conn.cursor()
         c.execute(sql)
         db_conn.commit()
         logger.debug('delete from text_indic_ann_matches ok.')
     except:
-        logger.warning('delete from text_indic_ann_matches failed.')
+        logger.warning('delete from text_indic_ann_matches failed, roll back.')
+        db_conn.rollback()
     
     # insert match results into SQL table
     logger.debug(sw.tick('match'))
-    match_df.to_sql('text_indic_ann_matches', db_engine, schema='analytics', index=False, if_exists='append', method='multi')
+    match_df.to_sql(_get_museum_indic_match_table_name(session_id, False), db_engine, schema='analytics', index=False, if_exists='append', method='multi')
     logger.debug(sw.tick('to_sql n={}'.format(len(match_df))))
     return df
 
