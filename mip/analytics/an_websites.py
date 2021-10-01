@@ -268,6 +268,7 @@ def get_attribute_for_webpage_url(url, session_id, attrib_name, db_conn):
     else: 
         return None
 
+
 def get_attribute_for_webpage_id(page_id, session_id, attrib_name, db_conn):
     """
     @returns attribute value (e.g. all_text) for a URL in a target scraping session;
