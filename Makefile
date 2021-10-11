@@ -24,6 +24,11 @@ db_stats:
 	./run_app_server.sh db_stats;
 
 
+scrape_twitter:
+	@echo ">>> Twitter";
+	nohup ./run_app_server.sh scrape_twitter > tmp/logs/nohup_${DATE}_log.txt &
+
+
 extract_txt_fields:
 	@echo ">>> Extract text fields";
 	nohup ./run_app_server.sh ex_txt_fields > tmp/logs/nohup_${DATE}_log.txt &
