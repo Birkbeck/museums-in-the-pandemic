@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
+from re import L
 #import twint
 logger = logging.getLogger(__name__)
 
@@ -34,7 +35,7 @@ def create_tweet_dump(db_conn):
     c.execute('''
         CREATE SCHEMA IF NOT EXISTS twitter;
         CREATE EXTENSION IF NOT EXISTS hstore;
-        CREATE TABLE twitter.tweets_dump 
+        CREATE TABLE IF NOT EXISTS twitter.tweets_dump 
             (tw_id text NOT NULL,
             account text NOT NULL,
             author_id text NOT NULL,
@@ -43,8 +44,7 @@ def create_tweet_dump(db_conn):
             tw_ts timestamptz NOT NULL,
             tweet_data_json json NOT NULL,
             collection_ts timestamptz DEFAULT CURRENT_TIMESTAMP,
-            PRIMARY KEY(tw_id, muse_id)
-            );
+            PRIMARY KEY(tw_id, muse_id));
             ''')
     db_conn.commit()
     print('create_tweet_dump')
@@ -98,8 +98,11 @@ def scrape_twitter_accounts(museums_df):
         print('> museum ', i, 'of', len(museums_df))
         mus_id = mus['museum_id']
         tw_accounts = get_twitter_accounts_from_col(mus['twitter_id'])
+        
         # scan museums
         for acc in tw_accounts:
+            if has_db_museum_tweets(mus_id, acc, db_con):
+                continue
             scrape_twitter_account(mus_id, acc, min_date, db_con)
         if len(tw_accounts) == 0:
             no_twitter_mus = no_twitter_mus.append(mus)
@@ -107,6 +110,12 @@ def scrape_twitter_accounts(museums_df):
     # insert no_twitter_mus into DB
     no_twitter_mus.to_sql('museums_no_twitter', db_engine, schema='twitter', index=False, if_exists='replace', method='multi')
 
+
+def has_db_museum_tweets(muse_id, user_name, db_con):
+    sql = '''select count(*) as cnt from twitter.tweets_dump where muse_id = '{}' and account = '{}';'''.format(muse_id, user_name)
+    df = pd.read_sql(sql, db_con)
+    cnt = df.cnt[0]
+    return cnt > 0
 
 def scrape_twitter_account(muse_id, user_name, min_date, db_con):
     """
