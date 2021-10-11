@@ -147,13 +147,14 @@ def scrape_twitter_account(muse_id, user_name, min_date, db_con):
     
     headers = create_twitter_api_headers()
     found_tweets = 0
+    PAUSE_SECS = 1.0
 
     while keep_querying:
         if next_token:
             query_params['next_token'] = next_token
         
         json_response = query_twitter_api_endpoint(headers, query_params)
-        time.sleep(.5)
+        time.sleep(PAUSE_SECS)
         assert 'data' in json_response, str(json_response)
         n_tweets = len(json_response['data'])
         found_tweets += n_tweets
