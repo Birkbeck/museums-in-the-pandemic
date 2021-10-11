@@ -117,6 +117,7 @@ def has_db_museum_tweets(muse_id, user_name, db_con):
     cnt = df.cnt[0]
     return cnt > 0
 
+
 def scrape_twitter_account(muse_id, user_name, min_date, db_con):
     """
     API code based on
