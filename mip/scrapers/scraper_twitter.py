@@ -146,7 +146,7 @@ def scrape_twitter_account(muse_id, user_name, min_date, db_con):
         time.sleep(.5)
         n_tweets = len(json_response['data'])
         found_tweets += n_tweets
-        print('n_tweets',n_tweets,'; found_tweets',found_tweets)
+        print('\tn_tweets',n_tweets,'; found_tweets',found_tweets)
         if 'meta' in json_response and 'next_token' in json_response['meta']:
             # next token found
             next_token = json_response['meta']['next_token']
