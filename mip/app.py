@@ -16,12 +16,14 @@ from utils import StopWatch
 from scrapers.scraper_google_selenium import scrape_google_museum_names, extract_google_results
 from scrapers.scraper_twitter import scrape_twitter_account
 from scrapers.scraper_websites import scrape_websites
+from scrapers.scraper_twitter import scrape_twitter_accounts
 from scrapers.scraper_facebook import scrape_facebook
 from analytics.an_websites import analyse_museum_websites
 from analytics.text_models import analyse_museum_text
 from museums import load_input_museums, load_input_museums_wattributes, load_extracted_museums, \
     generate_stratified_museum_sample,generate_stratified_museum_urls, combinedatasets, \
-    get_fuzzy_string_match_scores, load_fuzzy_museums, compare_result_to_sample
+    get_fuzzy_string_match_scores, load_fuzzy_museums, compare_result_to_sample, get_museums_w_web_urls, \
+    get_twitter_links
 from db.db import is_postgresql_db_accessible, count_all_db_rows
 
 from tests.run_tests import get_all_tests
@@ -93,8 +95,8 @@ def main():
         
         if cmd == "scrape_twitter":
             print("scrape_twitter")
-            df = load_input_museums()
-            # TODO scrape_twitter(df)
+            df = get_twitter_links()
+            scrape_twitter_accounts(df)
 
         if cmd == "scrape_facebook":
             print("scrape_facebook")

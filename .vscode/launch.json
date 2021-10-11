@@ -61,6 +61,14 @@
             "args": ["scrape_facebook"]
         },
         {
+            "name": "scrape_twitter",
+            "type": "python",
+            "request": "launch",
+            "program": "mip/app.py",
+            "console": "integratedTerminal",
+            "args": ["scrape_twitter"]
+        },
+        {
             "name": "extract_google",
             "type": "python",
             "request": "launch",

@@ -40,9 +40,6 @@ def get_museums_w_web_urls(data_folder=''):
     df['domain'] = df['url'].apply(get_url_domain)
     domaincounts_df=df['domain'].value_counts()
     print(domaincounts_df)
-
-    
-
     #df = df[df['url'].apply(is_valid_website)]
     #df = df.drop_duplicates(subset=['url'])
     #df['id_duplicated'] = df.duplicated(subset=['muse_id'])
@@ -626,12 +623,6 @@ def generate_weighted_fuzzy_scores(mname, str_from_url, weighteddict, location, 
                     scores.append(score)
                     #print(key)
                     #print(score)
-           
-            
-    
-    
-
-    
     max_score = max(scores)
     return max_score
 
@@ -860,4 +851,17 @@ def join_museum_info(df, muse_id_column):
     museums_df = load_input_museums()
     mdf = df.merge(museums_df, left_on=muse_id_column, right_on='id', how="left")
     assert len(mdf) == len(df)
+    return mdf
+
+
+def get_twitter_links():
+    """" Load Twitter accounts for all museums """
+    fn = 'data/museums/tw_urls_final.tsv'
+    df = pd.read_csv(fn, sep='\t')
+    df = df[['museum_id','url']].rename(columns={"url": "twitter_id"})
+    mdf = load_input_museums()
+    print('get_twitter_links',len(mdf),len(df))
+    mdf = mdf.rename(columns={"id": "museum_id"})
+    mdf = mdf.merge(df, on='museum_id', how='left')
+    #print(len(mdf))
     return mdf
