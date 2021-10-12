@@ -95,9 +95,9 @@ def scrape_twitter_accounts(museums_df):
     i = 0
     for idx, mus in museums_df.iterrows():
         i += 1
-        print('> museum ', i, 'of', len(museums_df))
         mus_id = mus['museum_id']
         tw_accounts = get_twitter_accounts_from_col(mus['twitter_id'])
+        print('> museum ', i, 'of', len(museums_df), tw_accounts)
         
         # scan museums
         for acc in tw_accounts:
