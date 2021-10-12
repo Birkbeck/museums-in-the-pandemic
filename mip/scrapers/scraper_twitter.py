@@ -167,6 +167,11 @@ def scrape_twitter_account(muse_id, user_name, min_date, db_con):
         n_tweets = len(json_response['data'])
         found_tweets += n_tweets
         print('\tn_tweets',n_tweets,'; found_tweets',found_tweets)
+        
+        MAX_TWEETS_PER_ACCOUNT = 80000
+        if found_tweets > MAX_TWEETS_PER_ACCOUNT:
+            raise Exception(user_name+' seems to have too many tweets for a museum.')
+        
         if 'meta' in json_response and 'next_token' in json_response['meta']:
             # next token found
             next_token = json_response['meta']['next_token']
