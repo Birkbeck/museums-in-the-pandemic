@@ -147,7 +147,7 @@ def scrape_twitter_account(muse_id, user_name, min_date, db_con):
     
     headers = create_twitter_api_headers()
     found_tweets = 0
-    PAUSE_SECS = 1.05
+    PAUSE_SECS = 2.0
 
     json_results = []
     while keep_querying:
