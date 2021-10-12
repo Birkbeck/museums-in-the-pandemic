@@ -144,6 +144,7 @@ def scrape_twitter_account(muse_id, user_name, min_date, db_con):
         #'user.fields': 'created_at, description, entities, id, location, name, pinned_tweet_id, profile_image_url, protected, public_metrics, url, username, verified, withheld'.replace(' ',''),
         #'place.fields': 'contained_within, country, country_code, full_name, geo, id, name, place_type'.replace(' ',''),
     }
+    # NOTE 'context_annotations' was removed because of the low tweet limit.
     
     headers = create_twitter_api_headers()
     found_tweets = 0
