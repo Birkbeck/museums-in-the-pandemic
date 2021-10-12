@@ -43,9 +43,9 @@ def create_tweet_dump(db_conn):
             muse_id text NOT NULL,
             tw_ts timestamptz NOT NULL,
             tweet_data_json json NOT NULL,
-            collection_ts timestamptz DEFAULT CURRENT_TIMESTAMP,
-            PRIMARY KEY(tw_id, muse_id));
-            ''')
+            collection_ts timestamptz DEFAULT CURRENT_TIMESTAMP
+            );''')
+            # , PRIMARY KEY(tw_id, muse_id)) # removed to avoid insert exception
     db_conn.commit()
     print('create_tweet_dump')
 
@@ -137,10 +137,10 @@ def scrape_twitter_account(muse_id, user_name, min_date, db_con):
     keep_querying = True
     next_token = None
     query_params = {'query': 'from:'+user_name+' OR to:'+user_name, 
-        'tweet.fields': 'attachments, author_id, context_annotations, conversation_id, created_at, entities, geo, id, in_reply_to_user_id, lang, public_metrics, possibly_sensitive, referenced_tweets, reply_settings, source, text, withheld'.replace(' ',''),
+        'tweet.fields': 'attachments, author_id, conversation_id, created_at, entities, geo, id, in_reply_to_user_id, lang, public_metrics, possibly_sensitive, referenced_tweets, reply_settings, source, text, withheld'.replace(' ',''),
         'expansions': 'attachments.poll_ids, attachments.media_keys, author_id, entities.mentions.username, geo.place_id, in_reply_to_user_id, referenced_tweets.id, referenced_tweets.id.author_id'.replace(' ',''),
         'start_time': start_time_iso,
-        'max_results': 100
+        'max_results': 450
         #'user.fields': 'created_at, description, entities, id, location, name, pinned_tweet_id, profile_image_url, protected, public_metrics, url, username, verified, withheld'.replace(' ',''),
         #'place.fields': 'contained_within, country, country_code, full_name, geo, id, name, place_type'.replace(' ',''),
     }
