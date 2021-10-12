@@ -582,8 +582,10 @@ def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, page_toke
         assert len(match_df) == n1
 
     # NOTE: lemma_n > token_n should be true but sometimes it's correct to have tokens > lemmas
-    #kk = match_df.lemma_n >= match_df.token_n
-    #assert kk.all():
+    
+    # remove short sentences that are unlikely to have useful information
+    MIN_SENTENCE_LENGTH = 3
+    match_df = match_df[match_df.sent_len >= MIN_SENTENCE_LENGTH]
 
     # check overlap score ranges
     assert match_df.ann_overlap_lemma.between(0,1).all(), match_df.ann_overlap_lemma.sort_values()
