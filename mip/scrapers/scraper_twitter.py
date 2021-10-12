@@ -59,11 +59,18 @@ def create_twitter_api_headers():
 
 def query_twitter_api_endpoint(headers, params):
     search_url = "https://api.twitter.com/2/tweets/search/all"
-    response = requests.request("GET", search_url, headers=headers, params=params)
-    #print(response.status_code)
-    if response.status_code != 200:
-        raise RuntimeError(response.status_code, response.text)
-    return response.json()
+    pause_secs = 2.0
+    while True:
+        time.sleep(pause_secs)
+        response = requests.request("GET", search_url, headers=headers, params=params)
+        #print(response.status_code)
+        if response.status_code == 200:
+            return response.json()
+        elif response.status_code == 503:
+            pause_secs *= 2
+            print('Error 503. Pausing secs=', pause_secs)
+        else:
+            raise RuntimeError(response.status_code, response.text)
 
 
 def scrape_twitter_accounts(museums_df):
@@ -152,7 +159,6 @@ def scrape_twitter_account(muse_id, user_name, min_date, db_con):
     
     headers = create_twitter_api_headers()
     found_tweets = 0
-    PAUSE_SECS = 2.0
 
     json_results = []
     while keep_querying:
@@ -160,7 +166,7 @@ def scrape_twitter_account(muse_id, user_name, min_date, db_con):
             query_params['next_token'] = next_token
         
         json_response = query_twitter_api_endpoint(headers, query_params)
-        time.sleep(PAUSE_SECS)
+        
         if not 'data' in json_response:
             print('warning: no data found for', muse_id, user_name, str(json_response))
             break
