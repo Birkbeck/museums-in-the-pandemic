@@ -156,7 +156,9 @@ def scrape_twitter_account(muse_id, user_name, min_date, db_con):
         
         json_response = query_twitter_api_endpoint(headers, query_params)
         time.sleep(PAUSE_SECS)
-        assert 'data' in json_response, str(json_response)
+        if not 'data' in json_response:
+            print('warning: no data found for', muse_id, user_name, str(json_response))
+            break
         n_tweets = len(json_response['data'])
         found_tweets += n_tweets
         print('\tn_tweets',n_tweets,'; found_tweets',found_tweets)
