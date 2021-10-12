@@ -66,9 +66,9 @@ def query_twitter_api_endpoint(headers, params):
         #print(response.status_code)
         if response.status_code == 200:
             return response.json()
-        elif response.status_code == 503:
+        elif response.status_code == 503 or response.status_code == 429:
             pause_secs *= 2
-            print('Error 503. Pausing secs=', pause_secs)
+            print('Error',response.status_code,response.text, '\n\tPausing secs=', pause_secs)
         else:
             raise RuntimeError(response.status_code, response.text)
 
