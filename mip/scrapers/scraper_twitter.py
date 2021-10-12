@@ -79,8 +79,9 @@ def scrape_twitter_accounts(museums_df):
         assert len(accounts) > 0
         accounts = [s.strip().replace('www.twitter.com/','') for s in accounts]
         accounts = [s.strip().replace('twitter.com/','') for s in accounts]
-        # remove status
+        # remove /status/ and parameters
         accounts = [s.split('/')[0] for s in accounts]
+        accounts = [s.split('?')[0] for s in accounts]
         accounts = [x for x in accounts if x]
         # remove duplicates
         accounts = list(set(accounts))
