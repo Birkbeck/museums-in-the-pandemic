@@ -81,6 +81,7 @@ def scrape_twitter_accounts(museums_df):
         accounts = [s.strip().replace('twitter.com/','') for s in accounts]
         # remove status
         accounts = [s.split('/')[0] for s in accounts]
+        accounts = [x for x in accounts if x]
         # remove duplicates
         accounts = list(set(accounts))
         return accounts
@@ -101,6 +102,7 @@ def scrape_twitter_accounts(museums_df):
         
         # scan museums
         for acc in tw_accounts:
+            assert acc
             if has_db_museum_tweets(mus_id, acc, db_con):
                 continue
             scrape_twitter_account(mus_id, acc, min_date, db_con)
@@ -126,6 +128,7 @@ def scrape_twitter_account(muse_id, user_name, min_date, db_con):
     https://developer.twitter.com/en/docs/twitter-api/v1/tweets/timelines/api-reference/get-statuses-user_timeline
     """
     assert min_date < datetime.datetime.now()
+    assert len(user_name.strip()) > 0
     # Optional params: start_time,end_time,since_id,until_id,max_results,next_token,
     # expansions,tweet.fields,media.fields,poll.fields,place.fields,user.fields
     # query_params = {'query': '(from:twitterdev -is:retweet) OR #twitterdev','tweet.fields': 'author_id'}
