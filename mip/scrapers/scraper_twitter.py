@@ -94,6 +94,8 @@ def scrape_twitter_accounts(museums_df):
         accounts = [x for x in accounts if x]
         # remove duplicates
         accounts = list(set(accounts))
+        for a in accounts:
+            assert not a.lower() in ['twitter','photo','status','com','www']
         return accounts
 
     no_twitter_mus = pd.DataFrame()
@@ -108,8 +110,8 @@ def scrape_twitter_accounts(museums_df):
         i += 1
         mus_id = mus['museum_id']
         tw_accounts = get_twitter_accounts_from_col(mus['twitter_id'])
-        print('> museum ', i, 'of', len(museums_df), tw_accounts)
-        
+        print('> museum ', mus_id, '-', i, 'of', len(museums_df), tw_accounts)
+        #continue # DEBUG
         # scan museums
         for acc in tw_accounts:
             assert acc

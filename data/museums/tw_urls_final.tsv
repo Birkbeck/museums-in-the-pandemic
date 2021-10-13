@@ -218,7 +218,7 @@ mm.hha.010	no_resource	no_resource
 mm.aim.0754	twitter.com/pollockstrust	ML
 mm.domus.SE444	twitter.com/npglondon	Both
 mm.hha.186	no_resource	no_resource
-mm.domus.SW216	['twitter.com/twitter.com/wiltsrangersnt']	Scrape
+mm.domus.SW216	['twitter.com/wiltsrangersnt']	Scrape
 mm.domus.SE230	['twitter.com/portscitymuseum']	Scrape
 mm.domus.NE046	no_resource	no_resource
 mm.hha.016	['twitter.com/ardingtonhouse']	Scrape
@@ -410,7 +410,7 @@ mm.hha.028	twitter.com/stanstedpark	Both
 mm.aim.0588	twitter.com/marlowmuseum	ML
 mm.New.100	['twitter.com/f_w_records']	Scrape
 mm.domus.SC315	no_resource	no_resource
-mm.fcm.191	['www.twitter.com/twitter.com/norfolktanks', 'twitter.com/norfolktanks']	Scrape
+mm.fcm.191	['www.twitter.com/norfolktanks', 'twitter.com/norfolktanks']	Scrape
 mm.domus.SW171	no_resource	no_resource
 mm.domus.NW082	no_resource	no_resource
 mm.domus.SE245	twitter.com/museumcromwell	Both
@@ -2708,7 +2708,7 @@ mm.mald.072	no_resource	no_resource
 mm.domus.SC014	twitter.com/cpkmuseums	ML
 mm.hha.007	twitter.com/stowehouse	Both
 mm.hha.142	twitter.com/muncastercastle	Both
-mm.domus.WA057	['twitter.com/twitter.com/pontymuseum', 'twitter.com/pontymuseum']	Scrape
+mm.domus.WA057	['twitter.com/pontymuseum', 'twitter.com/pontymuseum']	Scrape
 mm.musa.171	no_resource	no_resource
 mm.ace.1247	twitter.com/nthardmanshouse	ML
 mm.domus.SC145	no_resource	no_resource
@@ -3187,7 +3187,7 @@ mm.domus.NE016	twitter.com/vindolandatrust	Both
 mm.domus.SE550	twitter.com/thevynent	Both
 mm.misc.145	['twitter.com/paisleyis']	Scrape
 mm.domus.NW023	twitter.com/kendalmuseum	Both
-mm.domus.SW037	['twitter.com/twitter']	Scrape
+mm.domus.SW037	no_resource	Scrape
 mm.wiki.299	no_resource	no_resource
 mm.musa.073	twitter.com/ehcarlisle	Both
 mm.wiki.195	twitter.com/chawtonhouse	Both
