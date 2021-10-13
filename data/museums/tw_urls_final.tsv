@@ -194,7 +194,7 @@ mm.domus.WA077	twitter.com/ntpenrhyncastle	Both
 mm.fcm.254	no_resource	no_resource
 mm.domus.SC100	twitter.com/bdcmuseum	ML
 mm.domus.SE212	no_resource	no_resource
-mm.wiki.503	['twitter.com/merriamwebster', 'twitter.com/bygones_torquay']	Scrape
+mm.wiki.503	twitter.com/bygones_torquay	Scrape
 mm.domus.WM135	twitter.com/ntwightwick	Both
 mm.ace.1261	['twitter.com/#!/seacitymuseum', 'twitter.com/#!/seacitymuseum', 'twitter.com/seacitymuseum']	Scrape
 mm.domus.WA066	['twitter.com/aberceramics']	Scrape
