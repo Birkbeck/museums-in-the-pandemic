@@ -854,14 +854,21 @@ def join_museum_info(df, muse_id_column):
     return mdf
 
 
-def get_twitter_links():
+def get_twitter_facebook_links():
     """" Load Twitter accounts for all museums """
+    # load twitter
     fn = 'data/museums/tw_urls_final.tsv'
     df = pd.read_csv(fn, sep='\t')
     df = df[['museum_id','url']].rename(columns={"url": "twitter_id"})
     mdf = load_input_museums()
-    print('get_twitter_links',len(mdf),len(df))
+    
     mdf = mdf.rename(columns={"id": "museum_id"})
     mdf = mdf.merge(df, on='museum_id', how='left')
-    #print(len(mdf))
+    
+    # load facebook
+    fn = 'data/museums/fb_urls_final.tsv'
+    df = pd.read_csv(fn, sep='\t')
+    df = df[['museum_id','url']].rename(columns={"url": "facebook_pages"})
+    mdf = mdf.merge(df, on='museum_id', how='left')
+    print('get_twitter_facebook_links N =',len(mdf))
     return mdf

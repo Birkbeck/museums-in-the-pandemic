@@ -7,62 +7,171 @@ import datetime
 import time
 from db.db import open_sqlite, run_select_sql
 from db.db import connect_to_postgresql_db, create_alchemy_engine_posgresql
+from pandas.io.json._normalize import nested_to_record
 from vpn import vpn_random_region
+import requests
+from utils import flatten_dict
 from facebook_scraper import get_posts
 logger = logging.getLogger(__name__)
 
 """
 Facebook scraper based on facebook_scraper
-"""
+    https://pypi.org/project/facebook-scraper/
 
-# initial page limit for facebook_scraper.get_posts
-page_limit = 100
-# to avoid infinite loop
-max_limit = 500
+Crowdtangle API key
+
+TODO: https://github.com/UPB-SS1/PyCrowdTangle
+"""
+API_PAUSE_SECS = 12.1
+crowdtangle_api_key = 'RgLCYU3kushCgRshQVzjQAf3rqKeFfxGjMoMfh3Z'
+
+
+def get_facebook_pages_from_col(x):
+    """ extract facebook pages from string """
+
+    def remove_category(s):
+        import re
+        # pages/category/College---University/
+        clean_s = re.sub(r"pages/category/[^\/]+/", '', s)
+        clean_s = re.sub(r"category/[^\/]+/", '', clean_s)
+        return clean_s
+
+    if x == 'no_resource' or 'search?q=' in x or 'redirect.html' in x:
+        return []
+    x1 = x.replace("['",'').replace("']",'').replace("', '",',')
+    accounts = x1.split(',')
+    assert type(accounts) is list
+    assert len(accounts) > 0
+    accounts = [s.lower() for s in accounts]
+    for expr in ['www.facebook.com/pages/','www.facebook.com/pg/','en-gb.facebook.com/pages/','en-gb.facebook.com/',
+                'www.facebook.com/','facebook.com/']:
+        accounts = [s.strip().replace(expr.lower(),'') for s in accounts]    
+    
+    accounts = [remove_category(s) for s in accounts]
+    # remove /status/ and parameters
+    accounts = [s.split('/')[0] for s in accounts]
+    accounts = [s.split('?')[0] for s in accounts]
+    accounts = [x for x in accounts if x]
+    # remove duplicates
+    accounts = list(set(accounts))
+    #print('\n',x,'\n\t',accounts)
+    for a in accounts:
+        assert not '/' in a, a
+        assert not a in ['pages','photos','reviews','posts','about','category','pg'], a
+    return accounts
+
 
 def scrape_facebook(museums_df):
-    # TODO: implement for all museum data
-    print("scrape_facebook","page_limit =",page_limit)
+    print("scrape_facebook")
     db_con = connect_to_postgresql_db()
     db_engine = create_alchemy_engine_posgresql()
     
-    
-    date_limit = datetime.datetime(2019, 1, 1)
-    pagedf=pd.read_excel('tmp/fb_urls_final.xlsx')
-
-
-    
     scraped_pages = 0
-    for row in pagedf.iterrows():
-        print(row[1].url)
-        if row[1].url[0]=='[':
-            listbug=ast.literal_eval(row[1].url)
-            for item in listbug:
-                b = scrape_facebook_page(item, row[1].museum_id, date_limit, db_con, db_engine)
-                if b:
-                    scraped_pages += 1 
-        else:
-            b = scrape_facebook_page(row[1].url, row[1].museum_id, date_limit, db_con, db_engine)
-            if b:
-                scraped_pages += 1
+    i = 0
+    for idx, mus in museums_df.sample(200).iterrows():
+        i+=1
+        print(">", i, 'of', len(museums_df), ' -- ', mus['museum_id'])
+        pages = get_facebook_pages_from_col(mus['facebook_pages'])
+        for p in pages:
+            scrape_facebook_page(p, mus['museum_id'], db_con, db_engine)
 
     print("scraped_pages =", scraped_pages)
 
 
 def get_earliest_date(fbdata):
-    i = 0
     times = [p['time'] for p in fbdata]
     min_t = min(times)
     return min_t
 
 
-def scrape_facebook_page(url, muse_id, date_limit, db_conn, db_engine):
+def scrape_facebook_page(page_name, muse_id, db_conn, db_engine):
+    """
+    Docs: https://github.com/CrowdTangle/API/wiki/Posts
+    """
+
+    if fb_page_exists_in_db(muse_id, page_name, db_conn):
+        print(page_name,'already in local DB.')
+        return
+
+    date_blocks = ['2019-01-01','2020-01-01'] #,'2021-01-01','2022-01-01']
+    posts = []
+    for i in range(len(date_blocks)-1):
+        start_date = date_blocks[i]
+        end_date = date_blocks[i+1]
+        posts.extend(query_crowdtangle(page_name, start_date, end_date, db_engine))
+        #if len(posts)==0:
+        #    break
+    
+    if len(posts) == 0:
+        print('warning: no posts found for ',page_name)
+        return 0
+    # build data frame
+    flat_posts = []
+    for p in posts:
+        flatp = flatten_dict(p)
+        flat_posts.append(flatp)
+    
+    posts_df = pd.DataFrame(flat_posts)
+
+    posts_df['museum_id'] = muse_id
+    posts_df['query_account'] = page_name
+    assert len(posts_df) > 0
+    posts_df.to_sql('facebook_posts', db_engine, schema='facebook', index=False, if_exists='append', method='multi')
+    return len(posts_df)
+
+
+def query_crowdtangle(account, start_date, end_date, db_engine):
+    print('\tquery_crowdtangle',account, start_date, end_date)
+    assert account
+    assert db_engine
+    base_url = 'https://api.crowdtangle.com/posts'
+    do_next_token = True
+    next_url = None
+    all_posts = []
+    while do_next_token:
+        headers = {}
+        params = {'token': crowdtangle_api_key, 'accounts': [account], 'count': 100,
+            'startDate': start_date, 
+            'endDate': end_date}
+        # query crowdtangle
+        # 6 queries per minute
+        time.sleep(API_PAUSE_SECS)
+        if not next_url:
+            response = requests.request("GET", base_url, headers=headers, params=params)
+        else:
+            response = requests.request("GET", next_url)
+            next_url = None
+        
+        if response.status_code == 200 and response.ok:
+            res = json.loads(response.text)
+            if 'code' in res and res['code'] == 40:
+                # account not found
+                print('warning: account "',account,'" not found')
+                return all_posts
+            res = json.loads(response.content)
+            for p in res['result']['posts']:
+                all_posts.append(p)
+            
+            print('  posts =',len(res['result']['posts']), ' tot =',len(all_posts))
+            if 'pagination' in res['result'] and 'nextPage' in res['result']['pagination']:
+                next_url = res['result']['pagination']['nextPage']
+                do_next_token = True
+            else:
+                # end of cycle
+                do_next_token = False
+        else: 
+            raise RuntimeError(response.text)
+        
+        
+    return all_posts
+
+
+def scrape_facebook_page_OLD(page_name, muse_id, date_limit, db_conn, db_engine):
     """ 
     Scrape posts from facebook page in @url, going back at least to @date_limit
     @returns True if page was scraped or False if the page was already present in the DB
     """
-    urllist = url.split("/")
-    page_name = urllist[1]
+    assert False
     assert page_name
     assert muse_id
 
@@ -74,15 +183,17 @@ def scrape_facebook_page(url, muse_id, date_limit, db_conn, db_engine):
     while True:
         time.sleep(.1)
         try:
-            msg = page_name+' limit='+str(limit)+' ...'
-            logger.debug(msg)
-            print('\t'+msg)
             # scrape fb (slow)
-            posts = get_posts(page_name, pages=page_limit)
-            posts = [p for p in posts]
-            ##TODO Val Aug 2021: somehow need to reconcile the need to detect rejection (blank post) and change vpn with the need to stay
-            ##connected to DB
-            min_date = get_earliest_date(posts) ##TODO Val Aug 2021: when posts returns blank this method fails
+            print('> scrape_facebook_page',page_name,'...')
+            posts_iter = get_posts(page_name, pages=page_limit, timeout=10, options={"posts_per_page": 200},
+                credentials=('',''))
+            posts = []
+            for p in posts_iter:
+                print('.', end='')
+                #print(p)
+                posts.append(p)
+            print('\tposts',len(posts))
+            min_date = get_earliest_date(posts)
             
             if min_date > date_limit:
                 msg = "Too few posts, increasing limit - earliest date="+ str(min_date)
@@ -116,9 +227,9 @@ def scrape_facebook_page(url, muse_id, date_limit, db_conn, db_engine):
             time.sleep(2)
 
 
-def page_exists_in_db(page_name, db_con):
+def fb_page_exists_in_db(museum_id, page_name, db_con):
     """ True if page already exists in Facebook dump table """
-    sql = "select count(page_name) as page_posts_n from facebook_dump where page_name = '{}';".format(page_name)
+    sql = "select count(*) as page_posts_n from facebook.facebook_posts where museum_id = '{}' and query_account = '{}';".format(museum_id, page_name)
     df = run_select_sql(sql, db_con)
     val =  df.page_posts_n.tolist()[0]
     if val > 0: 
@@ -126,12 +237,12 @@ def page_exists_in_db(page_name, db_con):
     return False
 
 
-def create_fb_dump(db_conn):
+def create_fb_dump_OLD(db_conn):
     """ create table for Facebook dump """
     c = db_conn.cursor()
 
     # Create table
-    c.execute('''CREATE TABLE IF NOT EXISTS facebook_dump 
+    c.execute('''CREATE TABLE IF NOT EXISTS facebook.facebook_dump 
             (page_name text NOT NULL,
             post_id text PRIMARY KEY,
             muse_id text NOT NULL,
@@ -147,6 +258,7 @@ def create_fb_dump(db_conn):
 
 def insert_fb_data(page_name, fbdata, muse_id, db_con, db_engine):
     """ Insert posts from @fbdata list into Facebook dump table """
+    return 
     assert muse_id
     
     assert db_con
