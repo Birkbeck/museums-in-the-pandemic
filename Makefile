@@ -23,10 +23,14 @@ db_stats:
 	@echo ">>> DB stats";
 	./run_app_server.sh db_stats;
 
+scrape_twitter:
+	@echo ">>> Facebook";
+	nohup ./run_app_server.sh scrape_facebook > tmp/logs/nohup_fb_${DATE}_log.txt &
+
 
 scrape_twitter:
 	@echo ">>> Twitter";
-	nohup ./run_app_server.sh scrape_twitter > tmp/logs/nohup_${DATE}_log.txt &
+	nohup ./run_app_server.sh scrape_twitter > tmp/logs/nohup_tw_${DATE}_log.txt &
 
 
 extract_txt_fields:
@@ -36,7 +40,7 @@ extract_txt_fields:
 
 an_text:
 	@echo ">>> Run NLP";
-	nohup ./run_app_server.sh an_text > tmp/logs/nohup_${DATE}_log.txt &
+	nohup ./run_app_server.sh an_text > tmp/logs/nohup_an_${DATE}_log.txt &
 
 
 compile:
