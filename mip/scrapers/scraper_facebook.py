@@ -15,16 +15,15 @@ from facebook_scraper import get_posts
 logger = logging.getLogger(__name__)
 
 """
-Facebook scraper based on facebook_scraper
-    https://pypi.org/project/facebook-scraper/
-
-Crowdtangle API key
-
-TODO: https://github.com/UPB-SS1/PyCrowdTangle
+Facebook scraper based on CrowdTangle
 """
-API_PAUSE_SECS = 12.1
-crowdtangle_api_key = 'RgLCYU3kushCgRshQVzjQAf3rqKeFfxGjMoMfh3Z'
 
+API_PAUSE_SECS = 12.1
+
+# load API configuration
+with open('.secrets.json') as f:
+    config = json.load(f)
+    crowdtangle_api_key = config['ct_key']
 
 def get_facebook_pages_from_col(x):
     """ extract facebook pages from string """
@@ -43,7 +42,8 @@ def get_facebook_pages_from_col(x):
     assert type(accounts) is list
     assert len(accounts) > 0
     accounts = [s.lower() for s in accounts]
-    for expr in ['www.facebook.com/pages/','www.facebook.com/groups/','www.facebook.com/pg/',
+    for expr in ['www.facebook.com/events/','www.facebook.com/pages/','en-gb.facebook.com/events/',
+                'www.facebook.com/groups/','www.facebook.com/pg/',
                 'en-gb.facebook.com/pages/','en-gb.facebook.com/',
                 'www.facebook.com/','facebook.com/']:
         accounts = [s.strip().replace(expr.lower(),'') for s in accounts]    
@@ -58,7 +58,7 @@ def get_facebook_pages_from_col(x):
     #print('\n',x,'\n\t',accounts)
     for a in accounts:
         assert not '/' in a, a
-        assert not a in ['pages','photos','reviews','posts','about','category','pg','groups'], a
+        assert not a in ['pages','photos','reviews','posts','about','category','pg','groups','events'], a
     return accounts
 
 
@@ -68,16 +68,17 @@ def scrape_facebook(museums_df):
     db_engine = create_alchemy_engine_posgresql()
     create_fb_dump(db_con)
 
-    scraped_pages = 0
+    scraped_posts = 0
     i = 0
-    for idx, mus in museums_df.sample(200).iterrows():
+    for idx, mus in museums_df.sample(len(museums_df)).iterrows():
         i+=1
         print(">", i, 'of', len(museums_df), ' -- ', mus['museum_id'])
         pages = get_facebook_pages_from_col(mus['facebook_pages'])
         for p in pages:
-            scrape_facebook_page(p, mus['museum_id'], db_con, db_engine)
+            n = scrape_facebook_page(p, mus['museum_id'], db_con, db_engine)
+            scraped_posts += n
 
-    print("scraped_pages =", scraped_pages)
+    print("scraped_pages =", scraped_posts)
 
 
 def get_earliest_date(fbdata):
@@ -95,7 +96,7 @@ def scrape_facebook_page(page_name, muse_id, db_conn, db_engine):
         print(page_name,'already in local DB.')
         return
 
-    date_blocks = ['2019-01-01','2020-01-01'] #,'2021-01-01','2022-01-01']
+    date_blocks = ['2019-01-01','2020-01-01', '2021-01-01','2022-01-01']
     posts = []
     for i in range(len(date_blocks)-1):
         start_date = date_blocks[i]
@@ -155,7 +156,7 @@ def query_crowdtangle(account, start_date, end_date, db_engine):
             print('  posts =',len(res['result']['posts']), ' tot =',len(all_posts))
             if 'pagination' in res['result'] and 'nextPage' in res['result']['pagination']:
                 next_url = res['result']['pagination']['nextPage']
-                do_next_token = False
+                do_next_token = True
             else:
                 # end of cycle
                 do_next_token = False
@@ -228,8 +229,13 @@ def scrape_facebook_page_OLD(page_name, muse_id, date_limit, db_conn, db_engine)
 
 def fb_page_exists_in_db(museum_id, page_name, db_con):
     """ True if page already exists in Facebook dump table """
-    sql = "select count(*) as page_posts_n from facebook.facebook_posts where museum_id = '{}' and query_account = '{}';".format(museum_id, page_name)
-    df = run_select_sql(sql, db_con)
+    try:
+        sql = "select count(*) as page_posts_n from facebook.facebook_posts where museum_id = '{}' and query_account = '{}';".format(museum_id, page_name)
+        df = run_select_sql(sql, db_con)
+    except Exception as e:
+        print('warning',str(e))
+        return False
+    
     val =  df.page_posts_n.tolist()[0]
     if val > 0: 
         return True
@@ -272,9 +278,12 @@ def insert_fb_data(posts, db_conn):
         #print(x.keys())
         ts = datetime.datetime.fromisoformat(x['date'].replace("Z", "+00:00"))
         json_attr = json.dumps(x)
+        msg = None
+        if 'message' in x:
+            msg = x['message']
         # insert sql
         sql = '''INSERT INTO facebook.facebook_posts_dump(page_name, post_id, museum_id, user_id, post_text, post_ts, facebook_data_json)
               VALUES(%s,%s,%s,%s,%s,%s,%s);'''
-        cur.execute(sql, [x['account_id'], x['id'], x['museum_id'], x['account_id'], x['message'], ts, json_attr])
+        cur.execute(sql, [x['account_handle'], x['id'], x['museum_id'], x['account_id'], msg, ts, json_attr])
     
     db_conn.commit()

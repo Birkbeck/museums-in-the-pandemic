@@ -108,7 +108,7 @@ def scrape_twitter_accounts(museums_df):
     create_tweet_dump(db_con)
     min_date = datetime.datetime(2019, 1, 1, 0, 0, 0)
     i = 0
-    for idx, mus in museums_df.iterrows():
+    for idx, mus in museums_df.sample(len(museums_df)).iterrows():
         i += 1
         mus_id = mus['museum_id']
         tw_accounts = get_twitter_accounts_from_col(mus['twitter_id'])

@@ -865,7 +865,7 @@ mm.aim.0074	no_resource	no_resource
 mm.domus.SE412	['www.facebook.com/wycombemuseum', 'en-gb.facebook.com/WycombeMuseum']	Scrape
 mm.musa.075	en-gb.facebook.com/carshaltonwatertower	ML
 mm.wiki.031	no_resource	no_resource
-mm.ace.1298	['www.facebook.com/scientificamerican', 'en-gb.facebook.com/No42TAP/about']	Scrape
+mm.ace.1298	en-gb.facebook.com/No42TAP/	Scrape
 mm.ace.390	no_resource	no_resource
 mm.domus.NE020	['www.facebook.com/thisisdurham', 'en-gb.facebook.com/pages/category/History-Museum/DurhamMuseum/about']	Scrape
 mm.wiki.289	['www.facebook.com/sandringham1870-359634331480583']	Scrape
