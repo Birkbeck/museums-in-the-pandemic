@@ -23,7 +23,7 @@ db_stats:
 	@echo ">>> DB stats";
 	./run_app_server.sh db_stats;
 
-scrape_twitter:
+scrape_facebook:
 	@echo ">>> Facebook";
 	nohup ./run_app_server.sh scrape_facebook > tmp/logs/nohup_fb_${DATE}_log.txt &
 
