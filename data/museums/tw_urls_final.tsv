@@ -1454,7 +1454,7 @@ mm.New.149	no_resource	no_resource
 mm.wiki.237	['twitter.com/enginemill']	Scrape
 mm.domus.YH073	twitter.com/thackraymuseum	Both
 mm.domus.WM063	['twitter.com/bm_ag', 'twitter.com/bm_ag?lang=en-gb']	Scrape
-mm.aim.0579	['twitter.com/manutd']	Scrape
+mm.aim.0579	no_resource	Scrape
 mm.aim.1080	twitter.com/hockeymuseum	Both
 mm.domus.SE136	twitter.com/truesyardmuseum	ML
 mm.nimc.025	no_resource	no_resource
