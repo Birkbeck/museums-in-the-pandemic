@@ -1605,7 +1605,7 @@ mm.MDN.012	['www.facebook.com/visitardsandnorthdown']	Scrape
 mm.domus.SC260	no_resource	no_resource
 mm.domus.SE425	['www.facebook.com/marlipins-museum-451605998562259', 'en-gb.facebook.com/marlipins']	Scrape
 mm.musa.394	['www.facebook.com/yateheritageyh']	Scrape
-mm.mgs.334	['www.facebook.com/britannica']	Scrape
+mm.mgs.334	no_resource	Scrape
 mm.musa.142	no_resource	no_resource
 mm.domus.SW079	['www.facebook.com/nationalwaterwaysmuseumgloucester', 'en-gb.facebook.com/NationalWaterwaysMuseumGloucester']	Scrape
 mm.misc.119	['www.facebook.com/longmelfordheritagecentre', 'www.facebook.com/groups/631431174122988', 'en-gb.facebook.com/LongMelfordHeritageCentre/posts/tales-of-old-inns-the-bull-hotel/1668965016459793']	Scrape
