@@ -25,6 +25,7 @@ with open('.secrets.json') as f:
     twitter_config = json.load(f)
 
 twitter_db_fn = 'tmp/tweets.db'
+MAX_TWEETS_PER_ACCOUNT = 80000
 
 
 def create_tweet_dump(db_conn):
@@ -193,9 +194,9 @@ def scrape_twitter_account(muse_id, user_name, min_date, db_con, db_engine):
         found_tweets += n_tweets
         print('\tn_tweets',n_tweets,'; found_tweets',found_tweets)
         
-        MAX_TWEETS_PER_ACCOUNT = 80000
         if found_tweets > MAX_TWEETS_PER_ACCOUNT:
-            raise Exception(user_name+' seems to have too many tweets for a museum.')
+            print('warning: ',user_name+' seems to have too many tweets for a museum. Skipping')
+            return 0
         
         if 'meta' in json_response and 'next_token' in json_response['meta']:
             # next token found
