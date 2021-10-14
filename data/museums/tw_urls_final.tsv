@@ -3258,7 +3258,7 @@ mm.aim.0405	['twitter.com/visitcheshire']	Scrape
 mm.domus.SC104	['twitter.com/onatdclg']	Scrape
 mm.domus.WM120	twitter.com/bmmuseum	Both
 mm.domus.SE370	twitter.com/foundlingmuseum	Both
-mm.wiki.008	['twitter.com/royalfamily', 'twitter.com/clarencehouse', 'twitter.com/kensingtonroyal', '//twitter.com']	Scrape
+mm.wiki.008	['twitter.com/clarencehouse', 'twitter.com/kensingtonroyal']	Scrape
 mm.musa.118	twitter.com/dtcswansea	Both
 mm.domus.EM110	twitter.com/cottagemuseum	ML
 mm.domus.SE426	twitter.com/michelhampriory	Both
