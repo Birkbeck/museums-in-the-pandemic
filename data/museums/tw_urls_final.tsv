@@ -1524,7 +1524,7 @@ mm.ace.1136	no_resource	no_resource
 mm.domus.SC111	twitter.com/eyemouthmuseum	Both
 mm.hha.119	twitter.com/search?q=%23BrockField&src=hash	ML
 mm.wiki.065	twitter.com/chatsworthhouse	Both
-mm.ace.1150	twitter.com/kensingtonroyal	ML
+mm.ace.1150	no_resource	ML
 mm.domus.SE077	twitter.com/folkestonemus	Both
 mm.domus.WM130	no_resource	no_resource
 mm.ace.1233	no_resource	no_resource
@@ -3258,7 +3258,7 @@ mm.aim.0405	['twitter.com/visitcheshire']	Scrape
 mm.domus.SC104	['twitter.com/onatdclg']	Scrape
 mm.domus.WM120	twitter.com/bmmuseum	Both
 mm.domus.SE370	twitter.com/foundlingmuseum	Both
-mm.wiki.008	['twitter.com/clarencehouse', 'twitter.com/kensingtonroyal']	Scrape
+mm.wiki.008	['twitter.com/clarencehouse']	Scrape
 mm.musa.118	twitter.com/dtcswansea	Both
 mm.domus.EM110	twitter.com/cottagemuseum	ML
 mm.domus.SE426	twitter.com/michelhampriory	Both
