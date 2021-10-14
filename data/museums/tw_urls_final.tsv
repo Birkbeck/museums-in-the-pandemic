@@ -609,7 +609,7 @@ mm.musa.227	no_resource	no_resource
 mm.domus.SC168	['twitter.com/wlhleadmining']	Scrape
 mm.domus.WA076	no_resource	no_resource
 mm.ace.1175	twitter.com/hcrcmary	ML
-mm.domus.NE038	['dev.twitter.com/web/overview/privacy', 'support.twitter.com/articles/20170514']	Scrape
+mm.domus.NE038	no_resource	Scrape
 mm.ace.1114	twitter.com/epworthold	Both
 mm.domus.SE201	['//www.twitter.com/brightlingseamu', 'www.twitter.com/brightlingseamu', 'twitter.com/brightlingseamu']	Scrape
 mm.misc.216	twitter.com/sidneynolantrst	Both
