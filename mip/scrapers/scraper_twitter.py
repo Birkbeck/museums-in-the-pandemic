@@ -115,13 +115,15 @@ def scrape_twitter_accounts(museums_df):
         tw_accounts = get_twitter_accounts_from_col(mus['twitter_id'])
         print('> museum ', mus_id, '-', i, 'of', len(museums_df), tw_accounts)
         #continue # DEBUG
-        # scan museums
+        # scan accounts
+        found_tweets = 0
         for acc in tw_accounts:
             assert acc
             if has_db_museum_tweets(mus_id, acc, db_con):
                 continue
-            scrape_twitter_account(mus_id, acc, min_date, db_con, db_engine)
-        if len(tw_accounts) == 0:
+            found_tweets += scrape_twitter_account(mus_id, acc, min_date, db_con, db_engine)
+        
+        if found_tweets == 0:
             no_twitter_mus = no_twitter_mus.append(mus)
     db_con.close()
     # insert no_twitter_mus into DB
@@ -136,7 +138,7 @@ def has_db_museum_tweets(muse_id, user_name, db_con):
     if found: return True
     
     try:
-        sql = '''select count(*) as cnt from twitter.twitter_accounts_not_found where museum_id = '{}' and user_name = '{}';'''.format(muse_id, user_name)
+        sql = '''select * from twitter.twitter_accounts_not_found where museum_id = '{}' and user_name = '{}';'''.format(muse_id, user_name)
         df = pd.read_sql(sql, db_con)
         found = len(df) > 0
         return found
@@ -211,6 +213,7 @@ def scrape_twitter_account(muse_id, user_name, min_date, db_con, db_engine):
 
     for j in json_results:
         insert_tweets_into_db(j, muse_id, user_name, db_con)
+    return found_tweets
 
 
 def insert_tweets_into_db(tweets, muse_id, tw_account, db_con):
