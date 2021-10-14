@@ -108,7 +108,8 @@ def scrape_twitter_accounts(museums_df):
     create_tweet_dump(db_con)
     min_date = datetime.datetime(2019, 1, 1, 0, 0, 0)
     i = 0
-    for idx, mus in museums_df.sample(len(museums_df)).iterrows():
+    # museums_df = museums_df.sample(len(museums_df)) # SHUFFLE
+    for idx, mus in museums_df.iterrows():
         i += 1
         mus_id = mus['museum_id']
         tw_accounts = get_twitter_accounts_from_col(mus['twitter_id'])
@@ -119,7 +120,7 @@ def scrape_twitter_accounts(museums_df):
             assert acc
             if has_db_museum_tweets(mus_id, acc, db_con):
                 continue
-            scrape_twitter_account(mus_id, acc, min_date, db_con)
+            scrape_twitter_account(mus_id, acc, min_date, db_con, db_engine)
         if len(tw_accounts) == 0:
             no_twitter_mus = no_twitter_mus.append(mus)
     db_con.close()
@@ -131,10 +132,20 @@ def has_db_museum_tweets(muse_id, user_name, db_con):
     sql = '''select count(*) as cnt from twitter.tweets_dump where muse_id = '{}' and account = '{}';'''.format(muse_id, user_name)
     df = pd.read_sql(sql, db_con)
     cnt = df.cnt[0]
-    return cnt > 0
+    found = cnt > 0
+    if found: return True
+    
+    try:
+        sql = '''select count(*) as cnt from twitter.twitter_accounts_not_found where museum_id = '{}' and user_name = '{}';'''.format(muse_id, user_name)
+        df = pd.read_sql(sql, db_con)
+        found = len(df) > 0
+        return found
+    except Exception as e:
+        print('warning:', str(e))
+        return False
 
 
-def scrape_twitter_account(muse_id, user_name, min_date, db_con):
+def scrape_twitter_account(muse_id, user_name, min_date, db_con, db_engine):
     """
     API code based on
     https://github.com/twitterdev/Twitter-API-v2-sample-code/blob/master/Full-Archive-Search/full-archive-search.py
@@ -194,6 +205,10 @@ def scrape_twitter_account(muse_id, user_name, min_date, db_con):
         json_results.append(json_response['data'])
     
     # save data
+    if len(json_results)==0:
+        pd.DataFrame({'museum_id':[muse_id], 'user_name':[user_name]}).to_sql('twitter_accounts_not_found', db_engine, 
+            schema='twitter', index=False, if_exists='append', method='multi')
+
     for j in json_results:
         insert_tweets_into_db(j, muse_id, user_name, db_con)
 
