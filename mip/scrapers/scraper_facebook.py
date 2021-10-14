@@ -70,7 +70,8 @@ def scrape_facebook(museums_df):
 
     scraped_posts = 0
     i = 0
-    for idx, mus in museums_df.sample(len(museums_df)).iterrows():
+    #museums_df = museums_df.sample(len(museums_df)) # shuffle
+    for idx, mus in museums_df.iterrows():
         i+=1
         print(">", i, 'of', len(museums_df), ' -- ', mus['museum_id'])
         pages = get_facebook_pages_from_col(mus['facebook_pages'])
@@ -94,7 +95,7 @@ def scrape_facebook_page(page_name, muse_id, db_conn, db_engine):
 
     if fb_page_exists_in_db(muse_id, page_name, db_conn):
         print(page_name,'already in local DB.')
-        return
+        return 0
 
     date_blocks = ['2019-01-01','2020-01-01', '2021-01-01','2022-01-01']
     posts = []
@@ -107,6 +108,8 @@ def scrape_facebook_page(page_name, muse_id, db_conn, db_engine):
     
     if len(posts) == 0:
         print('warning: no posts found for ',page_name)
+        pd.DataFrame({'museum_id':[muse_id], 'page_name':[page_name]}).to_sql('facebook_pages_not_found', db_engine, 
+            schema='facebook', index=False, if_exists='append', method='multi')
         return 0
     # build data frame
     flat_posts = []
@@ -153,7 +156,7 @@ def query_crowdtangle(account, start_date, end_date, db_engine):
             for p in res['result']['posts']:
                 all_posts.append(p)
             
-            print('  posts =',len(res['result']['posts']), ' tot =',len(all_posts))
+            print('\t\tposts =',len(res['result']['posts']), ' tot =',len(all_posts))
             if 'pagination' in res['result'] and 'nextPage' in res['result']['pagination']:
                 next_url = res['result']['pagination']['nextPage']
                 do_next_token = True
@@ -230,7 +233,7 @@ def scrape_facebook_page_OLD(page_name, muse_id, date_limit, db_conn, db_engine)
 def fb_page_exists_in_db(museum_id, page_name, db_con):
     """ True if page already exists in Facebook dump table """
     try:
-        sql = "select count(*) as page_posts_n from facebook.facebook_posts where museum_id = '{}' and query_account = '{}';".format(museum_id, page_name)
+        sql = "select count(*) as page_posts_n from facebook.facebook_posts_dump where museum_id = '{}' and query_account = '{}';".format(museum_id, page_name)
         df = run_select_sql(sql, db_con)
     except Exception as e:
         print('warning',str(e))
@@ -238,6 +241,18 @@ def fb_page_exists_in_db(museum_id, page_name, db_con):
     
     val =  df.page_posts_n.tolist()[0]
     if val > 0: 
+        return True
+
+    # check missing pages
+    try:
+        sql = "select count(*) as page_posts_n from facebook.facebook_pages_not_found where museum_id = '{}' and page_name = '{}';".format(museum_id, page_name)
+        df = run_select_sql(sql, db_con)
+    except Exception as e:
+        print('warning',str(e))
+        return False
+    val =  df.page_posts_n.tolist()[0]
+    if val > 0:
+        # page found but no data
         return True
     return False
 
@@ -248,10 +263,12 @@ def create_fb_dump(db_conn):
     # Create table
     c.execute('''CREATE SCHEMA IF NOT EXISTS facebook;
         CREATE TABLE IF NOT EXISTS facebook.facebook_posts_dump 
-            (page_name text NOT NULL,
+            (
+            museum_id text NOT NULL,
+            query_account text NOT NULL,
+            page_name text,
             post_id text NOT NULL,
             post_text text,
-            museum_id text NOT NULL,
             user_id text,
             post_ts timestamptz NOT NULL,
             facebook_data_json JSON NOT NULL,
@@ -275,15 +292,20 @@ def insert_fb_data(posts, db_conn):
     '''
     cur = db_conn.cursor()
     for x in posts:
-        #print(x.keys())
+        # get attributes
         ts = datetime.datetime.fromisoformat(x['date'].replace("Z", "+00:00"))
         json_attr = json.dumps(x)
         msg = None
+        account_handle = None
         if 'message' in x:
             msg = x['message']
+        if 'account_handle' in x:
+            account = x['account_handle']
+        else: 
+            account = None
         # insert sql
-        sql = '''INSERT INTO facebook.facebook_posts_dump(page_name, post_id, museum_id, user_id, post_text, post_ts, facebook_data_json)
-              VALUES(%s,%s,%s,%s,%s,%s,%s);'''
-        cur.execute(sql, [x['account_handle'], x['id'], x['museum_id'], x['account_id'], msg, ts, json_attr])
+        sql = '''INSERT INTO facebook.facebook_posts_dump(page_name, query_account, post_id, museum_id, user_id, post_text, post_ts, facebook_data_json)
+              VALUES(%s,%s,%s,%s,%s,%s,%s,%s);'''
+        cur.execute(sql, [account, x['query_account'], x['id'], x['museum_id'], x['account_id'], msg, ts, json_attr])
     
     db_conn.commit()
