@@ -42,10 +42,9 @@ def get_facebook_pages_from_col(x):
     assert type(accounts) is list
     assert len(accounts) > 0
     accounts = [s.lower() for s in accounts]
-    for expr in ['www.facebook.com/events/','www.facebook.com/pages/','en-gb.facebook.com/events/',
-                'www.facebook.com/groups/','www.facebook.com/pg/',
-                'en-gb.facebook.com/pages/','en-gb.facebook.com/',
-                'www.facebook.com/','facebook.com/']:
+    for expr in ['en-gb.','www.','facebook.com/events/','facebook.com/pages/',
+                'facebook.com/groups/','facebook.com/pg/',
+                'facebook.com/pages/','facebook.com/','#','!']:
         accounts = [s.strip().replace(expr.lower(),'') for s in accounts]    
     
     accounts = [remove_category(s) for s in accounts]
@@ -57,8 +56,11 @@ def get_facebook_pages_from_col(x):
     accounts = list(set(accounts))
     #print('\n',x,'\n\t',accounts)
     for a in accounts:
+        assert len(a) > 2
         assert not '/' in a, a
         assert not a in ['pages','photos','reviews','posts','about','category','pg','groups','events'], a
+        assert not '#' in a
+        assert not '!' in a
     return accounts
 
 
