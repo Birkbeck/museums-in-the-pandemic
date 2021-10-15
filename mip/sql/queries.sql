@@ -5,7 +5,8 @@
 select muse_id,count(*) from twitter.tweets_dump group by muse_id ;
 select count(distinct muse_id) from twitter.tweets_dump;
 select count(*) from twitter.twitter_accounts_not_found;
-select count(*) from twitter.tweets_dump td ;
+select count(*) from twitter.tweets_dump td;
+select count(*) from twitter.museums_no_twitter td;
 select * from twitter.twitter_accounts_not_found tanf;
 
 -- facebook
@@ -17,3 +18,5 @@ select count(distinct page_name) from facebook.facebook_pages_not_found;
 
 select * from facebook.facebook_posts_dump fpd where query_account = 'ntbaddesleyclinton' limit 100;
 select * from facebook.facebook_posts_dump fpd where page_name = 'NTBaddesleyClinton' limit 100;
+
+select facebook_data_json -> 'account_name' as n from facebook.facebook_posts_dump fpd where query_account = 'ntbaddesleyclinton' limit 1000;
