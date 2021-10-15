@@ -127,26 +127,28 @@ def scrape_facebook_page(page_name, muse_id, db_conn, db_engine):
 
 
 def query_crowdtangle(account, start_date, end_date, db_engine):
+    '''
+    https://help.crowdtangle.com/en/articles/3443476-api-cheat-sheet
+    https://api.crowdtangle.com/posts?token=RgLCYU3kushCgRshQVzjQAf3rqKeFfxGjMoMfh3Z&accounts=abingtonmuseum&count=100&startDate=2019-01-01&endDate=2020-01-01
+    '''
+    account = 'abingtonmuseum' # DEBUG
     print('\tquery_crowdtangle',account, start_date, end_date)
     assert account
     assert db_engine
     base_url = 'https://api.crowdtangle.com/posts'
-    do_next_token = True
-    next_url = None
+    
+    #next_url = None
     all_posts = []
-    while do_next_token:
+    offset = 0
+    while True:
         headers = {}
-        params = {'token': crowdtangle_api_key, 'accounts': [account], 'count': 100,
-            'startDate': start_date, 
-            'endDate': end_date}
+        params = {'token': crowdtangle_api_key, 'accounts': [account], 'count': 100, 'offset': offset,
+            'startDate': start_date, 'endDate': end_date, 'sortBy': 'date'}
         # query crowdtangle
         # 6 queries per minute
         time.sleep(API_PAUSE_SECS)
-        if not next_url:
-            response = requests.request("GET", base_url, headers=headers, params=params)
-        else:
-            response = requests.request("GET", next_url)
-            next_url = None
+
+        response = requests.request("GET", base_url, headers=headers, params=params)
         
         if response.status_code == 200 and response.ok:
             res = json.loads(response.text)
@@ -155,82 +157,23 @@ def query_crowdtangle(account, start_date, end_date, db_engine):
                 print('warning: account "',account,'" not found')
                 return all_posts
             res = json.loads(response.content)
+            #valid_posts = 0
             for p in res['result']['posts']:
+                # check if post comes from the account
+                assert 'handle' in p['account'] and p['account']['handle'].lower() == account.lower()
                 all_posts.append(p)
-            
+                
             print('\t\tposts =',len(res['result']['posts']), ' tot =',len(all_posts))
-            if 'pagination' in res['result'] and 'nextPage' in res['result']['pagination']:
-                next_url = res['result']['pagination']['nextPage']
-                do_next_token = True
+            if len(res['result']['posts']) == 100:
+                # probably there is a next page, go on
+                offset += 100
             else:
-                # end of cycle
-                do_next_token = False
+                # finished, stop
+                assert len(res['result']['posts']) < 100
+                return all_posts
         else: 
             raise RuntimeError(response.text)
     
-    return all_posts
-
-
-def scrape_facebook_page_OLD(page_name, muse_id, date_limit, db_conn, db_engine):
-    """ 
-    Scrape posts from facebook page in @url, going back at least to @date_limit
-    @returns True if page was scraped or False if the page was already present in the DB
-    """
-    assert False
-    assert page_name
-    assert muse_id
-
-    #if page_exists_in_db(page_name, db_conn):
-        # skip page
-        #return False
-
-    limit = page_limit
-    while True:
-        time.sleep(.1)
-        try:
-            # scrape fb (slow)
-            print('> scrape_facebook_page',page_name,'...')
-            posts_iter = get_posts(page_name, pages=page_limit, timeout=10, options={"posts_per_page": 200},
-                credentials=('',''))
-            posts = []
-            for p in posts_iter:
-                print('.', end='')
-                #print(p)
-                posts.append(p)
-            print('\tposts',len(posts))
-            min_date = get_earliest_date(posts)
-            
-            if min_date > date_limit:
-                msg = "Too few posts, increasing limit - earliest date="+ str(min_date)
-                logger.warn(msg)
-                print(msg)
-                # too few posts, double limit
-                limit = limit * 2
-                if limit > max_limit:
-                    # save posts to DB and move on
-                    logger.warn("avoid infinite loop, saving and skipping: "+page_name)
-                    print(page_name, "posts n", len(posts))
-                    insert_fb_data(page_name, posts, muse_id, db_conn, db_engine)
-                    return True
-
-                logger.debug("too few posts, increase limit to "+str(limit))
-                time.sleep(1)
-                continue
-            
-            # all good, save posts to DB and move on
-            msg = page_name + " done: posts n " + str(len(posts)) + '; earliest_date_found=' + str(min_date)
-            print(msg)
-            logger.debug(msg)
-            insert_fb_data(page_name, posts, muse_id, db_conn)
-            return True
-        
-        except Exception as e:
-            logger.warning("error while scraping Facebook, changing VPN")
-            raise e
-            continue_scraping = True
-            # TODO change VPN
-            time.sleep(2)
-
 
 def fb_page_exists_in_db(museum_id, page_name, db_con):
     """ True if page already exists in Facebook dump table """

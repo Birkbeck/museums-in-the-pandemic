@@ -10,6 +10,10 @@ select * from twitter.twitter_accounts_not_found tanf;
 
 -- facebook
 select count(*) from facebook.facebook_posts_dump;
-select museum_id, count(*) from facebook.facebook_posts_dump group by museum_id;
+select museum_id, page_name, query_account, count(*) from facebook.facebook_posts_dump group by museum_id, page_name, query_account;
 select count(distinct museum_id) from facebook.facebook_posts_dump;
+select count(distinct page_name) from facebook.facebook_posts_dump;
 select count(distinct page_name) from facebook.facebook_pages_not_found;
+
+select * from facebook.facebook_posts_dump fpd where query_account = 'ntbaddesleyclinton' limit 100;
+select * from facebook.facebook_posts_dump fpd where page_name = 'NTBaddesleyClinton' limit 100;
