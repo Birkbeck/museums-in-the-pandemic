@@ -949,7 +949,7 @@ mm.wiki.502	no_resource	no_resource
 mm.domus.SW082	twitter.com/no1museum	Both
 mm.domus.YH035	twitter.com/bradfordmuseums/status/1024055175198244864	ML
 mm.aim.0811	['twitter.com/rockinghamcastl', 'twitter.com/rockinghamlive']	Scrape
-mm.mald.152	['www.twitter.com/#ntpembs']	Scrape
+mm.mald.152	['www.twitter.com/ntpembs']	Scrape
 mm.aim.0340	twitter.com/firingline	Both
 mm.domus.YH170	no_resource	no_resource
 mm.wiki.320	no_resource	no_resource
@@ -1431,7 +1431,7 @@ mm.wiki.414	twitter.com/nibunker	ML
 mm.mgs.323	twitter.com/rcpsglasgow	Both
 mm.domus.YH022	twitter.com/bishopshouse	Both
 mm.wiki.217	no_resource	no_resource
-mm.wiki.193	['twitter.com/#']	Scrape
+mm.wiki.193	no_resource	Scrape
 mm.domus.WM139	no_resource	no_resource
 mm.domus.WM006	twitter.com/shropsregiment	Both
 mm.hha.110	twitter.com/heathhousefarm	ML
