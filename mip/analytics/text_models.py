@@ -43,14 +43,15 @@ def prep_training_data():
 
 def get_indicator_annotations(data_folder=''):
     """ @returns indicators data frame and annotations data frame """
-    in_fn = data_folder + "data/annotations/indicators_and_annotations-v6.xlsx"
+    in_fn = data_folder + "data/annotations/indicators_and_annotations-v7.xlsx"
     indic_df = pd.read_excel(in_fn, 0)
     ann_df = pd.read_excel(in_fn, 1)
     
     # select first 4 columns
-    ann_df = ann_df.iloc[:, : 4]
-    ann_df['example_id'] = range(0, len(ann_df))
+    ann_df = ann_df.iloc[:, : 6]
     ann_df['example_id'] = ["ann_ex_{:05d}".format(x) for x in ann_df['example_id']]
+
+    ann_df = ann_df[ann_df.valid_annotation!='F']
     assert len(indic_df) > 0
     assert len(ann_df) > 0
     return indic_df, ann_df
