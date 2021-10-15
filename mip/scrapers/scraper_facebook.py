@@ -160,7 +160,7 @@ def query_crowdtangle(account, start_date, end_date, db_engine):
             #valid_posts = 0
             for p in res['result']['posts']:
                 # check if post comes from the account
-                assert 'handle' in p['account'] and p['account']['handle'].lower() == account.lower()
+                assert 'handle' in p['account'] and p['account']['handle'].strip().lower() == account.lower().strip()
                 all_posts.append(p)
                 
             print('\t\tposts =',len(res['result']['posts']), ' tot =',len(all_posts))
