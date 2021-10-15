@@ -131,7 +131,7 @@ def query_crowdtangle(account, start_date, end_date, db_engine):
     https://help.crowdtangle.com/en/articles/3443476-api-cheat-sheet
     https://api.crowdtangle.com/posts?token=RgLCYU3kushCgRshQVzjQAf3rqKeFfxGjMoMfh3Z&accounts=abingtonmuseum&count=100&startDate=2019-01-01&endDate=2020-01-01
     '''
-    account = 'abingtonmuseum' # DEBUG
+    #account = 'abingtonmuseum' # DEBUG
     print('\tquery_crowdtangle',account, start_date, end_date)
     assert account
     assert db_engine
