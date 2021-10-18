@@ -99,7 +99,7 @@ def scrape_facebook_page(page_name, muse_id, db_conn, db_engine):
         print(page_name,'already in local DB.')
         return 0
 
-    date_blocks = ['2019-01-01','2020-01-01', '2021-01-01','2022-01-01']
+    date_blocks = ['2019-01-01', '2020-01-01', '2021-01-01', '2022-01-01']
     posts = []
     for i in range(len(date_blocks)-1):
         start_date = date_blocks[i]
