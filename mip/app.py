@@ -116,7 +116,8 @@ def main():
         if cmd == "an_text":
             print("an_text")
             # RUN in terminal:
-            # python -m spacy download en_core_web_sm
+            ## python -m spacy download en_core_web_sm
+            # python -m spacy download en_core_web_lg
             assert is_postgresql_db_accessible()
             analyse_museum_text()
 

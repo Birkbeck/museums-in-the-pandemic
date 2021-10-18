@@ -251,7 +251,7 @@ def get_indicator_annotation_tokens(nlp):
     ann_tokens_df = _filter_tokens(ann_tokens_df)
     assert len(ann_tokens_df) > 0
     return ann_tokens_df
-
+    
 
 def match_indicators_in_muse_page(muse_id, session_id, page_id, nlp, annotat_tokens_df, keep_stopwords, db_conn, db_engine):
     """
@@ -278,7 +278,7 @@ def match_indicators_in_muse_page(muse_id, session_id, page_id, nlp, annotat_tok
         
         # this will read the tokens from the DB
         _match_musetext_indicators(muse_id, session_id, page_id, annotat_tokens_df, page_tokens_df, 
-                                ann_full_txt_df, sent_full_txt_df, keep_stopwords, db_conn, db_engine)
+                                ann_full_txt_df, sent_full_txt_df, keep_stopwords, db_conn, db_engine, nlp)
 
 
 def analyse_museum_text():
@@ -297,9 +297,11 @@ def analyse_museum_text():
     from collections import Counter
     spacy.prefer_gpu()
     # load language model
-    import en_core_web_sm
-    nlp = en_core_web_sm.load()
-    
+    #import en_core_web_sm # small
+    #nlp = en_core_web_sm.load()
+    import en_core_web_lg # large, also with similarity
+    nlp = en_core_web_lg.load()
+
     # get indicator tokens and write them to the DB
     ann_tokens_df = get_indicator_annotation_tokens(nlp)
     if True:
@@ -499,7 +501,7 @@ def _get_museum_indic_match_table_name(session_id, add_schema=True):
 
 
 def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, page_tokens_df, 
-                annotat_full_txt_df, sentences_full_txt_df, keep_stopwords, db_conn, db_engine):
+                annotat_full_txt_df, sentences_full_txt_df, keep_stopwords, db_conn, db_engine, nlp):
     """ 
     Main match loop between set of sentences and set of annotations for a single museum 
     """
@@ -595,6 +597,16 @@ def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, page_toke
     assert match_df.txt_overlap_lemma.between(0,1).all(), match_df.txt_overlap_lemma.sort_values()
     assert match_df.txt_overlap_token.between(0,1).all(), match_df.txt_overlap_token.sort_values()
 
+    # calculate semantic similarity
+    match_df['sem_similarity'] = None
+    for g, subdf in match_df.groupby(['example_id','sentence_id']):
+        ex_txt = ' '.join(subdf['ann_ex_tokens'].tolist())
+        page_txt = ' '.join(subdf['page_tokens'].tolist())
+        snt1 = nlp(ex_txt)
+        snt2 = nlp(page_txt)
+        sim = round(snt1.similarity(snt2),4)
+        match_df.loc[(match_df.example_id == g[0]) & (match_df.sentence_id == g[1]), 'sem_similarity'] = sim
+        
     # set general params
     match_df['session_id'] = session_id
     match_df['page_id'] = page_id
