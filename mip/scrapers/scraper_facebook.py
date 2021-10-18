@@ -99,7 +99,8 @@ def scrape_facebook_page(page_name, muse_id, db_conn, db_engine):
         print(page_name,'already in local DB.')
         return 0
 
-    date_blocks = ['2019-01-01', '2020-01-01', '2021-01-01', '2022-01-01']
+    today_yyyy = datetime.datetime.today().strftime('%Y-%m-%d')
+    date_blocks = ['2019-01-01', '2020-01-01', '2021-01-01', today_yyyy]
     posts = []
     for i in range(len(date_blocks)-1):
         start_date = date_blocks[i]
@@ -131,7 +132,7 @@ def query_crowdtangle(account, start_date, end_date, db_engine):
     https://help.crowdtangle.com/en/articles/3443476-api-cheat-sheet
     https://api.crowdtangle.com/posts?token=RgLCYU3kushCgRshQVzjQAf3rqKeFfxGjMoMfh3Z&accounts=abingtonmuseum&count=100&startDate=2019-01-01&endDate=2020-01-01
     '''
-    #account = 'groups/103361409763872' # DEBUG
+    #account = 'chchoxford' # DEBUG
     print('\tquery_crowdtangle "',account,'"', start_date, end_date)
     assert account
     assert db_engine
