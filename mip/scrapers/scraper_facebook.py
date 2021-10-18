@@ -131,8 +131,8 @@ def query_crowdtangle(account, start_date, end_date, db_engine):
     https://help.crowdtangle.com/en/articles/3443476-api-cheat-sheet
     https://api.crowdtangle.com/posts?token=RgLCYU3kushCgRshQVzjQAf3rqKeFfxGjMoMfh3Z&accounts=abingtonmuseum&count=100&startDate=2019-01-01&endDate=2020-01-01
     '''
-    #account = 'abingtonmuseum' # DEBUG
-    print('\tquery_crowdtangle',account, start_date, end_date)
+    #account = 'groups/103361409763872' # DEBUG
+    print('\tquery_crowdtangle "',account,'"', start_date, end_date)
     assert account
     assert db_engine
     base_url = 'https://api.crowdtangle.com/posts'
@@ -160,9 +160,11 @@ def query_crowdtangle(account, start_date, end_date, db_engine):
             #valid_posts = 0
             for p in res['result']['posts']:
                 # check if post comes from the account
-                assert 'handle' in p['account'] and p['account']['handle'].strip().lower() == account.lower().strip()
-                all_posts.append(p)
-                
+                if 'handle' in p['account'] and p['account']['handle'].strip().lower() == account.lower().strip():
+                    all_posts.append(p)
+                elif 'name' in p['account'] and p['account']['name']:
+                    all_posts.append(p)
+                    
             print('\t\tposts =',len(res['result']['posts']), ' tot =',len(all_posts))
             if len(res['result']['posts']) == 100:
                 # probably there is a next page, go on
@@ -246,7 +248,9 @@ def insert_fb_data(posts, db_conn):
             msg = x['message']
         if 'account_handle' in x:
             account = x['account_handle']
-        else: 
+        elif 'account_name' in x:
+            account = x['account_name']
+        else:
             account = None
         # insert sql
         sql = '''INSERT INTO facebook.facebook_posts_dump(page_name, query_account, post_id, museum_id, user_id, post_text, post_ts, facebook_data_json)

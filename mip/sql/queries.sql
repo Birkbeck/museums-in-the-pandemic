@@ -1,6 +1,10 @@
 
 -- Manual SQL queries for MIP
 
+-- analytics
+select * from analytics.text_indic_ann_matches_20210304 limit 100;
+select count(*) from analytics.text_indic_ann_matches_20210304;
+
 -- twitter 
 select muse_id,count(*) from twitter.tweets_dump group by muse_id ;
 select count(distinct muse_id) from twitter.tweets_dump;
