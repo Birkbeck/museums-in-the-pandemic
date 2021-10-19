@@ -251,7 +251,7 @@ def get_indicator_annotation_tokens(nlp):
     ann_tokens_df = _filter_tokens(ann_tokens_df)
     assert len(ann_tokens_df) > 0
     return ann_tokens_df
-    
+
 
 def match_indicators_in_muse_page(muse_id, session_id, page_id, nlp, annotat_tokens_df, keep_stopwords, db_conn, db_engine):
     """
@@ -467,6 +467,23 @@ def __OLD_match_tokens(musetxt_df, annot_df, case_sensitive, keep_stopwords):
     """
 
 
+def derive_new_attributes_matches(df):
+    """
+    Add derived fields to matches.
+    """
+    # valid_model_columns
+    # missing fields: 'lemmatoken_n', 'ann_overlap_tokenlemma','txt_overlap_tokenlemma', 
+    df["lemmatoken_n"] = df[["lemma_n", "token_n"]].max(axis=1)
+    df["ann_overlap_tokenlemma"] = df["lemmatoken_n"]/df['example_len']
+    df["txt_overlap_tokenlemma"] = df[["txt_overlap_lemma", "txt_overlap_token"]].max(axis=1)
+    indicator_dummy_df = pd.get_dummies(df[['indicator_code']], drop_first=True)
+    #print(valid_ann_df.shape)
+    df = pd.concat([df, indicator_dummy_df], axis=1)
+    #for c in valid_model_columns:
+    #    assert c in df.columns, c+ ' is missing'
+    return df
+
+
 def _count_unique_matches(df, col, target_col_name):
     """
     Aggregate token/lemma matches
@@ -670,3 +687,25 @@ def _OLD_match_musetext_vs_indicator_example(txt_df, annot_df):
     res_df = pd.DataFrame(data=res_d)
     assert len(res_df)>0
     return res_df
+
+
+def get_all_matches_from_db(session_id, db_conn, out_folder):
+    """ Download all annotation/website matches from a table """
+    print("get_all_matches_from_db", session_id)
+    db_columns = ['muse_id','page_id','sentence_id','example_id','indicator_code','session_id',
+        'ann_ex_tokens','page_tokens', 'sem_similarity',
+        'token_n', 'lemma_n', 'ann_overlap_lemma', 'ann_overlap_token',
+        'example_len', 'txt_overlap_lemma', 'txt_overlap_token', 'ann_overlap_criticwords']
+        
+    sql = """select {} from analytics.text_indic_ann_matches_{} t 
+        where keep_stopwords and ann_overlap_criticwords > 0;""".format(','.join(db_columns), session_id)
+    df = pd.read_sql(sql, db_conn)
+    print("query results:",df.shape)
+    df = derive_new_attributes_matches(df)
+    
+    # write df to file
+    matches_fn = out_folder+'tmp/matches_dump_df_{}.pik'.format(session_id)
+    df.to_pickle(matches_fn)
+    del df
+    print('\tsaved',matches_fn)
+    return matches_fn

@@ -6,6 +6,9 @@ select * from analytics.text_indic_ann_matches_20210304 limit 100;
 select count(*) from analytics.text_indic_ann_matches_20210304;
 select count(distinct muse_id) from analytics.text_indic_ann_matches_20210304;
 
+select * from websites.web_pages_dump_20210304_attr where page_id in (149714, 406382);
+select * from websites.web_pages_dump_20210304 where page_id in (149714, 406382);
+
 -- twitter 
 select muse_id,count(*) from twitter.tweets_dump group by muse_id ;
 select count(distinct muse_id) from twitter.tweets_dump;
