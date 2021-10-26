@@ -14,7 +14,6 @@ from utils import StopWatch
 import numpy as np
 import pickle
 import time
-#import tensorflow as tf
 from bs4 import BeautifulSoup
 from bs4.element import Comment
 import re
@@ -24,6 +23,7 @@ import matplotlib.pyplot as plt
 from db.db import make_string_sql_safe
 from museums import get_museums_w_web_urls, get_museums_sample_urls, load_input_museums_wattributes
 from analytics.an_websites import get_page_id_for_webpage_url, get_attribute_for_webpage_id
+from scrapers.scraper_websites import get_scraping_session_tables, get_session_id_from_table_name
 
 # constants
 tokens_table_name = 'analytics.mus_sentence_tokens'
@@ -316,8 +316,9 @@ def analyse_museum_text():
 
     #df = df.sample(3) # DEBUG
     
-    # set target scraping session
-    session_ids = ['20210304','20210404']
+    # set target scraping sessions
+    session_ids = sorted([get_session_id_from_table_name(x) for x in get_scraping_session_tables(db_conn)])
+    session_ids = ['20210304','20210404','20210914'] # DEBUG
     print('session_ids',str(session_ids))
     attrib_name = 'all_text'
     
