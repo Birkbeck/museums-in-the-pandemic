@@ -811,7 +811,8 @@ def make_social_media_corpus():
         
         # generate twitter corpus
         fn = tw_folder + 'twitter-' + muse_id + '.txt'
-        sql = "select account, tw_ts, tweet_text from twitter.tweets_dump td where muse_id = '{}' order by tw_ts;".format(muse_id)
+        #sql = "select account, tw_ts, tweet_text from twitter.tweets_dump td where muse_id = '{}' order by tw_ts;".format(muse_id)
+        sql = "select tweet_text from twitter.tweets_dump td where muse_id = '{}' order by tw_ts;".format(muse_id)
         df = pd.read_sql(sql, db_conn)
         if len(df) == 0:
             with open(fn, 'w') as f:
@@ -820,7 +821,8 @@ def make_social_media_corpus():
             df.to_csv(fn, sep='\t')
 
         fn = fb_folder + 'facebook-' + muse_id + '.txt'
-        sql = "select query_account, post_ts, post_text from facebook.facebook_posts_dump where museum_id = '{}' order by post_ts;".format(muse_id)
+        #sql = "select query_account, post_ts, post_text from facebook.facebook_posts_dump where museum_id = '{}' order by post_ts;".format(muse_id)
+        sql = "select post_text from facebook.facebook_posts_dump where museum_id = '{}' order by post_ts;".format(muse_id)
         df = pd.read_sql(sql, db_conn)
         if len(df) == 0:
             with open(fn, 'w') as f:

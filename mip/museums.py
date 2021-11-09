@@ -146,10 +146,10 @@ def load_fuzzy_museums():
     return df2
 
 
-def load_input_museums_wattributes():
+def load_input_museums_wattributes(data_folder=''):
     """  """
     fn = 'data/museums/museums_wattributes-2020-02-23.tsv'
-    df = pd.read_csv(fn, sep='\t')
+    df = pd.read_csv(data_folder + fn, sep='\t')
     print(df.columns)
     # remove closed museums
     df = df[df.closing_date.str.lower() == 'still open']
