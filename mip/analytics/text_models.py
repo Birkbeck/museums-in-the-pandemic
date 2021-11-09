@@ -14,6 +14,7 @@ from utils import StopWatch
 import numpy as np
 import pickle
 import time
+import os
 from bs4 import BeautifulSoup
 from bs4.element import Comment
 import re
@@ -710,3 +711,82 @@ def get_all_matches_from_db(session_id, db_conn, out_folder):
     del df
     print('\tsaved',matches_fn)
     return matches_fn
+
+
+def make_text_corpus():
+    """
+    Main command:
+    Preprocess and process museum text using NLP tools.
+    """
+    logger.info("make_text_corpus")
+    db_conn = connect_to_postgresql_db()
+    db_engine = create_alchemy_engine_posgresql()
+    # prep folders
+    web_folder = 'tmp/mip_corpus/websites/'
+    corpus_folders = ['tmp/mip_corpus/',web_folder,'tmp/mip_corpus/twitter/','tmp/mip_corpus/facebook/']
+    for c in corpus_folders:
+        if not os.path.exists(c):
+            os.makedirs(c)
+
+    df = get_museums_w_web_urls()
+    print("museums url N:",len(df))
+    attr_df = load_input_museums_wattributes()
+    df = pd.merge(df, attr_df, on='muse_id', how='left')
+    print("museum df with attributes: len", len(df))
+
+    #df = df.sample(50, random_state=42) # DEBUG
+    
+    # set target scraping sessions
+    session_ids = sorted([get_session_id_from_table_name(x) for x in get_scraping_session_tables(db_conn)])
+    session_ids = ['20210304','20210404','20210914'] # DEBUG
+    print('session_ids', str(session_ids))
+    attrib_name = 'all_text'
+    
+    urls_not_found = []
+
+    # scan sessions
+    for session_id in session_ids:
+        out_fold = web_folder + session_id + '/'
+        if not os.path.exists(out_fold):
+            os.makedirs(out_fold)
+
+        logger.info('>\t\t\t\tProcessing session ' + session_id)
+        # scan museums
+        for index, row in df.sample(frac=1).iterrows():
+            muse_id = row['muse_id']
+            print(muse_id)
+            # output file
+            fn = out_fold + muse_id + '.txt'
+            town = row['town_x']
+            if pd.isna(town): 
+                town = 'TOWN_NOT_FOUND'
+            #assert row['governance']
+            # write page info
+            with open(fn, 'w') as f:
+                file_head = '\n'.join(['MIP_INFO', muse_id, row['musname_x'], town, 
+                        row['url'], session_id, fn])
+                f.write(file_head)
+            # get main page of a museum
+            main_page_ids = get_page_id_for_webpage_url(row['url'], muse_id, session_id, attrib_name, db_conn)
+            if main_page_ids is None:
+                with open(fn, 'a') as f:
+                    f.write('\nMIP:PAGE_NOT_FOUND\nEND_MIP_INFO\n\n')
+                logger.warning('museum URL not found: '+str(row['url']) + "for museum id="+muse_id)
+                urls_not_found.append({'museum_id':muse_id, 'session_id':session_id, 'url':row['url']})
+                continue
+            assert len(main_page_ids) >= 1 and len(main_page_ids) <= 2
+            # write page info
+            with open(fn, 'a') as f:
+                    main_page_ids
+                    f.write('\npage_ids=' + str(main_page_ids))
+                    f.write('\nEND_MIP_INFO\n\n')
+            
+            for page_id in main_page_ids:
+                # match indicators with annotations
+                input_text = get_attribute_for_webpage_id(page_id, session_id, 'all_text', db_conn)
+                if not input_text:
+                    input_text = 'MIP:PAGE_EMPTY_page_id_' + str(page_id)
+                # write file
+                with open(fn, 'a') as f:
+                    f.write(input_text)
+                    print('\t', fn)

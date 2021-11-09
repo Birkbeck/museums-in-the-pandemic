@@ -18,7 +18,7 @@ from scrapers.scraper_websites import scrape_websites
 from scrapers.scraper_twitter import scrape_twitter_accounts
 from scrapers.scraper_facebook import scrape_facebook
 from analytics.an_websites import analyse_museum_websites
-from analytics.text_models import analyse_museum_text
+from analytics.text_models import analyse_museum_text, make_text_corpus
 from museums import load_input_museums, load_input_museums_wattributes, load_extracted_museums, \
     generate_stratified_museum_sample,generate_stratified_museum_urls, combinedatasets, \
     get_fuzzy_string_match_scores, load_fuzzy_museums, compare_result_to_sample, get_museums_w_web_urls, \
@@ -29,7 +29,7 @@ from tests.run_tests import get_all_tests
 import unittest
 
 COMMANDS = ["tests","scrape_google","extract_google",'scrape_twitter','scrape_websites','ex_txt_fields',
-    'scrape_facebook','compare_sample','db_stats','an_text']
+    'scrape_facebook','compare_sample','db_stats','an_text','corpus']
 cmd = None
 
 # %% Operations
@@ -101,7 +101,6 @@ def main():
             print("scrape_facebook")
             df = get_twitter_facebook_links()
             scrape_facebook(df)
-            # TODO scrape facebook
 
         if cmd == "scrape_websites":
             logger.info("scrape_websites")
@@ -120,6 +119,12 @@ def main():
             # python -m spacy download en_core_web_lg
             assert is_postgresql_db_accessible()
             analyse_museum_text()
+
+        if cmd == "corpus":
+            print("corpus")
+            # RUN in terminal:
+            assert is_postgresql_db_accessible()
+            make_text_corpus()
 
         if cmd == "compare_sample":
             print("compare_sample")

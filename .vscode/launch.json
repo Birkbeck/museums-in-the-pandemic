@@ -29,6 +29,14 @@
             "args": ["an_text"]
         },
         {
+            "name": "corpus",
+            "type": "python",
+            "request": "launch",
+            "program": "mip/app.py",
+            "console": "integratedTerminal",
+            "args": ["corpus"]
+        },
+        {
             "name": "tests",
             "type": "python",
             "request": "launch",
