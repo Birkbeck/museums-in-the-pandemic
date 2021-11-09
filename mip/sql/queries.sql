@@ -17,12 +17,19 @@ select count(*) from twitter.tweets_dump td;
 select count(*) from twitter.museums_no_twitter td;
 select * from twitter.twitter_accounts_not_found tanf;
 
+select count(*) from twitter.tweets_dump td where muse_id = 'mm.ace.685';
+
+CREATE INDEX tweets_muse_id_idx ON twitter.tweets_dump(muse_id);
+
+
 -- facebook
 select count(*) from facebook.facebook_posts_dump;
 select museum_id, page_name, query_account, count(*) from facebook.facebook_posts_dump group by museum_id, page_name, query_account;
 select count(distinct museum_id) from facebook.facebook_posts_dump;
 select count(distinct page_name) from facebook.facebook_posts_dump;
 select count(distinct page_name) from facebook.facebook_pages_not_found;
+
+CREATE INDEX facebook_muse_id_idx ON facebook.facebook_posts_dump(museum_id);
 
 select * from facebook.facebook_posts_dump fpd where query_account = 'ntbaddesleyclinton' limit 100;
 select * from facebook.facebook_posts_dump fpd where page_name = 'NTBaddesleyClinton' limit 100;

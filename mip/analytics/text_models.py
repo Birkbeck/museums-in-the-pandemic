@@ -715,8 +715,7 @@ def get_all_matches_from_db(session_id, db_conn, out_folder):
 
 def make_text_corpus():
     """
-    Main command:
-    Preprocess and process museum text using NLP tools.
+    Extract text corpus to process it with external NLP tools
     """
     logger.info("make_text_corpus")
     db_conn = connect_to_postgresql_db()
@@ -756,7 +755,7 @@ def make_text_corpus():
             muse_id = row['muse_id']
             print(muse_id)
             # output file
-            fn = out_fold + muse_id + '.txt'
+            fn = out_fold + 'website-' + session_id + '-' +  muse_id + '.txt'
             town = row['town_x']
             if pd.isna(town): 
                 town = 'TOWN_NOT_FOUND'
@@ -790,3 +789,41 @@ def make_text_corpus():
                 with open(fn, 'a') as f:
                     f.write(input_text)
                     print('\t', fn)
+
+def make_social_media_corpus():
+    print("make_social_media_corpus")
+
+    tw_folder = 'tmp/mip_corpus/twitter/'
+    fb_folder = 'tmp/mip_corpus/facebook/'
+
+    df = get_museums_w_web_urls()
+    print("museums url N:",len(df))
+    attr_df = load_input_museums_wattributes()
+    df = pd.merge(df, attr_df, on='muse_id', how='left')
+    print("museum df with attributes: len", len(df))
+
+    #df = df.sample(3, random_state=42) # DEBUG
+    db_conn = connect_to_postgresql_db()
+
+    for index, row in df.sample(frac=1).iterrows():
+        muse_id = row['muse_id']
+        print(muse_id)
+        
+        # generate twitter corpus
+        fn = tw_folder + 'twitter-' + muse_id + '.txt'
+        sql = "select account, tw_ts, tweet_text from twitter.tweets_dump td where muse_id = '{}' order by tw_ts;".format(muse_id)
+        df = pd.read_sql(sql, db_conn)
+        if len(df) == 0:
+            with open(fn, 'w') as f:
+                f.write('MIP:NO_TWEET_FOUND')
+        else:
+            df.to_csv(fn, sep='\t')
+
+        fn = fb_folder + 'facebook-' + muse_id + '.txt'
+        sql = "select query_account, post_ts, post_text from facebook.facebook_posts_dump where museum_id = '{}' order by post_ts;".format(muse_id)
+        df = pd.read_sql(sql, db_conn)
+        if len(df) == 0:
+            with open(fn, 'w') as f:
+                f.write('MIP:NO_FACEBOOK_FOUND')
+        else:
+            df.to_csv(fn, sep='\t')
