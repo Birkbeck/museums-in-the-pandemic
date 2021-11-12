@@ -20,9 +20,9 @@ def load_museums_df_complete():
     print("load_museums_df_complete")
 
 
-def load_input_museums():
+def load_input_museums(folder=''):
     """ Load MM museum data that includes ALL museums """
-    fn = 'data/museums/museum_names_and_postcodes-2020-01-26.tsv'
+    fn = folder+'data/museums/museum_names_and_postcodes-2020-01-26.tsv'
     df = pd.read_csv(fn, sep='\t')
     df = exclude_closed(df)
     assert df["id"].is_unique
@@ -854,19 +854,19 @@ def join_museum_info(df, muse_id_column):
     return mdf
 
 
-def get_twitter_facebook_links():
+def get_twitter_facebook_links(folder=''):
     """" Load Twitter accounts for all museums """
     # load twitter
-    fn = 'data/museums/tw_urls_final.tsv'
+    fn = folder + 'data/museums/tw_urls_final.tsv'
     df = pd.read_csv(fn, sep='\t')
     df = df[['museum_id','url']].rename(columns={"url": "twitter_id"})
-    mdf = load_input_museums()
+    mdf = load_input_museums(folder)
     
     mdf = mdf.rename(columns={"id": "museum_id"})
     mdf = mdf.merge(df, on='museum_id', how='left')
     
     # load facebook
-    fn = 'data/museums/fb_urls_final.tsv'
+    fn = folder+'data/museums/fb_urls_final.tsv'
     df = pd.read_csv(fn, sep='\t')
     df = df[['museum_id','url']].rename(columns={"url": "facebook_pages"})
     mdf = mdf.merge(df, on='museum_id', how='left')
