@@ -161,3 +161,5 @@ data/analysis/temporal_analysis/~$museum_activity_groups_var1_subject_matter.xls
 mip/notebooks_py/data/yelp_review_full_csv/readme.txt
 mip/notebooks_py/data/yelp_review_full_csv/test.csv
 mip/notebooks_py/data/yelp_review_full_csv/train.csv
+.Rhistory
+data/analysis/temporal_analysis/~$museum_activity_groups_var2_governance_simpl_country.xlsx

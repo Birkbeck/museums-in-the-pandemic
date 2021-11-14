@@ -9,7 +9,7 @@ output:
 # Setup
 
 ```{r setup}
-
+source('mip_setup.R')
 ```
 
 
@@ -52,9 +52,27 @@ for (margin_of_error in c(1,2,3,4,5,6,7,8,9,10)){
 
 # Visualisations
 
+
+## Social media bivariate heatmaps 
+
 TODO
 
 ```{r}
+OLD
+
+load_multilevel_header_excel = function(fn){
+  head = readLines(textConnection(fn),n=2)
+  View(head)
+}
+
+work_fold = '../../data/analysis/temporal_analysis/'
+fn = paste0(work_fold,'museum_activity_groups_var1_region.xlsx')
+load_multilevel_header_excel(fn)
+
+#df = read_xlsx()
+#View(df)
+# num_mat, xlab, ylab, fout, colPalette = c("white", "royalblue")
+#FUN_df_to_heatmap()
 
 ```
 
