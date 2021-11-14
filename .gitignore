@@ -157,3 +157,7 @@ data/annotations/~$museum_website_match_sample5_lang_staff-v2.xlsx
 data/annotations/~$museum_website_match_sample5_lang_staff_summary-v2.xlsx
 data/analysis/temporal_analysis/~$museum_activity_groups_var1_governance_simpl.xlsx
 data/analysis/temporal_analysis/~$museum_activity_groups_var1_subject_matter.xlsx
+.Rproj.user
+mip/notebooks_py/data/yelp_review_full_csv/readme.txt
+mip/notebooks_py/data/yelp_review_full_csv/test.csv
+mip/notebooks_py/data/yelp_review_full_csv/train.csv
