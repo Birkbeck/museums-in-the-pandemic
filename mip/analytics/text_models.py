@@ -319,7 +319,7 @@ def analyse_museum_text():
     
     # set target scraping sessions
     session_ids = sorted([get_session_id_from_table_name(x) for x in get_scraping_session_tables(db_conn)])
-    session_ids = ['20210304','20210404','20210914'] # DEBUG
+    #session_ids = ['20210304','20210404','20210914'] # DEBUG
     print('session_ids',str(session_ids))
     attrib_name = 'all_text'
     
