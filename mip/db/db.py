@@ -34,6 +34,12 @@ def open_sqlite(db_fn):
     return conn
 
 
+def create_alchemy_engine_sqlite_corpus():
+    print("create_alchemy_engine_sqlite_corpus")
+    local_search_db = 'tmp/mip_corpus_search.db'
+    local_engine = create_engine('sqlite:///'+local_search_db, echo=False)
+    return local_search_db, local_engine
+
 def create_alchemy_engine_posgresql():
     print("create_alchemy_engine_posgresql")
     ipaddress = pg_config['ip']

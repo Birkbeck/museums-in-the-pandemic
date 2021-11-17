@@ -8,7 +8,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-from db.db import connect_to_postgresql_db, create_alchemy_engine_posgresql
+from db.db import connect_to_postgresql_db, create_alchemy_engine_posgresql, create_alchemy_engine_sqlite_corpus
 import pandas as pd
 from utils import StopWatch
 import numpy as np
@@ -25,6 +25,7 @@ from db.db import make_string_sql_safe
 from museums import get_museums_w_web_urls, get_museums_sample_urls, load_input_museums_wattributes
 from analytics.an_websites import get_page_id_for_webpage_url, get_attribute_for_webpage_id
 from scrapers.scraper_websites import get_scraping_session_tables, get_session_id_from_table_name
+import sqlite3
 
 # constants
 tokens_table_name = 'analytics.mus_sentence_tokens'
@@ -791,6 +792,48 @@ def make_text_corpus():
                 with open(fn, 'a') as f:
                     f.write(input_text)
                     print('\t', fn)
+
+
+def make_corpus_sqlite():
+    """ Make local DB corpus for search """
+    print('make_corpus_sqlite')
+    db_fn, local_engine = create_alchemy_engine_sqlite_corpus()
+    local_conn = local_engine.connect()
+    db_conn = connect_to_postgresql_db()
+    
+    if True:
+        # twitter
+        sql = "select muse_id as museum_id, account as account, tweet_text as msg_text, tw_ts as msg_time from twitter.tweets_dump td;"
+        df = pd.read_sql(sql, db_conn)
+        print(len(df))
+        df = df.drop_duplicates()
+        df['platform'] = 'twitter'
+        df.to_sql('social_media_msg', local_engine, index=False, if_exists='replace', method='multi')
+        del df
+        
+        # facebook
+        sql = "select museum_id, page_name as account, post_text as msg_text, post_ts as msg_time from facebook.facebook_posts_dump td;"
+        df = pd.read_sql(sql, db_conn)
+        print(len(df))
+        df = df.drop_duplicates()
+        df['platform'] = 'facebook'
+        df.to_sql('social_media_msg', local_engine, index=False, if_exists='append', method='multi')
+        del df
+        
+        # https://www.sqlitetutorial.net/sqlite-index/
+        sql_commands = [
+            "CREATE INDEX social_text_idx ON social_media_msg(msg_text);",
+            "CREATE INDEX ts_idx ON social_media_msg(msg_time);"]
+        for s in sql_commands:
+            local_conn.execute(s)
+
+    # websites
+    # TODO
+
+    print("Social media DB ready:",db_fn)
+
+
+
 
 def make_social_media_corpus():
     print("make_social_media_corpus")
