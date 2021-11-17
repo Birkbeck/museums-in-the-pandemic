@@ -164,3 +164,19 @@ def make_string_sql_safe(s):
     """ Escape quotes """
     s = s.replace("'","''")
     return s
+
+def scan_table_limit_offset(db_conn, select_sql, block_sz, funct):
+    print('scan_table_limit_offset')
+    offset = 0
+    keep_scanning = True
+    while keep_scanning:
+        print('  offset =',offset)
+        sql = "{} limit {} offset {};".format(select_sql, block_sz, offset)
+        results_df = pd.read_sql(sql, db_conn)
+        funct(results_df)
+        # scanning logic
+        offset += block_sz
+        if len(results_df) < block_sz:
+            keep_scanning = False
+    
+    

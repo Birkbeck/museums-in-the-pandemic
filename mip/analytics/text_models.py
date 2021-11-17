@@ -8,7 +8,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-from db.db import connect_to_postgresql_db, create_alchemy_engine_posgresql, create_alchemy_engine_sqlite_corpus
+from db.db import connect_to_postgresql_db, create_alchemy_engine_posgresql, create_alchemy_engine_sqlite_corpus, scan_table_limit_offset
 import pandas as pd
 from utils import StopWatch
 import numpy as np
@@ -822,25 +822,27 @@ def make_corpus_sqlite():
     db_fn, local_engine = create_alchemy_engine_sqlite_corpus()
     local_conn = local_engine.connect()
     db_conn = connect_to_postgresql_db()
-    
-    if True:
-        # twitter
-        sql = "select muse_id as museum_id, account as account, tweet_text as msg_text, tw_ts as msg_time from twitter.tweets_dump td;"
-        df = pd.read_sql(sql, db_conn)
-        print(len(df))
-        df = df.drop_duplicates()
+
+    def _save_in_local_db_twitter(df):
+        #print("_save_in_local_db", len(df))
+        df = df.copy().drop_duplicates()
         df['platform'] = 'twitter'
-        df.to_sql('social_media_msg', local_engine, index=False, if_exists='replace', method='multi')
+        df.to_sql('social_media_msg', local_engine, index=False, if_exists='append', method='multi')
         del df
-        
-        # facebook
-        sql = "select museum_id, page_name as account, post_text as msg_text, post_ts as msg_time from facebook.facebook_posts_dump td;"
-        df = pd.read_sql(sql, db_conn)
-        print(len(df))
-        df = df.drop_duplicates()
+
+    def _save_in_local_db_facebook(df):
+        #print("_save_in_local_db", len(df))
+        df = df.copy().drop_duplicates()
         df['platform'] = 'facebook'
         df.to_sql('social_media_msg', local_engine, index=False, if_exists='append', method='multi')
         del df
+
+    if True:
+        select_sql = "select muse_id as museum_id, account as account, tweet_text as msg_text, tw_ts as msg_time from twitter.tweets_dump"
+        scan_table_limit_offset(db_conn, select_sql, 50000, _save_in_local_db_twitter)
+        
+        select_sql = "select museum_id, page_name as account, post_text as msg_text, post_ts as msg_time from facebook.facebook_posts_dump td;"
+        scan_table_limit_offset(db_conn, select_sql, 50000, _save_in_local_db_facebook)
         
         # https://www.sqlitetutorial.net/sqlite-index/
         sql_commands = [
@@ -853,8 +855,6 @@ def make_corpus_sqlite():
     # TODO
 
     print("Social media DB ready:",db_fn)
-
-
 
 
 def make_social_media_corpus():
