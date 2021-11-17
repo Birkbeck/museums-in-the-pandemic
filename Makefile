@@ -43,6 +43,11 @@ an_text:
 	nohup ./run_app_server.sh an_text > tmp/logs/nohup_an_${DATE}_log.txt &
 
 
+corpus:
+	@echo ">>> Run corpus";
+	nohup ./run_app_server.sh corpus > tmp/logs/nohup_corpus_${DATE}_log.txt &
+
+
 compile:
 	@python -m compileall mip/*
 
