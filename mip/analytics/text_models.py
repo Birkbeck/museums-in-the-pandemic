@@ -316,7 +316,7 @@ def analyse_museum_text():
     df = pd.merge(df, attr_df, on='muse_id', how='left')
     print("museum df with attributes: len", len(df))
 
-    df = df.sample(3) # DEBUG
+    #df = df.sample(3) # DEBUG
     
     # set target scraping sessions
     #session_ids = sorted([get_session_id_from_table_name(x) for x in get_scraping_session_tables(db_conn)])
@@ -326,11 +326,11 @@ def analyse_museum_text():
 
     # scan sessions
     for session_id in session_ids:
-        logger.info('>\t\t\t\tProcessing session ' + session_id)
+        logger.info('\n\n>\t\t\t\tProcessing session ' + session_id)
         # scan museums in parallel (SLOW)
         params = {'session_id': session_id, 'nlp': nlp, 'ann_tokens_df': ann_tokens_df, 
                 'attrib_name': attrib_name}
-        notfound_df = parallel_dataframe_apply_wparams(df, __find_matches_in_df_parallel, params, n_cores=2)
+        notfound_df = parallel_dataframe_apply_wparams(df, __find_matches_in_df_parallel, params, n_cores=8)
 
         # add indices to table
         assert len(notfound_df) < len(df), len(notfound_df)
