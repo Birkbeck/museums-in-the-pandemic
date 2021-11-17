@@ -19,13 +19,17 @@ from bs4 import BeautifulSoup
 from bs4.element import Comment
 import re
 from analytics.an_websites import get_webdump_attr_table_name
-from utils import remove_empty_elem_from_list, remove_multiple_spaces_tabs, _is_number, parallel_dataframe_apply
+from utils import remove_empty_elem_from_list, remove_multiple_spaces_tabs, _is_number, parallel_dataframe_apply, parallel_dataframe_apply_wparams
 import matplotlib.pyplot as plt
 from db.db import make_string_sql_safe
 from museums import get_museums_w_web_urls, get_museums_sample_urls, load_input_museums_wattributes
 from analytics.an_websites import get_page_id_for_webpage_url, get_attribute_for_webpage_id
 from scrapers.scraper_websites import get_scraping_session_tables, get_session_id_from_table_name
 import sqlite3
+# load language model
+#import en_core_web_sm # small
+#nlp = en_core_web_sm.load()
+import en_core_web_lg # large, also with similarity
 
 # constants
 tokens_table_name = 'analytics.mus_sentence_tokens'
@@ -298,10 +302,6 @@ def analyse_museum_text():
     from spacy import displacy
     from collections import Counter
     spacy.prefer_gpu()
-    # load language model
-    #import en_core_web_sm # small
-    #nlp = en_core_web_sm.load()
-    import en_core_web_lg # large, also with similarity
     nlp = en_core_web_lg.load()
 
     # get indicator tokens and write them to the DB
@@ -316,62 +316,84 @@ def analyse_museum_text():
     df = pd.merge(df, attr_df, on='muse_id', how='left')
     print("museum df with attributes: len", len(df))
 
-    #df = df.sample(3) # DEBUG
+    df = df.sample(3) # DEBUG
     
     # set target scraping sessions
-    session_ids = sorted([get_session_id_from_table_name(x) for x in get_scraping_session_tables(db_conn)])
-    #session_ids = ['20210304','20210404','20210914'] # DEBUG
+    #session_ids = sorted([get_session_id_from_table_name(x) for x in get_scraping_session_tables(db_conn)])
+    session_ids = ['20210304','20210404'] # DEBUG ,'20210914'
     print('session_ids',str(session_ids))
     attrib_name = 'all_text'
-    
-    urls_not_found = []
 
     # scan sessions
     for session_id in session_ids:
-        i = 0
         logger.info('>\t\t\t\tProcessing session ' + session_id)
-        # scan museums
-        for index, row in df.iterrows():
-            i += 1
-            muse_id = row['muse_id']
-            msg = ">>> Processing museum {} of {}, muse_id={}, session={}".format(i, len(df), muse_id, session_id)
-            # get main page of a museum
-            main_page_ids = get_page_id_for_webpage_url(row['url'], muse_id, session_id, attrib_name, db_conn)
-            if main_page_ids is None:
-                logger.warning('museum URL not found: '+str(row['url']) + " for museum id="+muse_id)
-                urls_not_found.append({'museum_id':muse_id, 'session_id':session_id, 'url':row['url']})
-                continue
-            assert len(main_page_ids) >= 1 and len(main_page_ids) <= 2
-            logger.info(msg)
-            print(msg)
-            for page_id in main_page_ids:
-                # match indicators with annotations
-                match_indicators_in_muse_page(muse_id, session_id, page_id, nlp, ann_tokens_df, True, db_conn, db_engine)
-                #spacy_extract_tokens(session_id, page_id, nlp, input_text, db_conn, db_engine)
-                # add pause to avoid DB transaction failures
-                time.sleep(.1)
-        del i
+        # scan museums in parallel (SLOW)
+        params = {'session_id': session_id, 'nlp': nlp, 'ann_tokens_df': ann_tokens_df, 
+                'attrib_name': attrib_name}
+        notfound_df = parallel_dataframe_apply_wparams(df, __find_matches_in_df_parallel, params, n_cores=2)
 
         # add indices to table
-        assert len(urls_not_found) < len(df), len(urls_not_found)
+        assert len(notfound_df) < len(df), len(notfound_df)
         idx_sql = """
             ALTER TABLE {0}  
                 DROP CONSTRAINT IF EXISTS {1}_pkey;
             ALTER TABLE {0} 
                 ADD PRIMARY KEY (sentence_id, example_id, page_id, keep_stopwords);""".format(
                                 _get_museum_indic_match_table_name(session_id),
-                                _get_museum_indic_match_table_name(session_id,False))
+                                _get_museum_indic_match_table_name(session_id, False))
         c = db_conn.cursor()
         c.execute(idx_sql)
         db_conn.commit()
         
         # write URLs not found to DB
-        notfound_df = pd.DataFrame(data=urls_not_found)
         notfound_table = _get_museum_indic_match_table_name(session_id,False)+'_notfound'
         notfound_df.to_sql(notfound_table, db_engine, schema='analytics', index=False, if_exists='replace', method='multi')
         
         logger.info('Session done. Matches written in table '+_get_museum_indic_match_table_name(session_id))
-        del session_id, notfound_df
+        del notfound_df
+
+
+def __find_matches_in_df_parallel(args):
+    # extract params
+    
+    df = args[0] # museums
+    print('__find_matches_in_df_parallel',len(df))
+    session_id = args[1]['session_id']
+    nlp = en_core_web_lg.load()
+    ann_tokens_df = args[1]['ann_tokens_df']
+    db_engine = create_alchemy_engine_posgresql()
+    attrib_name = args[1]['attrib_name']
+
+    urls_not_found = []
+    db_conn = connect_to_postgresql_db()
+    i = 0
+    # scan museums
+    for index, row in df.iterrows():
+        i += 1
+        muse_id = row['muse_id']
+        msg = ">>> Processing museum {} of {}, muse_id={}, session={}".format(i, len(df), muse_id, session_id)
+        # get main page of a museum
+        main_page_ids = get_page_id_for_webpage_url(row['url'], muse_id, session_id, attrib_name, db_conn)
+        if main_page_ids is None:
+            logger.warning('museum URL not found: '+str(row['url']) + " for museum id="+muse_id)
+            urls_not_found.append({'museum_id':muse_id, 'session_id':session_id, 'url':row['url']})
+            continue
+        assert len(main_page_ids) >= 1 and len(main_page_ids) <= 2
+        logger.info(msg)
+        print(msg)
+        for page_id in main_page_ids:
+            # match indicators with annotations
+            match_indicators_in_muse_page(muse_id, session_id, page_id, nlp, ann_tokens_df, True, db_conn, db_engine)
+            #spacy_extract_tokens(session_id, page_id, nlp, input_text, db_conn, db_engine)
+            # add pause to avoid DB transaction failures
+            time.sleep(.1)
+    del i
+    del nlp
+    db_conn.close()
+    db_engine.dispose()
+    notfound_df = pd.DataFrame(data=urls_not_found)
+    print('__find_matches_in_df_parallel done')
+    return notfound_df
     
 
 def _filter_tokens(df, keep_stopwords=True):

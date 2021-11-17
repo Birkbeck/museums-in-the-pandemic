@@ -150,6 +150,19 @@ def parallel_dataframe_apply(df, func, n_cores=4):
     return df
 
 
+def parallel_dataframe_apply_wparams(df, func, params, n_cores=4):
+    """ Apply function to rows in parallel. params is a dictionary of additional parameters """
+    df_split = np.array_split(df, n_cores)
+    pool = Pool(n_cores)
+    df_split_params = [(x,params) for x in df_split]
+    #params_d = {'df':df_split,'params':params}
+    df = pd.concat(pool.map(func, df_split_params), ignore_index=True)
+    df = df.reset_index()
+    pool.close()
+    pool.join()
+    return df
+
+
 def is_url(url):
     """ @returns True if url is a URL """
     if url is None or url == '':
