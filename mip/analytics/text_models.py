@@ -337,7 +337,7 @@ def analyse_museum_text():
             # get main page of a museum
             main_page_ids = get_page_id_for_webpage_url(row['url'], muse_id, session_id, attrib_name, db_conn)
             if main_page_ids is None:
-                logger.warning('museum URL not found: '+str(row['url']) + "for museum id="+muse_id)
+                logger.warning('museum URL not found: '+str(row['url']) + " for museum id="+muse_id)
                 urls_not_found.append({'museum_id':muse_id, 'session_id':session_id, 'url':row['url']})
                 continue
             assert len(main_page_ids) >= 1 and len(main_page_ids) <= 2
@@ -352,6 +352,7 @@ def analyse_museum_text():
         del i
 
         # add indices to table
+        assert len(urls_not_found) < len(df), len(urls_not_found)
         idx_sql = """
             ALTER TABLE {0}  
                 DROP CONSTRAINT IF EXISTS {1}_pkey;
@@ -645,7 +646,8 @@ def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, page_toke
     
     # insert match results into SQL table
     logger.debug(sw.tick('match'))
-    match_df.to_sql(_get_museum_indic_match_table_name(session_id, False), db_engine, schema='analytics', index=False, if_exists='append', method='multi')
+    tab = _get_museum_indic_match_table_name(session_id, False)
+    match_df.to_sql(tab, db_engine, schema='analytics', index=False, if_exists='append', method='multi')
     logger.debug(sw.tick('to_sql n={}'.format(len(match_df))))
     return df
 
@@ -770,7 +772,7 @@ def make_text_corpus():
             if main_page_ids is None:
                 with open(fn, 'a') as f:
                     f.write('\nMIP:PAGE_NOT_FOUND\nEND_MIP_INFO\n\n')
-                logger.warning('museum URL not found: '+str(row['url']) + "for museum id="+muse_id)
+                logger.warning('museum URL not found: '+str(row['url']) + " for museum id="+muse_id)
                 urls_not_found.append({'museum_id':muse_id, 'session_id':session_id, 'url':row['url']})
                 continue
             assert len(main_page_ids) >= 1 and len(main_page_ids) <= 2

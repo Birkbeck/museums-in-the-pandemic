@@ -571,6 +571,8 @@ def get_scraping_session_tables(db_conn):
     res = [r for r in res if 'web_pages' in r]
     res = ["websites."+r for r in res if not 'attr' in r]
     res = sorted(res, reverse=True)
+    # remove empty session
+    res = [r for r in res if not '20210303' in r]
     return res
 
 
