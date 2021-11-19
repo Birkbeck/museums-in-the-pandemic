@@ -265,12 +265,13 @@ def match_indicators_in_muse_page(muse_id, session_id, url, nlp, annotat_tokens_
     Main function to perform matching for a target museum
     """
     logger.info('match_indicators_in_muse_page {} {} {} stopwords={}'.format(muse_id, session_id, url, keep_stopwords))
-    
+    #TODO: DEBUG 'warning:match_indicators_in_muse_page' 
     page_id, input_text = get_attribute_for_webpage_url_lookback(url, session_id, 'all_text', db_conn)
     if not (page_id and page_id > 0):
         msg = "warning:match_indicators_in_muse_page museum: {} url {} not found in {}".format(muse_id, url, session_id)
         logger.warn(msg)
         print(msg)
+        return False
         #, msg
     #return # DEBUG
     # save page tokens only once
@@ -292,6 +293,8 @@ def match_indicators_in_muse_page(muse_id, session_id, url, nlp, annotat_tokens_
         # this will read the tokens from the DB
         _match_musetext_indicators(muse_id, session_id, page_id, annotat_tokens_df, page_tokens_df, 
                                 ann_full_txt_df, sent_full_txt_df, keep_stopwords, db_conn, db_engine, nlp)
+
+    return True
 
 
 def analyse_museum_text():
@@ -353,7 +356,7 @@ def analyse_museum_text():
         db_conn.commit()
         
         # write URLs not found to DB
-        notfound_table = _get_museum_indic_match_table_name(session_id,False)+'_notfound'
+        notfound_table = _get_museum_indic_match_table_name(session_id, False)+'_notfound'
         notfound_df.to_sql(notfound_table, db_engine, schema='analytics', index=False, if_exists='replace', method='multi')
         
         logger.info('Session done. Matches written in table '+_get_museum_indic_match_table_name(session_id))
@@ -370,6 +373,7 @@ def __find_matches_in_df_parallel(args):
     db_engine = create_alchemy_engine_posgresql()
 
     urls_not_found = []
+    urls_not_found_museum_ids = []
     db_conn = connect_to_postgresql_db()
     i = 0
     print('input museums n =',len(df))
@@ -380,13 +384,16 @@ def __find_matches_in_df_parallel(args):
         msg = ">>> Processing museum {} of {}, muse_id={}, session={}".format(i, len(df), muse_id, session_id)
         logger.info(msg)
         print(msg)
-        match_indicators_in_muse_page(muse_id, session_id, row['url'], nlp, ann_tokens_df, True, db_conn, db_engine)
+        found = match_indicators_in_muse_page(muse_id, session_id, row['url'], nlp, ann_tokens_df, True, db_conn, db_engine)
+        if not found:
+            urls_not_found.append(row['url'])
+            urls_not_found_museum_ids.append(muse_id)
         time.sleep(.05)
     del i
     del nlp
     db_conn.close()
     db_engine.dispose()
-    notfound_df = pd.DataFrame(data=urls_not_found)
+    notfound_df = pd.DataFrame({'url':urls_not_found, 'museum_id':urls_not_found_museum_ids})
     print('__find_matches_in_df_parallel thread={} done'.format(threading.get_native_id()))
     return notfound_df
     
