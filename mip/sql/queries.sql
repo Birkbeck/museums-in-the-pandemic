@@ -61,6 +61,8 @@ select * from websites.web_pages_dump_20210304 wpda where is_start_url and url i
 
 select * from websites.web_pages_dump_20210914 wpd where url ilike '%www.nationaltrust.org.uk/hinton-ampner';
 
+select * from websites.web_pages_dump_20211011 wpd where url ilike '%spodemuseumtrust.org%';
+
 select * from websites.web_pages_dump_20210304_attr wpda where page_id = 745284;
 
 select count(*) from websites.web_pages_dump_20210303 wpda;

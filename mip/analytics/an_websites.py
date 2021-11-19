@@ -314,21 +314,29 @@ def get_page_id_for_webpage_url(url, session_id, db_conn):
     assert session_id
     page_tbl_name = get_webdump_table_name(session_id)
     
+    url_variants = []
+    url_variants.append(url)
     if url[-1] == '/':
-        alt_url = url[:-1]
-    else: 
-        alt_url = url + '/'
+        url_variants.append(url[:-1])
+        url_variants.append(url + 'index.html')
+        url_variants.append(url + 'index.htm')
+        url_variants.append(url + 'index.php')
+    else:
+        url_variants.append(url + '/')
 
-    sql = """select url, page_id from {} p where (p.url='{}' or p.url='{}');""".format(page_tbl_name, make_string_sql_safe(url), make_string_sql_safe(alt_url))
+    for u in url_variants.copy():
+        url_variants.append(u.replace('https://','http://'))
+        url_variants.append(u.replace('http://','https://'))
+
+    url_variants = ','.join(["'"+make_string_sql_safe(x)+"'" for x in set(url_variants)])
+    sql = """select url, page_id from {} p where p.url in ({});""".format(page_tbl_name, url_variants)
     df = pd.read_sql(sql, db_conn)
 
     if len(df) > 0:
         val = df['page_id'].tolist()
-        if len(val) == 0:
-            val = None
         return val
-    else: 
-        return None
+    else:
+        return []
 
 
 def get_attribute_for_webpage_url_lookback(url, session_id, attrib_name, db_conn):
@@ -340,33 +348,39 @@ def get_attribute_for_webpage_url_lookback(url, session_id, attrib_name, db_conn
     #input_text1 = get_attribute_for_webpage_id_lookback(745284, '20210304', 'all_text', db_conn)
     #input_text2 = get_attribute_for_webpage_id_lookback(29599, '20210420', 'all_text', db_conn)
     #input_text3 = get_attribute_for_webpage_id_lookback(197, '20210914', 'all_text', db_conn)
-    page_ids = get_page_id_for_webpage_url(url, session_id, db_conn)
-    for page_id in page_ids:
-        attr = get_attribute_for_webpage_id(page_id, session_id, attrib_name, db_conn)
-        if attr:
+    
+    #page_ids = get_page_id_for_webpage_url(url, session_id, db_conn)
+    #for page_id in page_ids:
+    #    attr = get_attribute_for_webpage_id(page_id, session_id, attrib_name, db_conn)
+    #    if attr:
+    #        return page_id, attr
+        
+    # scan all sessions from current one back
+    #get_previous_session_tables('20210601', db_conn)
+    #get_previous_session_tables('20210401', db_conn)
+    #get_previous_session_tables('20210901', db_conn)
+    session_tables = get_previous_session_tables(session_id, db_conn)
+    session_tables.insert(0, get_webdump_table_name(session_id))
+    
+    for tab in session_tables:
+        print('   get_attribute_for_webpage_url_lookback:',tab)
+        prev_session = get_session_id_from_table_name(tab)
+        page_ids = get_page_id_for_webpage_url(url, prev_session, db_conn)
+        for page_id in page_ids:
+            sql = 'select * from {} where page_id = {} and page_content_length > 0;'.format(tab, page_id)
+            # prev_session_diff_b, new_page_b, prev_session_page_id, prev_session_table
+            df = pd.read_sql(sql, db_conn)
+            if len(df) == 0: 
+                # check previous page
+                continue
+            # page found
+            d_res = df.iloc[0].to_dict()
+            assert d_res['url']
+            attr = get_attribute_for_webpage_id(d_res['page_id'], prev_session, attrib_name, db_conn)
+            if not attr:
+                continue
+            print('   get_attribute_for_webpage_url_lookback: found attr page_id =',d_res['page_id'],tab)
             return page_id, attr
-        else:
-            # scan previous sessions
-            prev_session_tables = get_previous_session_tables(session_id, db_conn)
-            for tab in prev_session_tables:
-                print('   get_attribute_for_webpage_url_lookback:',tab)
-                prev_session = get_session_id_from_table_name(tab)
-                prev_page_ids = get_page_id_for_webpage_url(url, prev_session, db_conn)
-                for prev_page_id in prev_page_ids:
-                    sql = 'select * from {} where page_id = {} and page_content_length > 0;'.format(tab, prev_page_id)
-                    # prev_session_diff_b, new_page_b, prev_session_page_id, prev_session_table
-                    df = pd.read_sql(sql, db_conn)
-                    if len(df) == 0: 
-                        # check previous page
-                        continue
-                    # page found
-                    d_res = df.iloc[0].to_dict()
-                    assert d_res['url']    
-                    attr = get_attribute_for_webpage_id(d_res['page_id'], prev_session, attrib_name, db_conn)
-                    if not attr:
-                        continue
-                    print('   get_attribute_for_webpage_url_lookback: found attr page_id =',d_res['page_id'],tab)
-                    return page_id, attr
 
     msg = 'warning: get_attribute_for_webpage_url_lookback: attribute not found for url={} session_id={}'.format(url, session_id)
     print(msg) 

@@ -502,12 +502,13 @@ class MultiWebsiteSpider(CrawlSpider):
         #    print(e)
         #    raise CloseSpider(str(e))
 
+
 def get_previous_session_tables(session_id, db_conn):
     """ to get previous version of pages """
     #global db_conn
     tabs = get_scraping_session_tables(db_conn)
-    other_tabs = [t for t in tabs if not session_id in t]
-    assert len(other_tabs)>0
+    other_tabs = [t for t in tabs if not session_id in t and get_session_id_from_table_name(t) < session_id]
+    assert len(other_tabs)>=0
     previous_session_tables = sorted(other_tabs, reverse=True)
     return previous_session_tables
 

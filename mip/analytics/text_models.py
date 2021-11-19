@@ -267,9 +267,14 @@ def match_indicators_in_muse_page(muse_id, session_id, url, nlp, annotat_tokens_
     logger.info('match_indicators_in_muse_page {} {} {} stopwords={}'.format(muse_id, session_id, url, keep_stopwords))
     
     page_id, input_text = get_attribute_for_webpage_url_lookback(url, session_id, 'all_text', db_conn)
-    assert page_id > 0
+    if not (page_id and page_id > 0):
+        msg = "warning:match_indicators_in_muse_page museum: {} url {} not found in {}".format(muse_id, url, session_id)
+        logger.warn(msg)
+        print(msg)
+        #, msg
     #return # DEBUG
     # save page tokens only once
+    #return
     page_tokens_df = spacy_extract_tokens_page(session_id, page_id, nlp, input_text, db_conn, db_engine, insert_db=keep_stopwords)    
     
     #page_tokens_df.to_csv('tmp/debug_page_tokens_df.csv',index=False) # DEBUG
@@ -318,7 +323,7 @@ def analyse_museum_text():
     df = pd.merge(df, attr_df, on='muse_id', how='left')
     print("museum df with attributes: len", len(df))
 
-    df = df.sample(10, random_state=10) # DEBUG
+    df = df.sample(100, random_state=10) # DEBUG
     
     # set target scraping sessions
     #session_ids = sorted([get_session_id_from_table_name(x) for x in get_scraping_session_tables(db_conn)])
@@ -332,7 +337,7 @@ def analyse_museum_text():
         # scan museums in parallel (SLOW)
         params = {'session_id': session_id, 'nlp': nlp, 'ann_tokens_df': ann_tokens_df, 
                 'attrib_name': attrib_name}
-        notfound_df = parallel_dataframe_apply_wparams(df, __find_matches_in_df_parallel, params, n_cores=5)
+        notfound_df = parallel_dataframe_apply_wparams(df, __find_matches_in_df_parallel, params, n_cores=1)
 
         # add indices to table
         assert len(notfound_df) < len(df), len(notfound_df)
@@ -360,7 +365,7 @@ def __find_matches_in_df_parallel(args):
     df = args[0] # museums
     print('\n__find_matches_in_df_parallel thread={} mus={}'.format(threading.get_native_id(),len(df)))
     session_id = args[1]['session_id']
-    nlp = en_core_web_lg.load()
+    nlp = en_core_web_lg.load() # DEBUG
     ann_tokens_df = args[1]['ann_tokens_df']
     db_engine = create_alchemy_engine_posgresql()
 
@@ -381,7 +386,7 @@ def __find_matches_in_df_parallel(args):
     db_conn.close()
     db_engine.dispose()
     notfound_df = pd.DataFrame(data=urls_not_found)
-    print('\n__find_matches_in_df_parallel thread={} done'.format(threading.get_native_id()))
+    print('__find_matches_in_df_parallel thread={} done'.format(threading.get_native_id()))
     return notfound_df
     
 
