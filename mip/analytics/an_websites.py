@@ -277,6 +277,7 @@ def get_attribute_for_webpage_url(url, session_id, attrib_name, db_conn):
         return None
 
 
+
 def get_attribute_for_webpage_id(page_id, session_id, attrib_name, db_conn):
     """
     @returns attribute value (e.g. all_text) for a URL in a target scraping session;
@@ -302,6 +303,7 @@ def get_attribute_for_webpage_id(page_id, session_id, attrib_name, db_conn):
         return val
     else: 
         return None
+
 
 def get_page_id_for_webpage_url(url, session_id, db_conn):
     """
@@ -360,16 +362,13 @@ def get_attribute_for_webpage_url_lookback(url, session_id, attrib_name, db_conn
                     # page found
                     d_res = df.iloc[0].to_dict()
                     assert d_res['url']    
-                    print('   get_attribute_for_webpage_url_lookback: found page_id =',d_res['page_id'],tab)
                     attr = get_attribute_for_webpage_id(d_res['page_id'], prev_session, attrib_name, db_conn)
+                    if not attr:
+                        continue
+                    print('   get_attribute_for_webpage_url_lookback: found attr page_id =',d_res['page_id'],tab)
                     return page_id, attr
-                #else:
-                    # continue
-                #    if d_res['prev_session_page_id']:
-                #        prev_session_page_id = int(d_res['prev_session_page_id'])
-                #    else:
-                        # previous page missing, find page id using URL
-                #        main_page_ids = get_page_id_for_webpage_url(d_res['url'], session_id, db_conn)
-                #    prev_session_table = d_res['prev_session_table']
-                #    assert prev_session_page_id > 0
-                
+
+    msg = 'warning: get_attribute_for_webpage_url_lookback: attribute not found for url={} session_id={}'.format(url, session_id)
+    print(msg) 
+    logger.warn(msg)
+    return None, None
