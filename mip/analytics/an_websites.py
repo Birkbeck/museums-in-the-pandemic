@@ -167,7 +167,7 @@ def extract_text_from_websites(in_table, out_table, db_conn, target_museum_id=No
     assert in_table
     assert constants.table_suffix in out_table
     #clear_attribute_table(out_table, db_conn)
-    block_sz = 3000
+    block_sz = 10000
     offset = 0
     keep_scanning = True
     
