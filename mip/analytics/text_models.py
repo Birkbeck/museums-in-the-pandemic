@@ -337,7 +337,7 @@ def analyse_museum_text():
         # scan museums in parallel (SLOW)
         params = {'session_id': session_id, 'nlp': nlp, 'ann_tokens_df': ann_tokens_df, 
                 'attrib_name': attrib_name}
-        notfound_df = parallel_dataframe_apply_wparams(df, __find_matches_in_df_parallel, params, n_cores=1)
+        notfound_df = parallel_dataframe_apply_wparams(df, __find_matches_in_df_parallel, params, n_cores=5)
 
         # add indices to table
         assert len(notfound_df) < len(df), len(notfound_df)
