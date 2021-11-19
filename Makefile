@@ -35,7 +35,7 @@ scrape_twitter:
 
 extract_txt_fields:
 	@echo ">>> Extract text fields";
-	nohup ./run_app_server.sh ex_txt_fields > tmp/logs/nohup_${DATE}_log.txt &
+	nohup ./run_app_server.sh ex_txt_fields > tmp/logs/nohup_ex_${DATE}_log.txt &
 
 
 an_text:
