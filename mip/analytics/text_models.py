@@ -23,7 +23,7 @@ from utils import remove_empty_elem_from_list, remove_multiple_spaces_tabs, _is_
 import matplotlib.pyplot as plt
 from db.db import make_string_sql_safe
 from museums import get_museums_w_web_urls, get_museums_sample_urls, load_input_museums_wattributes
-from analytics.an_websites import get_page_id_for_webpage_url, get_attribute_for_webpage_id
+from analytics.an_websites import get_page_id_for_webpage_url, get_attribute_for_webpage_id, get_attribute_for_webpage_id_lookback
 from scrapers.scraper_websites import get_scraping_session_tables, get_session_id_from_table_name
 import sqlite3
 # load language model
@@ -265,8 +265,8 @@ def match_indicators_in_muse_page(muse_id, session_id, page_id, nlp, annotat_tok
     """
     logger.info('match_indicators_in_muse_page {} {} {} stopwords={}'.format(muse_id, session_id, page_id, keep_stopwords))
     
-    input_text = get_attribute_for_webpage_id(page_id, session_id, 'all_text', db_conn)
-
+    input_text = get_attribute_for_webpage_id_lookback(page_id, session_id, 'all_text', db_conn)
+    #return # DEBUG
     # save page tokens only once
     page_tokens_df = spacy_extract_tokens_page(session_id, page_id, nlp, input_text, db_conn, db_engine, insert_db=keep_stopwords)    
     
@@ -316,12 +316,12 @@ def analyse_museum_text():
     df = pd.merge(df, attr_df, on='muse_id', how='left')
     print("museum df with attributes: len", len(df))
 
-    #df = df.sample(3) # DEBUG
+    #df = df.sample(3, random_state=10) # DEBUG
     
     # set target scraping sessions
     #session_ids = sorted([get_session_id_from_table_name(x) for x in get_scraping_session_tables(db_conn)])
-    session_ids = ['20210304','20210404'] # DEBUG ,'20210914'
-    print('session_ids',str(session_ids))
+    session_ids = ['20210304','20210404','20210629','20210914'] # DEBUG
+    print('session_ids', str(session_ids))
     attrib_name = 'all_text'
 
     # scan sessions

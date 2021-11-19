@@ -8,7 +8,7 @@ from db.db import connect_to_postgresql_db, check_dbconnection_status, make_stri
 import pandas as pd
 from bs4 import BeautifulSoup
 from bs4.element import Comment
-from scrapers.scraper_websites import get_scraping_session_tables, get_scraping_session_stats_by_museum, get_webdump_table_name
+from scrapers.scraper_websites import get_scraping_session_tables, get_scraping_session_stats_by_museum, get_webdump_table_name, get_session_id_from_table_name
 from utils import get_url_domain
 import re
 from utils import remove_empty_elem_from_list, remove_multiple_spaces_tabs, get_soup_from_html, get_all_text_from_soup, garbage_collect
@@ -326,3 +326,38 @@ def get_page_id_for_webpage_url(url, id, session_id, attrib_name, db_conn):
         return val
     else: 
         return None
+
+
+def get_attribute_for_webpage_id_lookback(page_id, session_id, attrib_name, db_conn):
+    ''' get attribute for webpage. If attribute empty, look back to previous sessions until the page is found '''
+    ## DEBUG
+    # 20210304 745284; # page here
+    # 20210420 29599;
+    # 20210914 197;
+    #input_text1 = get_attribute_for_webpage_id_lookback(745284, '20210304', 'all_text', db_conn)
+    #input_text2 = get_attribute_for_webpage_id_lookback(29599, '20210420', 'all_text', db_conn)
+    #input_text3 = get_attribute_for_webpage_id_lookback(197, '20210914', 'all_text', db_conn)
+    
+    attr = get_attribute_for_webpage_id(page_id, session_id, attrib_name, db_conn)
+    if not attr:
+        #attr_tbl_name = get_webdump_attr_table_name(session_id)
+        prev_session_table = get_webdump_table_name(session_id)
+        prev_session_page_id = page_id
+        while True:
+            sql = 'select * from {} where page_id = {};'.format(prev_session_table, prev_session_page_id)
+            # prev_session_diff_b, new_page_b, prev_session_page_id, prev_session_table
+            df = pd.read_sql(sql, db_conn)
+            if len(df) == 0: return None
+            d_res = df.iloc[0].to_dict()
+            if d_res['new_page_b']:
+                # original page found
+                target_session = get_session_id_from_table_name(prev_session_table)
+                attr = get_attribute_for_webpage_id(prev_session_page_id, target_session, attrib_name, db_conn)
+                return attr
+            else:
+                # continue
+                prev_session_page_id = int(d_res['prev_session_page_id'])
+                prev_session_table = d_res['prev_session_table']
+                print('   get_attribute_for_webpage_id_lookback: go to:',prev_session_table,prev_session_page_id)
+    else: 
+        return attr

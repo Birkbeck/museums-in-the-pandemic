@@ -19,6 +19,7 @@ select * from twitter.twitter_accounts_not_found tanf;
 
 select count(*) from twitter.tweets_dump td where muse_id = 'mm.ace.685';
 
+
 CREATE INDEX tweets_muse_id_idx ON twitter.tweets_dump(muse_id);
 
 
@@ -43,7 +44,24 @@ select muse_id,page_id,sentence_id,example_id,indicator_code,session_id,ann_ex_t
 -- websites
 select * from websites.web_pages_dump_20210303 wpda where url ilike '%english-heritage.org%';
 
+select * from websites.web_pages_dump_20210404 wpda where url ilike '%alfordmanor%';
+select * from websites.web_pages_dump_20210914 wpda where url ilike '%alfordmanor%';
+
+select * from websites.web_pages_dump_20210914 wpda where is_start_url and url ilike '%trewithengardens.co.uk%';
+
+
+-- page debugging    
+--   20210420 29599;
+--   20210914 197;
+--   20210304 745284;
+select * from websites.web_pages_dump_20210914 wpda where is_start_url and url ilike '%trewithengardens.co.uk%';
+select * from websites.web_pages_dump_20210420 wpda where is_start_url and url ilike '%trewithengardens.co.uk%';
+select * from websites.web_pages_dump_20210304 wpda where is_start_url and url ilike '%trewithengardens.co.uk%';
+
+select * from websites.web_pages_dump_20210304_attr wpda where page_id = 745284;
+
 select count(*) from websites.web_pages_dump_20210303 wpda;
 
+select * from websites.web_pages_dump_20210304_attr wpda where page_id = 251480;
 
 -- EOF
