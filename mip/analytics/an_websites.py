@@ -11,7 +11,7 @@ from bs4.element import Comment
 from scrapers.scraper_websites import get_scraping_session_tables, get_scraping_session_stats_by_museum, get_webdump_table_name, get_session_id_from_table_name,get_previous_session_tables
 from utils import get_url_domain
 import re
-from utils import remove_empty_elem_from_list, remove_multiple_spaces_tabs, get_soup_from_html, get_all_text_from_soup, garbage_collect
+from utils import remove_empty_elem_from_list, remove_multiple_spaces_tabs, get_soup_from_html, get_all_text_from_soup, garbage_collect, parallel_dataframe_apply
 import logging
 import difflib
 import unicodedata
@@ -167,7 +167,7 @@ def extract_text_from_websites(in_table, out_table, db_conn, target_museum_id=No
     assert in_table
     assert constants.table_suffix in out_table
     #clear_attribute_table(out_table, db_conn)
-    block_sz = 10000
+    block_sz = 8000
     offset = 0
     keep_scanning = True
     
@@ -188,11 +188,11 @@ def extract_text_from_websites(in_table, out_table, db_conn, target_museum_id=No
             page_html = row['page_content']
             # extract all
             to_extract = True
-            #if 'prev_session_diff_b' in row:
-            #    new_page = row['new_page_b']
-            #    prev_session_diff_b = row['prev_session_diff_b']
-            #    if not new_page and not prev_session_diff_b:
-            #        to_extract = False
+            if 'prev_session_diff_b' in row:
+                new_page = row['new_page_b']
+                prev_session_diff_b = row['prev_session_diff_b']
+                if not new_page and not prev_session_diff_b:
+                    to_extract = False
             if to_extract and not exists_attrib_page(page_id, session_id, db_conn):
                 print('\t extracting page_id=', page_id)
                 extract_attributes_from_page_html(page_id, session_id, page_html, out_table, db_conn)
@@ -220,26 +220,34 @@ def exists_attrib_page(page_id, session_id, db_conn):
     return False
 
 
+def __extract_text_from_websites(tables):
+    print('__extract_text_from_websites')
+    db_conn2 = connect_to_postgresql_db()
+    for tab in tables['table']:
+        print('\t',tab)
+        df = get_scraping_session_stats_by_museum(tab, db_conn2)
+        #df = sample_df.merge(stats_df, how='left', left_on='mm_id', right_on='muse_id')
+        df.to_excel('tmp/analytics/websites-stats-{}.xlsx'.format(tab), index=False)
+        # prepare table
+        out_table = create_webpage_attribute_table(tab, db_conn2)
+        # extract attributes
+        extract_text_from_websites(tab, out_table, db_conn2) # DEBUG mm.musa.016
+    db_conn2.close()
+    # empty dataframe
+    return pd.DataFrame()
+
+
+
 def analyse_museum_websites():
     """ Main function analyse_museum_websites """
     # input data (museum sample)
     db_conn = connect_to_postgresql_db()
-
     logger.info("extract_text_from_websites")
 
-    # get session stats
     tables = get_scraping_session_tables(db_conn)
-    
-    for tab in tables:
-        print(tab)
-        df = get_scraping_session_stats_by_museum(tab, db_conn)
-        #df = sample_df.merge(stats_df, how='left', left_on='mm_id', right_on='muse_id')
-        df.to_excel('tmp/analytics/websites-stats-{}.xlsx'.format(tab), index=False)
-        del df
-        # prepare table
-        out_table = create_webpage_attribute_table(tab, db_conn)
-        # extract attributes
-        extract_text_from_websites(tab, out_table, db_conn) # DEBUG mm.musa.016
+    tables_df = pd.DataFrame({'table':tables})
+    # extract fields from websites (PARALLEL)
+    parallel_dataframe_apply(tables_df, __extract_text_from_websites, n_cores=6)
 
     return True
 

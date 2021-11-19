@@ -12,6 +12,7 @@
 
 
 
+
         {
             "name": "scrape_websites",
             "type": "python",
@@ -19,6 +20,14 @@
             "program": "mip/app.py",
             "console": "integratedTerminal",
             "args": ["scrape_websites"]
+        },
+        {
+            "name": "ex_txt_fields",
+            "type": "python",
+            "request": "launch",
+            "program": "mip/app.py",
+            "console": "integratedTerminal",
+            "args": ["ex_txt_fields"]
         },
         {
             "name": "an_text",
