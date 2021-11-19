@@ -58,10 +58,19 @@ select * from websites.web_pages_dump_20210914 wpda where is_start_url and url i
 select * from websites.web_pages_dump_20210420 wpda where is_start_url and url ilike '%trewithengardens.co.uk%';
 select * from websites.web_pages_dump_20210304 wpda where is_start_url and url ilike '%trewithengardens.co.uk%';
 
+
+select * from websites.web_pages_dump_20210914 wpd where url ilike '%www.nationaltrust.org.uk/hinton-ampner';
+
 select * from websites.web_pages_dump_20210304_attr wpda where page_id = 745284;
 
 select count(*) from websites.web_pages_dump_20210303 wpda;
 
+select count(prev_session_diff_b, new_page_b) from websites.web_pages_dump_20210304 wpda;
+
 select * from websites.web_pages_dump_20210304_attr wpda where page_id = 251480;
+
+select * from websites.web_pages_dump_20210304_attr wpda where page_id = 251480;
+
+select * from websites.web_pages_dump_20210901 wpda where page_id = 23250;
 
 -- EOF
