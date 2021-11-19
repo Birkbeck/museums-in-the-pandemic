@@ -372,6 +372,7 @@ def __find_matches_in_df_parallel(args):
     urls_not_found = []
     db_conn = connect_to_postgresql_db()
     i = 0
+    print('input museums n =',len(df))
     # scan museums
     for index, row in df.iterrows():
         i += 1
