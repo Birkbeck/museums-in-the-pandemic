@@ -844,7 +844,7 @@ def make_corpus_sqlite():
         df.to_sql('social_media_msg', local_engine, index=False, if_exists='append', method='multi')
         del df
 
-    if True:
+    if False:
         select_sql = "select muse_id as museum_id, account as account, tweet_text as msg_text, tw_ts as msg_time from twitter.tweets_dump"
         scan_table_limit_offset(db_conn, select_sql, 50000, _save_in_local_db_twitter)
         
@@ -859,9 +859,39 @@ def make_corpus_sqlite():
             local_conn.execute(s)
 
     # websites
-    # TODO
+    mdf = get_museums_w_web_urls()
+    session_ids = sorted([get_session_id_from_table_name(x) for x in get_scraping_session_tables(db_conn)])
+    websites_rows = []
+    #mdf = mdf.sample(10)
+    #session_ids = session_ids[0:2]
 
-    print("Social media DB ready:",db_fn)
+    for idx, row in mdf.iterrows():
+        #print(row['url'])
+        for session_id in session_ids:
+            mus_attrs = { 'museum_id': row['muse_id'], 'museum_name':row['musname'] }
+            page_id, text_attr = get_attribute_for_webpage_url_lookback(row['url'], session_id, 'all_text', db_conn)
+            mus_attrs['session_id'] = session_id
+            mus_attrs['page_id'] = page_id
+            mus_attrs['url'] = row['url']
+            mus_attrs['page_text'] = text_attr
+            if text_attr:
+                mus_attrs['page_text_len'] = len(text_attr)
+            else: 
+                mus_attrs['page_text_len'] = 0
+            #for k,v in mus_attrs.items():
+            #    mus_attrs[k] = [v]
+            websites_rows.append(mus_attrs)
+            del mus_attrs
+    # write websites to DB
+    websites_df = pd.DataFrame(websites_rows)
+    print('websites_df N =',len(websites_df))
+    websites_df.to_sql('websites_text', local_engine, index=False, if_exists='replace', method='multi')
+    sql_commands = [
+        "CREATE INDEX web_text_idx ON websites_text(page_text);",
+        "CREATE INDEX web_session_idx ON websites_text(session_id);"]
+    for s in sql_commands:
+        local_conn.execute(s)
+    print("Sqlite DB ready:",db_fn)
 
 
 def make_social_media_corpus():
