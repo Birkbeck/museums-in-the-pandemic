@@ -25,7 +25,7 @@ import matplotlib.pyplot as plt
 from db.db import make_string_sql_safe
 from museums import get_museums_w_web_urls, get_museums_sample_urls, load_input_museums_wattributes
 from analytics.an_websites import get_page_id_for_webpage_url, get_attribute_for_webpage_id, get_attribute_for_webpage_url_lookback
-from scrapers.scraper_websites import get_scraping_session_tables, get_session_id_from_table_name
+from scrapers.scraper_websites import get_scraping_session_tables, get_session_id_from_table_name, check_redirections_before_scraping
 import sqlite3
 # load language model
 #import en_core_web_sm # small
@@ -265,17 +265,17 @@ def match_indicators_in_muse_page(muse_id, session_id, url, nlp, annotat_tokens_
     Main function to perform matching for a target museum
     """
     logger.info('match_indicators_in_muse_page {} {} {} stopwords={}'.format(muse_id, session_id, url, keep_stopwords))
-    #TODO: DEBUG 'warning:match_indicators_in_muse_page' 
+    
     page_id, input_text = get_attribute_for_webpage_url_lookback(url, session_id, 'all_text', db_conn)
     if not (page_id and page_id > 0):
-        msg = "warning:match_indicators_in_muse_page museum: {} url {} not found in {}".format(muse_id, url, session_id)
+        msg = "warning:match_indicators_in_muse_page museum: {} {} {} not found".format(muse_id, session_id, url)
         logger.warn(msg)
         print(msg)
         return False
-        #, msg
+
     #return # DEBUG
     # save page tokens only once
-    #return
+
     page_tokens_df = spacy_extract_tokens_page(session_id, page_id, nlp, input_text, db_conn, db_engine, insert_db=keep_stopwords)    
     
     #page_tokens_df.to_csv('tmp/debug_page_tokens_df.csv',index=False) # DEBUG
@@ -296,6 +296,19 @@ def match_indicators_in_muse_page(muse_id, session_id, url, nlp, annotat_tokens_
 
     return True
 
+
+def add_index_to_match_table(session_id, db_conn):
+    print('add_index_to_match_table',session_id)
+    idx_sql = """
+            ALTER TABLE {0}  
+                DROP CONSTRAINT IF EXISTS {1}_pkey;
+            ALTER TABLE {0} 
+                ADD PRIMARY KEY (sentence_id, example_id, page_id, keep_stopwords);""".format(
+                                _get_museum_indic_match_table_name(session_id),
+                                _get_museum_indic_match_table_name(session_id, False))
+    c = db_conn.cursor()
+    c.execute(idx_sql)
+    db_conn.commit()
 
 def analyse_museum_text():
     """
@@ -326,7 +339,7 @@ def analyse_museum_text():
     df = pd.merge(df, attr_df, on='muse_id', how='left')
     print("museum df with attributes: len", len(df))
 
-    df = df.sample(100, random_state=10) # DEBUG
+    df = df.sample(500, random_state=10) # DEBUG
     
     # set target scraping sessions
     #session_ids = sorted([get_session_id_from_table_name(x) for x in get_scraping_session_tables(db_conn)])
@@ -336,25 +349,15 @@ def analyse_museum_text():
 
     # scan sessions
     for session_id in session_ids:
-        logger.info('\n\n>\t\t\t\tProcessing session ' + session_id)
+        logger.info('\n\n>\t\tProcessing session ' + session_id)
         # scan museums in parallel (SLOW)
         params = {'session_id': session_id, 'nlp': nlp, 'ann_tokens_df': ann_tokens_df, 
                 'attrib_name': attrib_name}
-        notfound_df = parallel_dataframe_apply_wparams(df, __find_matches_in_df_parallel, params, n_cores=5)
-
-        # add indices to table
+        n_cores = 5 # debug
+        notfound_df = parallel_dataframe_apply_wparams(df, __find_matches_in_df_parallel, params, n_cores=n_cores)
         assert len(notfound_df) < len(df), len(notfound_df)
-        idx_sql = """
-            ALTER TABLE {0}  
-                DROP CONSTRAINT IF EXISTS {1}_pkey;
-            ALTER TABLE {0} 
-                ADD PRIMARY KEY (sentence_id, example_id, page_id, keep_stopwords);""".format(
-                                _get_museum_indic_match_table_name(session_id),
-                                _get_museum_indic_match_table_name(session_id, False))
-        c = db_conn.cursor()
-        c.execute(idx_sql)
-        db_conn.commit()
-        
+        # add indices to table
+        add_index_to_match_table(session_id, db_conn)
         # write URLs not found to DB
         notfound_table = _get_museum_indic_match_table_name(session_id, False)+'_notfound'
         notfound_df.to_sql(notfound_table, db_engine, schema='analytics', index=False, if_exists='replace', method='multi')
@@ -377,11 +380,13 @@ def __find_matches_in_df_parallel(args):
     db_conn = connect_to_postgresql_db()
     i = 0
     print('input museums n =',len(df))
+    
     # scan museums
     for index, row in df.iterrows():
         i += 1
         muse_id = row['muse_id']
         msg = ">>> Processing museum {} of {}, muse_id={}, session={}".format(i, len(df), muse_id, session_id)
+        if row['url'] == 'no_resource': continue
         logger.info(msg)
         print(msg)
         found = match_indicators_in_muse_page(muse_id, session_id, row['url'], nlp, ann_tokens_df, True, db_conn, db_engine)

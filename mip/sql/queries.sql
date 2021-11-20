@@ -50,7 +50,7 @@ select * from websites.web_pages_dump_20210914 wpda where url ilike '%alfordmano
 select * from websites.web_pages_dump_20210914 wpda where is_start_url and url ilike '%trewithengardens.co.uk%';
 
 
--- page debugging    
+-- debugging of the page logic     
 --   20210420 29599;
 --   20210914 197;
 --   20210304 745284;
@@ -62,6 +62,22 @@ select * from websites.web_pages_dump_20210304 wpda where is_start_url and url i
 select * from websites.web_pages_dump_20210914 wpd where url ilike '%www.nationaltrust.org.uk/hinton-ampner';
 
 select * from websites.web_pages_dump_20211011 wpd where url ilike '%spodemuseumtrust.org%';
+select * from websites.web_pages_dump_20210521 wpd where url ilike '%www.jjfox.co.uk/heritage';
+
+
+select * from websites.web_pages_dump_20210304 wpd where url ilike 'https://www.lincolnshirelife.co.uk/posts/view/st-katherines%';
+
+-- https://www.visitherefordshire.co.uk/thedms.aspx?dms=3&venue=1400410
+-- mm.ace.1186
+select * from websites.web_pages_dump_20210521 wpd where url ilike 'https://www.visitherefordshire.co.uk%';
+
+-- https://www.dunollie.org/1745-house
+select * from websites.web_pages_dump_20210521 wpd where url ilike 'https://www.dunollie.org/';
+
+select * from websites.web_pages_dump_20210521 wpd where url ilike 'https://www.sheppyscider.com/';
+
+
+select * from websites.web_pages_dump_20210521 wpd where muse_id = 'mm.ace.1186';
 
 select * from websites.web_pages_dump_20210304_attr wpda where page_id = 745284;
 

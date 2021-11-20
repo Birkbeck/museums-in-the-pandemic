@@ -8,7 +8,7 @@ from db.db import connect_to_postgresql_db, check_dbconnection_status, make_stri
 import pandas as pd
 from bs4 import BeautifulSoup
 from bs4.element import Comment
-from scrapers.scraper_websites import get_scraping_session_tables, get_scraping_session_stats_by_museum, get_webdump_table_name, get_session_id_from_table_name,get_previous_session_tables
+from scrapers.scraper_websites import get_scraping_session_tables, get_scraping_session_stats_by_museum, get_webdump_table_name, get_session_id_from_table_name,get_previous_session_tables, check_for_url_redirection
 from utils import get_url_domain
 import re
 from utils import remove_empty_elem_from_list, remove_multiple_spaces_tabs, get_soup_from_html, get_all_text_from_soup, garbage_collect, parallel_dataframe_apply
@@ -314,8 +314,21 @@ def get_page_id_for_webpage_url(url, session_id, db_conn):
     assert session_id
     page_tbl_name = get_webdump_table_name(session_id)
     
+    # generate variants 
     url_variants = []
+    redirected_url = check_for_url_redirection(url, True, db_conn)
+    if redirected_url != url:
+        url_variants.append(redirected_url)    
     url_variants.append(url)
+
+    # fix for URL from google results
+    google_text_syntax = '#:~:text'
+    if google_text_syntax in url:
+        url2 = url.split(google_text_syntax)[0]
+        assert url2
+        url_variants.append(url2)
+        url = url2
+
     if url[-1] == '/':
         url_variants.append(url[:-1])
         url_variants.append(url + 'index.html')
@@ -354,11 +367,14 @@ def get_attribute_for_webpage_url_lookback(url, session_id, attrib_name, db_conn
     #    attr = get_attribute_for_webpage_id(page_id, session_id, attrib_name, db_conn)
     #    if attr:
     #        return page_id, attr
-        
-    # scan all sessions from current one back
+    # DEBUG     
     #get_previous_session_tables('20210601', db_conn)
     #get_previous_session_tables('20210401', db_conn)
     #get_previous_session_tables('20210901', db_conn)
+    #res111 = get_page_id_for_webpage_url("https://www.lincolnshirelife.co.uk/posts/view/st-katherines-900-years-of-history#:~:text=St%20Katherine's%20is%20housed%20in,wealth%20of%20stories%20to%20tell.", session_id, db_conn)
+    #res112 = get_page_id_for_webpage_url("https://www.lincolnshirelife.co.uk/posts/view/st-katherines-900-years-of-history#:~:text=St%20Katherine's%20is%20housed%20in,wealth%20of%20stories%20to%20tell.", session_id, db_conn)
+
+    # scan all sessions from current one back
     session_tables = get_previous_session_tables(session_id, db_conn)
     session_tables.insert(0, get_webdump_table_name(session_id))
     
