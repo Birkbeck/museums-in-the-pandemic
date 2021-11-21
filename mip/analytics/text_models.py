@@ -339,7 +339,7 @@ def analyse_museum_text():
     df = pd.merge(df, attr_df, on='muse_id', how='left')
     print("museum df with attributes: len", len(df))
 
-    df = df.sample(500, random_state=10) # DEBUG
+    #df = df.sample(500, random_state=10) # DEBUG
     
     # set target scraping sessions
     #session_ids = sorted([get_session_id_from_table_name(x) for x in get_scraping_session_tables(db_conn)])
