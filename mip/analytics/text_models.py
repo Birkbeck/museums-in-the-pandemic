@@ -863,14 +863,14 @@ def make_corpus_sqlite():
     mdf = get_museums_w_web_urls()
     session_ids = sorted([get_session_id_from_table_name(x) for x in get_scraping_session_tables(db_conn)])
     session_ids = ['20210304','20210404','20210629','20210914'] # DEBUG
-    mdf = mdf.sample(500) # DEBUG
+    #mdf = mdf.sample(500) # DEBUG
     #session_ids = session_ids[3:5] # DEBUG
 
-    for s in ['drop table websites_sentences_text;', 'drop table websites_text;']:
+    for s in ['drop table if exists websites_sentences_text;', 'drop table if exists websites_text;']:
         local_conn.execute(s)
 
     for session_id in session_ids:
-        logger.info('Extracting session',session_id)
+        logger.info('Extracting session: ' + session_id)
         websites_rows = []
         websites_sentences = []
         for idx, row in mdf.iterrows():
@@ -907,9 +907,14 @@ def make_corpus_sqlite():
         websites_df = pd.DataFrame(websites_rows)
         websites_sent_df = pd.DataFrame(websites_sentences)
         print('websites_df N =',len(websites_df), ' sentences=',len(websites_sent_df))
-        try: 
-            websites_df.to_sql('websites_text', local_engine, index=False, if_exists='replace', method='multi')
-            websites_sent_df.to_sql('websites_sentences_text', local_engine, index=False, if_exists='replace', method='multi')
+        try:
+            chunks = 10
+            for df in np.array_split(websites_df, chunks):
+                print('websites_text inserting chunk rows =',len(df))
+                df.to_sql('websites_text', local_engine, index=False, if_exists='append', method='multi')
+            for df in np.array_split(websites_sent_df, chunks*20):
+                print('websites_sentences_text inserting chunk rows =',len(df))
+                df.to_sql('websites_sentences_text', local_engine, index=False, if_exists='append', method='multi')
         except Exception as e:
             logger.error(e)
             raise e
