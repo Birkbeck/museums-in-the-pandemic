@@ -14,10 +14,12 @@ import matplotlib.pyplot as plt
 from matplotlib import pyplot as plt
 import seaborn as sns
 import sqlite3
+from datetime import datetime
 import nltk
 from ipywidgets import widgets
 from ipywidgets import interact, interactive, fixed, interact_manual
 from IPython.core.display import display, HTML
+
 # set up NLTK
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
@@ -45,6 +47,7 @@ def filter_search_string_for_regex(text, case_sensitive):
 def run_search(text, case_sensitive, search_facebook, search_twitter,
   search_websites):
   assert len(text) > 3, 'search string too short!'
+  assert search_facebook or search_twitter or search_websites, 'select at least one platform'
   where = ''
   platforms = []
   if search_websites: platforms.append('website')
@@ -56,13 +59,39 @@ def run_search(text, case_sensitive, search_facebook, search_twitter,
     sql = "select * from social_media_msg where platform in ({}) and msg_text like '%{}%';".format(where, 
       filter_search_string_for_sql(text))
 
-    print(sql)
+    #print(sql)
     df = pd.read_sql(sql, db_conn)
     print('N results:',len(df))
   
   return df
 
-def generate_html_matches(df, search_string, case_sensitive, limit=10):
+def get_before_after_strings(s, regex, context_size_words):
+  #print('get_before_after_strings:', s)
+  mm = re.finditer(regex, s)
+  sep = ' '
+  for m in mm:
+      beg, end = m.span()
+      bef = s[0:beg]
+      aft = s[end+1:-1]
+      bef_words = bef.split(sep)
+      #print(bef_words)
+      if len(bef_words) > context_size_words:
+        bef_words = bef_words[-context_size_words:]
+      aft_words = aft.split(sep)
+      if len(aft_words) > context_size_words:
+        aft_words = aft_words[0:context_size_words]
+      assert len(bef_words) <= context_size_words
+      assert len(aft_words) <= context_size_words
+      #print(bef_words, aft_words)
+      return bef_words, m.group(), aft_words
+
+def get_now_string():
+  now = datetime.now()
+  current_time = now.isoformat()
+  current_time = now.strftime("%Y%m%d-%H%M%S")
+  return current_time
+
+def generate_html_matches(df, search_string, case_sensitive, context_size_words, max_results):
   """
   <tr>
     <td>Alfreds Futterkiste</td>
@@ -75,31 +104,49 @@ def generate_html_matches(df, search_string, case_sensitive, limit=10):
     <td>Mexico</td>
   </tr>
   """
-  # , th, td
-  h = """<style>
-  table, tr, td {
+  css = """<style>
+  table, tr, th, td {
     margin: 3px;
     border: solid 1px gray;
-    font-size: 1em;
-    font-family: sans-serif;  
+    font-size: .9em;
+    border-collapse: collapse;
+    font-family: sans-serif;
+    vertical-align: top;
     }
+  .before_col { text-align: right; }
   strong { background-color: blue; color: white; }
   </style>"""
   j = 0
+  results_page_d = []
   search_regex = filter_search_string_for_regex(search_string, case_sensitive)
   print("search_regex:",search_regex)
+  
   for i, r in df.iterrows():
     j += 1
-    if j > limit: break
-    matches = re.findall(search_regex, r['msg_text'], re.MULTILINE)
-    html_m = "<tr><td>{}</td><td>{}</td><td>{}</td></tr>".format(r['museum_id'],r['msg_text'],r['platform'])
-    for m in matches:
-      repl_str = '<strong>{}</strong>'.format(m)
-      html_m = html_m.replace(m, repl_str)
-    h += html_m
+    bef_words, match_text, aft_words = get_before_after_strings(r['msg_text'], search_regex, context_size_words)
+    results_page_d.append({'res':j, 'museum_id':r['museum_id'], 
+      'before':' '.join(bef_words), 'match': match_text,
+      'after':' '.join(aft_words), 'platform':r['platform'] })
+  results_page_df = pd.DataFrame(results_page_d)
 
-  h = "<table>" + h + "</table>"
-  return h
+  header = "<tr>" + ''.join(["<th>{}</th>".format(x) for x in results_page_df.columns]) + "</tr>"
+  table_rows_h = ''
+  j = 0
+  for idx, row in results_page_df.iterrows():
+    j += 1
+    if j > max_results: break
+    #for m in mm:
+    #repl_str = '<strong>{}</strong>'.format(match_text)
+    #html_m = html_m.replace(match_text, repl_str)
+    row_h = ''
+    for c in results_page_df.columns:
+      css_class = ''
+      if 'before' in c:
+        css_class='before_col'
+      row_h += '<td class="{}">{}</td>'.format(css_class, row[c])
+    table_rows_h += "<tr>{}</tr>".format(row_h)
+  h = css + """<table>""" + header + table_rows_h + "</table>"
+  return h, results_page_df
 
 def filter_tokens(tokens):
   filt_tokens = [w.strip() for w in tokens]

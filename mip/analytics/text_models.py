@@ -829,6 +829,7 @@ def make_corpus_sqlite():
     db_fn, local_engine = create_alchemy_engine_sqlite_corpus()
     local_conn = local_engine.connect()
     db_conn = connect_to_postgresql_db()
+    nlp = en_core_web_lg.load()
 
     def _save_in_local_db_twitter(df):
         #print("_save_in_local_db", len(df))
@@ -861,14 +862,19 @@ def make_corpus_sqlite():
     # websites
     mdf = get_museums_w_web_urls()
     session_ids = sorted([get_session_id_from_table_name(x) for x in get_scraping_session_tables(db_conn)])
-    websites_rows = []
-    #mdf = mdf.sample(10)
-    #session_ids = session_ids[0:2]
+    session_ids = ['20210304','20210404','20210629','20210914'] # DEBUG
+    mdf = mdf.sample(500) # DEBUG
+    #session_ids = session_ids[3:5] # DEBUG
 
-    for idx, row in mdf.iterrows():
-        #print(row['url'])
-        for session_id in session_ids:
-            mus_attrs = { 'museum_id': row['muse_id'], 'museum_name':row['musname'] }
+    for s in ['drop table websites_sentences_text;', 'drop table websites_text;']:
+        local_conn.execute(s)
+
+    for session_id in session_ids:
+        logger.info('Extracting session',session_id)
+        websites_rows = []
+        websites_sentences = []
+        for idx, row in mdf.iterrows():
+            mus_attrs = { 'museum_id': row['muse_id'], 'museum_name': row['musname'] }
             page_id, text_attr = get_attribute_for_webpage_url_lookback(row['url'], session_id, 'all_text', db_conn)
             mus_attrs['session_id'] = session_id
             mus_attrs['page_id'] = page_id
@@ -878,17 +884,41 @@ def make_corpus_sqlite():
                 mus_attrs['page_text_len'] = len(text_attr)
             else: 
                 mus_attrs['page_text_len'] = 0
-            #for k,v in mus_attrs.items():
-            #    mus_attrs[k] = [v]
+
+            if text_attr:
+                text_sentences = nlp(text_attr)
+                sentence_id = 0
+                # segment sentences
+                for sentence in text_sentences.sents:
+                    sentence_id += 1
+                    # for each sentence
+                    snt_text = sentence.text
+                    sent_attrs = mus_attrs.copy()
+                    del sent_attrs['page_text']
+                    del sent_attrs['page_text_len']
+                    sent_attrs['sentence_id'] = "{}_{:07d}".format(page_id, sentence_id)
+                    sent_attrs['sentence_text'] = snt_text
+                    websites_sentences.append(sent_attrs)
+            
             websites_rows.append(mus_attrs)
             del mus_attrs
-    # write websites to DB
-    websites_df = pd.DataFrame(websites_rows)
-    print('websites_df N =',len(websites_df))
-    websites_df.to_sql('websites_text', local_engine, index=False, if_exists='replace', method='multi')
+
+        # write websites to DB
+        websites_df = pd.DataFrame(websites_rows)
+        websites_sent_df = pd.DataFrame(websites_sentences)
+        print('websites_df N =',len(websites_df), ' sentences=',len(websites_sent_df))
+        try: 
+            websites_df.to_sql('websites_text', local_engine, index=False, if_exists='replace', method='multi')
+            websites_sent_df.to_sql('websites_sentences_text', local_engine, index=False, if_exists='replace', method='multi')
+        except Exception as e:
+            logger.error(e)
+            raise e
+        # end for session
     sql_commands = [
         "CREATE INDEX web_text_idx ON websites_text(page_text);",
-        "CREATE INDEX web_session_idx ON websites_text(session_id);"]
+        "CREATE INDEX web_session_idx ON websites_text(session_id);",
+        "CREATE INDEX web_text_sent_idx ON websites_sentences_text(sentence_text);",
+        "CREATE INDEX web_session_sent_idx ON websites_sentences_text(session_id);"]
     for s in sql_commands:
         local_conn.execute(s)
     print("Sqlite DB ready:",db_fn)
