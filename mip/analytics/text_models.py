@@ -862,7 +862,7 @@ def make_corpus_sqlite():
     # websites
     mdf = get_museums_w_web_urls()
     session_ids = sorted([get_session_id_from_table_name(x) for x in get_scraping_session_tables(db_conn)])
-    session_ids = ['20210304','20210404','20210629','20210914'] # DEBUG
+    session_ids = ['20210404','20210914'] # DEBUG '20210304','20210629',
     #mdf = mdf.sample(500) # DEBUG
     #session_ids = session_ids[3:5] # DEBUG
 
