@@ -283,7 +283,7 @@ def get_attribute_for_webpage_id(page_id, session_id, attrib_name, db_conn):
     @returns attribute value (e.g. all_text) for a URL in a target scraping session;
         None if URL or attribute does not exist 
     """
-    print("get_attribute_for_webpage_id", page_id)
+    #print("get_attribute_for_webpage_id", page_id)
     page_tbl_name = get_webdump_table_name(session_id)
     attr_tbl_name = get_webdump_attr_table_name(session_id)
     #if page_id==60967:
@@ -379,7 +379,7 @@ def get_attribute_for_webpage_url_lookback(url, session_id, attrib_name, db_conn
     session_tables.insert(0, get_webdump_table_name(session_id))
     
     for tab in session_tables:
-        print('   get_attribute_for_webpage_url_lookback:',tab)
+        #print('   get_attribute_for_webpage_url_lookback:',tab)
         prev_session = get_session_id_from_table_name(tab)
         page_ids = get_page_id_for_webpage_url(url, prev_session, db_conn)
         for page_id in page_ids:
@@ -395,7 +395,7 @@ def get_attribute_for_webpage_url_lookback(url, session_id, attrib_name, db_conn
             attr = get_attribute_for_webpage_id(d_res['page_id'], prev_session, attrib_name, db_conn)
             if not attr:
                 continue
-            print('   get_attribute_for_webpage_url_lookback: found attr page_id =',d_res['page_id'],tab)
+            #print('   get_attribute_for_webpage_url_lookback: found attr page_id =',d_res['page_id'],tab)
             return page_id, attr
 
     msg = 'warning: get_attribute_for_webpage_url_lookback: attribute not found for url={} session_id={}'.format(url, session_id)

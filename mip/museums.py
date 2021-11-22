@@ -10,7 +10,7 @@ from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
 from tldextract import extract
 from utils import get_url_domain, get_url_domain_with_search
-
+import numpy as np
 import logging
 logger = logging.getLogger(__name__)
 
@@ -391,6 +391,19 @@ def generate_derived_attributes_muse_df(df):
     #print(df.sample(10))
     return df
 
+def get_extra_museum_attributes(df):
+    """ Derive museum attributes """
+    df['governance_simpl'] = df['governance'].str.split(':').str[0].str.lower()
+    df['subject_matter_simpl'] = df['subject_matter'].str.split(':').str[0]
+    df['country'] = df['admin_area'].str.split('/').str[1]
+    df['region'] = df['admin_area'].str.split('/').str[2]
+    df['region'] = np.where(df['country'] == 'England', df['region'], df['country'])
+    df['region'] = df['region'].str.replace('\(English Region\)','')
+    print(df['governance_simpl'].value_counts())
+    print(df['country'].value_counts())
+    print(df['region'].value_counts())
+    print(df['subject_matter_simpl'].value_counts())
+    return df
 
 def generate_stratified_museum_sample():
     """
@@ -693,7 +706,6 @@ def fuzzy_string_match(a, b):
     # https://towardsdatascience.com/fuzzy-string-matching-in-python-68f240d910fe
 
 
-    
 def generate_combined_dataframe():
     print("generate_combined_dataframe")
     scrapetarget=[]
