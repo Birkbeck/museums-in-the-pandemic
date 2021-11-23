@@ -48,11 +48,13 @@ def filter_search_string_for_regex(text, case_sensitive):
 def run_search(text, case_sensitive, search_facebook, search_twitter,
   search_websites, search_website_sentences):
   assert len(text) > 3, 'search string too short!'
-  assert search_facebook or search_twitter or search_websites, 'select at least one platform'
+  assert search_facebook or search_twitter or search_websites or search_website_sentences, 'select at least one platform'
   if search_websites and search_website_sentences:
     raise Exception('select either search_websites or search_website_sentences, not both')
   where = ''
   platforms = []
+  web_df = pd.DataFrame()
+  soc_df = pd.DataFrame()
   # search websites
   if search_websites:
     sql = "select * from websites_text where page_text like '%{}%';".format(filter_search_string_for_sql(text))
@@ -68,7 +70,7 @@ def run_search(text, case_sensitive, search_facebook, search_twitter,
     n_u_museums = web_df.museum_id.nunique()
     web_df['platform'] = 'website_sentences'
     web_df['session_time'] = web_df['session_id'].apply(sessionid_to_time)
-    print('Website sentences: {} matches found. Unique museums: {} - N sessions: {}'.format(len(web_df), n_u_museums, web_df.session_id.nunique()))
+    print('WEBSITE sentences: {} matches found. N sessions: {}. Unique museums: {}'.format(len(web_df), web_df.session_id.nunique(), n_u_museums))
   
   # search social media
   if search_facebook or search_twitter:
@@ -80,7 +82,8 @@ def run_search(text, case_sensitive, search_facebook, search_twitter,
     
     soc_df = pd.read_sql(sql, db_conn)
     n_u_museums = soc_df.museum_id.nunique()
-    print('Social media:',len(soc_df),'matches found. Unique museums:',n_u_museums)
+    for pname, subdf in soc_df.groupby('platform'):
+      print('{}: {} matches found. Unique museums: {}'.format(pname.upper(), len(subdf), subdf.museum_id.nunique()))
 
   df = merge_results(web_df, soc_df)
   return df
@@ -146,8 +149,13 @@ def merge_results(web_df, soc_df):
       web_df['msg_time'] = web_df['session_time']
   
   df = pd.concat([web_df,soc_df], axis=0, ignore_index=True)
-  #print(df)
   return df
+
+def msg_time_to_string(t):
+  if not isinstance(t, str):
+    t = str(t)
+  res = t[0:10]
+  return res
 
 def generate_html_matches(res_df, search_string, case_sensitive, context_size_words, max_results):
   """
@@ -162,19 +170,6 @@ def generate_html_matches(res_df, search_string, case_sensitive, context_size_wo
     <td>Mexico</td>
   </tr>
   """
-  css = """<style>
-  table, tr, th, td {
-    margin: 3px;
-    border: solid 1px gray;
-    font-size: .9em;
-    border-collapse: collapse;
-    font-family: sans-serif;
-    vertical-align: top;
-  }
-  .before_col { text-align: right; }
-  .match_col { font-weight: bold; color: blue; }
-  strong { background-color: blue; color: white; }
-  </style>"""
   # ==== generate results ====
   results_page_d = []
   search_regex = filter_search_string_for_regex(search_string, case_sensitive)
@@ -188,17 +183,44 @@ def generate_html_matches(res_df, search_string, case_sensitive, context_size_wo
       assert len(msg_txt) > 0
       bef_words, match_text, aft_words = get_before_after_strings(msg_txt, search_regex, context_size_words)
       if match_text is None: continue 
-      results_page_d.append({'res':j, 'museum_id':r['museum_id'], 
-        'before':' '.join(bef_words), 'match': match_text, 'msg_time':r.msg_time,
+      if 'account' not in r:
+        r['account'] = ''
+      results_page_d.append({'res':j, 'museum_id':r['museum_id'], 'account': r['account'],
+        'before':' '.join(bef_words), 'match': match_text, 'msg_time':msg_time_to_string(r.msg_time), #.str.slice(0,10)
         'after':' '.join(aft_words), 'platform':r['platform'] })
   results_page_df = pd.DataFrame(results_page_d)
+  # sort results
+  results_page_df = results_page_df.sort_values(['msg_time','museum_id'],ascending=False)
 
   # ==== generate HTML from results ====
-  columns_table_html = ['res','museum_id','before','match','after','msg_time']
-  header = "<tr>" + ''.join(["<th>{}</th>".format(x) for x in columns_table_html]) + "</tr>"
+  css = """<style>
+    table, tr, th, td {
+      margin: 3px;
+      border: solid 1px gray;
+      font-size: .9em;
+      border-collapse: collapse;
+      font-family: sans-serif;
+      vertical-align: top;
+    }
+    .before_col { text-align: right; }
+    .match_col { font-weight: bold; color: blue; }
+    strong { background-color: blue; color: white; }
+    </style>"""
+  
+  columns_table_html_web = ['res','museum_id','before','match','after','msg_time']
+  columns_table_html_social = ['res','museum_id','account','before','match','after','msg_time']
+  
+  # loop over website, facebook, twitter
   h = css
   for plat_name, subdf in results_page_df.groupby('platform'):
     j = 0
+    # select columns
+    if plat_name in ["twitter",'facebook']: 
+      columns_table_html = columns_table_html_social
+    else: columns_table_html = columns_table_html_web
+    # header
+    header = "<tr>" + ''.join(["<th>{}</th>".format(x) for x in columns_table_html]) + "</tr>"
+    # rows
     table_rows_h = ''
     for idx, row in subdf.iterrows():
       j += 1
@@ -212,7 +234,7 @@ def generate_html_matches(res_df, search_string, case_sensitive, context_size_wo
           css_class='match_col'
         row_h += '<td class="{}">{}</td>'.format(css_class, row[c])
       table_rows_h += "<tr>{}</tr>".format(row_h)
-    h += "<h3>{}</h3><table>{}{}</table>".format(plat_name, header, table_rows_h)
+    h += "<h3>{} (first {})</h3><table>{}{}</table>".format(plat_name, max_results, header, table_rows_h)
   return h, results_page_df
 
 def filter_tokens(tokens):
@@ -220,6 +242,16 @@ def filter_tokens(tokens):
   filt_tokens = [w for w in filt_tokens if not w.lower() in stop_words]
   filt_tokens = [w for w in filt_tokens if len(w)>1]
   return filt_tokens
+
+def generate_derived_attributes_muse_df(df):
+    print("generate_derived_attributes_muse_df")
+    df['governance_simpl'] = df['governance'].str.split(':').str[0].str.lower()
+    df['subject_matter_simpl'] = df['subject_matter'].str.split(':').str[0]
+    df['country'] = df['admin_area'].str.split('/').str[1]
+    df['region'] = df['admin_area'].str.split('/').str[2]
+    df['region'] = np.where(df['country'] == 'England', df['region'], df['country'])
+    df['region'] = df['region'].str.replace('\(English Region\)','')
+    return df
 
 def clean_text(txt):
   """Remove links"""
@@ -229,12 +261,22 @@ def clean_text(txt):
   #print("2",clean_txt)
   return clean_txt
 
+def load_museum_attr():
+  fn = 'museums_wattributes-2020-02-23.tsv'
+  df = pd.read_csv(fn, sep='\t')
+  #print(df.columns)
+    # remove closed museums
+  df = df.rename(columns={'muse_id':'museum_id'})
+  df = df[df.closing_date.str.lower() == 'still open']
+  df = generate_derived_attributes_muse_df(df)
+  #print(df.columns)
+  return df
+
 def an_results(df, search_string, case_sensitive, context_size):
   assert context_size > 0 and context_size <= 10, "context_size is too big/small" 
   assert len(search_string) > 1, search_string
-  print('N results: ',len(df))
-  print('N museums: ',df.museum_id.nunique())
-  print('Platforms:\n',df.platform.value_counts())
+  print('N results: {} • N unique museums: {}'.format(len(df),df.museum_id.nunique()))
+  print(df.platform.value_counts().to_frame('n_results'))
   
   search_regex = filter_search_string_for_regex(search_string, case_sensitive)
   before_tokens = []
@@ -254,12 +296,55 @@ def an_results(df, search_string, case_sensitive, context_size):
   
   before_tokens = filter_tokens(before_tokens)
   after_tokens = filter_tokens(after_tokens)
-  print('before\n\n')
-  print(pd.Series(before_tokens).value_counts())
-  print('after\n\n')
-  print(pd.Series(after_tokens).value_counts())
+  
+  display(HTML("<h3>Tokens before '{}'</h3>".format(search_string)))
+  limit_tokens = 20
+  before_df = pd.Series(before_tokens).value_counts().to_frame('occurrences')
+  j = 0
+  for i, row in before_df.head(limit_tokens).iterrows():
+    j += 1
+    print(i, "({})".format(row['occurrences']), end=' ')
+    if j % 7 == 0: print()
+
+  display(HTML("<h3>Tokens after '{}'</h3>".format(search_string)))
+  after_df = pd.Series(after_tokens).value_counts().to_frame('occurrences')
+  j = 0
+  for i, row in after_df.head(limit_tokens).iterrows():
+    j += 1
+    print(i, "({})".format(row['occurrences']), end=' ') 
+    if j % 7 == 0: print()
+  print()
+
+  # ==== analyse result attributes ====
+  res_attr_df = df.merge(mus_attr_df, on='museum_id', how='left')
+  res_attr_df = res_attr_df[['museum_id','museum_name','platform','governance','country','region','size','governance_simpl','subject_matter_simpl']]
+  res_attr_df = res_attr_df.drop_duplicates()
+  res_stats_df = []
+  print("Unique museum results:",len(res_attr_df))
+  for attr in ['governance','region','size','subject_matter_simpl']:
+    mus_counts_df = res_attr_df.groupby(attr).size().to_frame('n_museums').reset_index()
+    mus_counts_df['attribute'] = attr
+    tot_mus_df = mus_attr_df.groupby(attr).size().to_frame('n_tot_museums').reset_index()
+    mus_counts_df = mus_counts_df.merge(tot_mus_df, on=attr, how='left')
+    mus_counts_df['museum_attribute_pc'] = round(mus_counts_df['n_museums'] / mus_counts_df['n_tot_museums'] * 100,1)
+    mus_counts_df['museum_result_pc'] = round(mus_counts_df['n_museums'] / len(res_attr_df) * 100,1)
+    mus_counts_df = mus_counts_df.rename(columns={attr:'attribute_value'})
+    mus_counts_df = mus_counts_df.sort_values('museum_result_pc', ascending=False)
+    
+    res_stats_df.append(mus_counts_df)
+  # combine results
+  res_stats_df = pd.concat(res_stats_df, ignore_index=True)
+  res_stats_df = res_stats_df[['attribute','attribute_value','n_museums','museum_result_pc',
+    'n_tot_museums','museum_attribute_pc']]
+  for nm, df in res_stats_df.groupby('attribute'):
+    display(HTML("<h3>By {}</h3>".format(nm)))
+    display(df.drop(columns=['attribute']))
+  return res_stats_df
   
 # MAIN
 db_conn = open_local_db()
 assert db_conn, 'db not connected'
+
+mus_attr_df = load_museum_attr()
+
 print('ok')
