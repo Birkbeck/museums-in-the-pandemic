@@ -66,7 +66,7 @@ def run_search(text, case_sensitive, search_facebook, search_twitter,
       web_df['platform'] = 'website'
       web_df['session_time'] = web_df['session_id'].apply(sessionid_to_time)
       print('Websites: {} matches found. Unique museums: {} - N sessions: {}'.format(len(web_df), n_u_museums, web_df.session_id.nunique()))
-    else: 
+    else:
       print("Websites: no matches found.") 
   
   if search_website_sentences:
@@ -93,7 +93,7 @@ def run_search(text, case_sensitive, search_facebook, search_twitter,
       n_u_museums = soc_df.museum_id.nunique()
       for pname, subdf in soc_df.groupby('platform'):
         print('{}: {} matches found. Unique museums: {}'.format(pname.upper(), len(subdf), subdf.museum_id.nunique()))
-    else: 
+    else:
       print("TWITTER/FACEBOOK: no matches found.")
 
   df = merge_results(web_df, soc_df)
@@ -160,11 +160,12 @@ def merge_results(web_df, soc_df):
       web_df['msg_time'] = web_df['session_time']
   
   df = pd.concat([web_df,soc_df], axis=0, ignore_index=True)
+  df = df.drop_duplicates()
   return df
 
 def msg_time_to_string(t):
-  if not isinstance(t, str):
-    t = str(t)
+  #if not isinstance(t, str):
+  t = str(t)
   res = t[0:10]
   return res
 
