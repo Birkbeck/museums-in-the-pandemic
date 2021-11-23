@@ -41,8 +41,9 @@ def filter_search_string_for_sql(text):
 
 def filter_search_string_for_regex(text, case_sensitive):
   text = text.replace('*','.*')
+  text = r"\b{}\b".format(text)
   if not case_sensitive:
-    text = "(?i)" + text 
+    text = r"(?i)" + text
   return text
 
 def run_search(text, case_sensitive, search_facebook, search_twitter,
@@ -57,20 +58,27 @@ def run_search(text, case_sensitive, search_facebook, search_twitter,
   soc_df = pd.DataFrame()
   # search websites
   if search_websites:
+    # unused option
     sql = "select * from websites_text where page_text like '%{}%';".format(filter_search_string_for_sql(text))
     web_df = pd.read_sql(sql, db_conn)
-    n_u_museums = web_df.museum_id.nunique()
-    web_df['platform'] = 'website'
-    web_df['session_time'] = web_df['session_id'].apply(sessionid_to_time)
-    print('Websites: {} matches found. Unique museums: {} - N sessions: {}'.format(len(web_df), n_u_museums, web_df.session_id.nunique()))
+    if len(web_df) > 0:
+      n_u_museums = web_df.museum_id.nunique()
+      web_df['platform'] = 'website'
+      web_df['session_time'] = web_df['session_id'].apply(sessionid_to_time)
+      print('Websites: {} matches found. Unique museums: {} - N sessions: {}'.format(len(web_df), n_u_museums, web_df.session_id.nunique()))
+    else: 
+      print("Websites: no matches found.") 
   
   if search_website_sentences:
     sql = "select * from websites_sentences_text where sentence_text like '%{}%';".format(filter_search_string_for_sql(text))
     web_df = pd.read_sql(sql, db_conn)
-    n_u_museums = web_df.museum_id.nunique()
-    web_df['platform'] = 'website_sentences'
-    web_df['session_time'] = web_df['session_id'].apply(sessionid_to_time)
-    print('WEBSITE sentences: {} matches found. N sessions: {}. Unique museums: {}'.format(len(web_df), web_df.session_id.nunique(), n_u_museums))
+    if len(web_df) > 0:
+      n_u_museums = web_df.museum_id.nunique()
+      web_df['platform'] = 'website_sentences'
+      web_df['session_time'] = web_df['session_id'].apply(sessionid_to_time)
+      print('WEBSITES: {} matches found. N sessions: {}. Unique museums: {}'.format(len(web_df), web_df.session_id.nunique(), n_u_museums))
+    else:
+      print('WEBSITES: no matches found.')
   
   # search social media
   if search_facebook or search_twitter:
@@ -81,9 +89,12 @@ def run_search(text, case_sensitive, search_facebook, search_twitter,
       filter_search_string_for_sql(text))
     
     soc_df = pd.read_sql(sql, db_conn)
-    n_u_museums = soc_df.museum_id.nunique()
-    for pname, subdf in soc_df.groupby('platform'):
-      print('{}: {} matches found. Unique museums: {}'.format(pname.upper(), len(subdf), subdf.museum_id.nunique()))
+    if len(soc_df) > 0:
+      n_u_museums = soc_df.museum_id.nunique()
+      for pname, subdf in soc_df.groupby('platform'):
+        print('{}: {} matches found. Unique museums: {}'.format(pname.upper(), len(subdf), subdf.museum_id.nunique()))
+    else: 
+      print("TWITTER/FACEBOOK: no matches found.")
 
   df = merge_results(web_df, soc_df)
   return df
@@ -100,7 +111,7 @@ def get_before_after_strings(s, regex, context_size_words):
       assert beg >= 0
       assert end >= 0
       bef = s[0:beg]
-      aft = s[end+1:-1]
+      aft = s[end:-1]
       
       bef_words = bef.split(sep)
       #print(bef_words)
@@ -313,7 +324,7 @@ def an_results(df, search_string, case_sensitive, context_size):
     j += 1
     print(i, "({})".format(row['occurrences']), end=' ') 
     if j % 7 == 0: print()
-  print()
+  print('\n')
 
   # ==== analyse result attributes ====
   res_attr_df = df.merge(mus_attr_df, on='museum_id', how='left')
