@@ -343,7 +343,9 @@ def analyse_museum_text():
     
     # set target scraping sessions
     #session_ids = sorted([get_session_id_from_table_name(x) for x in get_scraping_session_tables(db_conn)])
-    session_ids = ['20210304','20210404','20210629','20210914'] # DEBUG
+    # 20210420 20210503 20210521 20210603 20210614 20210629 20210712 20210724 20210809 20210901 20210914 20211011 20211108
+    #session_ids = ['20210304','20210404','20210629','20210914'] # DEBUG
+    session_ids = ['20210503','20210614','20210712','20210809','20211108'] # DEBUG
     print('session_ids', str(session_ids))
     attrib_name = 'all_text'
 
@@ -845,87 +847,91 @@ def make_corpus_sqlite():
         df.to_sql('social_media_msg', local_engine, index=False, if_exists='append', method='multi')
         del df
 
-    if False:
+    if True:
+        # insert facebook
+        select_sql = "select museum_id, page_name as account, post_text as msg_text, post_ts as msg_time from facebook.facebook_posts_dump td"
+        scan_table_limit_offset(db_conn, select_sql, 50000, _save_in_local_db_facebook)
+        # insert twitter
         select_sql = "select muse_id as museum_id, account as account, tweet_text as msg_text, tw_ts as msg_time from twitter.tweets_dump"
         scan_table_limit_offset(db_conn, select_sql, 50000, _save_in_local_db_twitter)
-        
-        select_sql = "select museum_id, page_name as account, post_text as msg_text, post_ts as msg_time from facebook.facebook_posts_dump td;"
-        scan_table_limit_offset(db_conn, select_sql, 50000, _save_in_local_db_facebook)
         
         # https://www.sqlitetutorial.net/sqlite-index/
         sql_commands = [
             "CREATE INDEX social_text_idx ON social_media_msg(msg_text);",
-            "CREATE INDEX ts_idx ON social_media_msg(msg_time);"]
+            "CREATE INDEX ts_idx ON social_media_msg(msg_time);",
+            "CREATE INDEX social_platf_idx ON social_media_msg(platform);"]
         for s in sql_commands:
             local_conn.execute(s)
 
     # websites
-    mdf = get_museums_w_web_urls()
-    session_ids = sorted([get_session_id_from_table_name(x) for x in get_scraping_session_tables(db_conn)])
-    session_ids = ['20210404','20210914'] # DEBUG '20210304','20210629',
-    #mdf = mdf.sample(500) # DEBUG
-    #session_ids = session_ids[3:5] # DEBUG
+    if False:
+        mdf = get_museums_w_web_urls()
+        session_ids = sorted([get_session_id_from_table_name(x) for x in get_scraping_session_tables(db_conn)])
+        session_ids = ['20210404','20210914'] # DEBUG '20210304','20210629',
+        #mdf = mdf.sample(500) # DEBUG
+        #session_ids = session_ids[3:5] # DEBUG
 
-    for s in ['drop table if exists websites_sentences_text;', 'drop table if exists websites_text;']:
-        local_conn.execute(s)
+        for s in ['drop table if exists websites_sentences_text;', 'drop table if exists websites_text;']:
+            local_conn.execute(s)
 
-    for session_id in session_ids:
-        logger.info('Extracting session: ' + session_id)
-        websites_rows = []
-        websites_sentences = []
-        for idx, row in mdf.iterrows():
-            mus_attrs = { 'museum_id': row['muse_id'], 'museum_name': row['musname'] }
-            page_id, text_attr = get_attribute_for_webpage_url_lookback(row['url'], session_id, 'all_text', db_conn)
-            mus_attrs['session_id'] = session_id
-            mus_attrs['page_id'] = page_id
-            mus_attrs['url'] = row['url']
-            mus_attrs['page_text'] = text_attr
-            if text_attr:
-                mus_attrs['page_text_len'] = len(text_attr)
-            else: 
-                mus_attrs['page_text_len'] = 0
+        for session_id in session_ids:
+            logger.info('Extracting session: ' + session_id)
+            websites_rows = []
+            websites_sentences = []
+            for idx, row in mdf.iterrows():
+                mus_attrs = { 'museum_id': row['muse_id'], 'museum_name': row['musname'] }
+                page_id, text_attr = get_attribute_for_webpage_url_lookback(row['url'], session_id, 'all_text', db_conn)
+                mus_attrs['session_id'] = session_id
+                mus_attrs['page_id'] = page_id
+                mus_attrs['url'] = row['url']
+                mus_attrs['page_text'] = text_attr
+                if text_attr:
+                    mus_attrs['page_text_len'] = len(text_attr)
+                else: 
+                    mus_attrs['page_text_len'] = 0
 
-            if text_attr:
-                text_sentences = nlp(text_attr)
-                sentence_id = 0
-                # segment sentences
-                for sentence in text_sentences.sents:
-                    sentence_id += 1
-                    # for each sentence
-                    snt_text = sentence.text
-                    sent_attrs = mus_attrs.copy()
-                    del sent_attrs['page_text']
-                    del sent_attrs['page_text_len']
-                    sent_attrs['sentence_id'] = "{}_{:07d}".format(page_id, sentence_id)
-                    sent_attrs['sentence_text'] = snt_text
-                    websites_sentences.append(sent_attrs)
-            
-            websites_rows.append(mus_attrs)
-            del mus_attrs
+                if text_attr:
+                    text_sentences = nlp(text_attr)
+                    sentence_id = 0
+                    # segment sentences
+                    for sentence in text_sentences.sents:
+                        sentence_id += 1
+                        # for each sentence
+                        snt_text = sentence.text
+                        sent_attrs = mus_attrs.copy()
+                        del sent_attrs['page_text']
+                        del sent_attrs['page_text_len']
+                        sent_attrs['sentence_id'] = "{}_{:07d}".format(page_id, sentence_id)
+                        sent_attrs['sentence_text'] = snt_text
+                        websites_sentences.append(sent_attrs)
+                
+                websites_rows.append(mus_attrs)
+                del mus_attrs
 
-        # write websites to DB
-        websites_df = pd.DataFrame(websites_rows)
-        websites_sent_df = pd.DataFrame(websites_sentences)
-        print('websites_df N =',len(websites_df), ' sentences=',len(websites_sent_df))
-        try:
-            chunks = 10
-            for df in np.array_split(websites_df, chunks):
-                print('websites_text inserting chunk rows =',len(df))
-                df.to_sql('websites_text', local_engine, index=False, if_exists='append', method='multi')
-            for df in np.array_split(websites_sent_df, chunks*20):
-                print('websites_sentences_text inserting chunk rows =',len(df))
-                df.to_sql('websites_sentences_text', local_engine, index=False, if_exists='append', method='multi')
-        except Exception as e:
-            logger.error(e)
-            raise e
-        # end for session
-    sql_commands = [
-        "CREATE INDEX web_text_idx ON websites_text(page_text);",
-        "CREATE INDEX web_session_idx ON websites_text(session_id);",
-        "CREATE INDEX web_text_sent_idx ON websites_sentences_text(sentence_text);",
-        "CREATE INDEX web_session_sent_idx ON websites_sentences_text(session_id);"]
-    for s in sql_commands:
-        local_conn.execute(s)
+            # write websites to DB
+            websites_df = pd.DataFrame(websites_rows)
+            websites_sent_df = pd.DataFrame(websites_sentences)
+            print('websites_df N =',len(websites_df), ' sentences=',len(websites_sent_df))
+            try:
+                chunks = 10
+                for df in np.array_split(websites_df, chunks):
+                    print('websites_text inserting chunk rows =',len(df))
+                    df.to_sql('websites_text', local_engine, index=False, if_exists='append', method='multi')
+                for df in np.array_split(websites_sent_df, chunks*20):
+                    print('websites_sentences_text inserting chunk rows =',len(df))
+                    df.to_sql('websites_sentences_text', local_engine, index=False, if_exists='append', method='multi')
+            except Exception as e:
+                logger.error(e)
+                raise e
+            # end for session
+        sql_commands = [
+            "CREATE INDEX web_text_idx ON websites_text(page_text);",
+            "CREATE INDEX web_session_idx ON websites_text(session_id);",
+            "CREATE INDEX web_text_sent_idx ON websites_sentences_text(sentence_text);",
+            "CREATE INDEX web_session_sent_idx ON websites_sentences_text(session_id);"]
+        for s in sql_commands:
+            local_conn.execute(s)
+        
     print("Sqlite DB ready:",db_fn)
 
 
