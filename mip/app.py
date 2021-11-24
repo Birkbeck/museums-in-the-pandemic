@@ -17,7 +17,7 @@ from scrapers.scraper_google_selenium import scrape_google_museum_names, extract
 from scrapers.scraper_websites import scrape_websites
 from scrapers.scraper_twitter import scrape_twitter_accounts
 from scrapers.scraper_facebook import scrape_facebook
-from analytics.an_websites import analyse_museum_websites
+from analytics.an_websites import analyse_museum_websites, website_size_analysis
 from analytics.text_models import analyse_museum_text, make_text_corpus, make_social_media_corpus, make_corpus_sqlite
 from museums import load_input_museums, load_input_museums_wattributes, load_extracted_museums, \
     generate_stratified_museum_sample,generate_stratified_museum_urls, combinedatasets, \
@@ -126,7 +126,8 @@ def main():
             assert is_postgresql_db_accessible()
             #make_text_corpus()
             #make_social_media_corpus()
-            make_corpus_sqlite()
+            #make_corpus_sqlite()
+            website_size_analysis()
 
         if cmd == "compare_sample":
             print("compare_sample")

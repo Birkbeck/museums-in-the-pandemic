@@ -11,6 +11,7 @@ from bs4.element import Comment
 from scrapers.scraper_websites import get_scraping_session_tables, get_scraping_session_stats_by_museum, get_webdump_table_name, get_session_id_from_table_name,get_previous_session_tables, check_for_url_redirection
 from utils import get_url_domain
 import re
+from museums import get_museums_w_web_urls
 from utils import remove_empty_elem_from_list, remove_multiple_spaces_tabs, get_soup_from_html, get_all_text_from_soup, garbage_collect, parallel_dataframe_apply
 import logging
 import difflib
@@ -305,15 +306,7 @@ def get_attribute_for_webpage_id(page_id, session_id, attrib_name, db_conn):
         return None
 
 
-def get_page_id_for_webpage_url(url, session_id, db_conn):
-    """
-    @returns a list of page IDs for a URL in a target scraping session;
-        None if URL or attribute does not exist 
-    """
-    assert url
-    assert session_id
-    page_tbl_name = get_webdump_table_name(session_id)
-    
+def generate_url_variants(url, db_conn):
     # generate variants 
     url_variants = []
     redirected_url = check_for_url_redirection(url, True, db_conn)
@@ -340,7 +333,17 @@ def get_page_id_for_webpage_url(url, session_id, db_conn):
     for u in url_variants.copy():
         url_variants.append(u.replace('https://','http://'))
         url_variants.append(u.replace('http://','https://'))
+    return url_variants
 
+def get_page_id_for_webpage_url(url, session_id, db_conn):
+    """
+    @returns a list of page IDs for a URL in a target scraping session;
+        None if URL or attribute does not exist 
+    """
+    assert url
+    assert session_id
+    page_tbl_name = get_webdump_table_name(session_id)
+    url_variants = generate_url_variants(url, db_conn)
     url_variants = ','.join(["'"+make_string_sql_safe(x)+"'" for x in set(url_variants)])
     sql = """select url, page_id from {} p where p.url in ({});""".format(page_tbl_name, url_variants)
     df = pd.read_sql(sql, db_conn)
@@ -350,6 +353,32 @@ def get_page_id_for_webpage_url(url, session_id, db_conn):
         return val
     else:
         return []
+
+
+def count_links_and_size_from_url(url, session_id, db_conn):
+    assert db_conn
+    print('count_links_and_size_from_url', url, session_id)
+    tab = get_webdump_table_name(session_id)
+    url_variants = generate_url_variants(url, db_conn)
+    url_variants = ','.join(["'"+make_string_sql_safe(x)+"'" for x in set(url_variants)])
+
+    sql = """select * from {} p where p.url in ({});""".format(tab, url_variants)
+    size_d = {'url':url, 'session_id':session_id, 'links_level1':0, 'html_page_content_length':0}
+    page_df = pd.read_sql(sql, db_conn)
+    if len(page_df) > 0:
+        print(page_df.columns)
+        size_d['html_page_content_length'] = page_df.page_content_length.sum()
+        print('page_df len',len(page_df))
+        
+        # get links
+        sql = """select * from {} p where p.referer_url in ({});""".format(tab, url_variants)
+        links_df = pd.read_sql(sql, db_conn)
+        print(links_df.columns)
+        print('links len',len(links_df))
+        size_d['links_level1'] = len(links_df) 
+    
+    return size_d
+
 
 
 def get_attribute_for_webpage_url_lookback(url, session_id, attrib_name, db_conn):
@@ -402,3 +431,38 @@ def get_attribute_for_webpage_url_lookback(url, session_id, attrib_name, db_conn
     print(msg) 
     logger.warn(msg)
     return None, None
+
+def website_size_analysis():
+    print("website_size_analysis")
+    mdf = get_museums_w_web_urls()
+    db_conn = connect_to_postgresql_db()
+    session_ids = sorted([get_session_id_from_table_name(x) for x in get_scraping_session_tables(db_conn)])
+    session_ids = ['20210304', '20210404', '20210629', '20210914'] # DEBUG ,,
+    mdf = mdf.sample(30) # DEBUG
+    #session_ids = session_ids[3:5] # DEBUG
+    websites_rows = []
+    
+    for session_id in session_ids:
+        logger.info('Extracting session: ' + session_id)
+        
+        #websites_sentences = []
+        for idx, row in mdf.iterrows():
+            page_id, text_attr = get_attribute_for_webpage_url_lookback(row['url'], session_id, 'all_text', db_conn)
+            sz_d = count_links_and_size_from_url(row['url'], session_id, db_conn)
+            sz_d['museum_id'] = row['muse_id']
+            sz_d['museum_name'] = row['musname']
+            sz_d['session_id'] = session_id
+            sz_d['page_id'] = page_id
+            
+            if text_attr:
+                sz_d['page_text_len'] = len(text_attr)    
+            else: 
+                sz_d['page_text_len'] = 0
+            
+            websites_rows.append(sz_d)
+
+    websize_df = pd.DataFrame(websites_rows)
+    websize_df.to_excel('tmp/website_sizes.xlsx', index=False)
+    return websize_df
+        
+
