@@ -19,6 +19,8 @@ import nltk
 from ipywidgets import widgets
 from ipywidgets import interact, interactive, fixed, interact_manual
 from IPython.core.display import display, HTML
+# colab imports
+from google.colab import drive, files
 
 # set up NLTK
 from nltk.corpus import stopwords
@@ -348,9 +350,13 @@ def an_results(df, search_string, case_sensitive, context_size):
   res_stats_df = pd.concat(res_stats_df, ignore_index=True)
   res_stats_df = res_stats_df[['attribute','attribute_value','n_museums','museum_result_pc',
     'n_tot_museums','museum_attribute_pc']]
+  # show tables on notebook
   for nm, df in res_stats_df.groupby('attribute'):
     display(HTML("<h3>By {}</h3>".format(nm)))
     display(df.drop(columns=['attribute']))
+    # bar chart
+    sns.barplot(x="museum_result_pc", y="attribute_value", data=df)
+    plt.show()
   return res_stats_df
   
 # MAIN
