@@ -193,6 +193,7 @@ def generate_html_matches(res_df, search_string, case_sensitive, context_size_wo
   if len(res_df) == 0:
     return '', None
   search_regex = filter_search_string_for_regex(search_string, case_sensitive)
+  print("search_regex: '{}'".format(search_regex))
   
   for nn, subdf in res_df.groupby('platform'):
     j = 0
@@ -268,7 +269,7 @@ def filter_tokens(tokens):
   return filt_tokens
 
 def generate_derived_attributes_muse_df(df):
-    print("generate_derived_attributes_muse_df")
+    #print("generate_derived_attributes_muse_df")
     df['governance_simpl'] = df['governance'].str.split(':').str[0].str.lower()
     df['subject_matter_simpl'] = df['subject_matter'].str.split(':').str[0]
     df['country'] = df['admin_area'].str.split('/').str[1]
@@ -299,13 +300,20 @@ def load_museum_attr():
 def an_results(df, search_string, case_sensitive, context_size):
   assert context_size > 0 and context_size <= 10, "context_size is too big/small" 
   assert len(search_string) > 1, search_string
-  print('N results: {} • N unique museums: {}'.format(len(df),df.museum_id.nunique()))
-  print(df.platform.value_counts().to_frame('n_results'))
-  
+  # ==== General stats ==== 
+  print('Search: "{}" • N results: {} • N unique museums: {}'.format(search_string, len(df),df.museum_id.nunique()))
+  plat_stats_df = df.platform.value_counts().to_frame('n_results').reset_index().rename(columns={'index':'platform'})
+  plat_stats_df = plat_stats_df.merge(df.groupby('platform').nunique(), on='platform')[['platform','n_results','museum_id']]
+  display(plat_stats_df)
+  plat_stats_df2 = plat_stats_df.melt(id_vars='platform')
+  #display(plat_stats_df2)
+  sns.barplot(data=plat_stats_df2, y='platform', x='value', hue='variable').set(title='Number of results and museums by platform')
+  plt.show()
+
+  # ==== Extract context window ==== 
   search_regex = filter_search_string_for_regex(search_string, case_sensitive)
   before_tokens = []
   after_tokens = []
-  # extract context
   for i, r in df.iterrows():
     txt = clean_text(r['msg_text'].strip())
     match = re.search(search_regex, txt, re.MULTILINE)
