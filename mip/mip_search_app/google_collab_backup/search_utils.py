@@ -339,8 +339,10 @@ def an_results(df, search_string, case_sensitive, context_size):
   print('\n')
 
   # ==== analyse result attributes ====
-  res_attr_df = df.drop(columns=['museum_name']).merge(mus_attr_df, on='museum_id', how='left')
-  #print(res_attr_df.columns)
+  res_attr_df = df.merge(mus_attr_df, on='museum_id', how='left')
+  if 'museum_name_x' in res_attr_df:
+    res_attr_df = res_attr_df.rename(columns={'museum_name_x':'museum_name'})
+  assert 'museum_name' in res_attr_df.columns, res_attr_df.columns
   res_attr_df = res_attr_df[['museum_name','museum_id','platform','governance',
     'country','region','size','governance_simpl','subject_matter_simpl']]
   res_attr_df = res_attr_df.drop_duplicates()
