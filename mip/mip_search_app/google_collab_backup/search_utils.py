@@ -61,6 +61,7 @@ def run_search(text, case_sensitive, search_facebook, search_twitter,
   # search websites
   if search_websites:
     # unused option
+    assert False
     sql = "select * from websites_text where page_text like '%{}%';".format(filter_search_string_for_sql(text))
     web_df = pd.read_sql(sql, db_conn)
     if len(web_df) > 0:
@@ -148,8 +149,6 @@ def sessionid_to_time(session_id):
 
 def merge_results(web_df, soc_df):
   #print('merge_results')
-  #print(soc_df.columns)
-  #print(web_df.columns)
   # Index(['museum_id', 'account', 'msg_text', 'msg_time', 'platform'], dtype='object')
   # Index(['museum_id', 'museum_name', 'session_id', 'page_id', 'url', 'sentence_id', 'sentence_text']
   if len(web_df)>0:
@@ -158,12 +157,17 @@ def merge_results(web_df, soc_df):
       web_df['msg_text'] = web_df['sentence_text']
     if 'page_text' in web_df.columns:
       web_df['msg_text'] = web_df['page_text']
-    if 'session_id' in web_df.columns:
+    if 'session_time' in web_df.columns:
       web_df['msg_time'] = web_df['session_time']
   
   df = pd.concat([web_df,soc_df], axis=0, ignore_index=True)
-  df = df.drop_duplicates()
-  return df
+  
+  df1 = df.drop_duplicates()
+  if len(df) != len(df1):
+    print("Duplicates removed (from {} to {})".format(len(df),len(df1)))
+  
+  #print(df1)
+  return df1
 
 def msg_time_to_string(t):
   #if not isinstance(t, str):
@@ -186,9 +190,10 @@ def generate_html_matches(res_df, search_string, case_sensitive, context_size_wo
   """
   # ==== generate results ====
   results_page_d = []
+  if len(res_df) == 0:
+    return '', None
   search_regex = filter_search_string_for_regex(search_string, case_sensitive)
-  print("search_regex: '{}'".format(search_regex))
-  #df = merge_results(soc_df, web_df)
+  
   for nn, subdf in res_df.groupby('platform'):
     j = 0
     for i, r in subdf.iterrows():
@@ -196,15 +201,20 @@ def generate_html_matches(res_df, search_string, case_sensitive, context_size_wo
       msg_txt = r['msg_text'].strip()
       assert len(msg_txt) > 0
       bef_words, match_text, aft_words = get_before_after_strings(msg_txt, search_regex, context_size_words)
-      if match_text is None: continue 
+      #assert match_text, search_regex + ' NOT FOUND IN\n' + msg_txt
+      if match_text is None: continue
       if 'account' not in r:
         r['account'] = ''
       results_page_d.append({'res':j, 'museum_id':r['museum_id'], 'account': r['account'],
         'before':' '.join(bef_words), 'match': match_text, 'msg_time':msg_time_to_string(r.msg_time), #.str.slice(0,10)
         'after':' '.join(aft_words), 'platform':r['platform'] })
-  results_page_df = pd.DataFrame(results_page_d)
+  assert j > 0
+  if len(results_page_d) == 0:
+    return '\nNo match found.', None
+
   # sort results
-  results_page_df = results_page_df.sort_values(['msg_time','museum_id'],ascending=False)
+  results_page_df = pd.DataFrame(results_page_d)
+  results_page_df = results_page_df.sort_values(['msg_time','museum_id'], ascending=False)
 
   # ==== generate HTML from results ====
   css = """<style>
@@ -280,7 +290,7 @@ def load_museum_attr():
   df = pd.read_csv(fn, sep='\t')
   #print(df.columns)
     # remove closed museums
-  df = df.rename(columns={'muse_id':'museum_id'})
+  df = df.rename(columns={'muse_id':'museum_id','musname':'museum_name'})
   df = df[df.closing_date.str.lower() == 'still open']
   df = generate_derived_attributes_muse_df(df)
   #print(df.columns)
@@ -297,7 +307,6 @@ def an_results(df, search_string, case_sensitive, context_size):
   after_tokens = []
   # extract context
   for i, r in df.iterrows():
-    # TODO find context_size
     txt = clean_text(r['msg_text'].strip())
     match = re.search(search_regex, txt, re.MULTILINE)
     if match:
@@ -330,8 +339,10 @@ def an_results(df, search_string, case_sensitive, context_size):
   print('\n')
 
   # ==== analyse result attributes ====
-  res_attr_df = df.merge(mus_attr_df, on='museum_id', how='left')
-  res_attr_df = res_attr_df[['museum_id','museum_name','platform','governance','country','region','size','governance_simpl','subject_matter_simpl']]
+  res_attr_df = df.drop(columns=['museum_name']).merge(mus_attr_df, on='museum_id', how='left')
+  #print(res_attr_df.columns)
+  res_attr_df = res_attr_df[['museum_name','museum_id','platform','governance',
+    'country','region','size','governance_simpl','subject_matter_simpl']]
   res_attr_df = res_attr_df.drop_duplicates()
   res_stats_df = []
   print("Unique museum results:",len(res_attr_df))
