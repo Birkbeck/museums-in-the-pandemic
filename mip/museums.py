@@ -398,7 +398,7 @@ def get_extra_museum_attributes(df):
     df['country'] = df['admin_area'].str.split('/').str[1]
     df['region'] = df['admin_area'].str.split('/').str[2]
     df['region'] = np.where(df['country'] == 'England', df['region'], df['country'])
-    df['region'] = df['region'].str.replace('\(English Region\)','')
+    df['region'] = df['region'].str.replace('\(English Region\)','').str.strip()
     print(df['governance_simpl'].value_counts())
     print(df['country'].value_counts())
     print(df['region'].value_counts())
