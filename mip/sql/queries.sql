@@ -53,6 +53,7 @@ select * from websites.web_pages_dump_20210629 wpd where url ilike '%www.upperhe
 select * from websites.web_pages_dump_20210914 wpd where url ilike '%www.upperheyfordheritage.co.uk/home-page/tours/'
 
 select count(*) from websites.url_redirections ur;
+select count(*) from analytics.website_sizes ws;
 
 select * from websites.web_pages_dump_20210914 p where p.referer_url in ('https://www.upperheyfordheritage.co.uk/home-page/tours/index.html','https://www.upperheyfordheritage.co.uk/home-page/tours/','http://www.upperheyfordheritage.co.uk/home-page/tours','http://www.upperheyfordheritage.co.uk/home-page/tours/index.html','https://www.upperheyfordheritage.co.uk/home-page/tours/index.htm','https://www.upperheyfordheritage.co.uk/home-page/tours/index.php','http://www.upperheyfordheritage.co.uk/home-page/tours/index.php','http://www.upperheyfordheritage.co.uk/home-page/tours/index.htm','http://www.upperheyfordheritage.co.uk/home-page/tours/','https://www.upperheyfordheritage.co.uk/home-page/tours');
 
