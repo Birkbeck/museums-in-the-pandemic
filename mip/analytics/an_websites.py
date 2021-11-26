@@ -4,7 +4,7 @@
 Analyse scraped websites
 """
 
-from db.db import connect_to_postgresql_db, check_dbconnection_status, make_string_sql_safe
+from db.db import connect_to_postgresql_db, check_dbconnection_status, make_string_sql_safe, create_alchemy_engine_posgresql
 import pandas as pd
 from bs4 import BeautifulSoup
 from bs4.element import Comment
@@ -12,9 +12,10 @@ from scrapers.scraper_websites import get_scraping_session_tables, get_scraping_
 from utils import get_url_domain
 import re
 from museums import get_museums_w_web_urls
-from utils import remove_empty_elem_from_list, remove_multiple_spaces_tabs, get_soup_from_html, get_all_text_from_soup, garbage_collect, parallel_dataframe_apply
+from utils import remove_empty_elem_from_list, remove_multiple_spaces_tabs, get_soup_from_html, get_all_text_from_soup, garbage_collect, parallel_dataframe_apply, parallel_dataframe_apply_wparams
 import logging
 import difflib
+from datetime import datetime
 import unicodedata
 import constants
 
@@ -335,6 +336,7 @@ def generate_url_variants(url, db_conn):
         url_variants.append(u.replace('http://','https://'))
     return url_variants
 
+
 def get_page_id_for_webpage_url(url, session_id, db_conn):
     """
     @returns a list of page IDs for a URL in a target scraping session;
@@ -367,16 +369,29 @@ def count_links_and_size_from_url(url, session_id, db_conn):
     page_df = pd.read_sql(sql, db_conn)
     if len(page_df) > 0:
         print(page_df.columns)
-        size_d['html_page_content_length'] = page_df.page_content_length.sum()
+        #size_d['html_page_content_length'] = page_df.page_content_length.sum()
         print('page_df len',len(page_df))
         
         # get links
         sql = """select * from {} p where p.referer_url in ({});""".format(tab, url_variants)
+        #print(sql)
         links_df = pd.read_sql(sql, db_conn)
         print(links_df.columns)
         print('links len',len(links_df))
         size_d['links_level1'] = len(links_df) 
-    
+        # get sizes of links
+        sum_links_length = 0
+        sum_links_words = 0
+        for idx, row in links_df.iterrows():
+            link_url = row['url']
+            sub_page_id, sub_input_text, html_length = get_attribute_for_webpage_url_lookback(link_url, session_id, 'all_text', db_conn)
+            if sub_input_text is None:
+                continue
+            sum_links_length += len(sub_input_text)
+            sum_links_words += len(sub_input_text.split(' '))
+            print('    ', link_url, sum_links_length, sum_links_words)
+        size_d['sum_links_length'] = sum_links_length
+        size_d['sum_links_words'] = sum_links_words
     return size_d
 
 
@@ -421,48 +436,76 @@ def get_attribute_for_webpage_url_lookback(url, session_id, attrib_name, db_conn
             # page found
             d_res = df.iloc[0].to_dict()
             assert d_res['url']
+            html_page_content_length = df.page_content_length.sum()
+            assert html_page_content_length >= 0
             attr = get_attribute_for_webpage_id(d_res['page_id'], prev_session, attrib_name, db_conn)
             if not attr:
                 continue
             #print('   get_attribute_for_webpage_url_lookback: found attr page_id =',d_res['page_id'],tab)
-            return page_id, attr
+            return page_id, attr, html_page_content_length
 
     msg = 'warning: get_attribute_for_webpage_url_lookback: attribute not found for url={} session_id={}'.format(url, session_id)
     print(msg) 
     logger.warn(msg)
-    return None, None
+    return None, None, None
 
-def website_size_analysis():
-    print("website_size_analysis")
-    mdf = get_museums_w_web_urls()
-    db_conn = connect_to_postgresql_db()
-    session_ids = sorted([get_session_id_from_table_name(x) for x in get_scraping_session_tables(db_conn)])
-    session_ids = ['20210304', '20210404', '20210629', '20210914'] # DEBUG ,,
-    mdf = mdf.sample(30) # DEBUG
-    #session_ids = session_ids[3:5] # DEBUG
+
+def _sessionid_to_time(session_id):
+    dd = datetime.strptime(session_id, '%Y%m%d')
+    return dd
+
+
+def __get_website_sz(args):
+    print('_get_website_sz',args)
+    df = args[0]
+    params = args[1]
     websites_rows = []
-    
-    for session_id in session_ids:
+    assert len(params['session_ids']) > 0
+    db_conn = connect_to_postgresql_db()
+    for session_id in params['session_ids']:
         logger.info('Extracting session: ' + session_id)
-        
-        #websites_sentences = []
-        for idx, row in mdf.iterrows():
-            page_id, text_attr = get_attribute_for_webpage_url_lookback(row['url'], session_id, 'all_text', db_conn)
+        for idx, row in df.iterrows():
+            # find main page
+            page_id, text_attr, html_length = get_attribute_for_webpage_url_lookback(row['url'], session_id, 'all_text', db_conn)
+            # find size stats
             sz_d = count_links_and_size_from_url(row['url'], session_id, db_conn)
             sz_d['museum_id'] = row['muse_id']
             sz_d['museum_name'] = row['musname']
             sz_d['session_id'] = session_id
+            sz_d['session_time'] = _sessionid_to_time(session_id)
             sz_d['page_id'] = page_id
             
             if text_attr:
                 sz_d['page_text_len'] = len(text_attr)    
+                sz_d['page_text_words'] = len(text_attr.split(' '))   
+                sz_d['html_page_content_length'] = html_length
             else: 
+                sz_d['page_text_words'] = 0
                 sz_d['page_text_len'] = 0
+                sz_d['html_page_content_length'] = 0
             
             websites_rows.append(sz_d)
+    res_df = pd.DataFrame(websites_rows)
+    return res_df
 
-    websize_df = pd.DataFrame(websites_rows)
+
+def website_size_analysis():
+    print("website_size_analysis")
+
+    mdf = get_museums_w_web_urls()
+    db_conn = connect_to_postgresql_db()
+    db_engine = create_alchemy_engine_posgresql()
+    session_ids = sorted([get_session_id_from_table_name(x) for x in get_scraping_session_tables(db_conn)])
+    #session_ids = ['20210304', '20210404', '20210629', '20210914'] # DEBUG
+
+    mdf = mdf.sample(5, random_state=42) # DEBUG
+    #mdf = mdf[mdf.muse_id == 'mm.aim.0781'] # DEBUG
+    #session_ids = session_ids[3:5] # DEBUG
+    # parallel call
+    n_cores = 6
+    websize_df = parallel_dataframe_apply_wparams(mdf, __get_website_sz, {'session_ids':session_ids}, n_cores)
+    # save stats
+    websize_df.to_sql('website_sizes', db_engine, schema='analytics', index=False, if_exists='replace', method='multi')
     websize_df.to_excel('tmp/website_sizes.xlsx', index=False)
     return websize_df
         
-

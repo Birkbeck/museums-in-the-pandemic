@@ -266,7 +266,7 @@ def match_indicators_in_muse_page(muse_id, session_id, url, nlp, annotat_tokens_
     """
     logger.info('match_indicators_in_muse_page {} {} {} stopwords={}'.format(muse_id, session_id, url, keep_stopwords))
     
-    page_id, input_text = get_attribute_for_webpage_url_lookback(url, session_id, 'all_text', db_conn)
+    page_id, input_text, html_length = get_attribute_for_webpage_url_lookback(url, session_id, 'all_text', db_conn)
     if not (page_id and page_id > 0):
         msg = "warning:match_indicators_in_muse_page museum: {} {} {} not found".format(muse_id, session_id, url)
         logger.warn(msg)
@@ -880,7 +880,7 @@ def make_corpus_sqlite():
             websites_sentences = []
             for idx, row in mdf.iterrows():
                 mus_attrs = { 'museum_id': row['muse_id'], 'museum_name': row['musname'] }
-                page_id, text_attr = get_attribute_for_webpage_url_lookback(row['url'], session_id, 'all_text', db_conn)
+                page_id, text_attr, html_length = get_attribute_for_webpage_url_lookback(row['url'], session_id, 'all_text', db_conn)
                 mus_attrs['session_id'] = session_id
                 mus_attrs['page_id'] = page_id
                 mus_attrs['url'] = row['url']

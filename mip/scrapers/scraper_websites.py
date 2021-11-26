@@ -550,7 +550,7 @@ def check_for_url_redirection(url, check_db=False, db_conn=None):
     new_url = 'timeout'
     try:
         # user agent must be defined, otherwise some sites says 403
-        req = urllib.request.Request(url, headers={'User-Agent': user_agent})
+        req = urllib.request.Request(url, headers={'User-Agent': constants.user_agent})
         response = urllib.request.urlopen(req, timeout=5)
         new_url = response.geturl()
         redirected = new_url != url

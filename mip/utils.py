@@ -163,6 +163,11 @@ def parallel_dataframe_apply_wparams(df, func, params, n_cores=4):
     return df
 
 
+def say_done():
+    """ say "done" on OSX. """
+    os.system('say done')
+
+
 def is_url(url):
     """ @returns True if url is a URL """
     if url is None or url == '':
