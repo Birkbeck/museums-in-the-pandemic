@@ -498,12 +498,12 @@ def website_size_analysis():
     session_ids = sorted([get_session_id_from_table_name(x) for x in get_scraping_session_tables(db_conn)])
     session_ids.remove('20211122')
     #session_ids = ['20210304', '20210404', '20210629', '20210914'] # DEBUG
-    
-    mdf = mdf.sample(5, random_state=42) # DEBUG
+
+    mdf = mdf.sample(100, random_state=42) # DEBUG
     #mdf = mdf[mdf.muse_id == 'mm.aim.0781'] # DEBUG
     #session_ids = session_ids[3:5] # DEBUG
     # parallel call
-    n_cores = 6
+    n_cores = 8
     websize_df = parallel_dataframe_apply_wparams(mdf, __get_website_sz, {'session_ids':session_ids}, n_cores)
     # save stats
     websize_df.to_sql('website_sizes', db_engine, schema='analytics', index=False, if_exists='replace', method='multi')
