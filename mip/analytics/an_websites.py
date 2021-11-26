@@ -496,8 +496,9 @@ def website_size_analysis():
     db_conn = connect_to_postgresql_db()
     db_engine = create_alchemy_engine_posgresql()
     session_ids = sorted([get_session_id_from_table_name(x) for x in get_scraping_session_tables(db_conn)])
+    session_ids.remove('20211122')
     #session_ids = ['20210304', '20210404', '20210629', '20210914'] # DEBUG
-
+    
     mdf = mdf.sample(5, random_state=42) # DEBUG
     #mdf = mdf[mdf.muse_id == 'mm.aim.0781'] # DEBUG
     #session_ids = session_ids[3:5] # DEBUG
