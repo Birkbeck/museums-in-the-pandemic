@@ -70,7 +70,11 @@ def temporal_where(b_social, begin_date, end_date):
 
 def run_search(text, case_sensitive, search_facebook, search_twitter,
   search_websites, search_website_sentences, begin_date, end_date):
-  """ Main SEARCH function """
+  """ 
+  ============================================================
+  Main SEARCH function 
+  ============================================================
+  """
   assert len(text) > 3, 'search string too short!'
   begin_date = str_to_date(begin_date)
   end_date = str_to_date(end_date)
@@ -206,16 +210,9 @@ def msg_time_to_string(t):
 
 def generate_html_matches(res_df, search_string, case_sensitive, context_size_words, max_results):
   """
-  <tr>
-    <td>Alfreds Futterkiste</td>
-    <td>Maria Anders</td>
-    <td>Germany</td>
-  </tr>
-  <tr>
-    <td>Centro comercial Moctezuma</td>
-    <td>Francisco Chang</td>
-    <td>Mexico</td>
-  </tr>
+  ============================================================
+  @returns search results as HTML 
+  ============================================================
   """
   # ==== generate results ====
   results_page_d = []
@@ -325,10 +322,17 @@ def load_museum_attr():
   df = df[df.closing_date.str.lower() == 'still open']
   df = generate_derived_attributes_muse_df(df)
   #print(df.columns)
+  #print(len(df))
   return df
 
-def an_results(df, search_string, case_sensitive, context_size):
-  assert context_size > 0 and context_size <= 10, "context_size is too big/small" 
+def an_results(df, search_string, case_sensitive, context_size, list_before_after_words_limit):
+  """ 
+  ============================================================
+  Generate analysis of search results 
+  ============================================================
+  """
+  assert context_size > 0 and context_size <= 30, "context_size is too big/small (0,30)"
+  assert list_before_after_words_limit > 0 and list_before_after_words_limit <= 100, "list_before_after_words_limit is too big/small (0,100)" 
   assert len(search_string) > 1, search_string
   if len(df) == 0:
     print("No results to analyse.")
@@ -363,8 +367,8 @@ def an_results(df, search_string, case_sensitive, context_size):
   before_tokens = filter_tokens(before_tokens)
   after_tokens = filter_tokens(after_tokens)
   
-  display(HTML("<h3>Tokens before '{}'</h3>".format(search_string)))
-  limit_tokens = 20
+  display(HTML("<h3>Top {} tokens before '{}'</h3>".format(list_before_after_words_limit, search_string)))
+  limit_tokens = list_before_after_words_limit
   before_df = pd.Series(before_tokens).value_counts().to_frame('occurrences')
   j = 0
   for i, row in before_df.head(limit_tokens).iterrows():
@@ -372,7 +376,7 @@ def an_results(df, search_string, case_sensitive, context_size):
     print(i, "({})".format(row['occurrences']), end=' ')
     if j % 7 == 0: print()
 
-  display(HTML("<h3>Tokens after '{}'</h3>".format(search_string)))
+  display(HTML("<h3>Top {} tokens after '{}'</h3>".format(list_before_after_words_limit, search_string)))
   after_df = pd.Series(after_tokens).value_counts().to_frame('occurrences')
   j = 0
   for i, row in after_df.head(limit_tokens).iterrows():
@@ -380,6 +384,35 @@ def an_results(df, search_string, case_sensitive, context_size):
     print(i, "({})".format(row['occurrences']), end=' ') 
     if j % 7 == 0: print()
   print('\n')
+
+  # ============== temporal analysis ==============
+  display(HTML("<h3>Temporal analysis</h3>"))
+  time_df = df.set_index(pd.DatetimeIndex(df['msg_time']))[['platform']]
+  # ==== analyse time distribution (websites) ==== 
+  web_time_df = time_df[time_df.platform.isin(['website_sentences'])]
+  if len(web_time_df) > 0:
+    time_counts = web_time_df.groupby('msg_time',as_index=False).size() #.to_frame('n_results')
+    time_counts['session_id'] = time_counts['msg_time'].apply(date_to_str)
+    display(time_counts)
+    sns.barplot(data=time_counts, x='session_id', y='size', color='green')
+    plt.xlabel('Websites scraping time')
+    plt.ylabel('N search results')
+    plt.show()
+  # ==== analyse time distribution (Twitter/Facebook) ==== 
+  soc_time_df = time_df[time_df.platform.isin(['twitter','facebook'])]
+  if len(soc_time_df) > 0:
+    #display(time_df.sample(100))
+    # group by week and column 'platform'
+    time_col_grouper = soc_time_df.groupby([pd.Grouper(freq='1W'), 'platform'])
+    time_counts = time_col_grouper['platform'].count().to_frame('count')
+    sns.lineplot(data=time_counts, x="msg_time", y="count", hue="platform", style='platform')
+    plt.title('Search results in social media (weekly)')
+    plt.ylabel('N search results')
+    plt.show()
+    del time_counts, time_col_grouper
+  
+  del time_df
+  #return # DEBUG
 
   # ==== analyse result attributes ====
   res_attr_df = df.merge(mus_attr_df, on='museum_id', how='left')
@@ -394,10 +427,14 @@ def an_results(df, search_string, case_sensitive, context_size):
   for attr in ['governance','region','size','subject_matter_simpl']:
     mus_counts_df = res_attr_df.groupby(attr).size().to_frame('n_museums').reset_index()
     mus_counts_df['attribute'] = attr
+    # add totals
     tot_mus_df = mus_attr_df.groupby(attr).size().to_frame('n_tot_museums').reset_index()
     mus_counts_df = mus_counts_df.merge(tot_mus_df, on=attr, how='left')
-    mus_counts_df['museum_attribute_pc'] = round(mus_counts_df['n_museums'] / mus_counts_df['n_tot_museums'] * 100,1)
+    # derive attributes
+    mus_counts_df['res_museum_attribute_pc'] = round(mus_counts_df['n_museums'] / mus_counts_df['n_tot_museums'] * 100,1)
+    mus_counts_df['tot_museum_attribute_pc'] = round(mus_counts_df['n_tot_museums'] / len(mus_attr_df) * 100,1)
     mus_counts_df['museum_result_pc'] = round(mus_counts_df['n_museums'] / len(res_attr_df) * 100,1)
+    mus_counts_df['divergence_pc'] = mus_counts_df['museum_result_pc'] - mus_counts_df['tot_museum_attribute_pc']
     mus_counts_df = mus_counts_df.rename(columns={attr:'attribute_value'})
     mus_counts_df = mus_counts_df.sort_values('museum_result_pc', ascending=False)
     
@@ -405,17 +442,31 @@ def an_results(df, search_string, case_sensitive, context_size):
   # combine results
   res_stats_df = pd.concat(res_stats_df, ignore_index=True)
   res_stats_df = res_stats_df[['attribute','attribute_value','n_museums','museum_result_pc',
-    'n_tot_museums','museum_attribute_pc']]
+    'n_tot_museums','res_museum_attribute_pc','tot_museum_attribute_pc','divergence_pc']]
   # show tables on notebook
-  for nm, df in res_stats_df.groupby('attribute'):
+  sns.set_style("whitegrid") 
+  for nm, subdf in res_stats_df.groupby('attribute'):
     display(HTML("<h3>By {}</h3>".format(nm)))
-    display(df.drop(columns=['attribute']))
-    # bar chart
-    sns.barplot(x="museum_result_pc", y="attribute_value", data=df)
+    display(subdf.drop(columns=['attribute']))
+    subdf = subdf.sort_values('museum_result_pc', ascending=False)
+    # bar chart 1
+    sns.barplot(x="museum_result_pc", y="attribute_value", data=subdf)
+    plt.title('Proportion of museums in results (%)')
     plt.show()
+    # bar chart (divergence)
+    subdf = subdf.sort_values('divergence_pc', ascending=False)
+    sns.barplot(x="divergence_pc", y="attribute_value", data=subdf, palette="vlag")
+    plt.title('Over- and under-representation in results (%)')
+    plt.show()
+
+  # add general params to results
+  res_stats_df['begin_search'] = df.begin_date.tolist()[0].strftime('%Y-%m-%d')
+  res_stats_df['end_search'] = df.end_date.tolist()[0].strftime('%Y-%m-%d')
   return res_stats_df
   
+# =============================================================================
 # MAIN
+# =============================================================================
 db_conn = open_local_db()
 assert db_conn, 'db not connected'
 
