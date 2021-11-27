@@ -15,6 +15,7 @@ from matplotlib import pyplot as plt
 import seaborn as sns
 import sqlite3
 from datetime import datetime
+import datetime as datet
 import nltk
 from ipywidgets import widgets
 from ipywidgets import interact, interactive, fixed, interact_manual
@@ -37,6 +38,15 @@ def open_local_db():
   conn = sqlite3.connect('mip_corpus_search.db')
   return conn
 
+def str_to_date(sdate):
+  # convert from string format to datetime format
+  dt = datetime.strptime(sdate, '%Y-%m-%d')
+  return dt
+
+def date_to_str(date):
+  dates = date.strftime('%Y-%m-%d')
+  return dates
+
 def filter_search_string_for_sql(text):
   text = text.replace('*','%')
   return text
@@ -48,12 +58,29 @@ def filter_search_string_for_regex(text, case_sensitive):
     text = r"(?i)" + text
   return text
 
+def temporal_where(b_social, begin_date, end_date):
+  if b_social:
+    sql = " {} >= '{}' and {} <= '{}' ".format('msg_time', 
+      date_to_str(begin_date), 'msg_time', date_to_str(end_date))
+  else:
+    # websites
+    sql = " {} >= '{}' and {} <= '{}' ".format('session_id', 
+      begin_date.strftime('%Y%m%d'), 'session_id', end_date.strftime('%Y%m%d'))
+  return sql
+
 def run_search(text, case_sensitive, search_facebook, search_twitter,
-  search_websites, search_website_sentences):
+  search_websites, search_website_sentences, begin_date, end_date):
+  """ Main SEARCH function """
   assert len(text) > 3, 'search string too short!'
+  begin_date = str_to_date(begin_date)
+  end_date = str_to_date(end_date)
+  assert begin_date >= datetime(2019, 1, 1), 'begin_date should be after 2019-01-01 '+str(begin_date)
+  assert end_date <= datetime.now(), 'end_date cannot be in the future'
+  assert begin_date <= end_date, "begin_date should be before end_date"
   assert search_facebook or search_twitter or search_websites or search_website_sentences, 'select at least one platform'
   if search_websites and search_website_sentences:
     raise Exception('select either search_websites or search_website_sentences, not both')
+  print('Date range:', date_to_str(begin_date), 'to', date_to_str(end_date))
   where = ''
   platforms = []
   web_df = pd.DataFrame()
@@ -73,7 +100,8 @@ def run_search(text, case_sensitive, search_facebook, search_twitter,
       print("Websites: no matches found.") 
   
   if search_website_sentences:
-    sql = "select * from websites_sentences_text where sentence_text like '%{}%';".format(filter_search_string_for_sql(text))
+    sql = "select * from websites_sentences_text where sentence_text like '%{}%' and {};".format(filter_search_string_for_sql(text), 
+      temporal_where(False, begin_date, end_date))
     web_df = pd.read_sql(sql, db_conn)
     if len(web_df) > 0:
       n_u_museums = web_df.museum_id.nunique()
@@ -88,9 +116,8 @@ def run_search(text, case_sensitive, search_facebook, search_twitter,
     if search_facebook: platforms.append('facebook')
     if search_twitter: platforms.append('twitter')
     where = ','.join(["'"+x+"'" for x in platforms])
-    sql = "select * from social_media_msg where platform in ({}) and msg_text like '%{}%';".format(where, 
-      filter_search_string_for_sql(text))
-    
+    sql = "select * from social_media_msg where platform in ({}) and msg_text like '%{}%' and {};".format(where, 
+      filter_search_string_for_sql(text), temporal_where(True, begin_date, end_date))
     soc_df = pd.read_sql(sql, db_conn)
     if len(soc_df) > 0:
       n_u_museums = soc_df.museum_id.nunique()
@@ -100,6 +127,8 @@ def run_search(text, case_sensitive, search_facebook, search_twitter,
       print("TWITTER/FACEBOOK: no matches found.")
 
   df = merge_results(web_df, soc_df)
+  df['begin_date'] = begin_date
+  df['end_date'] = end_date
   return df
 
 def get_before_after_strings(s, regex, context_size_words):
@@ -194,6 +223,7 @@ def generate_html_matches(res_df, search_string, case_sensitive, context_size_wo
     return '', None
   search_regex = filter_search_string_for_regex(search_string, case_sensitive)
   print("search_regex: '{}'".format(search_regex))
+  #print("time: from {} to {}".format(begin_date, end_date))
   
   for nn, subdf in res_df.groupby('platform'):
     j = 0
@@ -275,7 +305,7 @@ def generate_derived_attributes_muse_df(df):
     df['country'] = df['admin_area'].str.split('/').str[1]
     df['region'] = df['admin_area'].str.split('/').str[2]
     df['region'] = np.where(df['country'] == 'England', df['region'], df['country'])
-    df['region'] = df['region'].str.replace('\(English Region\)','')
+    df['region'] = df['region'].str.replace('\(English Region\)','').str.strip()
     return df
 
 def clean_text(txt):
@@ -300,8 +330,13 @@ def load_museum_attr():
 def an_results(df, search_string, case_sensitive, context_size):
   assert context_size > 0 and context_size <= 10, "context_size is too big/small" 
   assert len(search_string) > 1, search_string
+  if len(df) == 0:
+    print("No results to analyse.")
+    return None
   # ==== General stats ==== 
-  print('Search: "{}" • N results: {} • N unique museums: {}'.format(search_string, len(df),df.museum_id.nunique()))
+  print('Search: "{}" • Date range: {} to {} • \nN results: {} • N unique museums: {}'.format(search_string, 
+    df.begin_date.tolist()[0].strftime('%Y-%m-%d'), df.end_date.tolist()[0].strftime('%Y-%m-%d'), 
+    len(df), df.museum_id.nunique()))
   plat_stats_df = df.platform.value_counts().to_frame('n_results').reset_index().rename(columns={'index':'platform'})
   plat_stats_df = plat_stats_df.merge(df.groupby('platform').nunique(), on='platform')[['platform','n_results','museum_id']]
   display(plat_stats_df)
