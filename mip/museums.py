@@ -868,6 +868,7 @@ def join_museum_info(df, muse_id_column):
 
 def get_twitter_facebook_links(folder=''):
     """" Load Twitter accounts for all museums """
+    assert False, 'deprecated'
     # load twitter
     fn = folder + 'data/museums/tw_urls_final.tsv'
     df = pd.read_csv(fn, sep='\t')
@@ -884,3 +885,10 @@ def get_twitter_facebook_links(folder=''):
     mdf = mdf.merge(df, on='museum_id', how='left')
     print('get_twitter_facebook_links N =',len(mdf))
     return mdf
+
+
+def get_twitter_facebook_links_v2(folder=''):
+    """ updated version of get_twitter_facebook_links()"""
+    df = pd.read_csv(folder+'data/museums/social_media_urls_corrected.tsv', sep='\t')
+    print('get_twitter_facebook_links_v2', len(df))
+    return df

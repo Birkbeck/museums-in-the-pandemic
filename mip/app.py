@@ -4,6 +4,7 @@
 
 # %% Setup
 import logging
+
 logger = logging.getLogger(__name__)
 
 import os
@@ -22,7 +23,7 @@ from analytics.text_models import analyse_museum_text, make_text_corpus, make_so
 from museums import load_input_museums, load_input_museums_wattributes, load_extracted_museums, \
     generate_stratified_museum_sample,generate_stratified_museum_urls, combinedatasets, \
     get_fuzzy_string_match_scores, load_fuzzy_museums, compare_result_to_sample, get_museums_w_web_urls, \
-    get_twitter_facebook_links
+    get_twitter_facebook_links_v2
 from db.db import is_postgresql_db_accessible, count_all_db_rows
 
 from tests.run_tests import get_all_tests
@@ -94,12 +95,12 @@ def main():
         
         if cmd == "scrape_twitter":
             print("scrape_twitter")
-            df = get_twitter_facebook_links()
+            df = get_twitter_facebook_links_v2()
             scrape_twitter_accounts(df)
 
         if cmd == "scrape_facebook":
             print("scrape_facebook")
-            df = get_twitter_facebook_links()
+            df = get_twitter_facebook_links_v2()
             scrape_facebook(df)
 
         if cmd == "scrape_websites":

@@ -85,6 +85,8 @@ def scrape_twitter_accounts(museums_df):
         accounts = x1.split(',')
         assert type(accounts) is list
         assert len(accounts) > 0
+        accounts = [s.strip().replace('https://','') for s in accounts]
+        accounts = [s.strip().replace('http://','') for s in accounts]
         accounts = [s.strip().replace('mobile.twitter.com/','') for s in accounts]
         accounts = [s.strip().replace('www.twitter.com/','') for s in accounts]
         accounts = [s.strip().replace('twitter.com/','') for s in accounts]
@@ -98,7 +100,7 @@ def scrape_twitter_accounts(museums_df):
         accounts = list(set(accounts))
         for a in accounts:
             assert len(a) > 0
-            assert not a.lower() in ['twitter','photo','status','com','www','#']
+            assert not a.lower() in ['twitter','photo','status','com','www','#','facebook']
         return accounts
 
     no_twitter_mus = pd.DataFrame()
@@ -118,10 +120,20 @@ def scrape_twitter_accounts(museums_df):
         #continue # DEBUG
         # scan accounts
         found_tweets = 0
+        
         for acc in tw_accounts:
             assert acc
+            # apply updates from social_media_urls_corrected.tsv (6 Dec 2021)
+            if mus['twitter_action'] == 'drop' or mus['twitter_action'] == 'update':
+                # delete old accounts, if any
+                old_tw_accounts = get_twitter_accounts_from_col(mus['twitter_id_old'])
+                assert len(old_tw_accounts) >= 0
+                for old_acc in old_tw_accounts:
+                    delete_twitter_account_from_db(mus_id, old_acc, db_con)
+            
             if has_db_museum_tweets(mus_id, acc, db_con):
                 continue
+            # scrape twitter account
             found_tweets += scrape_twitter_account(mus_id, acc, min_date, db_con, db_engine)
         
         if found_tweets == 0:
@@ -131,7 +143,16 @@ def scrape_twitter_accounts(museums_df):
     no_twitter_mus.to_sql('museums_no_twitter', db_engine, schema='twitter', index=False, if_exists='replace', method='multi')
 
 
+def delete_twitter_account_from_db(muse_id, user_name, db_con):
+    sql = '''delete from twitter.tweets_dump where muse_id = '{}' and account = '{}';'''.format(muse_id, user_name)
+    print('deleting twitter account: ',user_name)
+    cur = db_con.cursor()
+    ret = cur.execute(sql)
+    i = 0
+
+
 def has_db_museum_tweets(muse_id, user_name, db_con):
+    '''@returns True if Twitter account exists in DB'''
     sql = '''select count(*) as cnt from twitter.tweets_dump where muse_id = '{}' and account = '{}';'''.format(muse_id, user_name)
     df = pd.read_sql(sql, db_con)
     cnt = df.cnt[0]

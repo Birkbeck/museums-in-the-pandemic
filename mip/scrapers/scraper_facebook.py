@@ -5,6 +5,7 @@ import ast
 import json
 import datetime
 import time
+import numpy as np
 from db.db import open_sqlite, run_select_sql
 from db.db import connect_to_postgresql_db, create_alchemy_engine_posgresql
 from pandas.io.json._normalize import nested_to_record
@@ -27,6 +28,8 @@ with open('.secrets.json') as f:
 
 def get_facebook_pages_from_col(x):
     """ extract facebook pages from string """
+    if not isinstance(x, str) and np.isnan(x):
+        return []
 
     def remove_category(s):
         import re
@@ -42,7 +45,7 @@ def get_facebook_pages_from_col(x):
     assert type(accounts) is list
     assert len(accounts) > 0
     accounts = [s.lower() for s in accounts]
-    for expr in ['en-gb.','www.','facebook.com/events/','facebook.com/pages/',
+    for expr in ['https://','http://','en-gb.','www.','facebook.com/events/','facebook.com/pages/',
                 'facebook.com/groups/','facebook.com/pg/',
                 'facebook.com/pages/','facebook.com/','#','!']:
         accounts = [s.strip().replace(expr.lower(),'') for s in accounts]    
@@ -76,12 +79,28 @@ def scrape_facebook(museums_df):
     for idx, mus in museums_df.iterrows():
         i+=1
         print(">", i, 'of', len(museums_df), ' -- ', mus['museum_id'])
+        
+        if mus['facebook_action'] == 'drop' or mus['facebook_action'] == 'update':
+            # delete old accounts, if any
+            old_fb_accounts = get_facebook_pages_from_col(mus['facebook_pages_old'])
+            assert len(old_fb_accounts) >= 0
+            for old_acc in old_fb_accounts:
+                delete_facebook_account_from_db(mus['museum_id'], old_acc, db_con)
+        
         pages = get_facebook_pages_from_col(mus['facebook_pages'])
         for p in pages:
             n = scrape_facebook_page(p, mus['museum_id'], db_con, db_engine)
             scraped_posts += n
 
     print("scraped_pages =", scraped_posts)
+
+
+def delete_facebook_account_from_db(muse_id, user_name, db_con):
+    sql = '''delete from facebook.facebook_posts_dump where museum_id = '{}' and page_name = '{}';'''.format(muse_id, user_name)
+    print('deleting facebook account: ',user_name)
+    cur = db_con.cursor()
+    ret = cur.execute(sql)
+    i = 0
 
 
 def get_earliest_date(fbdata):
