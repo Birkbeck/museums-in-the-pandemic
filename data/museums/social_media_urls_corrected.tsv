@@ -1910,7 +1910,7 @@ mm.ace.019	no_resource	no_resource	keep	keep
 mm.domus.NI007	no_resource	en-gb.facebook.com/12th-Battalion-Royal-Irish-Rifles-Memorial-Association-1645416999031275/posts	keep	keep				
 mm.domus.SE083	no_resource	no_resource	drop	drop			['twitter.com/rpharms']	['www.facebook.com/royalpharmsoc', 'en-gb.facebook.com/pages/category/Museum/Royal-Pharmaceutical-Society-Museum-276119592463431']
 mm.ace.1265	twitter.com/the_rpsl	en-gb.facebook.com/royalphilsoclondon	keep	keep				
-mm.domus.WM089	['twitter.com/royalacademy']	https://www.facebook.com/102016068165143	update	update	['twitter.com/royalacademy']	https://www.facebook.com/102016068165143	['twitter.com/royalacademy']	['www.facebook.com/waterloo200org']
+mm.domus.WM089	no_resource	https://www.facebook.com/102016068165143	drop	update		https://www.facebook.com/102016068165143	['twitter.com/royalacademy']	['www.facebook.com/waterloo200org']
 mm.mgs.315	twitter.com/museumsunista	['www.facebook.com/museumsunista', 'www.facebook.com/uniofsta', 'en-gb.facebook.com/pages/category/College---University/Museum-and-Gallery-Studies-University-of-St-Andrews-759097484211825']	keep	keep				
 mm.ace.1221	['twitter.com/sledmerehouse']	['www.facebook.com/sledmerehouseandgardens', 'en-gb.facebook.com/sledmerehouseandgardens/?hc_location=ufi']	keep	keep				
 mm.domus.EM024	twitter.com/timekeepingmus	['www.facebook.com/timekeepingmus', 'www.facebook.com/timekeepingmus/photos/a.301148996903361/1186311365053782', 'www.facebook.com/timekeepingmus/photos/a.301148996903361/1077855242566062', 'www.facebook.com/timekeepingmus/photos/a.301148996903361/1077848845900035', 'en-gb.facebook.com/TimekeepingMus']	keep	keep				
