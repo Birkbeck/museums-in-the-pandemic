@@ -50,7 +50,7 @@ corpus:
 
 cp_corpus:
 	@echo ">>> Copy corpus";
-	scp andreab@193.61.36.75:/home/andreab/museums-in-the-pandemic/tmp/mip_corpus_search.db tmp/mip_corpus_search-remote.db
+	scp andreab@193.61.36.75:/home/andreab/museums-in-the-pandemic/tmp/mip_corpus_search.db.gz tmp/mip_corpus_search-remote.db.gz
 
 
 compile:
