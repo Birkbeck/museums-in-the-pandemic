@@ -826,7 +826,7 @@ def make_text_corpus():
 
 
 def make_corpus_sqlite():
-    """ Make local DB corpus for search """
+    """ Make local DB corpus for search app. SLOW. """
     print('make_corpus_sqlite')
     db_fn, local_engine = create_alchemy_engine_sqlite_corpus()
     local_conn = local_engine.connect()
@@ -857,6 +857,7 @@ def make_corpus_sqlite():
         
         # https://www.sqlitetutorial.net/sqlite-index/
         sql_commands = [
+            "CREATE INDEX social_musid_idx ON social_media_msg(museum_id);",
             "CREATE INDEX social_text_idx ON social_media_msg(msg_text);",
             "CREATE INDEX ts_idx ON social_media_msg(msg_time);",
             "CREATE INDEX social_platf_idx ON social_media_msg(platform);"]
@@ -864,10 +865,13 @@ def make_corpus_sqlite():
             local_conn.execute(s)
 
     # websites
-    if False:
+    if True:
         mdf = get_museums_w_web_urls()
         session_ids = sorted([get_session_id_from_table_name(x) for x in get_scraping_session_tables(db_conn)])
-        session_ids = ['20210404','20210914'] # DEBUG '20210304','20210629',
+        #session_ids = ['20210404','20210914'] # DEBUG '20210304','20210629',
+        #['20210304', '20210404', '20210420', '20210503', '20210521', '20210603', '20210614', '20210629', '20210712', '20210724', '20210809', '20210901', '20210914', '20210927', '20211011', '20211025', '20211108', '20211122', '20211206']
+        session_ids = ['20210304', '20210404', '20210503', '20210603', '20210712', '20210809', '20210901', '20210927',  '20211025', '20211108', '20211206']
+        print(session_ids)
         #mdf = mdf.sample(500) # DEBUG
         #session_ids = session_ids[3:5] # DEBUG
 
@@ -927,12 +931,14 @@ def make_corpus_sqlite():
         sql_commands = [
             "CREATE INDEX web_text_idx ON websites_text(page_text);",
             "CREATE INDEX web_session_idx ON websites_text(session_id);",
+            "CREATE INDEX web_session_musid_idx ON websites_text(museum_id);",
             "CREATE INDEX web_text_sent_idx ON websites_sentences_text(sentence_text);",
-            "CREATE INDEX web_session_sent_idx ON websites_sentences_text(session_id);"]
+            "CREATE INDEX web_session_sent_idx ON websites_sentences_text(session_id);",
+            "CREATE INDEX web_session_musidsent_idx ON websites_sentences_text(museum_id);"]
         for s in sql_commands:
             local_conn.execute(s)
         
-    print("Sqlite DB ready:",db_fn)
+    print("Sqlite DB ready:", db_fn)
 
 
 def make_social_media_corpus():

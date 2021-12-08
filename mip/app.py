@@ -127,8 +127,8 @@ def main():
             assert is_postgresql_db_accessible()
             #make_text_corpus()
             #make_social_media_corpus()
-            #make_corpus_sqlite()
-            website_size_analysis()
+            make_corpus_sqlite()
+            #website_size_analysis()
 
         if cmd == "compare_sample":
             print("compare_sample")
