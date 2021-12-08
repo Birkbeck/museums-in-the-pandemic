@@ -48,6 +48,11 @@ corpus:
 	nohup ./run_app_server.sh corpus > tmp/logs/nohup_corpus_${DATE}_log.txt &
 
 
+cp_corpus:
+	@echo ">>> Copy corpus";
+	scp andreab@193.61.36.75:/home/andreab/museums-in-the-pandemic/tmp/mip_corpus_search.db tmp/mip_corpus_search-remote.db
+
+
 compile:
 	@python -m compileall mip/*
 
