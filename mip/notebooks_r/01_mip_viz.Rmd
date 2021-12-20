@@ -10,6 +10,7 @@ output:
 
 ```{r setup}
 source('mip_setup.R')
+data_fold = "../../data/"
 ```
 
 
@@ -52,6 +53,21 @@ for (margin_of_error in c(1,2,3,4,5,6,7,8,9,10)){
 
 # Visualisations
 
+## Indicators with error bars
+
+Hard to do in Python (see `total_indicators_w_uncertain.csv` in `02_extract_indicators.ipynb`)
+
+```{r}
+df = read_csv(paste0(data_fold, "analysis/indicators/total_indicators_w_uncertain.csv"))
+colnames(df)
+df$indic_museum_pc_upper[df$indic_museum_pc_upper > 100] = 100
+p = ggplot(data=df, aes(x=session_time, y=indic_museum_pc, colour=indicator_code_merged, linetype=indicator_code_merged)) + geom_point() + geom_line() + theme_light() + ylim(0,100)
+p = p + geom_ribbon(aes(ymin = df$indic_museum_pc_lower, ymax = df$indic_museum_pc_upper), fill = 'gray10', alpha=.05, size=0.5 ) 
+fn = paste0(data_fold, "analysis/indicators/total_indicators_w_uncertain-n_museums_pc.pdf")
+ggsave(fn, p, width = 10)
+print(fn)
+#rm(df)
+```
 
 ## Social media bivariate heatmaps 
 
