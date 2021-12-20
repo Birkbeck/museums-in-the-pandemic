@@ -68,8 +68,34 @@ def temporal_where(b_social, begin_date, end_date):
       begin_date.strftime('%Y%m%d'), 'session_id', end_date.strftime('%Y%m%d'))
   return sql
 
-def run_search(text, case_sensitive, search_facebook, search_twitter,
-  search_websites, search_website_sentences, begin_date, end_date):
+def generate_mus_attribute_filter(mname, mgovernance, msize):
+  """ Generates SQL where condition for name, governance and size filters. """
+  mgovernance = mgovernance.strip()
+  msize = msize.strip()
+  sql_filt = ''
+  filt_df = mus_attr_df.copy()
+  
+  if len(mgovernance)>0:
+    filt_df = filt_df[filt_df['governance'].str.contains(mgovernance, case=False, regex=True)]
+    sql_filt = " and museum_id in ('{}') ".format("','".join(filt_df.museum_id))
+  if len(msize)>0:
+    filt_df = filt_df[filt_df['size'].str.contains(msize, case=False, regex=True)]
+    sql_filt = sql_filt + " and museum_id in ('{}') ".format("','".join(filt_df.museum_id))
+  if len(mname)>0:
+    filt_df = filt_df[filt_df['museum_name'].str.contains(mname, case=False, regex=True)]
+    sql_filt = " and museum_id in ('{}') ".format("','".join(filt_df.museum_id))
+  
+  if len(filt_df) == 0:
+    raise ValueError("Filter on name/governance/size returns no results. Check values.".format(mgovernance))
+
+  #filt_df = mus_attr_df[mus_attr_df['msize'].str.contains(msize, regex=False)]
+  if sql_filt:
+    print("Searching only {} museums with name:'{}', governance:'{}', size:'{}'".format(len(filt_df), mname, mgovernance, msize))
+  #print(sql_filt)
+  return sql_filt
+  
+def run_search(text, search_string_not, case_sensitive, search_facebook, search_twitter,
+  search_websites, search_website_sentences, museum_name, museum_governance, museum_size, begin_date, end_date):
   """ 
   ============================================================
   Main SEARCH function 
@@ -84,28 +110,28 @@ def run_search(text, case_sensitive, search_facebook, search_twitter,
   assert search_facebook or search_twitter or search_websites or search_website_sentences, 'select at least one platform'
   if search_websites and search_website_sentences:
     raise Exception('select either search_websites or search_website_sentences, not both')
+  
   print('Date range:', date_to_str(begin_date), 'to', date_to_str(end_date))
   where = ''
   platforms = []
   web_df = pd.DataFrame()
   soc_df = pd.DataFrame()
-  # search websites
-  if search_websites:
-    # unused option
-    assert False
-    sql = "select * from websites_text where page_text like '%{}%';".format(filter_search_string_for_sql(text))
-    web_df = pd.read_sql(sql, db_conn)
-    if len(web_df) > 0:
-      n_u_museums = web_df.museum_id.nunique()
-      web_df['platform'] = 'website'
-      web_df['session_time'] = web_df['session_id'].apply(sessionid_to_time)
-      print('Websites: {} matches found. Unique museums: {} - N sessions: {}'.format(len(web_df), n_u_museums, web_df.session_id.nunique()))
-    else:
-      print("Websites: no matches found.") 
   
+  # build not filter
+  not_filter = ''
+  if len(search_string_not.strip())>0:
+    print("Excluding '{}' from results.".format(search_string_not))
+    not_filter = " not like '%{}%' ".format(filter_search_string_for_sql(search_string_not))
+
+  # build attribute filters
+  attrib_filter = generate_mus_attribute_filter(museum_name, museum_governance, museum_size)
+
   if search_website_sentences:
-    sql = "select * from websites_sentences_text where sentence_text like '%{}%' and {};".format(filter_search_string_for_sql(text), 
-      temporal_where(False, begin_date, end_date))
+    if len(not_filter)>0:
+      web_not_filter = " and sentence_text" + not_filter
+    sql = "select * from websites_sentences_text where sentence_text like '%{}%' and {} {} {};".format(filter_search_string_for_sql(text), 
+      temporal_where(False, begin_date, end_date), web_not_filter, attrib_filter)
+    #print(sql) # debug
     web_df = pd.read_sql(sql, db_conn)
     if len(web_df) > 0:
       n_u_museums = web_df.museum_id.nunique()
@@ -119,9 +145,11 @@ def run_search(text, case_sensitive, search_facebook, search_twitter,
   if search_facebook or search_twitter:
     if search_facebook: platforms.append('facebook')
     if search_twitter: platforms.append('twitter')
+    if len(not_filter)>0:
+      soc_not_filter = " and msg_text" + not_filter
     where = ','.join(["'"+x+"'" for x in platforms])
-    sql = "select * from social_media_msg where platform in ({}) and msg_text like '%{}%' and {};".format(where, 
-      filter_search_string_for_sql(text), temporal_where(True, begin_date, end_date))
+    sql = "select * from social_media_msg where platform in ({}) and msg_text like '%{}%' and {} {} {};".format(where, 
+      filter_search_string_for_sql(text), temporal_where(True, begin_date, end_date), soc_not_filter, attrib_filter)
     soc_df = pd.read_sql(sql, db_conn)
     if len(soc_df) > 0:
       n_u_museums = soc_df.museum_id.nunique()

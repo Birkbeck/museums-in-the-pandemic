@@ -63,7 +63,7 @@ df = read_csv(paste0(data_fold, "analysis/indicators/total_indicators_w_uncertai
 colnames(df)
 df$indic_museum_pc_upper[df$indic_museum_pc_upper > 100] = 100
 # plot
-p = ggplot(data=df, aes(x=session_time, y=indic_museum_pc, colour=indicator_code_merged, linetype=indicator_code_merged)) + geom_point() + geom_line() + theme_light() + ylim(0,100)
+p = ggplot(data=df, aes(x=session_time, y=indic_museum_pc, colour=indicator_code_merged, linetype=indicator_code_merged)) + geom_point() + geom_line() + theme_light() + ylim(0,100) + ggtitle('Indicators for all museums (%) with upper and lower boundaries based on evaluation accuracy')
 p = p + geom_ribbon(aes(ymin = df$indic_museum_pc_lower, ymax = df$indic_museum_pc_upper), fill = 'gray10', alpha=.05, size=0.5 ) 
 
 fn = paste0(data_fold, "analysis/indicators/total_indicators_w_uncertain-n_museums_pc.pdf")
