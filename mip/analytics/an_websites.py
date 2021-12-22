@@ -227,6 +227,10 @@ def __extract_text_from_websites(tables):
     db_conn2 = connect_to_postgresql_db()
     for tab in tables['table']:
         print('\t',tab)
+        table_schema, table_name = tab.split('.')
+        if check_postgres_db_table_exists(table_schema, table_name + constants.table_suffix, db_conn2):
+            print('\t already done, skipping')
+            continue
         df = get_scraping_session_stats_by_museum(tab, db_conn2)
         #df = sample_df.merge(stats_df, how='left', left_on='mm_id', right_on='muse_id')
         df.to_excel('tmp/analytics/websites-stats-{}.xlsx'.format(tab), index=False)
@@ -239,6 +243,17 @@ def __extract_text_from_websites(tables):
     return pd.DataFrame()
 
 
+def check_postgres_db_table_exists(schema_name, table_name, dbcon):
+    sql = """SELECT EXISTS (
+        SELECT FROM pg_tables
+        WHERE  schemaname = '{}'
+        AND    tablename  = '{}'
+    ) as res;
+    """.format(schema_name, table_name)
+    df = pd.read_sql(sql, dbcon)
+    found = df.res.tolist()[0]
+    #print('check_postgres_db_table_exists', schema_name, table_name, found)
+    return found
 
 def analyse_museum_websites():
     """ Main function analyse_museum_websites """
@@ -248,9 +263,9 @@ def analyse_museum_websites():
 
     tables = get_scraping_session_tables(db_conn)
     tables_df = pd.DataFrame({'table':tables})
+    __extract_text_from_websites(tables_df)
     # extract fields from websites (PARALLEL)
-    parallel_dataframe_apply(tables_df, __extract_text_from_websites, n_cores=6)
-
+    #parallel_dataframe_apply(tables_df, __extract_text_from_websites, n_cores=1)
     return True
 
 

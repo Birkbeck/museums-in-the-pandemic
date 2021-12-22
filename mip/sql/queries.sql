@@ -98,4 +98,22 @@ select * from websites.web_pages_dump_20210304_attr wpda where page_id = 251480;
 
 select * from websites.web_pages_dump_20210901 wpda where page_id = 23250;
 
+SELECT pgClass.relname, pgClass.reltuples AS n_rows, pgClass.relnamespace
+    FROM
+        pg_class pgClass
+    LEFT JOIN
+        pg_namespace pgNamespace ON (pgNamespace.oid = pgClass.relnamespace)
+    WHERE
+        pgNamespace.nspname NOT IN ('pg_catalog', 'information_schema') 
+        AND pgClass.relkind='r'
+    order by pgClass.relname;
+
+  SELECT * FROM information_schema.tables; 
+ 
+select schemaname, relname, n_live_tup, n_dead_tup
+from pg_stat_user_tables
+order by schemaname, relname desc;
+
+select * from pg_catalog.pg_stat_user_tables 
+
 -- EOF
