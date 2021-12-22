@@ -148,7 +148,7 @@ def scrape_twitter_accounts(museums_df):
 
 
 def delete_twitter_account_from_db(muse_id, user_name, db_con):
-    sql = '''delete from twitter.tweets_dump where muse_id = '{}' and account = '{}';'''.format(muse_id, user_name)
+    sql = '''delete from twitter.tweets_dump where muse_id = '{}' and museum_account = '{}';'''.format(muse_id, user_name)
     print('deleting twitter account: ',user_name)
     cur = db_con.cursor()
     ret = cur.execute(sql)
