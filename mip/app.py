@@ -95,6 +95,7 @@ def main():
         
         if cmd == "scrape_twitter":
             print("scrape_twitter")
+            assert is_postgresql_db_accessible()
             df = get_twitter_facebook_links_v2()
             scrape_twitter_accounts(df)
 

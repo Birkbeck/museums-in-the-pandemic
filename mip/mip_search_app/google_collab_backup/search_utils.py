@@ -127,6 +127,7 @@ def run_search(text, search_string_not, case_sensitive, search_facebook, search_
   attrib_filter = generate_mus_attribute_filter(museum_name, museum_governance, museum_size)
 
   if search_website_sentences:
+    web_not_filter = ''
     if len(not_filter)>0:
       web_not_filter = " and sentence_text" + not_filter
     sql = "select * from websites_sentences_text where sentence_text like '%{}%' and {} {} {};".format(filter_search_string_for_sql(text), 
@@ -145,6 +146,7 @@ def run_search(text, search_string_not, case_sensitive, search_facebook, search_
   if search_facebook or search_twitter:
     if search_facebook: platforms.append('facebook')
     if search_twitter: platforms.append('twitter')
+    soc_not_filter = ''
     if len(not_filter)>0:
       soc_not_filter = " and msg_text" + not_filter
     where = ','.join(["'"+x+"'" for x in platforms])

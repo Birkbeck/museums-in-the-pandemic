@@ -38,9 +38,11 @@ def create_tweet_dump(db_conn):
         CREATE EXTENSION IF NOT EXISTS hstore;
         CREATE TABLE IF NOT EXISTS twitter.tweets_dump 
             (tw_id text NOT NULL,
-            account text NOT NULL,
             author_id text NOT NULL,
+            author_account text NOT NULL,
             tweet_text text NOT NULL,
+            is_reply boolean NOT NULL,
+            museum_account text NOT NULL,
             muse_id text NOT NULL,
             tw_ts timestamptz NOT NULL,
             tweet_data_json json NOT NULL,
@@ -104,14 +106,16 @@ def scrape_twitter_accounts(museums_df):
         return accounts
 
     no_twitter_mus = pd.DataFrame()
+
     # open connection to db
     db_engine = create_alchemy_engine_posgresql()
     db_con = connect_to_postgresql_db() #open_sqlite(twitter_db_fn)
     # init table
-    create_tweet_dump(db_con)
     min_date = datetime.datetime(2019, 1, 1, 0, 0, 0)
+    create_tweet_dump(db_con)
     i = 0
     # museums_df = museums_df.sample(len(museums_df)) # SHUFFLE
+    #museums_df = museums_df.sample(2) # DEBUG
     for idx, mus in museums_df.iterrows():
         i += 1
         mus_id = mus['museum_id']
@@ -153,7 +157,7 @@ def delete_twitter_account_from_db(muse_id, user_name, db_con):
 
 def has_db_museum_tweets(muse_id, user_name, db_con):
     '''@returns True if Twitter account exists in DB'''
-    sql = '''select count(*) as cnt from twitter.tweets_dump where muse_id = '{}' and account = '{}';'''.format(muse_id, user_name)
+    sql = '''select count(*) as cnt from twitter.tweets_dump where muse_id = '{}' and museum_account = '{}';'''.format(muse_id, user_name)
     df = pd.read_sql(sql, db_con)
     cnt = df.cnt[0]
     found = cnt > 0
@@ -190,10 +194,11 @@ def scrape_twitter_account(muse_id, user_name, min_date, db_con, db_engine):
     next_token = None
     query_params = {'query': 'from:'+user_name+' OR to:'+user_name, 
         'tweet.fields': 'attachments, author_id, conversation_id, created_at, entities, geo, id, in_reply_to_user_id, lang, public_metrics, possibly_sensitive, referenced_tweets, reply_settings, source, text, withheld'.replace(' ',''),
+        #'user.fields': 'created_at, description, entities, id, location, name, pinned_tweet_id, profile_image_url, protected, public_metrics, url, username, verified, withheld'.replace(' ',''),
+        'user.fields': 'created_at, description, id, location, name, profile_image_url, public_metrics, url, username, verified'.replace(' ',''),
         'expansions': 'attachments.poll_ids, attachments.media_keys, author_id, entities.mentions.username, geo.place_id, in_reply_to_user_id, referenced_tweets.id, referenced_tweets.id.author_id'.replace(' ',''),
         'start_time': start_time_iso,
         'max_results': 450
-        #'user.fields': 'created_at, description, entities, id, location, name, pinned_tweet_id, profile_image_url, protected, public_metrics, url, username, verified, withheld'.replace(' ',''),
         #'place.fields': 'contained_within, country, country_code, full_name, geo, id, name, place_type'.replace(' ',''),
     }
     # NOTE 'context_annotations' was removed because of the low tweet limit.
@@ -226,7 +231,7 @@ def scrape_twitter_account(muse_id, user_name, min_date, db_con, db_engine):
             # next token not found, stop
             keep_querying = False
         
-        json_results.append(json_response['data'])
+        json_results.append(json_response)
     
     # save data
     if len(json_results)==0:
@@ -238,10 +243,21 @@ def scrape_twitter_account(muse_id, user_name, min_date, db_con, db_engine):
     return found_tweets
 
 
-def insert_tweets_into_db(tweets, muse_id, tw_account, db_con):
+def insert_tweets_into_db(tweets_json, muse_id, tw_account, db_con):
     """ Insert twitter data into DB """
     assert muse_id
     assert db_con
+    # extract tweets and users
+    tweets = tweets_json['data']
+    assert 'includes' in tweets_json
+    users_j = tweets_json['includes']['users']
+    places_d = {}
+    if 'places' in tweets_json['includes']:
+        for p in tweets_json['includes']['places']:
+            places_d[p['id']] = p
+    users_d = {}
+    for u in users_j:
+        users_d[u['id']] = u
 
     if len(tweets) == 0: 
         return
@@ -251,11 +267,25 @@ def insert_tweets_into_db(tweets, muse_id, tw_account, db_con):
         # extract fields
         tw_id_str = x['id']
         user_id = x['author_id']
+        place_info = {}
+        if 'geo' in x and 'place_id' in x['geo']:
+            # add place info
+            place_info = places_d[x['geo']['place_id']]
+        assert user_id in users_d, 'user not found'
+        user_info = users_d[user_id]
+        user_name = user_info['username']
         ts = datetime.datetime.fromisoformat(x['created_at'].replace("Z", "+00:00"))
+        x['author_info'] = user_info
+        x['place_info'] = place_info
+        is_reply = False
+        if 'in_reply_to_user_id' in x:
+            is_reply = True
         json_attr = json.dumps(x)
+        b_museum_user = user_name == tw_account
         # insert sql
-        sql = '''INSERT INTO twitter.tweets_dump(tw_id, tw_ts, account, author_id, tweet_text, muse_id, tweet_data_json)
-              VALUES(%s,%s,%s,%s,%s,%s,%s);'''
-        cur.execute(sql, [tw_id_str, ts, tw_account, user_id, x['text'], muse_id, json_attr])
+        sql = '''INSERT INTO twitter.tweets_dump(tw_id, tw_ts, museum_account, author_account, 
+            author_id, tweet_text, is_reply, muse_id, tweet_data_json)
+            VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s);'''
+        cur.execute(sql, [tw_id_str, ts, tw_account, user_name, user_id, x['text'], is_reply, muse_id, json_attr])
     
     db_con.commit()
