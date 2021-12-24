@@ -140,6 +140,15 @@ def _write_str_to_file(s, fn, bGzip=False):
     log.info(str(len(s)) + " chars written in " + fn)
 
 
+def write_file(str_content, fout, append=False):
+    """ Write string to file """
+    mode = "w"
+    if append:
+        mode = 'a'
+    with open(fout, mode) as text_file:
+        text_file.write(str_content)
+
+
 def parallel_dataframe_apply(df, func, n_cores=4):
     """ Apply function to rows in parallel """
     df_split = np.array_split(df, n_cores)

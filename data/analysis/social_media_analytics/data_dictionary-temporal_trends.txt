@@ -1,0 +1,8 @@
+Temporal trends:
+'W','D','M','Q': week, day, month, quarter
+
+* tweets: number of tweets by museum in a given time slot
+* tweets_engage: number of tweets to the museum by other users in a given time slot
+* facebook_posts: number of facebook posts by museum in a given time slot
+* museums_on_tw: number of museums active on Twitter in a given time slot
+* museums_on_fb: number of museums active on Facebook in a given time slot

@@ -427,6 +427,7 @@ def an_results(df, search_string, case_sensitive, context_size, list_before_afte
     sns.barplot(data=time_counts, x='session_id', y='size', color='green')
     plt.xlabel('Websites scraping time')
     plt.ylabel('N search results')
+    plt.xticks(rotation=45, horizontalalignment='right')
     plt.show()
   # ==== analyse time distribution (Twitter/Facebook) ==== 
   soc_time_df = time_df[time_df.platform.isin(['twitter','facebook'])]
@@ -438,6 +439,7 @@ def an_results(df, search_string, case_sensitive, context_size, list_before_afte
     sns.lineplot(data=time_counts, x="msg_time", y="count", hue="platform", style='platform')
     plt.title('Search results in social media (weekly)')
     plt.ylabel('N search results')
+    plt.xticks(rotation=45, horizontalalignment='right')
     plt.show()
     del time_counts, time_col_grouper
   

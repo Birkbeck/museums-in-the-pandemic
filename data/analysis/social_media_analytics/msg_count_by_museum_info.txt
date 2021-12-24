@@ -1,0 +1,8 @@
+
+msg_count_twitter: number of tweets by the museum
+msg_count_twitter_engage: number of tweets to the museum by other users
+msg_count_facebook: number of FB messages by the museum
+
+<variable>_z: z score (0 = average, positive = above average, negative = below average)
+<variable>_decile: decile (1 = top, 10 = bottom)
+    

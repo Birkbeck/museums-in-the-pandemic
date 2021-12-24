@@ -10,7 +10,7 @@ select * from websites.web_pages_dump_20210304_attr where page_id in (149714, 40
 select * from websites.web_pages_dump_20210304 where page_id in (149714, 406382);
 
 -- twitter 
-select muse_id,count(*) from twitter.tweets_dump group by muse_id ;
+select muse_id, count(*) from twitter.tweets_dump group by muse_id ;
 select count(distinct muse_id) from twitter.tweets_dump;
 select count(*) from twitter.twitter_accounts_not_found;
 select count(*) from twitter.tweets_dump td;
