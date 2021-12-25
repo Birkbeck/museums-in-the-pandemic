@@ -19,6 +19,7 @@ select * from twitter.twitter_accounts_not_found tanf;
 
 select count(*) from twitter.tweets_dump td where muse_id = 'mm.ace.685';
 
+select muse_id as museum_id, author_account as account, museum_account as museum_account, tweet_text as msg_text, tw_ts as msg_time from twitter.tweets_dump limit 100;
 
 CREATE INDEX tweets_muse_id_idx ON twitter.tweets_dump(muse_id);
 
