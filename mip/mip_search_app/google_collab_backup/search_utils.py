@@ -94,7 +94,7 @@ def generate_mus_attribute_filter(mname, mgovernance, msize):
   #print(sql_filt)
   return sql_filt
   
-def run_search(text, search_string_not, case_sensitive, search_facebook, search_twitter,
+def run_search(text, search_string_not, case_sensitive, search_facebook, search_twitter, twitter_include_replies,
   search_websites, search_website_sentences, museum_name, museum_governance, museum_size, begin_date, end_date):
   """ 
   ============================================================
@@ -108,6 +108,8 @@ def run_search(text, search_string_not, case_sensitive, search_facebook, search_
   assert end_date <= datetime.now(), 'end_date cannot be in the future'
   assert begin_date <= end_date, "begin_date should be before end_date"
   assert search_facebook or search_twitter or search_websites or search_website_sentences, 'select at least one platform'
+  if twitter_include_replies and not search_twitter:
+    raise Exception('The "search_twitter_include_replies" option requires "search_twitter".')
   if search_websites and search_website_sentences:
     raise Exception('select either search_websites or search_website_sentences, not both')
   
@@ -152,8 +154,15 @@ def run_search(text, search_string_not, case_sensitive, search_facebook, search_
     where = ','.join(["'"+x+"'" for x in platforms])
     sql = "select * from social_media_msg where platform in ({}) and msg_text like '%{}%' and {} {} {};".format(where, 
       filter_search_string_for_sql(text), temporal_where(True, begin_date, end_date), soc_not_filter, attrib_filter)
+    # get results from DB
     soc_df = pd.read_sql(sql, db_conn)
+    
+    if not twitter_include_replies:
+      # filter out replies from twitter results
+        soc_df = soc_df[(soc_df.platform == 'facebook')|(soc_df.from_museum == True)]
+    
     if len(soc_df) > 0:
+      # results found
       n_u_museums = soc_df.museum_id.nunique()
       for pname, subdf in soc_df.groupby('platform'):
         print('{}: {} matches found. Unique museums: {}'.format(pname.upper(), len(subdf), subdf.museum_id.nunique()))
@@ -263,9 +272,13 @@ def generate_html_matches(res_df, search_string, case_sensitive, context_size_wo
       if match_text is None: continue
       if 'account' not in r:
         r['account'] = ''
-      results_page_d.append({'res':j, 'museum_id':r['museum_id'], 'account': r['account'],
-        'before':' '.join(bef_words), 'match': match_text, 'msg_time':msg_time_to_string(r.msg_time), #.str.slice(0,10)
-        'after':' '.join(aft_words), 'platform':r['platform'] })
+      if r['platform'] == 'twitter':
+        if not r['from_museum']:
+          r['account'] = '[reply] ' + r['account']
+      res_row = {'res':j, 'museum_id':r['museum_id'], 'account': r['account'],
+        'before':' '.join(bef_words), 'match': match_text, 'msg_time': msg_time_to_string(r.msg_time), #.str.slice(0,10)
+        'after':' '.join(aft_words), 'platform': r['platform'] }
+      results_page_d.append(res_row)
   assert j > 0
   if len(results_page_d) == 0:
     return '\nNo match found.', None
