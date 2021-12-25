@@ -850,11 +850,11 @@ def make_corpus_sqlite():
     if True:
         # insert twitter
         select_sql = "select muse_id as museum_id, author_account as account, museum_account as museum_account, (lower(author_account) = lower(museum_account)) as from_museum, tweet_text as msg_text, tw_ts as msg_time from twitter.tweets_dump"
-        scan_table_limit_offset(db_conn, select_sql, 50000, _save_in_local_db_twitter)
+        scan_table_limit_offset(db_conn, select_sql, 10000, _save_in_local_db_twitter)
         
         # insert facebook
         select_sql = "select museum_id, page_name as account, post_text as msg_text, post_ts as msg_time from facebook.facebook_posts_dump td"
-        scan_table_limit_offset(db_conn, select_sql, 50000, _save_in_local_db_facebook)
+        scan_table_limit_offset(db_conn, select_sql, 10000, _save_in_local_db_facebook)
         
         # https://www.sqlitetutorial.net/sqlite-index/
         sql_commands = [
