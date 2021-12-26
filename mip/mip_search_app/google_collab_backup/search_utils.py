@@ -136,6 +136,7 @@ def run_search(text, search_string_not, case_sensitive, search_facebook, search_
       temporal_where(False, begin_date, end_date), web_not_filter, attrib_filter)
     #print(sql) # debug
     web_df = pd.read_sql(sql, db_conn)
+    web_df = web_df.drop_duplicates()
     if len(web_df) > 0:
       n_u_museums = web_df.museum_id.nunique()
       web_df['platform'] = 'website_sentences'
@@ -161,6 +162,7 @@ def run_search(text, search_string_not, case_sensitive, search_facebook, search_
       # filter out replies from twitter results
         soc_df = soc_df[(soc_df.platform == 'facebook')|(soc_df.from_museum == True)]
     
+    soc_df = soc_df.drop_duplicates()
     if len(soc_df) > 0:
       # results found
       n_u_museums = soc_df.museum_id.nunique()
@@ -169,7 +171,7 @@ def run_search(text, search_string_not, case_sensitive, search_facebook, search_
     else:
       print("TWITTER/FACEBOOK: no matches found.")
 
-  df = merge_results(web_df, soc_df)
+  df = merge_results(web_df, soc_df).copy()
   df['begin_date'] = begin_date
   df['end_date'] = end_date
   return df
