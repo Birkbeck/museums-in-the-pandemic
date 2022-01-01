@@ -19,7 +19,7 @@ select * from twitter.twitter_accounts_not_found tanf;
 
 select count(*) from twitter.tweets_dump td where muse_id = 'mm.ace.685';
 
-select muse_id as museum_id, author_account as account, museum_account as museum_account, tweet_text as msg_text, tw_ts as msg_time from twitter.tweets_dump limit 100;
+select muse_id as museum_id, , author_account as account, museum_account as museum_account, tweet_text as msg_text, tw_ts as msg_time from twitter.tweets_dump limit 100;
 
 CREATE INDEX tweets_muse_id_idx ON twitter.tweets_dump(muse_id);
 
@@ -57,6 +57,8 @@ select count(*) from websites.url_redirections ur;
 select count(*) from analytics.website_sizes ws;
 
 select * from websites.web_pages_dump_20210914 p where p.referer_url in ('https://www.upperheyfordheritage.co.uk/home-page/tours/index.html','https://www.upperheyfordheritage.co.uk/home-page/tours/','http://www.upperheyfordheritage.co.uk/home-page/tours','http://www.upperheyfordheritage.co.uk/home-page/tours/index.html','https://www.upperheyfordheritage.co.uk/home-page/tours/index.htm','https://www.upperheyfordheritage.co.uk/home-page/tours/index.php','http://www.upperheyfordheritage.co.uk/home-page/tours/index.php','http://www.upperheyfordheritage.co.uk/home-page/tours/index.htm','http://www.upperheyfordheritage.co.uk/home-page/tours/','https://www.upperheyfordheritage.co.uk/home-page/tours');
+
+select * from websites.web_pages_dump_20210404 where url = 'https://www.shetlandheritageassociation.com/members/south-mainland/george-waterston-memorial-museum';
 
 -- debugging of the page logic     
 --   20210420 29599;
