@@ -60,6 +60,8 @@ select * from websites.web_pages_dump_20210914 p where p.referer_url in ('https:
 
 select * from websites.web_pages_dump_20210404 where url = 'https://www.shetlandheritageassociation.com/members/south-mainland/george-waterston-memorial-museum';
 
+select * from websites.web_pages_dump_20210404 where muse_id = 'mm.misc.137';
+
 -- debugging of the page logic     
 --   20210420 29599;
 --   20210914 197;

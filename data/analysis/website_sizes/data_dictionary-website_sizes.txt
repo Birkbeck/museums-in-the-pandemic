@@ -1,0 +1,9 @@
+
+Analysis of size of museum websites:
+
+* page_text_len: length of plain text in the main web page (n characters)
+* page_text_words: number of words in plain text in the main web page
+* page_html_len: length of HTML code in the main web page (n characters)
+* links_level1: number of links in the main page
+* sum_links_length: sum of lenghts of plain text pages linked from main page (n characters)
+* sum_links_words: sum of lenghts plain text pages linked from main page (n of words)
