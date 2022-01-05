@@ -173,3 +173,4 @@ data/annotations/~$msg_count_by_museum_manual_validation-v2.xlsx
 mip/mip_search_app/mip_corpus_search.db.gz
 data/analysis/website_sizes/~$website_size_by_museum-mean.xlsx
 .RData
+data/analysis/social_media_analytics/~$msg_count_by_museum.xlsx
