@@ -19,7 +19,7 @@ from scrapers.scraper_websites import scrape_websites
 from scrapers.scraper_twitter import scrape_twitter_accounts
 from scrapers.scraper_facebook import scrape_facebook
 from analytics.an_websites import analyse_museum_websites, website_size_analysis
-from analytics.text_models import analyse_museum_text, make_text_corpus, make_social_media_corpus, make_corpus_sqlite
+from analytics.text_models import analyse_museum_text, make_text_corpus, make_social_media_corpus, make_corpus_sqlite, analyse_museum_indic_social_media
 from museums import load_input_museums, load_input_museums_wattributes, load_extracted_museums, \
     generate_stratified_museum_sample,generate_stratified_museum_urls, combinedatasets, \
     get_fuzzy_string_match_scores, load_fuzzy_museums, compare_result_to_sample, get_museums_w_web_urls, \
@@ -120,7 +120,8 @@ def main():
             ## python -m spacy download en_core_web_sm
             # python -m spacy download en_core_web_lg
             assert is_postgresql_db_accessible()
-            analyse_museum_text()
+            #analyse_museum_text()
+            analyse_museum_indic_social_media()
 
         if cmd == "corpus":
             print("corpus")

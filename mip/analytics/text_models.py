@@ -23,9 +23,11 @@ from analytics.an_websites import get_webdump_attr_table_name
 from utils import remove_empty_elem_from_list, remove_multiple_spaces_tabs, _is_number, parallel_dataframe_apply, parallel_dataframe_apply_wparams
 import matplotlib.pyplot as plt
 from db.db import make_string_sql_safe
-from museums import get_museums_w_web_urls, get_museums_sample_urls, load_input_museums_wattributes
+from museums import get_museums_w_web_urls, get_museums_sample_urls, load_input_museums_wattributes, get_twitter_facebook_links_v2
 from analytics.an_websites import get_page_id_for_webpage_url, get_attribute_for_webpage_id, get_attribute_for_webpage_url_lookback
 from scrapers.scraper_websites import get_scraping_session_tables, get_session_id_from_table_name, check_redirections_before_scraping
+from scrapers.scraper_twitter import get_tweets_from_db
+from scrapers.scraper_facebook import get_fb_posts_from_db
 import sqlite3
 # load language model
 #import en_core_web_sm # small
@@ -163,6 +165,24 @@ def _preprocess_input_text(txt):
         return None
     return t
 
+
+def spacy_extract_tokens_social_msg(platform, msg_id, text, nlp, db_conn, db_engine, insert_db=False):
+    ''' to extract indicators from social media messages '''
+    if text is None or len(text) < 3: 
+        return None
+    text = _preprocess_input_text(text)
+    
+    tokens_df = spacy_extract_tokens(nlp, text)
+    tokens_df["platform"] = platform
+    tokens_df["msg_id"] = msg_id
+
+    # change sentence id format
+    tokens_df['sentence_id'] = ["{}_msg{}_sent{:05d}".format(platform,msg_id,x) for x in tokens_df['sentence_id']]
+    if insert_db:
+        # insert tokens into DB
+        print("spacy_extract_tokens_social_msg insert tokens into DB (n={})...".format(len(tokens_df)))
+        tokens_df.to_sql('mus_social_sentence_tokens', db_engine, schema='analytics', index=False, if_exists='append', method='multi')
+    return tokens_df
 
 def spacy_extract_tokens_page(session_id, page_id, nlp, text, db_conn, db_engine, insert_db=False):
     """ 
@@ -309,6 +329,92 @@ def add_index_to_match_table(session_id, db_conn):
     c = db_conn.cursor()
     c.execute(idx_sql)
     db_conn.commit()
+
+
+def analyse_museum_indic_social_media():
+    """ Finds indicators in social media text """
+    print('analyse_museum_indic_social_media')
+    db_conn = connect_to_postgresql_db()
+    db_engine = create_alchemy_engine_posgresql()
+
+    # load museum data
+    soc_df = get_twitter_facebook_links_v2()
+    attr_df = load_input_museums_wattributes()
+    soc_df = pd.merge(soc_df, attr_df, left_on='museum_id', right_on='muse_id', how='left')
+    print('N =',len(soc_df))
+    
+    # load NLP
+    import spacy    
+    from spacy import displacy
+    from collections import Counter
+    spacy.prefer_gpu()
+    nlp = en_core_web_lg.load()
+
+    # get indicator tokens and write them to the DB
+    ann_tokens_df = get_indicator_annotation_tokens(nlp)
+    if True:
+        ann_tokens_df.to_sql('indicator_annotation_tokens', db_engine, schema='analytics', index=False, if_exists='replace', method='multi')
+
+    msg_counts_d = []
+    i = 0
+    soc_df = soc_df.sample(50, random_state=12) # DEBUG
+    
+    for index, row in soc_df.iterrows():
+        i += 1
+        museum_id = row['muse_id']
+
+        msg_df = get_tweets_from_db(museum_id, db_conn)
+        msg_fb_df = get_fb_posts_from_db(museum_id, db_conn)
+        
+        msg = ">>> Processing museum {} of {}, museum_id={} tweets={} fb_messages={}".format(i, len(soc_df), museum_id, len(msg_df), len(msg_fb_df))
+        msg_counts_d.append({'museum_id':museum_id, 'twitter_n': len(msg_df), 'facebook_n': len(msg_fb_df)})
+        logger.info(msg)
+        print(msg)
+
+        if len(msg_fb_df) > 0:
+            msg_df = msg_df.append(msg_fb_df)
+    
+        if len(msg_df) == 0: continue
+
+        # build tokens from messages
+        social_tokens_df = pd.DataFrame()
+        #msg_df = msg_df.sample(10, random_state=12) # DEBUG
+        for msg_idx, row in msg_df.iterrows():
+            tokens = spacy_extract_tokens_social_msg(row['platform'], row['msg_id'], row['msg'], nlp, db_conn, db_engine)
+            if tokens is None or len(tokens)==0: 
+                continue
+            tokens['museum_id'] = museum_id
+            social_tokens_df = social_tokens_df.append(tokens)
+            del tokens
+
+        # find matches
+        keep_stopwords = True
+        social_tokens_filt_df = _filter_tokens(social_tokens_df, keep_stopwords)
+        ann_tokens_filt_df = _filter_tokens(ann_tokens_df, keep_stopwords)
+
+        # add full text for DEBUG
+        sent_full_txt_df = social_tokens_filt_df.groupby('sentence_id').apply(lambda x: " ".join(x['token'].tolist())).to_frame().rename(columns={0:'page_tokens'})
+        ann_full_txt_df = ann_tokens_filt_df.groupby('example_id').apply(lambda x: " ".join(x['token'].tolist())).to_frame().rename(columns={0:'ann_ex_tokens'})
+        
+        dummy_page_id = row['platform']+'_'+row['msg_id']
+        # find matches (slow)
+        match_df = _match_musetext_indicators(museum_id, 'dummy_session', dummy_page_id, ann_tokens_filt_df, social_tokens_filt_df, 
+                ann_full_txt_df, sent_full_txt_df, keep_stopwords, db_conn, db_engine, nlp)
+        # get platform and msg id
+        match_df[['platform','msg_id']] = match_df['page_id'].str.split('_', expand=True)
+        # save matches into DB
+        match_df.to_sql('indicators_social_media_matches', db_engine, schema='analytics', index=False, if_exists='append', method='multi')
+        time.sleep(.05)
+
+    msg_counts_df = pd.DataFrame(msg_counts_d)
+    msg_counts_df.to_sql('social_media_msg_counts', db_engine, schema='analytics', index=False, if_exists='replace', method='multi')
+    del i
+    del nlp
+    db_conn.close()
+    db_engine.dispose()
+
+    # TODO
+
 
 def analyse_museum_text():
     """
@@ -553,7 +659,7 @@ def _get_museum_indic_match_table_name(session_id, add_schema=True):
 
 
 def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, page_tokens_df, 
-                annotat_full_txt_df, sentences_full_txt_df, keep_stopwords, db_conn, db_engine, nlp):
+                annotat_full_txt_df, sentences_full_txt_df, keep_stopwords, db_conn, db_engine, nlp, insert_db=True):
     """ 
     Main match loop between set of sentences and set of annotations for a single museum 
     """
@@ -665,23 +771,25 @@ def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, page_toke
     match_df['muse_id'] = muse_id
     match_df['keep_stopwords'] = keep_stopwords
 
-    # clear page before insertion
-    try:
-        sql = "delete from {} where session_id = '{}' and page_id = {} and keep_stopwords = {};".format(_get_museum_indic_match_table_name(session_id), session_id, page_id, keep_stopwords)
-        c = db_conn.cursor()
-        c.execute(sql)
-        db_conn.commit()
-        logger.debug('delete from text_indic_ann_matches ok.')
-    except:
-        logger.warning('delete from text_indic_ann_matches failed, roll back.')
-        db_conn.rollback()
+    if insert_db:
+        # clear page before insertion
+        try:
+            sql = "delete from {} where session_id = '{}' and page_id = {} and keep_stopwords = {};".format(_get_museum_indic_match_table_name(session_id), session_id, page_id, keep_stopwords)
+            c = db_conn.cursor()
+            c.execute(sql)
+            db_conn.commit()
+            logger.debug('delete from text_indic_ann_matches ok.')
+        except:
+            logger.warning('delete from text_indic_ann_matches failed, roll back.')
+            db_conn.rollback()
+        
+        # insert match results into SQL table
+        logger.debug(sw.tick('match'))
+        tab = _get_museum_indic_match_table_name(session_id, False)
+        match_df.to_sql(tab, db_engine, schema='analytics', index=False, if_exists='append', method='multi')
+        logger.debug(sw.tick('to_sql n={}'.format(len(match_df))))
     
-    # insert match results into SQL table
-    logger.debug(sw.tick('match'))
-    tab = _get_museum_indic_match_table_name(session_id, False)
-    match_df.to_sql(tab, db_engine, schema='analytics', index=False, if_exists='append', method='multi')
-    logger.debug(sw.tick('to_sql n={}'.format(len(match_df))))
-    return df
+    return match_df
 
     
 def _OLD_match_musetext_vs_indicator_example(txt_df, annot_df):

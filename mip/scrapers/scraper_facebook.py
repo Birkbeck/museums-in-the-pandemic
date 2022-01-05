@@ -103,6 +103,14 @@ def delete_facebook_account_from_db(muse_id, user_name, db_con):
     i = 0
 
 
+def get_fb_posts_from_db(museum_id, db_conn):
+    ''' get facebook posts to find indicators '''
+    assert museum_id
+    sql = '''select museum_id, post_id as msg_id, post_text as msg, post_ts as ts, 'facebook' as platform from facebook.facebook_posts_dump where museum_id = '{}' '''.format(museum_id)
+    df = pd.read_sql(sql, db_conn)
+    return df
+
+
 def get_earliest_date(fbdata):
     times = [p['time'] for p in fbdata]
     min_t = min(times)

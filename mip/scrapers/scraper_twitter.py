@@ -243,6 +243,14 @@ def scrape_twitter_account(muse_id, user_name, min_date, db_con, db_engine):
     return found_tweets
 
 
+def get_tweets_from_db(museum_id, db_conn):
+    ''' get tweets' text to find indicators '''
+    assert museum_id
+    sql = '''select muse_id as museum_id, tw_id as msg_id, tweet_text as msg, tw_ts as ts, 'twitter' as platform from twitter.tweets_dump where muse_id = '{}' and not is_reply '''.format(museum_id)
+    df = pd.read_sql(sql, db_conn)
+    return df
+
+
 def insert_tweets_into_db(tweets_json, muse_id, tw_account, db_con):
     """ Insert twitter data into DB """
     assert muse_id
