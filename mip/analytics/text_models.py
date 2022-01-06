@@ -339,10 +339,10 @@ def analyse_museum_indic_social_media():
     soc_df = get_twitter_facebook_links_v2()
     attr_df = load_input_museums_wattributes()
     soc_df = pd.merge(soc_df, attr_df, left_on='museum_id', right_on='muse_id', how='left')
-    soc_df = soc_df.sample(30, random_state=12) # DEBUG
+    soc_df = soc_df.sample(10, random_state=11) # DEBUG
     print('N =',len(soc_df))
 
-    parallel_dataframe_apply(soc_df, __analyse_museum_indic_social_media_parall, n_cores=2)
+    parallel_dataframe_apply(soc_df, __analyse_museum_indic_social_media_parall, n_cores=1)
 
 
 def __analyse_museum_indic_social_media_parall(soc_df):
@@ -413,6 +413,7 @@ def __analyse_museum_indic_social_media_parall(soc_df):
             # find matches (slow)
             match_df = _match_musetext_indicators(museum_id, 'dummy_session', dummy_page_id, ann_tokens_filt_df, social_tokens_filt_df, 
                     ann_full_txt_df, sent_full_txt_df, keep_stopwords, db_conn, db_engine, nlp, insert_db=False)
+            if match_df is None or len(match_df) == 0: continue
             # get platform and msg id
             # sentence id: twitter_msg1091648170462007301_sent00001
             match_df[['platform','msg_id','msg_sentence_id']] = match_df['sentence_id'].str.split('_', expand=True)
