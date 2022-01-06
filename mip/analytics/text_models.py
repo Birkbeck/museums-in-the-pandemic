@@ -420,7 +420,7 @@ def __analyse_museum_indic_social_media_parall(soc_df):
             match_df['msg_id'] = match_df['msg_id'].str.replace('msg','')
             print('match_df n=',len(match_df))
             # add time stamps
-            match_df = match_df.merge(msg_df[['msg_id','ts']], on='msg_id')
+            match_df = match_df.merge(msg_chunk_df[['msg_id','ts']], on='msg_id')
 
             # save matches into DB
             match_df.to_sql('indicators_social_media_matches', db_engine, schema='analytics', index=False, if_exists='append', method='multi')
