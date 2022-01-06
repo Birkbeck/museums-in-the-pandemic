@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 from db.db import connect_to_postgresql_db, create_alchemy_engine_posgresql, create_alchemy_engine_sqlite_corpus, scan_table_limit_offset
 import pandas as pd
-from utils import StopWatch
+from utils import StopWatch, split_dataframe
 import numpy as np
 import pickle
 import time
@@ -334,15 +334,22 @@ def add_index_to_match_table(session_id, db_conn):
 def analyse_museum_indic_social_media():
     """ Finds indicators in social media text """
     print('analyse_museum_indic_social_media')
-    db_conn = connect_to_postgresql_db()
-    db_engine = create_alchemy_engine_posgresql()
 
     # load museum data
     soc_df = get_twitter_facebook_links_v2()
     attr_df = load_input_museums_wattributes()
     soc_df = pd.merge(soc_df, attr_df, left_on='museum_id', right_on='muse_id', how='left')
+    soc_df = soc_df.sample(30, random_state=12) # DEBUG
     print('N =',len(soc_df))
-    
+
+    parallel_dataframe_apply(soc_df, __analyse_museum_indic_social_media_parall, n_cores=2)
+
+
+def __analyse_museum_indic_social_media_parall(soc_df):
+    """ parallel function for analyse_museum_indic_social_media() """
+    db_conn = connect_to_postgresql_db()
+    db_engine = create_alchemy_engine_posgresql()
+
     # load NLP
     import spacy    
     from spacy import displacy
@@ -352,12 +359,11 @@ def analyse_museum_indic_social_media():
 
     # get indicator tokens and write them to the DB
     ann_tokens_df = get_indicator_annotation_tokens(nlp)
-    if True:
+    if False:
         ann_tokens_df.to_sql('indicator_annotation_tokens', db_engine, schema='analytics', index=False, if_exists='replace', method='multi')
 
     msg_counts_d = []
     i = 0
-    soc_df = soc_df.sample(50, random_state=12) # DEBUG
     
     for index, row in soc_df.iterrows():
         i += 1
@@ -373,47 +379,60 @@ def analyse_museum_indic_social_media():
 
         if len(msg_fb_df) > 0:
             msg_df = msg_df.append(msg_fb_df)
-    
+        del msg_fb_df
         if len(msg_df) == 0: continue
 
         # build tokens from messages
         social_tokens_df = pd.DataFrame()
         #msg_df = msg_df.sample(10, random_state=12) # DEBUG
-        for msg_idx, row in msg_df.iterrows():
-            tokens = spacy_extract_tokens_social_msg(row['platform'], row['msg_id'], row['msg'], nlp, db_conn, db_engine)
-            if tokens is None or len(tokens)==0: 
-                continue
-            tokens['museum_id'] = museum_id
-            social_tokens_df = social_tokens_df.append(tokens)
-            del tokens
+        # make chunks
+        chunk_size = 1000
+        msg_df_split = split_dataframe(msg_df, chunk_size)
+        del msg_df
+        print('  msg_df_split N =',len(msg_df_split))
+        for msg_chunk_df in msg_df_split:
+            for msg_idx, msg_row in msg_chunk_df.iterrows():
+                tokens = spacy_extract_tokens_social_msg(msg_row['platform'], msg_row['msg_id'], msg_row['msg'], nlp, db_conn, db_engine)
+                if tokens is None or len(tokens)==0: 
+                    continue
+                tokens['museum_id'] = museum_id
+                social_tokens_df = social_tokens_df.append(tokens)
+                del tokens
 
-        # find matches
-        keep_stopwords = True
-        social_tokens_filt_df = _filter_tokens(social_tokens_df, keep_stopwords)
-        ann_tokens_filt_df = _filter_tokens(ann_tokens_df, keep_stopwords)
+            print('  social_tokens_df n =',len(social_tokens_df))
+            # find matches
+            keep_stopwords = True
+            social_tokens_filt_df = _filter_tokens(social_tokens_df, keep_stopwords)
+            ann_tokens_filt_df = _filter_tokens(ann_tokens_df, keep_stopwords)
 
-        # add full text for DEBUG
-        sent_full_txt_df = social_tokens_filt_df.groupby('sentence_id').apply(lambda x: " ".join(x['token'].tolist())).to_frame().rename(columns={0:'page_tokens'})
-        ann_full_txt_df = ann_tokens_filt_df.groupby('example_id').apply(lambda x: " ".join(x['token'].tolist())).to_frame().rename(columns={0:'ann_ex_tokens'})
-        
-        dummy_page_id = row['platform']+'_'+row['msg_id']
-        # find matches (slow)
-        match_df = _match_musetext_indicators(museum_id, 'dummy_session', dummy_page_id, ann_tokens_filt_df, social_tokens_filt_df, 
-                ann_full_txt_df, sent_full_txt_df, keep_stopwords, db_conn, db_engine, nlp)
-        # get platform and msg id
-        match_df[['platform','msg_id']] = match_df['page_id'].str.split('_', expand=True)
-        # save matches into DB
-        match_df.to_sql('indicators_social_media_matches', db_engine, schema='analytics', index=False, if_exists='append', method='multi')
-        time.sleep(.05)
+            # add full text for DEBUG
+            sent_full_txt_df = social_tokens_filt_df.groupby('sentence_id').apply(lambda x: " ".join(x['token'].tolist())).to_frame().rename(columns={0:'page_tokens'})
+            ann_full_txt_df = ann_tokens_filt_df.groupby('example_id').apply(lambda x: " ".join(x['token'].tolist())).to_frame().rename(columns={0:'ann_ex_tokens'})
+            
+            dummy_page_id = museum_id + '-all_social'
+            # find matches (slow)
+            match_df = _match_musetext_indicators(museum_id, 'dummy_session', dummy_page_id, ann_tokens_filt_df, social_tokens_filt_df, 
+                    ann_full_txt_df, sent_full_txt_df, keep_stopwords, db_conn, db_engine, nlp, insert_db=False)
+            # get platform and msg id
+            # sentence id: twitter_msg1091648170462007301_sent00001
+            match_df[['platform','msg_id','msg_sentence_id']] = match_df['sentence_id'].str.split('_', expand=True)
+            match_df['msg_id'] = match_df['msg_id'].str.replace('msg','')
+            print('match_df n=',len(match_df))
+            # add time stamps
+            match_df = match_df.merge(msg_df[['msg_id','ts']], on='msg_id')
+
+            # save matches into DB
+            match_df.to_sql('indicators_social_media_matches', db_engine, schema='analytics', index=False, if_exists='append', method='multi')
+            del match_df
+            time.sleep(.01)
 
     msg_counts_df = pd.DataFrame(msg_counts_d)
-    msg_counts_df.to_sql('social_media_msg_counts', db_engine, schema='analytics', index=False, if_exists='replace', method='multi')
+    msg_counts_df.to_sql('social_media_msg_counts', db_engine, schema='analytics', index=False, if_exists='append', method='multi')
     del i
     del nlp
     db_conn.close()
     db_engine.dispose()
-
-    # TODO
+    return msg_counts_df
 
 
 def analyse_museum_text():
@@ -661,7 +680,7 @@ def _get_museum_indic_match_table_name(session_id, add_schema=True):
 def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, page_tokens_df, 
                 annotat_full_txt_df, sentences_full_txt_df, keep_stopwords, db_conn, db_engine, nlp, insert_db=True):
     """ 
-    Main match loop between set of sentences and set of annotations for a single museum 
+    Main match loop between set of sentences and set of annotations for a single museum
     """
     assert muse_id
     assert session_id
