@@ -361,7 +361,7 @@ def __analyse_museum_indic_social_media_parall(soc_df):
     ann_tokens_df = get_indicator_annotation_tokens(nlp)
     if False:
         ann_tokens_df.to_sql('indicator_annotation_tokens', db_engine, schema='analytics', index=False, if_exists='replace', method='multi')
-
+    
     msg_counts_d = []
     i = 0
     
@@ -382,8 +382,6 @@ def __analyse_museum_indic_social_media_parall(soc_df):
         del msg_fb_df
         if len(msg_df) == 0: continue
 
-        # build tokens from messages
-        social_tokens_df = pd.DataFrame()
         #msg_df = msg_df.sample(10, random_state=12) # DEBUG
         # make chunks
         chunk_size = 1000
@@ -391,6 +389,9 @@ def __analyse_museum_indic_social_media_parall(soc_df):
         del msg_df
         print('  msg_df_split N =',len(msg_df_split))
         for msg_chunk_df in msg_df_split:
+            # build tokens from messages
+            social_tokens_df = pd.DataFrame()
+            # scan tweets or fb messages
             for msg_idx, msg_row in msg_chunk_df.iterrows():
                 tokens = spacy_extract_tokens_social_msg(msg_row['platform'], msg_row['msg_id'], msg_row['msg'], nlp, db_conn, db_engine)
                 if tokens is None or len(tokens)==0: 
@@ -425,6 +426,7 @@ def __analyse_museum_indic_social_media_parall(soc_df):
             # save matches into DB
             match_df.to_sql('indicators_social_media_matches', db_engine, schema='analytics', index=False, if_exists='append', method='multi')
             del match_df
+            del social_tokens_df
             time.sleep(.01)
 
     msg_counts_df = pd.DataFrame(msg_counts_d)

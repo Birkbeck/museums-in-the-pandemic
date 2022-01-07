@@ -121,4 +121,9 @@ order by schemaname, relname desc;
 
 select * from pg_catalog.pg_stat_user_tables 
 
+-- ----------------------------------------
+-- Social media indicators
+-- ----------------------------------------
+
+select count(*) from analytics.indicators_social_media_matches;
 -- EOF
