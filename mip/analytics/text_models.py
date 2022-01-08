@@ -339,9 +339,9 @@ def analyse_museum_indic_social_media():
     soc_df = get_twitter_facebook_links_v2()
     attr_df = load_input_museums_wattributes()
     soc_df = pd.merge(soc_df, attr_df, left_on='museum_id', right_on='muse_id', how='left')
-    soc_df = soc_df.sample(100, random_state=11) # DEBUG
+    #soc_df = soc_df.sample(100, random_state=11) # DEBUG
     print('N =',len(soc_df))
-
+    
     parallel_dataframe_apply(soc_df, __analyse_museum_indic_social_media_parall, n_cores=5)
 
 
