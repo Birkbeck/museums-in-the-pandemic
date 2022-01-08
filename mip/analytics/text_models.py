@@ -342,7 +342,7 @@ def analyse_museum_indic_social_media():
     soc_df = soc_df.sample(100, random_state=11) # DEBUG
     print('N =',len(soc_df))
 
-    parallel_dataframe_apply(soc_df, __analyse_museum_indic_social_media_parall, n_cores=4)
+    parallel_dataframe_apply(soc_df, __analyse_museum_indic_social_media_parall, n_cores=5)
 
 
 def __analyse_museum_indic_social_media_parall(soc_df):
@@ -364,14 +364,14 @@ def __analyse_museum_indic_social_media_parall(soc_df):
 
     msg_counts_d = []
     i = 0
-    
     for index, row in soc_df.iterrows():
         i += 1
         museum_id = row['muse_id']
+        sw = StopWatch('__analyse_museum_indic_social_media_parall ' + museum_id)
 
         msg_df = get_tweets_from_db(museum_id, db_conn)
         msg_fb_df = get_fb_posts_from_db(museum_id, db_conn)
-        
+        #print(sw.tick('1'))
         msg = ">>> Processing museum {} of {}, museum_id={} tweets={} fb_messages={}".format(i, len(soc_df), museum_id, len(msg_df), len(msg_fb_df))
         msg_counts_d.append({'museum_id':museum_id, 'twitter_n': len(msg_df), 'facebook_n': len(msg_fb_df)})
         logger.info(msg)
@@ -388,7 +388,9 @@ def __analyse_museum_indic_social_media_parall(soc_df):
         msg_df_split = split_dataframe(msg_df, chunk_size)
         del msg_df
         print('  msg_df_split N =',len(msg_df_split))
+
         for msg_chunk_df in msg_df_split:
+            #print(sw.tick('2'))
             # build tokens from messages
             social_tokens_df = pd.DataFrame()
             # scan tweets or fb messages
@@ -405,21 +407,23 @@ def __analyse_museum_indic_social_media_parall(soc_df):
             keep_stopwords = True
             social_tokens_filt_df = _filter_tokens(social_tokens_df, keep_stopwords)
             ann_tokens_filt_df = _filter_tokens(ann_tokens_df, keep_stopwords)
-
+            #print(sw.tick('3'))
             # add full text for DEBUG
             sent_full_txt_df = social_tokens_filt_df.groupby('sentence_id').apply(lambda x: " ".join(x['token'].tolist())).to_frame().rename(columns={0:'page_tokens'})
             ann_full_txt_df = ann_tokens_filt_df.groupby('example_id').apply(lambda x: " ".join(x['token'].tolist())).to_frame().rename(columns={0:'ann_ex_tokens'})
             
             dummy_page_id = museum_id + '-all_social'
             # find matches (slow)
+            #print(sw.tick('4'))
             match_df = _match_musetext_indicators(museum_id, 'dummy_session', dummy_page_id, ann_tokens_filt_df, social_tokens_filt_df, 
                     ann_full_txt_df, sent_full_txt_df, keep_stopwords, db_conn, db_engine, nlp, insert_db=False)
+            print(sw.tick('match'))
             if match_df is None or len(match_df) == 0: continue
             # get platform and msg id
             # sentence id: twitter_msg1091648170462007301_sent00001
             match_df[['platform','msg_id','msg_sentence_id']] = match_df['sentence_id'].str.split('_', expand=True)
             match_df['msg_id'] = match_df['msg_id'].str.replace('msg','')
-            print('match_df n=',len(match_df))
+            print('    match_df n =', len(match_df))
             # add time stamps
             match_df = match_df.merge(msg_chunk_df[['msg_id','ts']], on='msg_id')
             # filter poor matches to save space
@@ -429,7 +433,8 @@ def __analyse_museum_indic_social_media_parall(soc_df):
             match_df.to_sql('indicators_social_media_matches', db_engine, schema='analytics', index=False, if_exists='append', method='multi')
             del match_df
             del social_tokens_df
-            time.sleep(.01)
+            time.sleep(.001)
+        print(sw.tick())
 
     msg_counts_df = pd.DataFrame(msg_counts_d)
     msg_counts_df.to_sql('social_media_msg_counts', db_engine, schema='analytics', index=False, if_exists='append', method='multi')
@@ -699,7 +704,6 @@ def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, page_toke
     df = pd.DataFrame()
     if len(page_tokens_df)==0:
         return df
-    
     # count sentence length in input data
     txt_len_df = txt_df.groupby(['sentence_id']).size().reset_index().rename(columns={0:'sent_len'})
     ann_len_df = annot_df.groupby(['example_id']).size().reset_index().rename(columns={0:'example_len'})
@@ -750,7 +754,7 @@ def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, page_toke
     assert n == len(match_df), str(len(match_df))
 
     match_df = match_df.drop(columns=['sentence_id_txt'])
-
+    
     # calculate overlaps
     digits = 5
     match_df['ann_overlap_lemma'] = round(match_df['lemma_n'] / match_df['example_len'],digits)
@@ -781,20 +785,38 @@ def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, page_toke
 
     # calculate semantic similarity
     match_df['sem_similarity'] = None
-    for g, subdf in match_df.groupby(['example_id','sentence_id']):
-        ex_txt = ' '.join(subdf['ann_ex_tokens'].tolist())
-        page_txt = ' '.join(subdf['page_tokens'].tolist())
+    # VERY SLOW
+    k = 0
+    if False: # OLD VERSION for websites
+        print(len(match_df.groupby(['example_id','sentence_id'])))
+        for g, subdf in match_df.groupby(['example_id','sentence_id']):
+            k += 1
+            if k % 1000 == 0: print('     calc sim ', k)
+            assert len(subdf) == 1
+            ex_txt = ' '.join(subdf['ann_ex_tokens'].tolist())
+            page_txt = ' '.join(subdf['page_tokens'].tolist())
+            snt1 = nlp(ex_txt)
+            snt2 = nlp(page_txt)
+            sim = round(snt1.similarity(snt2), 4)
+            match_df.loc[(match_df.example_id == g[0]) & (match_df.sentence_id == g[1]), 'sem_similarity'] = sim
+        print(sw.tick('sim '+str(k)))
+
+    def __calc_semantic_sim(row): 
+        """ Version for social """
+        ex_txt = row['ann_ex_tokens']
+        page_txt = row['page_tokens']
         snt1 = nlp(ex_txt)
         snt2 = nlp(page_txt)
-        sim = round(snt1.similarity(snt2),4)
-        match_df.loc[(match_df.example_id == g[0]) & (match_df.sentence_id == g[1]), 'sem_similarity'] = sim
-        
+        sim = round(snt1.similarity(snt2), 4)
+        return sim
+
+    match_df['sem_similarity'] = match_df.apply(__calc_semantic_sim, axis=1)
     # set general params
     match_df['session_id'] = session_id
     match_df['page_id'] = page_id
     match_df['muse_id'] = muse_id
     match_df['keep_stopwords'] = keep_stopwords
-
+    
     if insert_db:
         # clear page before insertion
         try:
@@ -812,7 +834,7 @@ def _match_musetext_indicators(muse_id, session_id, page_id, annot_df, page_toke
         tab = _get_museum_indic_match_table_name(session_id, False)
         match_df.to_sql(tab, db_engine, schema='analytics', index=False, if_exists='append', method='multi')
         logger.debug(sw.tick('to_sql n={}'.format(len(match_df))))
-    
+    print(sw.tick('done'))
     return match_df
 
     
