@@ -339,10 +339,10 @@ def analyse_museum_indic_social_media():
     soc_df = get_twitter_facebook_links_v2()
     attr_df = load_input_museums_wattributes()
     soc_df = pd.merge(soc_df, attr_df, left_on='museum_id', right_on='muse_id', how='left')
-    soc_df = soc_df.sample(10, random_state=11) # DEBUG
+    soc_df = soc_df.sample(100, random_state=11) # DEBUG
     print('N =',len(soc_df))
 
-    parallel_dataframe_apply(soc_df, __analyse_museum_indic_social_media_parall, n_cores=1)
+    parallel_dataframe_apply(soc_df, __analyse_museum_indic_social_media_parall, n_cores=4)
 
 
 def __analyse_museum_indic_social_media_parall(soc_df):
@@ -361,7 +361,7 @@ def __analyse_museum_indic_social_media_parall(soc_df):
     ann_tokens_df = get_indicator_annotation_tokens(nlp)
     if False:
         ann_tokens_df.to_sql('indicator_annotation_tokens', db_engine, schema='analytics', index=False, if_exists='replace', method='multi')
-    
+
     msg_counts_d = []
     i = 0
     
@@ -384,7 +384,7 @@ def __analyse_museum_indic_social_media_parall(soc_df):
 
         #msg_df = msg_df.sample(10, random_state=12) # DEBUG
         # make chunks
-        chunk_size = 1000
+        chunk_size = 500
         msg_df_split = split_dataframe(msg_df, chunk_size)
         del msg_df
         print('  msg_df_split N =',len(msg_df_split))
@@ -422,7 +422,9 @@ def __analyse_museum_indic_social_media_parall(soc_df):
             print('match_df n=',len(match_df))
             # add time stamps
             match_df = match_df.merge(msg_chunk_df[['msg_id','ts']], on='msg_id')
-
+            # filter poor matches to save space
+            match_df = match_df[match_df.ann_overlap_criticwords  > 0]
+            if match_df is None or len(match_df) == 0: continue
             # save matches into DB
             match_df.to_sql('indicators_social_media_matches', db_engine, schema='analytics', index=False, if_exists='append', method='multi')
             del match_df

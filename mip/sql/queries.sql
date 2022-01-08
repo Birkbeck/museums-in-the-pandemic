@@ -126,4 +126,8 @@ select * from pg_catalog.pg_stat_user_tables
 -- ----------------------------------------
 
 select count(*) from analytics.indicators_social_media_matches;
+
+select count(*) as match_n, count(distinct muse_id) as museum_n from analytics.indicators_social_media_matches;
+
+select count(*) as match_n, count(distinct muse_id) as museum_n from analytics.indicators_social_media_matches where ann_overlap_criticwords  > 0;
 -- EOF
