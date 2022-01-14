@@ -21,8 +21,11 @@ Twitter scraper
 """
 
 # load twitter API configuration
-with open('.secrets.json') as f:
-    twitter_config = json.load(f)
+try:
+    with open('.secrets.json') as f:
+        twitter_config = json.load(f)
+except:
+    print('Warning: .secrets.json file not found to use Twitter API.')
 
 twitter_db_fn = 'tmp/tweets.db'
 MAX_TWEETS_PER_ACCOUNT = 80000

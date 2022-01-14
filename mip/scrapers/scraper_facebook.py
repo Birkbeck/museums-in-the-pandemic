@@ -22,9 +22,13 @@ Facebook scraper based on CrowdTangle
 API_PAUSE_SECS = 12.1
 
 # load API configuration
-with open('.secrets.json') as f:
-    config = json.load(f)
-    crowdtangle_api_key = config['ct_key']
+try:
+    with open('.secrets.json') as f:
+        config = json.load(f)
+        crowdtangle_api_key = config['ct_key']
+except:
+    print('Warning: .secrets.json file not found to use Crowdtangle API.')
+
 
 def get_facebook_pages_from_col(x):
     """ extract facebook pages from string """
