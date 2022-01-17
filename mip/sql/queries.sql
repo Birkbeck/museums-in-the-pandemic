@@ -125,6 +125,10 @@ select * from pg_catalog.pg_stat_user_tables
 -- Social media indicators
 -- ----------------------------------------
 
+select count(distinct museum_id) as museum_n from facebook.facebook_posts_dump;
+select count(distinct muse_id) as museum_n from twitter.tweets_dump td;
+
+
 select count(*) from analytics.indicators_social_media_matches;
 
 select count(*) as match_n, count(distinct muse_id) as museum_n from analytics.indicators_social_media_matches;
