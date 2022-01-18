@@ -131,6 +131,8 @@ select count(distinct muse_id) as museum_n from twitter.tweets_dump td;
 
 select count(*) from analytics.indicators_social_media_matches;
 
+select count(muse_id) from analytics.indicators_social_media_matches where muse_id = 'mm.domus.SE118';
+
 select count(*) as match_n, count(distinct muse_id) as museum_n from analytics.indicators_social_media_matches;
 
 select count(*) as match_n, count(distinct muse_id) as museum_n from analytics.indicators_social_media_matches where ann_overlap_criticwords  > 0;
