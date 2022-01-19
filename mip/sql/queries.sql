@@ -135,5 +135,7 @@ select count(muse_id) from analytics.indicators_social_media_matches where muse_
 
 select count(*) as match_n, count(distinct muse_id) as museum_n from analytics.indicators_social_media_matches;
 
+select count(*) as match_n, count(distinct muse_id) as museum_n, platform from analytics.indicators_social_media_matches group by platform;
+
 select count(*) as match_n, count(distinct muse_id) as museum_n from analytics.indicators_social_media_matches where ann_overlap_criticwords  > 0;
 -- EOF
