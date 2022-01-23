@@ -190,14 +190,10 @@ def get_fb_tw_links():
 def load_extracted_museums(df):
     """ TODO: document """
     
-  
-    
-
     comparedf = pd.read_csv('data/websites_to_flag.tsv', sep='\t')
     
     urldict={}
-    
-    
+        
     dfcheck=pd.DataFrame(columns=["google_rank","url","search", "muse_id", "location", "Museum_Name"])
     
     dfaccurate=pd.DataFrame(columns=["url","search", "muse_id", "location"])
@@ -237,6 +233,7 @@ def load_extracted_museums(df):
     dfaccurate.to_csv('tmp/accurate_results.tsv', index=False, sep='\t')
     dfcheck.to_excel("tmp/tocheck_results_view.xlsx", index=False)
     return dfaccurate
+
 
 def generate_samples():
         resultsdf=pd.read_csv("data/google_results/results_source_files/fuzzy_museum_scores_twitter.tsv", sep='\t')

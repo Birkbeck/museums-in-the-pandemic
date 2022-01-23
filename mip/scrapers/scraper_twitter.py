@@ -249,7 +249,7 @@ def scrape_twitter_account(muse_id, user_name, min_date, db_con, db_engine):
 def get_tweets_from_db(museum_id, db_conn):
     ''' get tweets' text to find indicators '''
     assert museum_id
-    sql = '''select muse_id as museum_id, tw_id as msg_id, tweet_text as msg, tw_ts as ts, 'twitter' as platform from twitter.tweets_dump where muse_id = '{}' and not is_reply '''.format(museum_id)
+    sql = '''select muse_id as museum_id, tw_id as msg_id, author_account as account, tweet_text as msg, tw_ts as ts, 'twitter' as platform from twitter.tweets_dump where muse_id = '{}' and not is_reply '''.format(museum_id)
     df = pd.read_sql(sql, db_conn)
     return df
 
