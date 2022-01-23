@@ -341,18 +341,20 @@ def analyse_museum_indic_social_media():
     soc_df = pd.merge(soc_df, attr_df, left_on='museum_id', right_on='muse_id', how='left')
     #soc_df = soc_df.sample(100, random_state=11) # DEBUG
     print('N =',len(soc_df))
-
-    parallel_dataframe_apply(soc_df, __analyse_museum_indic_social_media_parall, n_cores=5)
+    n_cores = 3
+    parallel_dataframe_apply(soc_df, __analyse_museum_indic_social_media_parall, n_cores=n_cores)
 
 
 def _check_if_museum_social_match_done(museum_id, db_conn):
+    """ check if social media indicator matching already done for this museum """
     assert museum_id
     sql = """select count(muse_id) as n_results from analytics.indicators_social_media_matches where muse_id = '{}';""".format(museum_id)
     df = pd.read_sql_query(sql, db_conn)
     n = df.n_results.tolist()[0]
-    if len(df) > 0: 
+    if n > 0: 
         return True
     return False
+
 
 def __analyse_museum_indic_social_media_parall(soc_df):
     """ parallel function for analyse_museum_indic_social_media() """
@@ -378,6 +380,8 @@ def __analyse_museum_indic_social_media_parall(soc_df):
         museum_id = row['muse_id']
 
         # check if museum is done and skip
+        # DEBUG
+        #if museum_id not in ['mm.domus.EM106','mm.domus.NW153','mm.musa.138','mm.domus.NE026','mm.domus.SC258']: 
         b_done = _check_if_museum_social_match_done(museum_id, db_conn)
         if b_done: 
             print(' done, skipping ', museum_id, '...')
@@ -393,12 +397,18 @@ def __analyse_museum_indic_social_media_parall(soc_df):
         logger.info(msg)
         print(msg)
 
-
         if len(msg_fb_df) > 0:
             msg_df = msg_df.append(msg_fb_df)
         del msg_fb_df
         if len(msg_df) == 0: continue
+        print('len msg_df',len(msg_df))
 
+        if False:
+            # DEBUG on missing matches
+            msg_df['ts'] = msg_df['ts'].dt.tz_localize(None)
+            msg_df.to_excel('tmp/missing_matches_messages_sample-{}.xlsx'.format(museum_id),index=False)
+            continue
+        
         #msg_df = msg_df.sample(10, random_state=12) # DEBUG
         # make chunks
         chunk_size = 500
@@ -447,14 +457,17 @@ def __analyse_museum_indic_social_media_parall(soc_df):
             match_df = match_df[match_df.ann_overlap_criticwords  > 0]
             if match_df is None or len(match_df) == 0: continue
             # save matches into DB
-            match_df.to_sql('indicators_social_media_matches', db_engine, schema='analytics', index=False, if_exists='append', method='multi')
+            match_df.to_sql('indicators_social_media_matches', db_engine, schema='analytics', index=False, 
+                if_exists='append', method='multi', chunksize=10000)
             del match_df
             del social_tokens_df
             time.sleep(.001)
         print(sw.tick())
 
+    # write results to DB
     msg_counts_df = pd.DataFrame(msg_counts_d)
-    msg_counts_df.to_sql('social_media_msg_counts', db_engine, schema='analytics', index=False, if_exists='append', method='multi')
+    msg_counts_df.to_sql('social_media_msg_counts', db_engine, schema='analytics', index=False, if_exists='append', 
+        method='multi', chunksize=10000)
     del i
     del nlp
     db_conn.close()

@@ -128,6 +128,7 @@ select * from pg_catalog.pg_stat_user_tables
 select count(distinct museum_id) as museum_n from facebook.facebook_posts_dump;
 select count(distinct muse_id) as museum_n from twitter.tweets_dump td;
 
+select count(muse_id) as n_results from analytics.indicators_social_media_matches where muse_id = 'mm.domus.NW153';
 
 select count(*) from analytics.indicators_social_media_matches;
 
