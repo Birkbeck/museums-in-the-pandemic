@@ -125,14 +125,17 @@ select * from pg_catalog.pg_stat_user_tables
 -- Social media indicators
 -- ----------------------------------------
 
+CREATE INDEX indicators_social_media_matches_muse_id_idx ON analytics.indicators_social_media_matches USING btree (muse_id);
+CREATE INDEX indicators_social_media_matches_example_id_idx ON analytics.indicators_social_media_matches USING btree (example_id, msg_sentence_id, msg_id);
+
 select count(distinct museum_id) as museum_n from facebook.facebook_posts_dump;
 select count(distinct muse_id) as museum_n from twitter.tweets_dump td;
 
 select count(muse_id) as n_results from analytics.indicators_social_media_matches where muse_id = 'mm.domus.NW153';
 
-select count(*) from analytics.indicators_social_media_matches;
+select count(*) as n from analytics.indicators_social_media_matches;
 
-select count(muse_id) from analytics.indicators_social_media_matches where muse_id = 'mm.domus.SE118';
+select count(muse_id) from analytics.indicators_social_media_matches where muse_id = 'mm.domus.WM038';
 
 select count(*) as match_n, count(distinct muse_id) as museum_n from analytics.indicators_social_media_matches;
 
