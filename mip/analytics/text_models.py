@@ -351,7 +351,7 @@ def _check_if_museum_social_match_done(museum_id, db_conn):
     sql = """select count(muse_id) as n_results from analytics.indicators_social_media_matches where muse_id = '{}';""".format(museum_id)
     df = pd.read_sql_query(sql, db_conn)
     n = df.n_results.tolist()[0]
-    if n > 0: 
+    if n > 0:
         return True
     return False
 
