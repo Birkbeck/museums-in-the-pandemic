@@ -339,10 +339,13 @@ def analyse_museum_indic_social_media():
     soc_df = get_twitter_facebook_links_v2()
     attr_df = load_input_museums_wattributes()
     soc_df = pd.merge(soc_df, attr_df, left_on='museum_id', right_on='muse_id', how='left')
+    soc_df = soc_df.drop(columns=['muse_id'])
+    assert all(pd.notnull(soc_df["museum_id"]))
     #soc_df = soc_df.sample(100, random_state=11) # DEBUG
     print('N =',len(soc_df))
-    n_cores = 3
+    n_cores = 1
     parallel_dataframe_apply(soc_df, __analyse_museum_indic_social_media_parall, n_cores=n_cores)
+    print('analyse_museum_indic_social_media done')
 
 
 def _check_if_museum_social_match_done(museum_id, db_conn):
@@ -377,8 +380,8 @@ def __analyse_museum_indic_social_media_parall(soc_df):
     i = 0
     for index, row in soc_df.iterrows():
         i += 1
-        museum_id = row['muse_id']
-
+        museum_id = row['museum_id']
+        assert museum_id is not None
         # check if museum is done and skip
         # DEBUG
         #if museum_id not in ['mm.domus.EM106','mm.domus.NW153','mm.musa.138','mm.domus.NE026','mm.domus.SC258']: 
