@@ -343,7 +343,7 @@ def analyse_museum_indic_social_media():
     assert all(pd.notnull(soc_df["museum_id"]))
     #soc_df = soc_df.sample(100, random_state=11) # DEBUG
     print('N =',len(soc_df))
-    n_cores = 1
+    n_cores = 4
     parallel_dataframe_apply(soc_df, __analyse_museum_indic_social_media_parall, n_cores=n_cores)
     print('analyse_museum_indic_social_media done')
 
