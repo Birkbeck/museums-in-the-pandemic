@@ -137,6 +137,7 @@ select count(*) as n from analytics.indicators_social_media_matches;
 
 select count(muse_id) from analytics.indicators_social_media_matches where muse_id = 'mm.domus.WM038';
 
+-- count matches
 select count(*) as match_n, count(distinct muse_id) as museum_n from analytics.indicators_social_media_matches;
 
 select count(*) as match_n, count(distinct muse_id) as museum_n, platform from analytics.indicators_social_media_matches group by platform;
