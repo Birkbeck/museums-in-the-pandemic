@@ -469,8 +469,8 @@ def __analyse_museum_indic_social_media_parall(soc_df):
 
     # write results to DB
     msg_counts_df = pd.DataFrame(msg_counts_d)
-    msg_counts_df.to_sql('social_media_msg_counts', db_engine, schema='analytics', index=False, if_exists='append', 
-        method='multi', chunksize=10000)
+    #msg_counts_df.to_sql('social_media_msg_counts', db_engine, schema='analytics', index=False, if_exists='append', 
+    #    method='multi', chunksize=10000)
     del i
     del nlp
     db_conn.close()
