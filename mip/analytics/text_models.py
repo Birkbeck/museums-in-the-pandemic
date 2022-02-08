@@ -475,6 +475,7 @@ def __analyse_museum_indic_social_media_parall(soc_df):
     del nlp
     db_conn.close()
     db_engine.dispose()
+    logger.info('__analyse_museum_indic_social_media_parall done')
     return msg_counts_df
 
 
