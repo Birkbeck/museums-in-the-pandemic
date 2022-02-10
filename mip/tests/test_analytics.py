@@ -290,28 +290,9 @@ class TestVal(unittest.TestCase):
         print('precision')
         print(precision)
         ##evaluation method 1 end
-
-
-
-
-
-
-
-
-
         #socdf=df_400.merge(socdf,  on=['museum_id','type'],how='left')
-        df_facebook.to_excel(r'tmp/a_x_test2.xlsx')
-
-        
+        df_facebook.to_excel(r'tmp/a_x_test2.xlsx')        
         print('end')
-
-
-
-    
-        
-    
-
-                
     
 class TestCentralDB(unittest.TestCase):
     def setUp(self):        
