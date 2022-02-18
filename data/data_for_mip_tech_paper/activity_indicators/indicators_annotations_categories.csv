@@ -1,0 +1,60 @@
+﻿indicator_code,indicator_attribute_name,indicator_attribute_description
+closed_cur,_description,Currently closed 
+closed_perm,_description,Permanent closure  
+closed_indef,_description,Indefinite closure
+event_indoor,_description,New indoor event 
+event_outdoors,_description,New outdoor event 
+finance_health,_description,Indicator of financial health 
+funding_fundraise,_description,Running a fundraising campaign  
+funding_fundraise,amount_current,currency (£ or others)
+funding_fundraise,amount_required,currency (£ or others)
+funding_fundraise,date,
+funding_fundraise,purpose_devel,
+funding_fundraise,purpose_mainten,
+funding_fundraise,purpose_survival,
+funding_fundraise,scope,"worldwide, national, local, subject community? "
+funding_fundraise,scope_worldwide,
+funding_fundraise,success_no,
+funding_fundraise,success_notyet,
+funding_fundraise,success_yes,
+funding_gov_emer,_description,Has secured emergency government funding 
+funding_gov_emer,amount,currency (£ or others)
+funding_gov_emer,date,
+funding_gov_emer,source,Funding source
+funding_other_emer,_description,Has secured [other] emergency funding 
+funding_other_emer,amount,currency (£ or others)
+funding_other_emer,date,
+funding_other_emer,source,
+funding_did_not_get,_description,Did not receive emergency funding
+good_to_go,_description,‘Good to go’ mark 
+lang_difficulty,_description,Language of difficulty 
+lang_difficulty,degree_crisis,
+lang_difficulty,degree_severe,
+lang_difficulty,degree_struggle,
+noweb_broken,_description,Broken link –  permanently closed? Or still in process of opening? 
+noweb_noweb,_description,No website - permanently closed? Or still in process of opening? 
+made_covid_safe,_description,
+old_post,_description,Last post/update more than a year old  
+online_engag,_description,New online engagement  
+online_event,_description,New online event 
+online_event,date,
+online_exhib,_description,New online exhibition 
+online_exhib,date,
+open_cafe,_description,Café open / takeaway 
+open_cur,_description,Currently open 
+open_garden,_description,Garden open 
+open_onlineshop,_description,Online shop 
+open_onlineshop,scope,"Scope: UK, Europe, Worldwide "
+project_postpone,_description,Postponement of project
+reduced_hours,_description,Reduced opening hours 
+reopen_intent,_description,Intent to reopen 
+reopen_plan,_description,Planned re-opening 
+reopen_plan,date,
+staff_furlough,_description,Furlough 
+staff_furlough,date,
+staff_hiring,_description,Hiring new staff
+staff_hiring,date,
+staff_hiring,role,
+staff_redundancy,_description,Redundancy of staff
+staff_restruct,_description,Restructuring 
+staff_working,_description,Staff continuing to work despite closure 

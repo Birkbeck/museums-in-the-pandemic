@@ -41,6 +41,7 @@ select facebook_data_json -> 'account_name' as n from facebook.facebook_posts_du
 select muse_id,page_id,sentence_id,example_id,indicator_code,session_id,ann_ex_tokens,page_tokens,sem_similarity,token_n,lemma_n,ann_overlap_lemma,ann_overlap_token,example_len,txt_overlap_lemma,txt_overlap_token,ann_overlap_criticwords from analytics.text_indic_ann_matches_20210303 t 
         where keep_stopwords and ann_overlap_criticwords > 0;
 
+select version();
 
 -- websites
 select * from websites.web_pages_dump_20210303 wpda where url ilike '%english-heritage.org%';
