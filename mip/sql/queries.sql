@@ -131,8 +131,12 @@ CREATE INDEX indicators_social_media_matches_example_id_idx ON analytics.indicat
 
 select count(distinct museum_id) as museum_n from facebook.facebook_posts_dump;
 select count(distinct muse_id) as museum_n from twitter.tweets_dump td;
+select count(muse_id) as museum_n from twitter.tweets_dump td;
 
 select count(muse_id) as n_results from analytics.indicators_social_media_matches where muse_id = 'mm.domus.NW153';
+
+select muse_id,platform,msg_id,ts,page_id,sentence_id,example_id,indicator_code,session_id,ann_ex_tokens,page_tokens,sem_similarity,token_n,lemma_n,ann_overlap_lemma,ann_overlap_token,example_len,txt_overlap_lemma,txt_overlap_token,ann_overlap_criticwords from analytics.indicators_social_media_matches t 
+        where keep_stopwords and ann_overlap_criticwords > 0 limit 10;
 
 select count(*) as n from analytics.indicators_social_media_matches;
 
