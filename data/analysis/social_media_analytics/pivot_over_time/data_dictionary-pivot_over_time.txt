@@ -1,0 +1,8 @@
+Temporal trends by attribute:
+'W','D','M','Q': week, day, month, quarter
+
+Attributes: museum size, museum governance, museum governance simplified, region
+
+* count: number of tweets/messages by museums in a given group and time slot
+* count_mean: mean number of messages per museum in a given group and time slot
+* n_museums: museums that have posted at least 1 message in a given group and time slot
