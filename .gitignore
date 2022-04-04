@@ -196,3 +196,6 @@ data/analysis/indicators_social/valid_social_matches_dump_df_valid_debug.csv
 data/analysis/indicators_social/valid_social_matches_dump_df_valid_debug.csv
 data/analysis/missing_web_soc_museums/~$missing_web_soc_museum_counts.xlsx
 data/data_for_mip_tech_paper/activity_indicators/~$indicators_model_comparison.xlsx
+data/analysis/matching_validation/~$match_validation_comparison_traditional_models-v3.xlsx
+data/data_for_mip_tech_paper/activity_indicators/~$indicators_model_comparison-all_models.xlsx
+data/data_for_mip_tech_paper/activity_indicators/~$traditional_models_table.xlsx
