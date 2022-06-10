@@ -25,11 +25,11 @@ CREATE INDEX tweets_muse_id_idx ON twitter.tweets_dump(muse_id);
 
 
 -- facebook
-select count(*) from facebook.facebook_posts_dump;
+select count(*) from facebook.facebook_posts_dump_v1;
 select museum_id, page_name, query_account, count(*) from facebook.facebook_posts_dump group by museum_id, page_name, query_account;
-select count(distinct museum_id) from facebook.facebook_posts_dump;
-select count(distinct page_name) from facebook.facebook_posts_dump;
-select count(distinct page_name) from facebook.facebook_pages_not_found;
+select count(distinct museum_id) from facebook.facebook_posts_dump_v1;
+select count(distinct page_name) from facebook.facebook_posts_dump_v1;
+select count(distinct page_name) from facebook.facebook_pages_not_found_v1;
 
 CREATE INDEX facebook_muse_id_idx ON facebook.facebook_posts_dump(museum_id);
 
