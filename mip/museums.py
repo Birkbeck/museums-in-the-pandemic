@@ -940,6 +940,6 @@ def get_twitter_facebook_links(folder=''):
 def get_twitter_facebook_links_v2(folder=''):
     """ updated version of get_twitter_facebook_links()"""
     df = pd.read_csv(
-        folder+'data/museums/social_media_urls_corrected.tsv', sep='\t')
+        folder+'data/museums/social_media_urls_corrected-v2.tsv', sep='\t')
     print('get_twitter_facebook_links_v2', len(df))
     return df

@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 Facebook scraper based on CrowdTangle
 """
 
+#API_PAUSE_SECS = 2.1
 API_PAUSE_SECS = 12.1
 
 # load API configuration
@@ -84,12 +85,12 @@ def scrape_facebook(museums_df):
         i+=1
         print(">", i, 'of', len(museums_df), ' -- ', mus['museum_id'])
         
-        if mus['facebook_action'] == 'drop' or mus['facebook_action'] == 'update':
-            # delete old accounts, if any
-            old_fb_accounts = get_facebook_pages_from_col(mus['facebook_pages_old'])
-            assert len(old_fb_accounts) >= 0
-            for old_acc in old_fb_accounts:
-                delete_facebook_account_from_db(mus['museum_id'], old_acc, db_con)
+        #if mus['facebook_action'] == 'drop' or mus['facebook_action'] == 'update':
+        #    # delete old accounts, if any
+        #    old_fb_accounts = get_facebook_pages_from_col(mus['facebook_pages_old'])
+        #    assert len(old_fb_accounts) >= 0
+        #    for old_acc in old_fb_accounts:
+        #        delete_facebook_account_from_db(mus['museum_id'], old_acc, db_con)
         
         pages = get_facebook_pages_from_col(mus['facebook_pages'])
         for p in pages:
