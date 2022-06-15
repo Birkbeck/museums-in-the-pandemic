@@ -31,7 +31,8 @@ select count(distinct museum_id) from facebook.facebook_posts_dump;
 
 select * from facebook.facebook_posts_dump where page_name = 'maclaurinart';
 
-delete from facebook.facebook_posts_dump where page_name = 'perthmuseum';
+--delete from facebook.facebook_posts_dump where page_name = 'perthmuseum';
+select * from facebook.facebook_posts_dump where page_name = 'perthmuseum';
 
 select count(distinct museum_id) from facebook.facebook_posts_dump_v1;
 select count(distinct page_name) from facebook.facebook_posts_dump_v1;
