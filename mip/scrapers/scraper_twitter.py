@@ -131,12 +131,12 @@ def scrape_twitter_accounts(museums_df):
         for acc in tw_accounts:
             assert acc
             # apply updates from social_media_urls_corrected.tsv (6 Dec 2021)
-            if mus['twitter_action'] == 'drop' or mus['twitter_action'] == 'update':
-                # delete old accounts, if any
-                old_tw_accounts = get_twitter_accounts_from_col(mus['twitter_id_old'])
-                assert len(old_tw_accounts) >= 0
-                for old_acc in old_tw_accounts:
-                    delete_twitter_account_from_db(mus_id, old_acc, db_con)
+            #if mus['twitter_action'] == 'drop' or mus['twitter_action'] == 'update':
+            #    # delete old accounts, if any
+            #    old_tw_accounts = get_twitter_accounts_from_col(mus['twitter_id_old'])
+            #    assert len(old_tw_accounts) >= 0
+            #    for old_acc in old_tw_accounts:
+            #        delete_twitter_account_from_db(mus_id, old_acc, db_con)
             
             if has_db_museum_tweets(mus_id, acc, db_con):
                 continue
