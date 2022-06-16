@@ -286,7 +286,7 @@ def match_indicators_in_muse_page(muse_id, session_id, url, nlp, annotat_tokens_
     """
     logger.info('match_indicators_in_muse_page {} {} {} stopwords={}'.format(muse_id, session_id, url, keep_stopwords))
     
-    page_id, input_text, html_length = get_attribute_for_webpage_url_lookback(url, session_id, 'all_text', db_conn)
+    page_id, input_text, html_length, tab = get_attribute_for_webpage_url_lookback(url, session_id, 'all_text', db_conn)
     if not (page_id and page_id > 0):
         msg = "warning:match_indicators_in_muse_page museum: {} {} {} not found".format(muse_id, session_id, url)
         logger.warn(msg)
@@ -509,6 +509,7 @@ def analyse_museum_text():
     print("museum df with attributes: len", len(df))
 
     #df = df.sample(500, random_state=10) # DEBUG
+    #df = df[df.muse_id=='mm.New.148'] # DEBUG
     
     # set target scraping sessions
     # ALL: ['20210304', '20210404', '20210420', '20210503', '20210521', '20210603', '20210614', 
@@ -1080,7 +1081,7 @@ def make_corpus_sqlite():
             websites_sentences = []
             for idx, row in mdf.iterrows():
                 mus_attrs = { 'museum_id': row['muse_id'], 'museum_name': row['musname'] }
-                page_id, text_attr, html_length = get_attribute_for_webpage_url_lookback(row['url'], session_id, 'all_text', db_conn)
+                page_id, text_attr, html_length, tab = get_attribute_for_webpage_url_lookback(row['url'], session_id, 'all_text', db_conn)
                 mus_attrs['session_id'] = session_id
                 mus_attrs['page_id'] = page_id
                 mus_attrs['url'] = row['url']
