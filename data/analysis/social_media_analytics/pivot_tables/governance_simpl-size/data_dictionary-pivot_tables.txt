@@ -1,0 +1,12 @@
+Data dictionary:
+
+* twitter: tweets by museums
+* twitter_engage: tweets to museums by other users
+* facebook: posts by museums
+
+* msg_count_<platform>_count: number of messages on the platform.
+* msg_count_<platform>_msg_per_mus: average number of messages per museum on a platform.
+* msg_count_<platform>_active_mus_pc: percentage of museums in a group that are active on the platform.
+* msg_count_<platform>_active_mus_pc_z: 0 = average, positive = above average, negative = below average.
+* msg_count_<platform>_median: median number of messages in a group.
+* msg_count_<platform>_mean: mean number of messages in a group.
