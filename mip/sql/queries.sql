@@ -153,6 +153,9 @@ select muse_id,platform,msg_id,ts,page_id,sentence_id,example_id,indicator_code,
 
 select count(*) as n from analytics.indicators_social_media_matches;
 
+select count(*) as n from analytics.indicators_social_media_matches;
+select min(ts), max(ts) as n from analytics.indicators_social_media_matches;
+
 select count(muse_id) from analytics.indicators_social_media_matches where muse_id = 'mm.domus.WM038';
 
 -- count matches

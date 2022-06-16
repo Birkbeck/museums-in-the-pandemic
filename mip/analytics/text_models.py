@@ -351,7 +351,7 @@ def analyse_museum_indic_social_media():
 def _check_if_museum_social_match_done(museum_id, db_conn):
     """ check if social media indicator matching already done for this museum """
     assert museum_id
-    sql = """select count(muse_id) as n_results from analytics.indicators_social_media_matches where muse_id = '{}';""".format(museum_id)
+    sql = """select count(muse_id) as n_results from analytics.indicators_social_media_matches_2022 where muse_id = '{}';""".format(museum_id)
     df = pd.read_sql_query(sql, db_conn)
     n = df.n_results.tolist()[0]
     if n > 0:
@@ -386,6 +386,7 @@ def __analyse_museum_indic_social_media_parall(soc_df):
         # DEBUG
         #if museum_id not in ['mm.domus.EM106','mm.domus.NW153','mm.musa.138','mm.domus.NE026','mm.domus.SC258']: 
         b_done = _check_if_museum_social_match_done(museum_id, db_conn)
+        # DEBUG
         if b_done: 
             print(' done, skipping ', museum_id, '...')
             continue
@@ -394,6 +395,7 @@ def __analyse_museum_indic_social_media_parall(soc_df):
 
         msg_df = get_tweets_from_db(museum_id, db_conn)
         msg_fb_df = get_fb_posts_from_db(museum_id, db_conn)
+
         #print(sw.tick('1'))
         msg = ">>> Processing museum {} of {}, museum_id={} tweets={} fb_messages={}".format(i, len(soc_df), museum_id, len(msg_df), len(msg_fb_df))
         msg_counts_d.append({'museum_id':museum_id, 'twitter_n': len(msg_df), 'facebook_n': len(msg_fb_df)})
@@ -425,6 +427,14 @@ def __analyse_museum_indic_social_media_parall(soc_df):
             social_tokens_df = pd.DataFrame()
             # scan tweets or fb messages
             for msg_idx, msg_row in msg_chunk_df.iterrows():
+
+                if True:
+                    # keep only messages AFTER min time filter
+                    MIN_TIME_FILTER = pd.Timestamp('2021-12-23 09:02:30').tz_localize(msg_row['ts'].tz)
+                    # filter based on time (for subsequent scans)
+                    if msg_row['ts'] <= MIN_TIME_FILTER:
+                        continue
+
                 tokens = spacy_extract_tokens_social_msg(msg_row['platform'], msg_row['msg_id'], msg_row['msg'], nlp, db_conn, db_engine)
                 if tokens is None or len(tokens)==0: 
                     continue
@@ -459,8 +469,9 @@ def __analyse_museum_indic_social_media_parall(soc_df):
             # filter poor matches to save space
             match_df = match_df[match_df.ann_overlap_criticwords  > 0]
             if match_df is None or len(match_df) == 0: continue
+
             # save matches into DB
-            match_df.to_sql('indicators_social_media_matches', db_engine, schema='analytics', index=False, 
+            match_df.to_sql('indicators_social_media_matches_2022', db_engine, schema='analytics', index=False, 
                 if_exists='append', method='multi', chunksize=10000)
             del match_df
             del social_tokens_df
