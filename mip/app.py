@@ -120,8 +120,8 @@ def main():
             ## python -m spacy download en_core_web_sm
             # python -m spacy download en_core_web_lg
             assert is_postgresql_db_accessible()
-            analyse_museum_text()
-            #analyse_museum_indic_social_media()
+            #analyse_museum_text()
+            analyse_museum_indic_social_media()
 
         if cmd == "corpus":
             print("corpus")
