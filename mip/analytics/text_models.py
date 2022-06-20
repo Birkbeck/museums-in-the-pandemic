@@ -442,11 +442,15 @@ def __analyse_museum_indic_social_media_parall(soc_df):
                 social_tokens_df = social_tokens_df.append(tokens)
                 del tokens
 
+            if len(social_tokens_df) == 0:
+                # no tokens to process, skip
+                continue
             print('  social_tokens_df n =',len(social_tokens_df))
             # find matches
             keep_stopwords = True
             social_tokens_filt_df = _filter_tokens(social_tokens_df, keep_stopwords)
             ann_tokens_filt_df = _filter_tokens(ann_tokens_df, keep_stopwords)
+            assert len(social_tokens_filt_df) > 0, 'empty filtered social tokens'
             #print(sw.tick('3'))
             # add full text for DEBUG
             sent_full_txt_df = social_tokens_filt_df.groupby('sentence_id').apply(lambda x: " ".join(x['token'].tolist())).to_frame().rename(columns={0:'page_tokens'})
