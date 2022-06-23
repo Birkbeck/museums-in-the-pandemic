@@ -428,11 +428,19 @@ def __analyse_museum_indic_social_media_parall(soc_df):
             # scan tweets or fb messages
             for msg_idx, msg_row in msg_chunk_df.iterrows():
 
-                if True:
+                if False:
                     # keep only messages AFTER min time filter
                     MIN_TIME_FILTER = pd.Timestamp('2021-12-23 09:02:30').tz_localize(msg_row['ts'].tz)
                     # filter based on time (for subsequent scans)
                     if msg_row['ts'] <= MIN_TIME_FILTER:
+                        continue
+                
+                if True:
+                    # filter for debug
+                    MIN_TIME_FILTER = pd.Timestamp('2021-10-20 00:00:00').tz_localize(msg_row['ts'].tz)
+                    MAX_TIME_FILTER = pd.Timestamp('2021-12-22 00:00:00').tz_localize(msg_row['ts'].tz)
+                    # filter based on time (for subsequent scans)
+                    if msg_row['ts'] <= MIN_TIME_FILTER and msg_row['ts'] >= MAX_TIME_FILTER:
                         continue
 
                 tokens = spacy_extract_tokens_social_msg(msg_row['platform'], msg_row['msg_id'], msg_row['msg'], nlp, db_conn, db_engine)

@@ -163,6 +163,14 @@ select min(ts), max(ts) as n from analytics.indicators_social_media_matches;
 
 select count(muse_id) from analytics.indicators_social_media_matches where muse_id = 'mm.domus.WM038';
 
+-- debug of 2022 data issue on facebook indicators_social_media_matches_2022
+select count(*) from analytics.indicators_social_media_matches ismm where ts >= '2021-10-20' and ts <= '2021-12-22';
+select count(*) from analytics.indicators_social_media_matches ismm where ts >= '2021-09-20' and ts <= '2021-11-22';
+select count(*) from analytics.indicators_social_media_matches_2022 ismm where ts >= '2021-10-20' and ts <= '2021-12-22';
+
+
+
+
 -- count matches
 select count(*) as match_n, count(distinct muse_id) as museum_n from analytics.indicators_social_media_matches;
 
