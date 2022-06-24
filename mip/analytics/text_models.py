@@ -438,14 +438,13 @@ def __analyse_museum_indic_social_media_parall(soc_df):
                 
                 if True:
                     # filter for debug
-                    MIN_TIME_FILTER = pd.Timestamp('2021-10-18 00:00:00').tz_localize(msg_row['ts'].tz)
-                    MAX_TIME_FILTER = pd.Timestamp('2021-12-25 00:00:00').tz_localize(msg_row['ts'].tz)
+                    MIN_TIME_FILTER = pd.Timestamp('2021-10-01 00:00:00').tz_localize(msg_row['ts'].tz)
+                    #MIN_TIME_FILTER = pd.Timestamp('2021-10-18 00:00:00').tz_localize(msg_row['ts'].tz)
+                    #MAX_TIME_FILTER = pd.Timestamp('2021-12-25 00:00:00').tz_localize(msg_row['ts'].tz)
                     # filter based on time (for subsequent scans)
-                    if msg_row['ts'] <= MIN_TIME_FILTER and msg_row['ts'] >= MAX_TIME_FILTER:
+                    if msg_row['ts'] <= MIN_TIME_FILTER:
                         continue
-                    if msg_row['platform'] == 'twitter':
-                        continue
-                
+                    
                 tokens = spacy_extract_tokens_social_msg(msg_row['platform'], msg_row['msg_id'], msg_row['msg'], nlp, db_conn, db_engine)
                 if tokens is None or len(tokens)==0: 
                     continue
@@ -487,7 +486,7 @@ def __analyse_museum_indic_social_media_parall(soc_df):
             if match_df is None or len(match_df) == 0: continue
 
             # save matches into DB
-            match_df.to_sql('indicators_social_media_matches_2022', db_engine, schema='analytics', index=False, 
+            match_df.to_sql('indicators_social_media_matches_2022b', db_engine, schema='analytics', index=False, 
                 if_exists='append', method='multi', chunksize=10000)
             del match_df
             del social_tokens_df
