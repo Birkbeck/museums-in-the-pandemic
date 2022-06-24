@@ -386,7 +386,7 @@ def __analyse_museum_indic_social_media_parall(soc_df):
         # check if museum is done and skip
         # DEBUG
         #if museum_id not in ['mm.domus.EM106','mm.domus.NW153','mm.musa.138','mm.domus.NE026','mm.domus.SC258']: 
-        b_done = _check_if_museum_social_match_done(museum_id, db_conn)
+        b_done = False #_check_if_museum_social_match_done(museum_id, db_conn)
         # DEBUG
         if b_done: 
             print(' done, skipping ', museum_id, '...')
