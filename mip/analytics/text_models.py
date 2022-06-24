@@ -378,6 +378,7 @@ def __analyse_museum_indic_social_media_parall(soc_df):
 
     msg_counts_d = []
     i = 0
+    processed_msg = 0
     for index, row in soc_df.iterrows():
         i += 1
         museum_id = row['museum_id']
@@ -437,15 +438,16 @@ def __analyse_museum_indic_social_media_parall(soc_df):
                 
                 if True:
                     # filter for debug
-                    MIN_TIME_FILTER = pd.Timestamp('2021-10-20 00:00:00').tz_localize(msg_row['ts'].tz)
-                    MAX_TIME_FILTER = pd.Timestamp('2021-12-22 00:00:00').tz_localize(msg_row['ts'].tz)
+                    MIN_TIME_FILTER = pd.Timestamp('2021-10-18 00:00:00').tz_localize(msg_row['ts'].tz)
+                    MAX_TIME_FILTER = pd.Timestamp('2021-12-25 00:00:00').tz_localize(msg_row['ts'].tz)
                     # filter based on time (for subsequent scans)
                     if msg_row['ts'] <= MIN_TIME_FILTER and msg_row['ts'] >= MAX_TIME_FILTER:
                         continue
-
+                
                 tokens = spacy_extract_tokens_social_msg(msg_row['platform'], msg_row['msg_id'], msg_row['msg'], nlp, db_conn, db_engine)
                 if tokens is None or len(tokens)==0: 
                     continue
+                processed_msg += 1
                 tokens['museum_id'] = museum_id
                 social_tokens_df = social_tokens_df.append(tokens)
                 del tokens
@@ -490,6 +492,7 @@ def __analyse_museum_indic_social_media_parall(soc_df):
             time.sleep(.001)
         print(sw.tick())
 
+    print('processed_msg =', processed_msg)
     # write results to DB
     msg_counts_df = pd.DataFrame(msg_counts_d)
     #msg_counts_df.to_sql('social_media_msg_counts', db_engine, schema='analytics', index=False, if_exists='append', 
