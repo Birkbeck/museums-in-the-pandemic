@@ -492,7 +492,7 @@ def __analyse_museum_indic_social_media_parall(soc_df):
             time.sleep(.001)
         print(sw.tick())
 
-    print('processed_msg =', processed_msg)
+    logger.info('processed_msg = {}'.format(processed_msg))
     # write results to DB
     msg_counts_df = pd.DataFrame(msg_counts_d)
     #msg_counts_df.to_sql('social_media_msg_counts', db_engine, schema='analytics', index=False, if_exists='append', 
