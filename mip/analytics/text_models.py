@@ -443,6 +443,8 @@ def __analyse_museum_indic_social_media_parall(soc_df):
                     # filter based on time (for subsequent scans)
                     if msg_row['ts'] <= MIN_TIME_FILTER and msg_row['ts'] >= MAX_TIME_FILTER:
                         continue
+                    if msg_row['platform'] == 'twitter':
+                        continue
                 
                 tokens = spacy_extract_tokens_social_msg(msg_row['platform'], msg_row['msg_id'], msg_row['msg'], nlp, db_conn, db_engine)
                 if tokens is None or len(tokens)==0: 
