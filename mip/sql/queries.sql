@@ -160,6 +160,7 @@ select count(distinct muse_id) as mus_n from analytics.indicators_social_media_m
 --delete from analytics.indicators_social_media_matches_2022 where true;
 
 select min(ts), max(ts) as n from analytics.indicators_social_media_matches;
+select min(ts), max(ts) as n from analytics.indicators_social_media_matches_2022b;
 
 select count(muse_id) from analytics.indicators_social_media_matches where muse_id = 'mm.domus.WM038';
 
@@ -168,7 +169,30 @@ select count(*) from analytics.indicators_social_media_matches ismm where ts >= 
 select count(*) from analytics.indicators_social_media_matches ismm where ts >= '2021-09-20' and ts <= '2021-11-22';
 select count(*) from analytics.indicators_social_media_matches_2022 ismm where ts >= '2021-10-20' and ts <= '2021-12-22';
 
+select count(*) from analytics.indicators_social_media_matches_2022;
+select count(*) from analytics.indicators_social_media_matches_2022b;
 
+-- group by time for debugging
+
+-- normal data from 20 Dec 2021, low data before that
+select date_trunc('week', ts), count(1)
+from analytics.indicators_social_media_matches_2022 ismm 
+where platform = 'facebook'
+and muse_id = 'mm.domus.SE073'
+group by 1 order by 1;
+
+-- low data for 25 Oct 2011
+select date_trunc('week', ts), count(1)
+from analytics.indicators_social_media_matches ismm 
+where platform = 'facebook' 
+and muse_id = 'mm.domus.SE073'
+group by 1 order by 1;
+
+select date_trunc('month', post_ts), count(1)
+from facebook.facebook_posts_dump fpd 
+group by 1 order by 1;
+
+-- ok facebook data, but gap in matches: 20 Oct to 22 Dec 
 
 
 -- count matches
@@ -177,4 +201,5 @@ select count(*) as match_n, count(distinct muse_id) as museum_n from analytics.i
 select count(*) as match_n, count(distinct muse_id) as museum_n, platform from analytics.indicators_social_media_matches group by platform;
 
 select count(*) as match_n, count(distinct muse_id) as museum_n from analytics.indicators_social_media_matches where ann_overlap_criticwords  > 0;
+
 -- EOF
