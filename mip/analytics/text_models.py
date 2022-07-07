@@ -1056,14 +1056,14 @@ def make_corpus_sqlite():
     nlp = en_core_web_lg.load()
 
     def _save_in_local_db_twitter(df):
-        #print("_save_in_local_db", len(df))
+        print("_save_in_local_db_twitter", len(df))
         df = df.copy().drop_duplicates()
         df['platform'] = 'twitter'
         df.to_sql('social_media_msg', local_engine, index=False, if_exists='append', method='multi')
         del df
 
     def _save_in_local_db_facebook(df):
-        #print("_save_in_local_db", len(df))
+        print("_save_in_local_db_facebook", len(df))
         df = df.copy().drop_duplicates()
         df['platform'] = 'facebook'
         df.to_sql('social_media_msg', local_engine, index=False, if_exists='append', method='multi')
@@ -1095,7 +1095,7 @@ def make_corpus_sqlite():
         #session_ids = ['20210404','20210914'] # DEBUG '20210304','20210629',
         #['20210304', '20210404', '20210420', '20210503', '20210521', '20210603', '20210614', '20210629', '20210712', '20210724', '20210809', '20210901', '20210914', '20210927', '20211011', '20211025', '20211108', '20211122', '20211206']
         session_ids = ['20210304', '20210404', '20210503', '20210603', '20210712', '20210809', 
-            '20210901', '20210927',  '20211025', '20211108', '20211206', '20211206',
+            '20210901', '20210927',  '20211025', '20211108', '20211206',
             '20220103','20220131','20220228','20220328','20220425','20220524']
         print(session_ids)
         #mdf = mdf.sample(500) # DEBUG
@@ -1106,6 +1106,7 @@ def make_corpus_sqlite():
 
         for session_id in session_ids:
             logger.info('Extracting session: ' + session_id)
+            print('Extracting session: ' + session_id)
             websites_rows = []
             websites_sentences = []
             for idx, row in mdf.iterrows():
