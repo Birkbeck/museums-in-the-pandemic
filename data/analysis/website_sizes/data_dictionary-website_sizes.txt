@@ -1,6 +1,11 @@
 
 Analysis of size of museum websites:
 
+10 snapshots are considered.
+
+* website_size_by_attribute-mean.xlsx: mean of web sizes by museum attributes
+
+Fields:
 * page_text_len: length of plain text in the main web page (n characters)
 * page_text_words: number of words in plain text in the main web page
 * page_html_len: length of HTML code in the main web page (n characters)

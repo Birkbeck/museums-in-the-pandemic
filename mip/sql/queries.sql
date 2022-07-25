@@ -195,7 +195,8 @@ group by 1 order by 1;
 -- ok facebook data, but gap in matches: 20 Oct to 22 Dec 
 
 -- website sizes
-select distinct session_time from analytics.website_sizes_v0 w; 
+select distinct session_time from analytics.website_sizes w;
+select count(*) from analytics.website_sizes w;
 
 -- count matches
 select count(*) as match_n, count(distinct muse_id) as museum_n from analytics.indicators_social_media_matches;
