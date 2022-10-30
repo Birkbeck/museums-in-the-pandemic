@@ -207,3 +207,5 @@ data/analysis/social_media_analytics/pivot_tables/governance/~$museum_activity_g
 data/data_for_mip_tech_paper/figures/~$search_results_20220803-online_exhib-sample.xlsx
 data/analysis/indicators/indic_pivot_tables/indic-governance/~$indic_counts-governance.xlsx
 mip/mip_search_app/mip_corpus_search-v1.db.gz
+data/analysis/social_media_analytics/input_data/tweets.tsv.gz
+data/analysis/social_media_analytics/input_data/facebook_posts.tsv.gz
