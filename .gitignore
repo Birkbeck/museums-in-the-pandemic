@@ -209,3 +209,5 @@ data/analysis/indicators/indic_pivot_tables/indic-governance/~$indic_counts-gove
 mip/mip_search_app/mip_corpus_search-v1.db.gz
 data/analysis/social_media_analytics/input_data/tweets.tsv.gz
 data/analysis/social_media_analytics/input_data/facebook_posts.tsv.gz
+data/analysis/social_media_analytics/socmedia_msg_temporal-all_mus-M.pdf
+data/analysis/social_media_analytics/socmedia_msg_temporal-all_mus-M.svg
