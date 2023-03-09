@@ -30,4 +30,4 @@ See data folder.
 
 ## Maintainer
 
-Andrea Ballatore (King's College London)
+Andrea Ballatore (King's College London) [aballatore.space](https://aballatore.space)
