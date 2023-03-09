@@ -26,7 +26,8 @@ Conda environment in `conda_env` with all Python packages.
 
 ## Data 
 
-See data folder.
+The final datasets produced by the project are located in `data/analysis`.
+The other folders contain raw and intermediate data.
 
 ## Maintainer
 
