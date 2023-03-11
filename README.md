@@ -16,6 +16,13 @@ Using interview-based research to better understand what constitutes risk during
 
 URL: https://www.bbk.ac.uk/research/projects/museums-in-the-pandemic
 
+## Team
+
+- PI: Fiona Candlin (Birkbeck, UoL)
+- Co-I: Andrea Ballatore (King's College London)
+- Co-I: Alex Poulovassilis (Birkbeck, UoL)
+- Co-I: Peter Wood (Bikrbeck, UoL)
+
 ## Funding
 
 Awarded £190,000 by the UKRI-AHRC Rapid Recovery Scheme (January 2021 until September 2022).
