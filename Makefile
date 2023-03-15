@@ -56,6 +56,14 @@ compile:
 	@python -m compileall mip/*
 
 
+dump_db:
+	# edit first /etc/postgresql/10/main/pg_hba.conf
+	pg_dump -E UTF-8 -U postgres -F p -t "facebook.facebook_posts_dump" -t "facebook.facebook_pages_not_found" -t "twitter.tweets_dump" -t "twitter.museums_no_twitter" -t "twitter.twitter_accounts_not_found" mip -f mip_db-social_media.sql;
+	
+	pg_dump -E UTF-8 -Z 7 -U postgres -F p -t "websites.web_pages_dump_20210304*" -t "websites.web_pages_dump_20210712*" -t "websites.web_pages_dump_20211011*" -t "websites.web_pages_dump_20220117*" -t "websites.web_pages_dump_20220524*" mip -f mip_db-websites.sql.gz;
+	
+	scp andreab@193.61.36.75:/home/andreab/mip_db-social_media.sql.gz mip_db-social_media.sql.gz;
+
 running:
 	-@ps auxw | grep 'mip/app.py';
 	#-@ps auxw | grep '[t]or';
