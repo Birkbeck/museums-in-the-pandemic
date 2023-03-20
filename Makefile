@@ -65,6 +65,8 @@ dump_db:
 	scp andreab@193.61.36.75:/home/andreab/mip_db-social_media.sql.gz mip_db-social_media.sql.gz;
 	scp andreab@193.61.36.75:/home/andreab/mip_db-websites.sql.gz mip_db-websites.sql.gz;
 	rsync -LvzP andreab@193.61.36.75:/home/andreab/mip_db-websites.sql.gz mip_db-websites.sql.gz;
+	
+	split -b 2048m "mip_db-websites.sql.gz" "mip_db-websites.sql.gz."
 
 running:
 	-@ps auxw | grep 'mip/app.py';
