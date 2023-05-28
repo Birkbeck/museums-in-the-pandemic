@@ -21,7 +21,7 @@ URL: https://www.bbk.ac.uk/research/projects/museums-in-the-pandemic
 - PI: Fiona Candlin (Birkbeck, UoL)
 - Co-I: Andrea Ballatore (King's College London)
 - Co-I: Alex Poulovassilis (Birkbeck, UoL)
-- Co-I: Peter Wood (Bikrbeck, UoL)
+- Co-I: Peter Wood (Birkbeck, UoL)
 
 ## Funding
 
