@@ -5,11 +5,12 @@
 Data and code repository for Museums in the Pandemic (MIP) project (Birkbeck, University of London and King's College London) [link](https://www.bbk.ac.uk/research/projects/museums-in-the-pandemic).
 This repository contains:
 - The Python source code of an application designed to scrape large-scale online information about UK museums, from websites, Facebook, and Twitter (folder `mip/`). 
-- The final datasets produced by the project (folder `data/analysis`).
-- The other folders contain raw and intermediate data.
+- Jupyter Notebooks used for data analytics (folder `mip/notebooks_py`).
+- Lists of museum websites, Twitter, and Facebook accounts  (folder `data/museums`).
+- Final datasets produced by the project (folder `data/analysis`).
 - The input datasets (scraped websites, Twitter and Facebook messages) cannot be republished and are therefore not included.
 
-This project is by the team that led the [Mapping Museums project](http://mappingmuseums.org) (see also the [GitHub repository](https://github.com/Birkbeck/mapping-museums)).
+This project is a continuation of the [Mapping Museums project](http://mappingmuseums.org) (see also the [GitHub repository](https://github.com/Birkbeck/mapping-museums)).
 
 ## Project description
 
@@ -31,14 +32,21 @@ Using interview-based research to better understand what constitutes risk during
 - Co-I: Peter Wood (Birkbeck, UoL)
 - PDRA: Val Katerinchuk (Birkbeck, UoL)
 
+## Publications
+
+The code and data in this repository were used to produce the following publications:
+
+- Ballatore, Andrea, Valeri Katerinchuk, Alexandra Poulovassilis, and Peter T. Wood. ‘Tracking Museums’ Online Responses to the Covid-19 Pandemic: A Study in Museum Analytics’. ACM Journal on Computing and Cultural Heritage, 2023.
+
+See also related publications at https://museweb.dcs.bbk.ac.uk/publications
+
 ## Funding
 
-Awarded £190,000 by the UKRI-AHRC Rapid Recovery Scheme (2021-2022).
+Awarded £190,000 by the UKRI-AHRC Rapid Recovery Scheme (2021-2022)
 
 ## Conda environment
 
 Conda environment in `conda_env` with all Python packages.
-
 
 ## Maintainer
 
