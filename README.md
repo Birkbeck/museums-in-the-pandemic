@@ -1,4 +1,4 @@
-# Museums in the Pandemic (MIP): Data and Code Repository
+# Museums in the Pandemic (MIP) - Data and Code
 
 ## Abstract 
 
