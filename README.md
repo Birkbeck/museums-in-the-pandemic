@@ -2,7 +2,10 @@
 
 ## Abstract 
 
-Data and code repository for Museums in the Pandemic (MIP) project (Birkbeck, University of London and King's College London) [link](https://www.bbk.ac.uk/research/projects/museums-in-the-pandemic).
+This is the data and code repository for the project _Museums in the Pandemic (MIP): Risk, Closure, and Resilience_ (Birkbeck, University of London and King's College London).
+
+Home page: https://www.bbk.ac.uk/research/projects/museums-in-the-pandemic
+
 This repository contains:
 - The Python source code of an application designed to scrape large-scale online information about UK museums, from websites, Facebook, and Twitter (folder `mip/`). 
 - Jupyter Notebooks used for data analytics (folder `mip/notebooks_py`).
