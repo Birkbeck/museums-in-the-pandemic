@@ -1,4 +1,4 @@
-# Museums in the Pandemic (MIP): Risk, Closure, and Resilience
+# Museums in the Pandemic (MIP): Data and Code Repository
 
 ## Abstract 
 
