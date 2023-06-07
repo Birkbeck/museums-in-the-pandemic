@@ -39,7 +39,8 @@ Using interview-based research to better understand what constitutes risk during
 
 The code and data in this repository were used to produce the following publications:
 
-- Ballatore, Andrea, Valeri Katerinchuk, Alexandra Poulovassilis, and Peter T. Wood. ‘Tracking Museums’ Online Responses to the Covid-19 Pandemic: A Study in Museum Analytics’. ACM Journal on Computing and Cultural Heritage, 2023.
+- Larkin, J., Ballatore, A. and Mityurova, E. (2023) Museums, Covid-19 and the Pivot to Social Media. Curator: The Museum Journal
+- Ballatore, Andrea, Valeri Katerinchuk, Alexandra Poulovassilis, and Peter T. Wood (2023) ‘Tracking Museums’ Online Responses to the Covid-19 Pandemic: A Study in Museum Analytics’. ACM Journal on Computing and Cultural Heritage
 
 See also related publications at https://museweb.dcs.bbk.ac.uk/publications
 
